@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import JobListingView from '@/components/JobListingView';
+import JobListingView from '@/components/jobs_components/JobListingView';
 
 export const metadata: Metadata = {
   title: 'অভিজ্ঞতা ছাড়া সরকারি চাকরি ২০২৬ (No Experience Jobs) | চাকরি সেবা',

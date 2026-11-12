@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
-import SingleBlogClient from '@/components/SingleBlogClient';
-import { blogPostsData } from '@/lib/preparation/data';
+import SingleBlogClient from '@/components/guides_components/SingleBlogClient';
+import { blogPostsData } from '@/data/preparationData';
 
 interface PageProps {
   params: Promise<{ slug: string }>;

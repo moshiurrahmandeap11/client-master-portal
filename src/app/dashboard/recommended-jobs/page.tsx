@@ -27,10 +27,10 @@ import {
   ArrowUpRight
 } from 'lucide-react';
 import { storage } from '@/lib/store';
-import { fetchWithAuth } from '@/lib/axiosInstance';
-import { CandidateProfile } from '@/lib/types';
-import { EnrichedJobRecommendation, RecommendationSectionFeeds } from '@/lib/matching/types';
-import MatchBreakdownModal from '@/components/matching/MatchBreakdownModal';
+import { fetchWithAuth } from '@/lib/axios';
+import { CandidateProfile } from '@/types';
+import { EnrichedJobRecommendation, RecommendationSectionFeeds } from '@/types/matching.types';
+import MatchBreakdownModal from '@/components/shared/matching/MatchBreakdownModal';
 
 export default function RecommendedJobsPage() {
   const [profile, setProfile] = useState<CandidateProfile | null>(null);

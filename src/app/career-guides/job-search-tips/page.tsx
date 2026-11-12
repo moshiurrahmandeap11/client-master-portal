@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import CareerGuideDetailClient from '@/components/CareerGuideDetailClient';
+import CareerGuideDetailClient from '@/components/guides_components/CareerGuideDetailClient';
 
 export const metadata: Metadata = {
   title: 'অনলাইনে দ্রুত ও সঠিক চাকরি খুঁজে পাওয়ার কার্যকরী উপায় | চাকরি সেবা',

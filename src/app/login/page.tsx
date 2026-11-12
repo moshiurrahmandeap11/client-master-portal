@@ -23,10 +23,10 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { storage } from '@/lib/store';
-import { BD_DIVISIONS_MAP } from '@/lib/constants';
-import axiosInstance from '@/lib/axiosInstance';
-import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
-import EmailVerifyModal from '@/components/auth/EmailVerifyModal';
+import { BD_DIVISIONS_MAP } from '@/constants';
+import { loginService, authService } from '@/services';
+import { ApiError, extractErrorMessage } from '@/lib/api-error';
+import { GoogleSignInButton, EmailVerifyModal } from '@/components/auth_components';
 
 function LoginForm() {
   const router = useRouter();
@@ -133,14 +133,13 @@ function LoginForm() {
 
     setIsSubmitting(true);
     try {
-      const res = await axiosInstance.post('/api/auth/login', {
+      const data = await loginService.login({
         email: loginIdentifier.trim(),
         identifier: loginIdentifier.trim(),
         password: loginPassword,
         role: 'candidate'
       });
 
-      const data = res.data;
       if (data?.success) {
         storage.setAuth({
           isLoggedIn: true,
@@ -155,10 +154,9 @@ function LoginForm() {
           window.location.href = getRedirectTarget();
         }, 500);
       }
-    } catch (err: any) {
-      const resData = err?.response?.data;
-      if (err?.response?.status === 403 && resData?.requiresVerification) {
-        // Trigger email OTP verification flow
+    } catch (err: unknown) {
+      if (err instanceof ApiError && err.statusCode === 403 && (err.responseData as Record<string, unknown>)?.requiresVerification) {
+        const resData = err.responseData as Record<string, string>;
         setVerifyModal({
           open: true,
           email: resData.email || loginIdentifier.trim()
@@ -166,7 +164,7 @@ function LoginForm() {
         setIsSubmitting(false);
         return;
       }
-      setError(resData?.error || 'লগইন ব্যর্থ হয়েছে। সঠিক তথ্য প্রদান করুন।');
+      setError(extractErrorMessage(err, 'লগইন ব্যর্থ হয়েছে। সঠিক তথ্য প্রদান করুন।'));
       setIsSubmitting(false);
     }
   };
@@ -179,13 +177,12 @@ function LoginForm() {
     setLoginPassword('123456');
 
     try {
-      const res = await axiosInstance.post('/api/auth/login', {
+      const data = await loginService.login({
         email: 'tanvir.jobseeker@gmail.com',
         password: '123456',
         role: 'candidate'
       });
 
-      const data = res.data;
       if (data?.success) {
         storage.setAuth({
           isLoggedIn: true,
@@ -200,8 +197,8 @@ function LoginForm() {
           window.location.href = getRedirectTarget();
         }, 500);
       }
-    } catch (err: any) {
-      setError(err?.response?.data?.error || 'ডেমো লগইন ব্যর্থ হয়েছে।');
+    } catch (err: unknown) {
+      setError(extractErrorMessage(err, 'ডেমো লগইন ব্যর্থ হয়েছে।'));
       setIsSubmitting(false);
     }
   };
@@ -247,7 +244,7 @@ function LoginForm() {
 
     setIsSubmitting(true);
     try {
-      const res = await axiosInstance.post('/api/auth/register', {
+      const data = await loginService.register({
         name: regName.trim(),
         nameBn: regNameBn.trim() || regName.trim(),
         email: regEmail.trim().toLowerCase(),
@@ -256,7 +253,6 @@ function LoginForm() {
         password: regPassword
       });
 
-      const data = res.data;
       if (data?.success && data?.requiresVerification) {
         setSuccessMsg('রেজিস্ট্রেশন সফল! ইমেইল ভেরিফিকেশন কোড প্রদান করুন।');
         setVerifyModal({
@@ -266,8 +262,8 @@ function LoginForm() {
         });
         setIsSubmitting(false);
       }
-    } catch (err: any) {
-      setError(err?.response?.data?.error || 'রেজিস্ট্রেশন ব্যর্থ হয়েছে।');
+    } catch (err: unknown) {
+      setError(extractErrorMessage(err, 'রেজিস্ট্রেশন ব্যর্থ হয়েছে।'));
       setIsSubmitting(false);
     }
   };
@@ -283,18 +279,16 @@ function LoginForm() {
     }
     setIsForgotLoading(true);
     try {
-      const res = await axiosInstance.post('/api/auth/forgot-password', {
-        action: 'request_otp',
+      const data = await authService.requestForgotPasswordOtp({
         identifier: forgotId.trim()
       });
-      const data = res.data;
       setForgotMessage(data.message || 'আপনার ইমেইলে ৬-ডিজিটের ভেরিফিকেশন কোড পাঠানো হয়েছে।');
       setForgotTestOtp(data.testOtp || '');
       setForgotMaskedTarget(data.maskedTarget || forgotId.trim());
       setForgotStep(2);
       setForgotCountdown(60);
-    } catch (err: any) {
-      setForgotError(err?.response?.data?.error || 'রিকোয়েস্ট ব্যর্থ হয়েছে।');
+    } catch (err: unknown) {
+      setForgotError(extractErrorMessage(err, 'রিকোয়েস্ট ব্যর্থ হয়েছে।'));
     } finally {
       setIsForgotLoading(false);
     }
@@ -310,15 +304,14 @@ function LoginForm() {
     }
     setIsForgotLoading(true);
     try {
-      await axiosInstance.post('/api/auth/forgot-password', {
-        action: 'verify_otp',
+      await authService.verifyForgotPasswordOtp({
         identifier: forgotId.trim(),
         otp: forgotOtp.trim()
       });
       setForgotMessage('');
       setForgotStep(3);
-    } catch (err: any) {
-      setForgotError(err?.response?.data?.error || 'ভুল ওটিপি কোড।');
+    } catch (err: unknown) {
+      setForgotError(extractErrorMessage(err, 'ভুল ওটিপি কোড।'));
     } finally {
       setIsForgotLoading(false);
     }
@@ -338,13 +331,11 @@ function LoginForm() {
     }
     setIsForgotLoading(true);
     try {
-      const res = await axiosInstance.post('/api/auth/forgot-password', {
-        action: 'reset_password',
+      const data = await authService.resetPassword({
         identifier: forgotId.trim(),
         otp: forgotOtp.trim(),
         newPassword: forgotNewPass
       });
-      const data = res.data;
       if (data.user) {
         storage.setAuth({
           isLoggedIn: true,
@@ -360,8 +351,8 @@ function LoginForm() {
         setShowForgotModal(false);
         window.location.href = getRedirectTarget();
       }, 700);
-    } catch (err: any) {
-      setForgotError(err?.response?.data?.error || 'পাসওয়ার্ড পরিবর্তনের সময় সমস্যা হয়েছে।');
+    } catch (err: unknown) {
+      setForgotError(extractErrorMessage(err, 'পাসওয়ার্ড পরিবর্তনের সময় সমস্যা হয়েছে।'));
     } finally {
       setIsForgotLoading(false);
     }

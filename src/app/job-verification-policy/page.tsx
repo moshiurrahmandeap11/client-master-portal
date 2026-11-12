@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import PolicyLayout, { PolicySection } from '@/components/PolicyLayout';
+import PolicyLayout, { PolicySection } from '@/components/shared/PolicyLayout';
 
 export const dynamic = 'force-dynamic';
 

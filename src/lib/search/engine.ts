@@ -1,10 +1,10 @@
 import { isPublicJob } from '../job-visibility';
-import { JobCircular } from '../types';
-import { SearchParams, SearchResult, SearchFacets, SearchFacetItem } from './types';
+import { JobCircular } from '@/types';
+import { SearchParams, SearchResult, SearchFacets, SearchFacetItem } from '@/types/search.types';
 import { SearchScorer } from './scorer';
 import { SearchNormalizer } from './normalizer';
 import { JobTaxonomyClassifier } from '../taxonomy/classifier';
-import { CategoryRecord } from '../taxonomy/types';
+import { CategoryRecord } from '@/types/taxonomy.types';
 
 export class SearchEngine {
   /**

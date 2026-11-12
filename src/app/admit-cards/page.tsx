@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import AdmitCardsClient from '@/components/AdmitCardsClient';
+import AdmitCardsClient from '@/components/guides_components/AdmitCardsClient';
 
 export const metadata: Metadata = {
   title: 'প্রবেশপত্র ডাউনলোড ও অ্যাডমিট কার্ড পোর্টাল ২০২৬ | চাকরি সেবা',

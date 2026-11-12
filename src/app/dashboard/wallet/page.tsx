@@ -20,9 +20,9 @@ import {
   RotateCcw
 } from 'lucide-react';
 import { storage } from '@/lib/store';
-import { fetchWithAuth } from '@/lib/axiosInstance';
-import { CandidateProfile, WalletTransaction } from '@/lib/types';
-import { useCandidateData } from '@/components/CandidateDataProvider';
+import { fetchWithAuth } from '@/lib/axios';
+import { CandidateProfile, WalletTransaction } from '@/types';
+import { useCandidateData } from '@/components/shared/CandidateDataProvider';
 
 export default function WalletPage() {
   const candidateData = useCandidateData();

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import CareerGuideDetailClient from '@/components/CareerGuideDetailClient';
+import CareerGuideDetailClient from '@/components/guides_components/CareerGuideDetailClient';
 
 export const metadata: Metadata = {
   title: 'আন্তর্জাতিক মানের পেশাদার সিভি (CV) তৈরির পূর্ণাঙ্গ কৌশল | চাকরি সেবা',

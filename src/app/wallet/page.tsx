@@ -21,8 +21,8 @@ import {
   Smartphone
 } from 'lucide-react';
 import { storage } from '@/lib/store';
-import { fetchWithAuth } from '@/lib/axiosInstance';
-import { CandidateProfile, WalletTransaction } from '@/lib/types';
+import { fetchWithAuth } from '@/lib/axios';
+import { CandidateProfile, WalletTransaction } from '@/types';
 
 export default function WalletPublicPage() {
   const [isMounted, setIsMounted] = useState(false);

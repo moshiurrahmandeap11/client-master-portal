@@ -1,7 +1,7 @@
 'use client';
-import { fetchPublicJobs } from '@/lib/public-jobs-client';
+import { fetchPublicJobs } from '@/services/jobs.service';
 
-import DeadlineCountdown from '@/components/deadlines/DeadlineCountdown';
+import DeadlineCountdown from '@/components/shared/deadlines/DeadlineCountdown';
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { 
@@ -19,7 +19,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { storage } from '@/lib/store';
-import { JobCircular } from '@/lib/types';
+import { JobCircular } from '@/types';
 
 export default function SavedJobsPage() {
   const [jobs, setJobs] = useState<JobCircular[]>(storage.getJobs());

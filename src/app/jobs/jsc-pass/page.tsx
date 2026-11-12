@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import JobListingView from '@/components/JobListingView';
+import JobListingView from '@/components/jobs_components/JobListingView';
 
 export const metadata: Metadata = {
   title: 'জেএসসি ও ৮ম শ্রেণি পাসে সরকারি চাকরি ২০২৬ (JSC Pass Jobs) | চাকরি সেবা',

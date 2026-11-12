@@ -2,7 +2,7 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound, redirect, RedirectType } from 'next/navigation';
 import { serverDB } from '@/lib/db';
-import JobDetailClient from '@/components/JobDetailClient';
+import JobDetailClient from '@/components/jobs_components/JobDetailClient';
 
 interface Props {
   params: Promise<{ id: string }>;

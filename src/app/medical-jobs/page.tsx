@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import JobListingView from '@/components/JobListingView';
+import JobListingView from '@/components/jobs_components/JobListingView';
 
 export const metadata: Metadata = {
   title: 'মেডিকেল ও স্বাস্থ্য সেবা নিয়োগ ২০২৬ | চাকরি সেবা',

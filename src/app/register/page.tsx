@@ -20,10 +20,10 @@ import {
   FolderLock,
   Zap
 } from 'lucide-react';
-import { BD_DIVISIONS_MAP } from '@/lib/constants';
-import axiosInstance from '@/lib/axiosInstance';
-import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
-import EmailVerifyModal from '@/components/auth/EmailVerifyModal';
+import { BD_DIVISIONS_MAP } from '@/constants';
+import { loginService } from '@/services/login.service';
+import { extractErrorMessage } from '@/lib/api-error';
+import { GoogleSignInButton, EmailVerifyModal } from '@/components/auth_components';
 
 function RegisterForm() {
   const router = useRouter();
@@ -103,7 +103,7 @@ function RegisterForm() {
 
     setIsSubmitting(true);
     try {
-      const res = await axiosInstance.post('/api/auth/register', {
+      const data = await loginService.register({
         name: nameEn.trim() || nameBn.trim(),
         nameBn: nameBn.trim() || nameEn.trim(),
         email: cleanEmail,
@@ -112,7 +112,6 @@ function RegisterForm() {
         district: district.trim() || 'ঢাকা'
       });
 
-      const data = res.data;
       if (data?.success && data?.requiresVerification) {
         setSuccessMsg('রেজিস্ট্রেশন সফল! ইমেইলে পাঠানো ৬-সংখ্যার ওটিপি কোডটি দিয়ে ভেরিফাই করুন।');
         setVerifyModal({
@@ -122,8 +121,8 @@ function RegisterForm() {
         });
         setIsSubmitting(false);
       }
-    } catch (err: any) {
-      setErrorMsg(err?.response?.data?.error || 'রেজিস্ট্রেশনে ত্রুটি হয়েছে।');
+    } catch (err: unknown) {
+      setErrorMsg(extractErrorMessage(err, 'রেজিস্ট্রেশনে ত্রুটি হয়েছে।'));
       setIsSubmitting(false);
     }
   };

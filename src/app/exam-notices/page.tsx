@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import ExamNoticesClient from '@/components/ExamNoticesClient';
+import ExamNoticesClient from '@/components/guides_components/ExamNoticesClient';
 
 export const metadata: Metadata = {
   title: 'সকল চাকরির পরীক্ষার সময়সূচি ও নোটিশ ২০২৬ | চাকরি সেবা',

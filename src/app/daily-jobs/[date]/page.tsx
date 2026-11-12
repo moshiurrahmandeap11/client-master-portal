@@ -4,7 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import { serverDB } from '@/lib/db';
 import { JobFeedEngine } from '@/lib/feeds/engine';
 import { BangladeshDateHelper } from '@/lib/feeds/timezone';
-import JobFeedClient from '@/components/feeds/JobFeedClient';
+import JobFeedClient from '@/components/shared/feeds/JobFeedClient';
 
 export const dynamic = 'force-dynamic';
 

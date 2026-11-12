@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import ConditionalLayout from '@/components/layout/ConditionalLayout';
+import ConditionalLayout from '@/components/shared/layout/ConditionalLayout';
 import { serverDB } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';

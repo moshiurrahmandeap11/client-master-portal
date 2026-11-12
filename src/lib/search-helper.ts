@@ -3,7 +3,7 @@
  * Provides robust bilingual (Bengali <-> English), multi-field, and position-level matching
  */
 
-import { JobCircular } from './types';
+import { JobCircular } from '@/types';
 
 const BILINGUAL_MAP: Record<string, string[]> = {
   'জামালপুর': ['jamalpur', 'dcjamalpur'],

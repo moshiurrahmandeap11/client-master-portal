@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { JobCircular } from '@/lib/types';
+import { JobCircular } from '@/types';
 
 export class SyntheticJobManager {
   private static storePath = path.join(process.cwd(), 'src', 'db', 'synthetic_jobs_store.json');

@@ -14,8 +14,8 @@ import {
   AlertCircle,
   Briefcase
 } from 'lucide-react';
-import { SearchResult } from '@/lib/search/types';
-import JobCard from '@/components/JobCard';
+import { SearchResult } from '@/types/search.types';
+import JobCard from '@/components/shared/JobCard';
 
 interface Props {
   categorySlug: string;

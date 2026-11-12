@@ -1,5 +1,5 @@
 'use client';
-import { fetchPublicJobs } from '@/lib/public-jobs-client';
+import { fetchPublicJobs } from '@/services/jobs.service';
 
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
@@ -23,8 +23,8 @@ import {
   Briefcase
 } from 'lucide-react';
 import { storage } from '@/lib/store';
-import { CandidateProfile, JobCircular, ApplicationRequest, NotificationItem, CandidateDocument } from '@/lib/types';
-import { emptyCandidateProfile as mockUserProfile } from '@/lib/candidate-defaults';
+import { CandidateProfile, JobCircular, ApplicationRequest, NotificationItem, CandidateDocument } from '@/types';
+import { emptyCandidateProfile as mockUserProfile } from '@/data/candidateDefaults';
 
 export default function DashboardOverview() {
   const [profile, setProfile] = useState<CandidateProfile>(mockUserProfile);

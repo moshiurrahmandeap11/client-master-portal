@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import VivaNoticesClient from '@/components/VivaNoticesClient';
+import VivaNoticesClient from '@/components/guides_components/VivaNoticesClient';
 
 export const metadata: Metadata = {
   title: 'মৌখিক পরীক্ষার সময়সূচি ও নোটিশ ২০২৬ (Viva Notices) | চাকরি সেবা',

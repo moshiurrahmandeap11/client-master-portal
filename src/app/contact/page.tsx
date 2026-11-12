@@ -22,7 +22,7 @@ import {
   RefreshCw,
   Sparkles
 } from 'lucide-react';
-import { ContactMessageItem } from '@/lib/types';
+import { ContactMessageItem } from '@/types';
 import { storage } from '@/lib/store';
 
 export default function ContactPage() {

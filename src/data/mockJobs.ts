@@ -1,4 +1,4 @@
-import { JobCircular, CandidateProfile, ApplicationRequest } from '@/lib/types';
+import type { JobCircular, CandidateProfile, ApplicationRequest } from '@/types';
 
 export const mockJobs: JobCircular[] = [];
 

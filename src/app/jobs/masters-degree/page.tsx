@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import JobListingView from '@/components/JobListingView';
+import JobListingView from '@/components/jobs_components/JobListingView';
 
 export const metadata: Metadata = {
   title: 'স্নাতকোত্তর / মাস্টার্স পাসে চাকরি ২০২৬ (Masters Degree Jobs) | চাকরি সেবা',

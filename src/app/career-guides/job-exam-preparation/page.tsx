@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import CareerGuideDetailClient from '@/components/CareerGuideDetailClient';
+import CareerGuideDetailClient from '@/components/guides_components/CareerGuideDetailClient';
 
 export const metadata: Metadata = {
   title: 'প্রথম চান্সেই সরকারি চাকরি পাওয়ার কৌশল ও দৈনিক রুটিন | চাকরি সেবা',

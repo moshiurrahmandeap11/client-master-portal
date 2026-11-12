@@ -65,7 +65,7 @@ import {
 
 
 
-} from './types';
+} from '@/types';
 
 
 
@@ -196,54 +196,54 @@ interface DatabaseState {
 
   verificationQueue?: any[];
 
-  contentStudioArticles?: Record<string, import('./content_studio/types').ContentStudioState>;
+  contentStudioArticles?: Record<string, import('@/types/content-studio.types').ContentStudioState>;
 
-  publishingQueue?: Record<string, import('./publishing/types').PublishingQueueItem>;
+  publishingQueue?: Record<string, import('@/types/publishing.types').PublishingQueueItem>;
 
-  publicationSnapshots?: Record<string, import('./publishing/types').PublicationSnapshot>;
+  publicationSnapshots?: Record<string, import('@/types/publishing.types').PublicationSnapshot>;
 
-  publicationAuditLogs?: import('./publishing/types').PublicationAuditLog[];
+  publicationAuditLogs?: import('@/types/publishing.types').PublicationAuditLog[];
 
-  redirects?: Record<string, import('./publishing/types').RedirectRecord>;
+  redirects?: Record<string, import('@/types/publishing.types').RedirectRecord>;
 
-  reviewComments?: Record<string, import('./publishing/types').ReviewComment[]>;
+  reviewComments?: Record<string, import('@/types/publishing.types').ReviewComment[]>;
 
-  categories?: Record<string, import('./taxonomy/types').CategoryRecord>;
+  categories?: Record<string, import('@/types/taxonomy.types').CategoryRecord>;
 
-  searchAnalytics?: import('./search/types').SearchEventRecord[];
+  searchAnalytics?: import('@/types/search.types').SearchEventRecord[];
 
-  featuredPlacements?: Record<string, import('./feeds/types').FeaturedPlacement>;
+  featuredPlacements?: Record<string, import('@/types/feeds.types').FeaturedPlacement>;
 
-  feedConfig?: import('./feeds/types').GlobalFeedConfig;
+  feedConfig?: import('@/types/feeds.types').GlobalFeedConfig;
 
-  deadlineData?: Record<string, import('./deadlines/types').DeadlineData>;
+  deadlineData?: Record<string, import('@/types/deadlines.types').DeadlineData>;
 
-  deadlineRevisions?: Record<string, import('./deadlines/types').DeadlineRevision[]>;
+  deadlineRevisions?: Record<string, import('@/types/deadlines.types').DeadlineRevision[]>;
 
-  circularChangeProposals?: Record<string, import('./deadlines/types').CircularChangeProposal>;
+  circularChangeProposals?: Record<string, import('@/types/deadlines.types').CircularChangeProposal>;
 
-  userJobReminders?: Record<string, import('./deadlines/types').UserJobReminder[]>;
+  userJobReminders?: Record<string, import('@/types/deadlines.types').UserJobReminder[]>;
 
-  notificationDeliveries?: import('./deadlines/types').NotificationDeliveryItem[];
+  notificationDeliveries?: import('@/types/deadlines.types').NotificationDeliveryItem[];
 
-  monitoringRuns?: import('./deadlines/types').MonitoringRunRecord[];
+  monitoringRuns?: import('@/types/deadlines.types').MonitoringRunRecord[];
 
-  deadlineAlertRules?: import('./deadlines/types').DeadlineAlertRule[];
+  deadlineAlertRules?: import('@/types/deadlines.types').DeadlineAlertRule[];
 
-  recommendationFeedback?: Record<string, import('./matching/types').RecommendationFeedbackItem[]>;
+  recommendationFeedback?: Record<string, import('@/types/matching.types').RecommendationFeedbackItem[]>;
 
-  matchingConfig?: import('./matching/types').MatchingEngineConfig;
+  matchingConfig?: import('@/types/matching.types').MatchingEngineConfig;
 
-  operationalExpenses?: Record<string, import('./operations/types').OperationalExpenseRecord>;
+  operationalExpenses?: Record<string, import('@/types/operations.types').OperationalExpenseRecord>;
 
-  platformBudget?: import('./operations/types').PlatformBudgetConfig;
-  staffMembers?: Record<string, import('./governance/types').StaffMemberRecord>;
-  mediaItems?: Record<string, import('./types').MediaItem>;
-  platformSettings?: import('./types').PlatformSettings;
-  engineeringTasks?: Record<string, import('./engineering/types').EngineeringTask>;
-  jobReports?: import('./types').JobReportItem[];
-  jobAlertSubscriptions?: import('./types').JobAlertSubscription[];
-  contactMessages?: import('./types').ContactMessageItem[];
+  platformBudget?: import('@/types/operations.types').PlatformBudgetConfig;
+  staffMembers?: Record<string, import('@/types/governance.types').StaffMemberRecord>;
+  mediaItems?: Record<string, import('@/types').MediaItem>;
+  platformSettings?: import('@/types').PlatformSettings;
+  engineeringTasks?: Record<string, import('@/types/engineering.types').EngineeringTask>;
+  jobReports?: import('@/types').JobReportItem[];
+  jobAlertSubscriptions?: import('@/types').JobAlertSubscription[];
+  contactMessages?: import('@/types').ContactMessageItem[];
 
 }
 
@@ -2445,23 +2445,23 @@ function normalizeJob(job: JobCircular): JobCircular {
 
 export const serverDB = {
   // Job Reports & Complaints Engine
-  getJobReports(status?: string): import('./types').JobReportItem[] {
+  getJobReports(status?: string): import('@/types').JobReportItem[] {
     const db = loadDB();
     const reports = db.jobReports || [];
     if (!status || status === 'all') return reports;
     return reports.filter(r => r.status === status);
   },
 
-  getJobReportById(id: string): import('./types').JobReportItem | null {
+  getJobReportById(id: string): import('@/types').JobReportItem | null {
     const db = loadDB();
     return (db.jobReports || []).find(r => r.id === id) || null;
   },
 
-  createJobReport(payload: Partial<import('./types').JobReportItem>): import('./types').JobReportItem {
+  createJobReport(payload: Partial<import('@/types').JobReportItem>): import('@/types').JobReportItem {
     const db = loadDB();
     if (!db.jobReports) db.jobReports = [];
     const reportId = 'REP-2026-' + (Math.floor(1000 + Math.random() * 9000)).toString();
-    const newReport: import('./types').JobReportItem = {
+    const newReport: import('@/types').JobReportItem = {
       id: reportId,
       jobId: payload.jobId,
       jobTitle: payload.jobTitle || 'সাধারণ বিজ্ঞপ্তি',
@@ -2481,7 +2481,7 @@ export const serverDB = {
     return newReport;
   },
 
-  updateJobReportStatus(id: string, status: 'pending' | 'investigating' | 'resolved' | 'dismissed', adminNotes?: string): { success: boolean; report?: import('./types').JobReportItem } {
+  updateJobReportStatus(id: string, status: 'pending' | 'investigating' | 'resolved' | 'dismissed', adminNotes?: string): { success: boolean; report?: import('@/types').JobReportItem } {
     const db = loadDB();
     if (!db.jobReports) return { success: false };
     const report = db.jobReports.find(r => r.id === id);
@@ -2494,17 +2494,17 @@ export const serverDB = {
   },
 
   // Job Alert Subscriptions Engine
-  getJobAlertSubscriptions(): import('./types').JobAlertSubscription[] {
+  getJobAlertSubscriptions(): import('@/types').JobAlertSubscription[] {
     const db = loadDB();
     return db.jobAlertSubscriptions || [];
   },
 
-  createJobAlertSubscription(data: Partial<import('./types').JobAlertSubscription>): import('./types').JobAlertSubscription {
+  createJobAlertSubscription(data: Partial<import('@/types').JobAlertSubscription>): import('@/types').JobAlertSubscription {
     const db = loadDB();
     if (!db.jobAlertSubscriptions) db.jobAlertSubscriptions = [];
     const subId = 'SUB-2026-' + (Math.floor(1000 + Math.random() * 9000)).toString();
     const existingIndex = db.jobAlertSubscriptions.findIndex(s => s.phone === data.phone);
-    const newSub: import('./types').JobAlertSubscription = {
+    const newSub: import('@/types').JobAlertSubscription = {
       id: subId,
       phone: data.phone || '',
       email: data.email,
@@ -2528,23 +2528,23 @@ export const serverDB = {
   },
 
   // Contact Messages & Support Tickets Engine
-  getContactMessages(status?: string): import('./types').ContactMessageItem[] {
+  getContactMessages(status?: string): import('@/types').ContactMessageItem[] {
     const db = loadDB();
     const messages = db.contactMessages || [];
     if (!status || status === 'all') return messages;
     return messages.filter(m => m.status === status);
   },
 
-  getContactMessageById(id: string): import('./types').ContactMessageItem | null {
+  getContactMessageById(id: string): import('@/types').ContactMessageItem | null {
     const db = loadDB();
     return (db.contactMessages || []).find(m => m.id === id) || null;
   },
 
-  createContactMessage(payload: Partial<import('./types').ContactMessageItem>): import('./types').ContactMessageItem {
+  createContactMessage(payload: Partial<import('@/types').ContactMessageItem>): import('@/types').ContactMessageItem {
     const db = loadDB();
     if (!db.contactMessages) db.contactMessages = [];
     const ticketId = 'TCK-2026-' + (Math.floor(1000 + Math.random() * 9000)).toString();
-    const newMessage: import('./types').ContactMessageItem = {
+    const newMessage: import('@/types').ContactMessageItem = {
       id: ticketId,
       name: payload.name || 'সম্মানিত চাকরিপ্রার্থী',
       phone: payload.phone || '',
@@ -2562,7 +2562,7 @@ export const serverDB = {
     return newMessage;
   },
 
-  updateContactMessageStatus(id: string, status: 'new' | 'in_progress' | 'replied' | 'closed', replyNotes?: string): { success: boolean; message?: import('./types').ContactMessageItem } {
+  updateContactMessageStatus(id: string, status: 'new' | 'in_progress' | 'replied' | 'closed', replyNotes?: string): { success: boolean; message?: import('@/types').ContactMessageItem } {
     const db = loadDB();
     if (!db.contactMessages) return { success: false };
     const item = db.contactMessages.find(m => m.id === id);
@@ -4701,13 +4701,7 @@ export const serverDB = {
 
     if (pdfTarget) {
 
-      try {
-
-        const { triggerAutoPdfConversion } = require('./pdfAutoConverter');
-
-        triggerAutoPdfConversion(job.id, pdfTarget);
-
-      } catch (e) { }
+      // PDF auto conversion runs on backend server
 
     }
 
@@ -6964,7 +6958,7 @@ export const serverDB = {
 
 
 
-  saveContentStudioState(state: import('./content_studio/types').ContentStudioState): void {
+  saveContentStudioState(state: import('@/types/content-studio.types').ContentStudioState): void {
 
     const db = loadDB();
 
@@ -7004,7 +6998,7 @@ export const serverDB = {
 
 
 
-  getContentStudioState(draftId: string): import('./content_studio/types').ContentStudioState | null {
+  getContentStudioState(draftId: string): import('@/types/content-studio.types').ContentStudioState | null {
 
     const db = loadDB();
 
@@ -7026,7 +7020,7 @@ export const serverDB = {
 
 
 
-  getPublishingQueue(): Record<string, import('./publishing/types').PublishingQueueItem> {
+  getPublishingQueue(): Record<string, import('@/types/publishing.types').PublishingQueueItem> {
 
     const db = loadDB();
 
@@ -7036,7 +7030,7 @@ export const serverDB = {
 
 
 
-  savePublishingQueueItem(item: import('./publishing/types').PublishingQueueItem): import('./publishing/types').PublishingQueueItem {
+  savePublishingQueueItem(item: import('@/types/publishing.types').PublishingQueueItem): import('@/types/publishing.types').PublishingQueueItem {
 
     const db = loadDB();
 
@@ -7072,7 +7066,7 @@ export const serverDB = {
 
 
 
-  getPublicationSnapshots(): Record<string, import('./publishing/types').PublicationSnapshot> {
+  getPublicationSnapshots(): Record<string, import('@/types/publishing.types').PublicationSnapshot> {
 
     const db = loadDB();
 
@@ -7082,7 +7076,7 @@ export const serverDB = {
 
 
 
-  savePublicationSnapshot(snapshot: import('./publishing/types').PublicationSnapshot): import('./publishing/types').PublicationSnapshot {
+  savePublicationSnapshot(snapshot: import('@/types/publishing.types').PublicationSnapshot): import('@/types/publishing.types').PublicationSnapshot {
 
     const db = loadDB();
 
@@ -7098,7 +7092,7 @@ export const serverDB = {
 
 
 
-  getPublicationSnapshotById(id: string): import('./publishing/types').PublicationSnapshot | null {
+  getPublicationSnapshotById(id: string): import('@/types/publishing.types').PublicationSnapshot | null {
 
     const db = loadDB();
 
@@ -7108,7 +7102,7 @@ export const serverDB = {
 
 
 
-  getPublicationAuditLogs(): import('./publishing/types').PublicationAuditLog[] {
+  getPublicationAuditLogs(): import('@/types/publishing.types').PublicationAuditLog[] {
 
     const db = loadDB();
 
@@ -7118,7 +7112,7 @@ export const serverDB = {
 
 
 
-  addPublicationAuditLog(log: import('./publishing/types').PublicationAuditLog): void {
+  addPublicationAuditLog(log: import('@/types/publishing.types').PublicationAuditLog): void {
 
     const db = loadDB();
 
@@ -7138,7 +7132,7 @@ export const serverDB = {
 
 
 
-  getRedirects(): Record<string, import('./publishing/types').RedirectRecord> {
+  getRedirects(): Record<string, import('@/types/publishing.types').RedirectRecord> {
 
     const db = loadDB();
 
@@ -7148,7 +7142,7 @@ export const serverDB = {
 
 
 
-  saveRedirect(redirect: import('./publishing/types').RedirectRecord): import('./publishing/types').RedirectRecord {
+  saveRedirect(redirect: import('@/types/publishing.types').RedirectRecord): import('@/types/publishing.types').RedirectRecord {
 
     const db = loadDB();
 
@@ -7164,7 +7158,7 @@ export const serverDB = {
 
 
 
-  findRedirectByPath(path: string): import('./publishing/types').RedirectRecord | null {
+  findRedirectByPath(path: string): import('@/types/publishing.types').RedirectRecord | null {
 
     const db = loadDB();
 
@@ -7176,7 +7170,7 @@ export const serverDB = {
 
 
 
-  getReviewComments(jobId: string): import('./publishing/types').ReviewComment[] {
+  getReviewComments(jobId: string): import('@/types/publishing.types').ReviewComment[] {
 
     const db = loadDB();
 
@@ -7188,7 +7182,7 @@ export const serverDB = {
 
 
 
-  addReviewComment(comment: import('./publishing/types').ReviewComment): import('./publishing/types').ReviewComment {
+  addReviewComment(comment: import('@/types/publishing.types').ReviewComment): import('@/types/publishing.types').ReviewComment {
 
     const db = loadDB();
 
@@ -7206,7 +7200,7 @@ export const serverDB = {
 
 
 
-  getAllContentStudioStates(): import('./content_studio/types').ContentStudioState[] {
+  getAllContentStudioStates(): import('@/types/content-studio.types').ContentStudioState[] {
 
     const db = loadDB();
 
@@ -7562,13 +7556,7 @@ export const serverDB = {
 
     if (pdfSource) {
 
-      try {
-
-        const { triggerAutoPdfConversion } = require('./pdfAutoConverter');
-
-        triggerAutoPdfConversion(newJobId, pdfSource);
-
-      } catch (e) { }
+      // PDF auto conversion runs on backend server
 
     }
 
@@ -8024,13 +8012,13 @@ export const serverDB = {
 
   // --- STEP 06: TAXONOMY & CATEGORY METHODS ---
 
-  getCategories(): import('./taxonomy/types').CategoryRecord[] {
+  getCategories(): import('@/types/taxonomy.types').CategoryRecord[] {
 
     const db = loadDB();
 
     if (!db.categories || Object.keys(db.categories).length === 0) {
 
-      const { DEFAULT_TAXONOMY_CATEGORIES } = require('./taxonomy/defaults');
+      const { DEFAULT_TAXONOMY_CATEGORIES } = require('../data/taxonomyDefaults');
 
       const seeded: Record<string, any> = {};
 
@@ -8054,7 +8042,7 @@ export const serverDB = {
 
 
 
-  getCategoryById(id: string): import('./taxonomy/types').CategoryRecord | null {
+  getCategoryById(id: string): import('@/types/taxonomy.types').CategoryRecord | null {
 
     const cats = this.getCategories();
 
@@ -8064,7 +8052,7 @@ export const serverDB = {
 
 
 
-  getCategoryBySlug(slug: string): import('./taxonomy/types').CategoryRecord | null {
+  getCategoryBySlug(slug: string): import('@/types/taxonomy.types').CategoryRecord | null {
     if (!slug) return null;
     const cats = this.getCategories();
     const clean = slug.toLowerCase().trim().replace(/^\/+|\/+$/g, '');
@@ -8138,7 +8126,7 @@ export const serverDB = {
 
 
 
-  saveCategory(cat: import('./taxonomy/types').CategoryRecord): import('./taxonomy/types').CategoryRecord {
+  saveCategory(cat: import('@/types/taxonomy.types').CategoryRecord): import('@/types/taxonomy.types').CategoryRecord {
 
     const db = loadDB();
 
@@ -8146,7 +8134,7 @@ export const serverDB = {
 
     const existing = db.categories[cat.id] || {};
 
-    const updated: import('./taxonomy/types').CategoryRecord = {
+    const updated: import('@/types/taxonomy.types').CategoryRecord = {
 
       ...existing,
 
@@ -8242,7 +8230,7 @@ export const serverDB = {
 
   // --- STEP 06: SEARCH ANALYTICS METHODS ---
 
-  getSearchAnalytics(): import('./search/types').SearchEventRecord[] {
+  getSearchAnalytics(): import('@/types/search.types').SearchEventRecord[] {
 
     const db = loadDB();
 
@@ -8252,13 +8240,13 @@ export const serverDB = {
 
 
 
-  logSearchEvent(event: Omit<import('./search/types').SearchEventRecord, 'id' | 'timestamp'>): import('./search/types').SearchEventRecord {
+  logSearchEvent(event: Omit<import('@/types/search.types').SearchEventRecord, 'id' | 'timestamp'>): import('@/types/search.types').SearchEventRecord {
 
     const db = loadDB();
 
     if (!db.searchAnalytics) db.searchAnalytics = [];
 
-    const record: import('./search/types').SearchEventRecord = {
+    const record: import('@/types/search.types').SearchEventRecord = {
 
       ...event,
 
@@ -8286,7 +8274,7 @@ export const serverDB = {
 
   // --- STEP 07: JOB FEEDS & FEATURED JOBS METHODS ---
 
-  getFeaturedPlacements(): import('./feeds/types').FeaturedPlacement[] {
+  getFeaturedPlacements(): import('@/types/feeds.types').FeaturedPlacement[] {
 
     const db = loadDB();
 
@@ -8298,7 +8286,7 @@ export const serverDB = {
 
 
 
-  getFeaturedPlacementById(id: string): import('./feeds/types').FeaturedPlacement | null {
+  getFeaturedPlacementById(id: string): import('@/types/feeds.types').FeaturedPlacement | null {
 
     const db = loadDB();
 
@@ -8310,7 +8298,7 @@ export const serverDB = {
 
 
 
-  saveFeaturedPlacement(placement: import('./feeds/types').FeaturedPlacement): import('./feeds/types').FeaturedPlacement {
+  saveFeaturedPlacement(placement: import('@/types/feeds.types').FeaturedPlacement): import('@/types/feeds.types').FeaturedPlacement {
 
     const db = loadDB();
 
@@ -8378,7 +8366,7 @@ export const serverDB = {
 
 
 
-  getFeedConfig(): import('./feeds/types').GlobalFeedConfig {
+  getFeedConfig(): import('@/types/feeds.types').GlobalFeedConfig {
 
     const db = loadDB();
 
@@ -8396,7 +8384,7 @@ export const serverDB = {
 
 
 
-  saveFeedConfig(config: Partial<import('./feeds/types').GlobalFeedConfig>): import('./feeds/types').GlobalFeedConfig {
+  saveFeedConfig(config: Partial<import('@/types/feeds.types').GlobalFeedConfig>): import('@/types/feeds.types').GlobalFeedConfig {
 
     const db = loadDB();
 
@@ -8404,7 +8392,7 @@ export const serverDB = {
 
     const existing = db.feedConfig || DEFAULT_FEED_CONFIG;
 
-    const merged: import('./feeds/types').GlobalFeedConfig = {
+    const merged: import('@/types/feeds.types').GlobalFeedConfig = {
 
       ...existing,
 
@@ -8440,7 +8428,7 @@ export const serverDB = {
 
 
 
-  getDeadlineData(jobId: string): import('./deadlines/types').DeadlineData | null {
+  getDeadlineData(jobId: string): import('@/types/deadlines.types').DeadlineData | null {
 
     const db = loadDB();
 
@@ -8450,7 +8438,7 @@ export const serverDB = {
 
 
 
-  saveDeadlineData(data: import('./deadlines/types').DeadlineData): import('./deadlines/types').DeadlineData {
+  saveDeadlineData(data: import('@/types/deadlines.types').DeadlineData): import('@/types/deadlines.types').DeadlineData {
 
     const db = loadDB();
 
@@ -8466,7 +8454,7 @@ export const serverDB = {
 
 
 
-  getDeadlineRevisions(jobId: string): import('./deadlines/types').DeadlineRevision[] {
+  getDeadlineRevisions(jobId: string): import('@/types/deadlines.types').DeadlineRevision[] {
 
     const db = loadDB();
 
@@ -8476,7 +8464,7 @@ export const serverDB = {
 
 
 
-  addDeadlineRevision(revision: import('./deadlines/types').DeadlineRevision): void {
+  addDeadlineRevision(revision: import('@/types/deadlines.types').DeadlineRevision): void {
 
     const db = loadDB();
 
@@ -8492,7 +8480,7 @@ export const serverDB = {
 
 
 
-  getCircularChangeProposals(status?: 'PENDING_REVIEW' | 'APPROVED' | 'REJECTED'): import('./deadlines/types').CircularChangeProposal[] {
+  getCircularChangeProposals(status?: 'PENDING_REVIEW' | 'APPROVED' | 'REJECTED'): import('@/types/deadlines.types').CircularChangeProposal[] {
 
     const db = loadDB();
 
@@ -8510,7 +8498,7 @@ export const serverDB = {
 
 
 
-  getCircularChangeProposal(id: string): import('./deadlines/types').CircularChangeProposal | null {
+  getCircularChangeProposal(id: string): import('@/types/deadlines.types').CircularChangeProposal | null {
 
     const db = loadDB();
 
@@ -8520,7 +8508,7 @@ export const serverDB = {
 
 
 
-  saveCircularChangeProposal(proposal: import('./deadlines/types').CircularChangeProposal): import('./deadlines/types').CircularChangeProposal {
+  saveCircularChangeProposal(proposal: import('@/types/deadlines.types').CircularChangeProposal): import('@/types/deadlines.types').CircularChangeProposal {
 
     const db = loadDB();
 
@@ -8560,7 +8548,7 @@ export const serverDB = {
 
 
 
-  getUserJobReminders(candidateId: string): import('./deadlines/types').UserJobReminder[] {
+  getUserJobReminders(candidateId: string): import('@/types/deadlines.types').UserJobReminder[] {
     if (candidateId && candidateId.startsWith('SYNTH-')) {
       return SyntheticUserManager.getUserJobReminders(candidateId);
     }
@@ -8572,7 +8560,7 @@ export const serverDB = {
 
 
 
-  saveUserJobReminder(reminder: import('./deadlines/types').UserJobReminder): import('./deadlines/types').UserJobReminder {
+  saveUserJobReminder(reminder: import('@/types/deadlines.types').UserJobReminder): import('@/types/deadlines.types').UserJobReminder {
     if (reminder.candidateId && reminder.candidateId.startsWith('SYNTH-')) {
       return SyntheticUserManager.saveUserJobReminder(reminder);
     }
@@ -8630,11 +8618,11 @@ export const serverDB = {
 
 
 
-  getAllUserJobReminders(): import('./deadlines/types').UserJobReminder[] {
+  getAllUserJobReminders(): import('@/types/deadlines.types').UserJobReminder[] {
 
     const db = loadDB();
 
-    const all: import('./deadlines/types').UserJobReminder[] = [];
+    const all: import('@/types/deadlines.types').UserJobReminder[] = [];
 
     for (const list of Object.values(db.userJobReminders || {})) {
       if (Array.isArray(list)) all.push(...list);
@@ -8646,7 +8634,7 @@ export const serverDB = {
 
 
 
-  getNotificationDeliveries(candidateId?: string): import('./deadlines/types').NotificationDeliveryItem[] {
+  getNotificationDeliveries(candidateId?: string): import('@/types/deadlines.types').NotificationDeliveryItem[] {
     if (candidateId && candidateId.startsWith('SYNTH-')) {
       return SyntheticUserManager.getNotificationDeliveries(candidateId);
     }
@@ -8657,7 +8645,7 @@ export const serverDB = {
     return combined.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   },
 
-  enqueueNotificationDelivery(item: import('./deadlines/types').NotificationDeliveryItem): import('./deadlines/types').NotificationDeliveryItem {
+  enqueueNotificationDelivery(item: import('@/types/deadlines.types').NotificationDeliveryItem): import('@/types/deadlines.types').NotificationDeliveryItem {
     if (item.candidateId && item.candidateId.startsWith('SYNTH-')) {
       return SyntheticUserManager.enqueueNotificationDelivery(item);
     }
@@ -8691,7 +8679,7 @@ export const serverDB = {
 
 
 
-  updateNotificationDelivery(id: string, updates: Partial<import('./deadlines/types').NotificationDeliveryItem>): boolean {
+  updateNotificationDelivery(id: string, updates: Partial<import('@/types/deadlines.types').NotificationDeliveryItem>): boolean {
     if (SyntheticUserManager.updateNotificationDelivery(id, updates)) {
       return true;
     }
@@ -8713,7 +8701,7 @@ export const serverDB = {
 
 
 
-  getMonitoringRuns(limit = 30): import('./deadlines/types').MonitoringRunRecord[] {
+  getMonitoringRuns(limit = 30): import('@/types/deadlines.types').MonitoringRunRecord[] {
 
     const db = loadDB();
 
@@ -8723,7 +8711,7 @@ export const serverDB = {
 
 
 
-  saveMonitoringRun(run: import('./deadlines/types').MonitoringRunRecord): import('./deadlines/types').MonitoringRunRecord {
+  saveMonitoringRun(run: import('@/types/deadlines.types').MonitoringRunRecord): import('@/types/deadlines.types').MonitoringRunRecord {
 
     const db = loadDB();
 
@@ -8755,7 +8743,7 @@ export const serverDB = {
 
 
 
-  getDeadlineAlertRules(): import('./deadlines/types').DeadlineAlertRule[] {
+  getDeadlineAlertRules(): import('@/types/deadlines.types').DeadlineAlertRule[] {
 
     const db = loadDB();
 
@@ -8765,7 +8753,7 @@ export const serverDB = {
 
 
 
-  saveDeadlineAlertRules(rules: import('./deadlines/types').DeadlineAlertRule[]): void {
+  saveDeadlineAlertRules(rules: import('@/types/deadlines.types').DeadlineAlertRule[]): void {
 
     const db = loadDB();
 
@@ -8905,7 +8893,7 @@ export const serverDB = {
 
 
 
-  getRecommendationFeedback(candidateId?: string): import('./matching/types').RecommendationFeedbackItem[] {
+  getRecommendationFeedback(candidateId?: string): import('@/types/matching.types').RecommendationFeedbackItem[] {
 
     const db = loadDB();
 
@@ -8917,7 +8905,7 @@ export const serverDB = {
 
     }
 
-    const all: import('./matching/types').RecommendationFeedbackItem[] = [];
+    const all: import('@/types/matching.types').RecommendationFeedbackItem[] = [];
 
     for (const list of Object.values(db.recommendationFeedback)) {
 
@@ -8931,7 +8919,7 @@ export const serverDB = {
 
 
 
-  saveRecommendationFeedback(item: import('./matching/types').RecommendationFeedbackItem): import('./matching/types').RecommendationFeedbackItem {
+  saveRecommendationFeedback(item: import('@/types/matching.types').RecommendationFeedbackItem): import('@/types/matching.types').RecommendationFeedbackItem {
 
     const db = loadDB();
 
@@ -8985,7 +8973,7 @@ export const serverDB = {
 
 
 
-  getMatchingConfig(): import('./matching/types').MatchingEngineConfig {
+  getMatchingConfig(): import('@/types/matching.types').MatchingEngineConfig {
 
     const db = loadDB();
 
@@ -9021,7 +9009,7 @@ export const serverDB = {
 
 
 
-  updateMatchingConfig(updates: Partial<import('./matching/types').MatchingEngineConfig>): import('./matching/types').MatchingEngineConfig {
+  updateMatchingConfig(updates: Partial<import('@/types/matching.types').MatchingEngineConfig>): import('@/types/matching.types').MatchingEngineConfig {
 
     const db = loadDB();
 
@@ -9047,7 +9035,7 @@ export const serverDB = {
 
 
 
-  updateCandidatePreferences(candidateId: string, prefs: import('./matching/types').CareerPreferences): CandidateRecord | null {
+  updateCandidatePreferences(candidateId: string, prefs: import('@/types/matching.types').CareerPreferences): CandidateRecord | null {
 
     const db = loadDB();
 
@@ -9112,7 +9100,7 @@ export const serverDB = {
 
 
 
-  addCandidateSkill(candidateId: string, skill: import('./matching/types').UserSkillItem): CandidateRecord | null {
+  addCandidateSkill(candidateId: string, skill: import('@/types/matching.types').UserSkillItem): CandidateRecord | null {
 
     const db = loadDB();
 
@@ -9184,7 +9172,7 @@ export const serverDB = {
 
 
 
-  addCandidateExperience(candidateId: string, exp: import('./types').ExperienceRecord): CandidateRecord | null {
+  addCandidateExperience(candidateId: string, exp: import('@/types').ExperienceRecord): CandidateRecord | null {
 
     const db = loadDB();
 
@@ -9208,7 +9196,7 @@ export const serverDB = {
 
 
 
-  updateCandidateExperience(candidateId: string, expId: string, exp: Partial<import('./types').ExperienceRecord>): CandidateRecord | null {
+  updateCandidateExperience(candidateId: string, expId: string, exp: Partial<import('@/types').ExperienceRecord>): CandidateRecord | null {
 
     const db = loadDB();
 
@@ -9280,13 +9268,13 @@ export const serverDB = {
     return true;
   },
 
-  getCandidateTrainings(candidateId: string): import('./types').TrainingRecord[] {
+  getCandidateTrainings(candidateId: string): import('@/types').TrainingRecord[] {
     const db = loadDB();
     const candidate = db.candidates[candidateId];
     return (candidate && candidate.trainings) || [];
   },
 
-  addCandidateTraining(candidateId: string, training: import('./types').TrainingRecord): CandidateRecord | null {
+  addCandidateTraining(candidateId: string, training: import('@/types').TrainingRecord): CandidateRecord | null {
     const db = loadDB();
     const candidate = db.candidates[candidateId];
     if (!candidate) return null;
@@ -9305,7 +9293,7 @@ export const serverDB = {
   updateCandidateTraining(
     candidateId: string,
     trainingId: string,
-    updates: Partial<import('./types').TrainingRecord>
+    updates: Partial<import('@/types').TrainingRecord>
   ): CandidateRecord | null {
     const db = loadDB();
     const candidate = db.candidates[candidateId];
@@ -9329,17 +9317,17 @@ export const serverDB = {
   },
 
   // Step 13: Operational Expenses & Budget
-  getOperationalExpenses(): import('./operations/types').OperationalExpenseRecord[] {
+  getOperationalExpenses(): import('@/types/operations.types').OperationalExpenseRecord[] {
     const db = loadDB();
     return db.operationalExpenses ? Object.values(db.operationalExpenses) : [];
   },
 
-  getOperationalExpenseById(id: string): import('./operations/types').OperationalExpenseRecord | null {
+  getOperationalExpenseById(id: string): import('@/types/operations.types').OperationalExpenseRecord | null {
     const db = loadDB();
     return (db.operationalExpenses && db.operationalExpenses[id]) || null;
   },
 
-  saveOperationalExpense(expense: import('./operations/types').OperationalExpenseRecord): void {
+  saveOperationalExpense(expense: import('@/types/operations.types').OperationalExpenseRecord): void {
     const db = loadDB();
     if (!db.operationalExpenses) db.operationalExpenses = {};
     db.operationalExpenses[expense.id] = expense;
@@ -9354,29 +9342,29 @@ export const serverDB = {
     return true;
   },
 
-  getPlatformBudget(): import('./operations/types').PlatformBudgetConfig | null {
+  getPlatformBudget(): import('@/types/operations.types').PlatformBudgetConfig | null {
     const db = loadDB();
     return db.platformBudget || null;
   },
 
-  savePlatformBudget(config: import('./operations/types').PlatformBudgetConfig): void {
+  savePlatformBudget(config: import('@/types/operations.types').PlatformBudgetConfig): void {
     const db = loadDB();
     db.platformBudget = config;
     saveDB(db);
   },
 
   // Step 14: Admin Governance & Staff RBAC
-  getStaffMembers(): import('./governance/types').StaffMemberRecord[] {
+  getStaffMembers(): import('@/types/governance.types').StaffMemberRecord[] {
     const db = loadDB();
     return db.staffMembers ? Object.values(db.staffMembers) : [];
   },
 
-  getStaffMemberById(id: string): import('./governance/types').StaffMemberRecord | null {
+  getStaffMemberById(id: string): import('@/types/governance.types').StaffMemberRecord | null {
     const db = loadDB();
     return (db.staffMembers && db.staffMembers[id]) || null;
   },
 
-  saveStaffMember(member: import('./governance/types').StaffMemberRecord): import('./governance/types').StaffMemberRecord {
+  saveStaffMember(member: import('@/types/governance.types').StaffMemberRecord): import('@/types/governance.types').StaffMemberRecord {
     const db = loadDB();
     if (!db.staffMembers) db.staffMembers = {};
     db.staffMembers[member.id] = member;
@@ -9484,17 +9472,17 @@ export const serverDB = {
   // =========================================================================
   // STEP 16 / PHASE 04: MEDIA LIBRARY REPOSITORY
   // =========================================================================
-  getMediaItems(): import('./types').MediaItem[] {
+  getMediaItems(): import('@/types').MediaItem[] {
     const db = loadDB();
     return db.mediaItems ? Object.values(db.mediaItems) : [];
   },
 
-  getMediaItemById(id: string): import('./types').MediaItem | null {
+  getMediaItemById(id: string): import('@/types').MediaItem | null {
     const db = loadDB();
     return (db.mediaItems && db.mediaItems[id]) || null;
   },
 
-  saveMediaItem(item: import('./types').MediaItem): import('./types').MediaItem {
+  saveMediaItem(item: import('@/types').MediaItem): import('@/types').MediaItem {
     const db = loadDB();
     if (!db.mediaItems) db.mediaItems = {};
     db.mediaItems[item.id] = {
@@ -9517,7 +9505,7 @@ export const serverDB = {
     return db.mediaItems[item.id];
   },
 
-  updateMediaItem(id: string, updates: Partial<import('./types').MediaItem>): import('./types').MediaItem | null {
+  updateMediaItem(id: string, updates: Partial<import('@/types').MediaItem>): import('@/types').MediaItem | null {
     const db = loadDB();
     if (!db.mediaItems || !db.mediaItems[id]) return null;
     const existing = db.mediaItems[id];
@@ -9543,11 +9531,11 @@ export const serverDB = {
   // =========================================================================
   // STEP 16 / PHASE 04: PLATFORM SETTINGS & GLOBAL CONFIGURATION
   // =========================================================================
-  getPlatformSettings(): import('./types').PlatformSettings {
+  getPlatformSettings(): import('@/types').PlatformSettings {
     const db = loadDB();
     if (db.platformSettings) return db.platformSettings;
 
-    const defaultSettings: import('./types').PlatformSettings = {
+    const defaultSettings: import('@/types').PlatformSettings = {
       general: {
         siteName: 'চাকরি সেবা (Chakri Sheba)',
         siteDescription: 'বাংলাদেশের একমাত্র ১০০% সম্পূর্ণ ফ্রি সরকারি ও বেসরকারি চাকরি পোর্টাল',
@@ -9600,10 +9588,10 @@ export const serverDB = {
     return defaultSettings;
   },
 
-  updatePlatformSettings(updates: Partial<import('./types').PlatformSettings>, adminId = 'ADMIN-SUPER'): import('./types').PlatformSettings {
+  updatePlatformSettings(updates: Partial<import('@/types').PlatformSettings>, adminId = 'ADMIN-SUPER'): import('@/types').PlatformSettings {
     const db = loadDB();
     const current = this.getPlatformSettings();
-    const merged: import('./types').PlatformSettings = {
+    const merged: import('@/types').PlatformSettings = {
       ...current,
       ...updates,
       general: { ...current.general, ...(updates.general || {}) },
@@ -9634,7 +9622,7 @@ export const serverDB = {
 
 
   // --- Engineering Tasks System (Parallel Hybrid AI Engineering & QA) ---
-  getEngineeringTasks(filters?: import('./engineering/types').TaskFilterOptions): import('./engineering/types').EngineeringTask[] {
+  getEngineeringTasks(filters?: import('@/types/engineering.types').TaskFilterOptions): import('@/types/engineering.types').EngineeringTask[] {
     const db = loadDB();
     const tasks = Object.values(db.engineeringTasks || {});
     if (!filters) return tasks.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
@@ -9649,22 +9637,22 @@ export const serverDB = {
     }).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   },
 
-  getEngineeringTaskById(taskId: string): import('./engineering/types').EngineeringTask | null {
+  getEngineeringTaskById(taskId: string): import('@/types/engineering.types').EngineeringTask | null {
     const db = loadDB();
     return (db.engineeringTasks && db.engineeringTasks[taskId]) || null;
   },
 
   createEngineeringTask(taskData: {
-    workstream: import('./engineering/types').EngineeringWorkstream;
-    taskType: import('./engineering/types').TaskType;
+    workstream: import('@/types/engineering.types').EngineeringWorkstream;
+    taskType: import('@/types/engineering.types').TaskType;
     title: string;
     description: string;
-    priority: import('./engineering/types').TaskPriority;
+    priority: import('@/types/engineering.types').TaskPriority;
     affectedModules?: string[];
     assignedAgent?: string;
     requiresHumanApproval?: boolean;
     idempotencyKey?: string;
-  }): import('./engineering/types').EngineeringTask {
+  }): import('@/types/engineering.types').EngineeringTask {
     const db = loadDB();
     if (!db.engineeringTasks) db.engineeringTasks = {};
 
@@ -9679,7 +9667,7 @@ export const serverDB = {
     const timestamp = new Date().toISOString();
     const taskId = 'TASK-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + '-' + Math.floor(1000 + Math.random() * 9000);
 
-    const newTask: import('./engineering/types').EngineeringTask = {
+    const newTask: import('@/types/engineering.types').EngineeringTask = {
       taskId,
       workstream: taskData.workstream,
       taskType: taskData.taskType,
@@ -9709,7 +9697,7 @@ export const serverDB = {
     return newTask;
   },
 
-  acquireNextEngineeringTask(workerId: string, allowedWorkstreams?: import('./engineering/types').EngineeringWorkstream[]): import('./engineering/types').EngineeringTask | null {
+  acquireNextEngineeringTask(workerId: string, allowedWorkstreams?: import('@/types/engineering.types').EngineeringWorkstream[]): import('@/types/engineering.types').EngineeringTask | null {
     const db = loadDB();
     if (!db.engineeringTasks) db.engineeringTasks = {};
 
@@ -9734,7 +9722,7 @@ export const serverDB = {
     }
 
     // Priority ordering
-    const priorityWeights: Record<import('./engineering/types').TaskPriority, number> = {
+    const priorityWeights: Record<import('@/types/engineering.types').TaskPriority, number> = {
       'P0_CRITICAL': 400,
       'P1_HIGH': 300,
       'P2_MEDIUM': 200,
@@ -9800,7 +9788,7 @@ export const serverDB = {
     return true;
   },
 
-  completeEngineeringTask(taskId: string, workerId: string, summary: string, evidence?: string[]): import('./engineering/types').EngineeringTask | null {
+  completeEngineeringTask(taskId: string, workerId: string, summary: string, evidence?: string[]): import('@/types/engineering.types').EngineeringTask | null {
     const db = loadDB();
     if (!db.engineeringTasks || !db.engineeringTasks[taskId]) return null;
     const task = db.engineeringTasks[taskId];
@@ -9827,7 +9815,7 @@ export const serverDB = {
     return task;
   },
 
-  failEngineeringTask(taskId: string, workerId: string, error: { message: string; stackTrace?: string; failedRoute?: string }): import('./engineering/types').EngineeringTask | null {
+  failEngineeringTask(taskId: string, workerId: string, error: { message: string; stackTrace?: string; failedRoute?: string }): import('@/types/engineering.types').EngineeringTask | null {
     const db = loadDB();
     if (!db.engineeringTasks || !db.engineeringTasks[taskId]) return null;
     const task = db.engineeringTasks[taskId];
@@ -9856,7 +9844,7 @@ export const serverDB = {
     return task;
   },
 
-  recordEngineeringTaskApproval(taskId: string, approvedBy: string, decision: 'APPROVED' | 'REJECTED' | 'CHANGES_REQUESTED', notes?: string): import('./engineering/types').EngineeringTask | null {
+  recordEngineeringTaskApproval(taskId: string, approvedBy: string, decision: 'APPROVED' | 'REJECTED' | 'CHANGES_REQUESTED', notes?: string): import('@/types/engineering.types').EngineeringTask | null {
     const db = loadDB();
     if (!db.engineeringTasks || !db.engineeringTasks[taskId]) return null;
     const task = db.engineeringTasks[taskId];

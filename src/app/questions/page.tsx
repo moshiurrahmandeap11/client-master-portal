@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import QuestionBankClient from '@/components/QuestionBankClient';
+import QuestionBankClient from '@/components/guides_components/QuestionBankClient';
 
 export const metadata: Metadata = {
   title: 'বিগত বছরের প্রশ্নব্যাংক ও নির্ভুল সমাধান ২০২৬ | চাকরি সেবা',

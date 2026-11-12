@@ -1,4 +1,4 @@
-import { ContentBlock, ContentBlockType } from './types';
+import { ContentBlock, ContentBlockType } from '@/types/content-studio.types';
 
 /**
  * Converts an array of ContentBlocks into a clean Bengali Markdown string

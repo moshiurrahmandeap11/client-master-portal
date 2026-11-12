@@ -2,7 +2,7 @@ import React from 'react';
 import { Metadata } from 'next';
 import { serverDB } from '@/lib/db';
 import { JobFeedEngine } from '@/lib/feeds/engine';
-import JobFeedClient from '@/components/feeds/JobFeedClient';
+import JobFeedClient from '@/components/shared/feeds/JobFeedClient';
 
 export const dynamic = 'force-dynamic';
 

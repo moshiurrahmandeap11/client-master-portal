@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import JobListingView from '@/components/JobListingView';
+import JobListingView from '@/components/jobs_components/JobListingView';
 
 export const metadata: Metadata = {
   title: 'বিপিএসসি / কর্ম কমিশন নিয়োগ সার্কুলার ২০২৬ (BPSC Jobs) | চাকরি সেবা',

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import Link from 'next/link';
-import { getDivisionForDistrict, normalizeToEnglishDistrict, normalizeToEnglishDivision } from '@/lib/constants';
+import { getDivisionForDistrict, normalizeToEnglishDistrict, normalizeToEnglishDivision } from '@/constants';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { 
   BarChart3,
@@ -75,40 +75,40 @@ import {
   Calendar, 
   User 
 } from 'lucide-react';
-import CouponsRaffleManagement from '@/components/admin/CouponsRaffleManagement';
-import WebsiteBuilder from '@/components/admin/WebsiteBuilder';
-import SourceRegistryManagement from '@/components/admin/SourceRegistryManagement';
-import SmsNotificationsManagement from '@/components/admin/SmsNotificationsManagement';
-import SystemSettingsDiagnostics from '@/components/admin/SystemSettingsDiagnostics';
-import WebsiteCmsSeoManagement from '@/components/admin/WebsiteCmsSeoManagement';
-import FinancialTransactionsLedger from '@/components/admin/FinancialTransactionsLedger';
-import CandidateManagementHub from '@/components/admin/CandidateManagementHub';
-import JobVerificationCenter from '@/components/admin/JobVerificationCenter';
-import JobReportsManagement from '@/components/admin/JobReportsManagement';
-import SupportTicketsManagement from '@/components/admin/SupportTicketsManagement';
-import JobContentStudio from '@/components/admin/JobContentStudio';
-import JobPublishingCenter from '@/components/admin/JobPublishingCenter';
-import JobCategorySearchManager from '@/components/admin/JobCategorySearchManager';
-import JobFeedManager from '@/components/admin/JobFeedManager';
-import DeadlineAlertManager from '@/components/admin/DeadlineAlertManager';
-import SmartMatchingAdmin from '@/components/admin/SmartMatchingAdmin';
-import PlatformOperationsHub from '@/components/admin/PlatformOperationsHub';
-import AdminGlobalSearchModal from '@/components/admin/AdminGlobalSearchModal';
-import PlatformGovernanceOverview from '@/components/admin/PlatformGovernanceOverview';
-import UniversalJobWorkspace from '@/components/admin/UniversalJobWorkspace';
-import MediaLibraryManager from '@/components/admin/MediaLibraryManager';
-import OrganizationManagementHub from '@/components/admin/OrganizationManagementHub';
-import CentralAutomationManager from '@/components/admin/CentralAutomationManager';
-import AnalyticsIntelligenceHub from '@/components/admin/AnalyticsIntelligenceHub';
-import TestingSpiderHub from '@/components/admin/TestingSpiderHub';
-import GeminiBrowserSpiderHub from '@/components/admin/GeminiBrowserSpiderHub';
-import AdminLayout from '@/components/admin/layout/AdminLayout';
-import AdminDashboardOverview from '@/components/admin/dashboard/AdminDashboardOverview';
-import CertificateVerificationQueue from '@/components/admin/CertificateVerificationQueue';
-import { getAdminHeaders, ADMIN_REQ_HEADERS } from '@/lib/adminAuthClient';
+import CouponsRaffleManagement from '@/components/admin_components/CouponsRaffleManagement';
+import WebsiteBuilder from '@/components/admin_components/WebsiteBuilder';
+import SourceRegistryManagement from '@/components/admin_components/SourceRegistryManagement';
+import SmsNotificationsManagement from '@/components/admin_components/SmsNotificationsManagement';
+import SystemSettingsDiagnostics from '@/components/admin_components/SystemSettingsDiagnostics';
+import WebsiteCmsSeoManagement from '@/components/admin_components/WebsiteCmsSeoManagement';
+import FinancialTransactionsLedger from '@/components/admin_components/FinancialTransactionsLedger';
+import CandidateManagementHub from '@/components/admin_components/CandidateManagementHub';
+import JobVerificationCenter from '@/components/admin_components/JobVerificationCenter';
+import JobReportsManagement from '@/components/admin_components/JobReportsManagement';
+import SupportTicketsManagement from '@/components/admin_components/SupportTicketsManagement';
+import JobContentStudio from '@/components/admin_components/JobContentStudio';
+import JobPublishingCenter from '@/components/admin_components/JobPublishingCenter';
+import JobCategorySearchManager from '@/components/admin_components/JobCategorySearchManager';
+import JobFeedManager from '@/components/admin_components/JobFeedManager';
+import DeadlineAlertManager from '@/components/admin_components/DeadlineAlertManager';
+import SmartMatchingAdmin from '@/components/admin_components/SmartMatchingAdmin';
+import PlatformOperationsHub from '@/components/admin_components/PlatformOperationsHub';
+import AdminGlobalSearchModal from '@/components/admin_components/AdminGlobalSearchModal';
+import PlatformGovernanceOverview from '@/components/admin_components/PlatformGovernanceOverview';
+import UniversalJobWorkspace from '@/components/admin_components/UniversalJobWorkspace';
+import MediaLibraryManager from '@/components/admin_components/MediaLibraryManager';
+import OrganizationManagementHub from '@/components/admin_components/OrganizationManagementHub';
+import CentralAutomationManager from '@/components/admin_components/CentralAutomationManager';
+import AnalyticsIntelligenceHub from '@/components/admin_components/AnalyticsIntelligenceHub';
+import TestingSpiderHub from '@/components/admin_components/TestingSpiderHub';
+import GeminiBrowserSpiderHub from '@/components/admin_components/GeminiBrowserSpiderHub';
+import AdminLayout from '@/components/admin_components/layout/AdminLayout';
+import AdminDashboardOverview from '@/components/admin_components/dashboard/AdminDashboardOverview';
+import CertificateVerificationQueue from '@/components/admin_components/CertificateVerificationQueue';
+import { getAdminHeaders, ADMIN_REQ_HEADERS } from '@/lib/axios';
 
 
-import { ApplicationRequest, JobCircular, JobSource, CircularDraft, CompanyProfile } from '@/lib/types';
+import { ApplicationRequest, JobCircular, JobSource, CircularDraft, CompanyProfile } from '@/types';
 
 export default function AdminPage() {
   return (

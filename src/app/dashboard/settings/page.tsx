@@ -25,8 +25,8 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { storage } from '@/lib/store';
-import axiosInstance from '@/lib/axiosInstance';
-import { CandidateProfile } from '@/lib/types';
+import axiosInstance from '@/lib/axios';
+import { CandidateProfile } from '@/types';
 
 export default function SettingsPage() {
   const router = useRouter();

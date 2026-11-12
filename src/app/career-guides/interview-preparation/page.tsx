@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import CareerGuideDetailClient from '@/components/CareerGuideDetailClient';
+import CareerGuideDetailClient from '@/components/guides_components/CareerGuideDetailClient';
 
 export const metadata: Metadata = {
   title: 'চাকরির ইন্টারভিউ ও ভাইভায় সফল হওয়ার চূড়ান্ত কৌশল | চাকরি সেবা',

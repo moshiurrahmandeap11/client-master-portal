@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import ApplicationsTrackingClient from '@/components/ApplicationsTrackingClient';
+import ApplicationsTrackingClient from '@/components/apply_components/ApplicationsTrackingClient';
 
 export const metadata: Metadata = {
   title: 'আমার আবেদন ও ট্র্যাকিং ড্যাশবোর্ড | চাকরি সেবা',

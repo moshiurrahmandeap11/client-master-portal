@@ -3,8 +3,8 @@
  * Step 07: Administrative Placements, Scheduling & Expiration
  */
 
-import { JobCircular } from '../types';
-import { FeaturedPlacement, FeaturedStatus } from './types';
+import { JobCircular } from '@/types';
+import { FeaturedPlacement, FeaturedStatus } from '@/types/feeds.types';
 
 export class FeaturedManager {
   /**

@@ -26,9 +26,9 @@ import {
   Sliders
 } from 'lucide-react';
 import { storage } from '@/lib/store';
-import { fetchWithAuth } from '@/lib/axiosInstance';
-import { CandidateDocument } from '@/lib/types';
-import { useCandidateData } from '@/components/CandidateDataProvider';
+import { fetchWithAuth } from '@/lib/axios';
+import { CandidateDocument } from '@/types';
+import { useCandidateData } from '@/components/shared/CandidateDataProvider';
 
 export default function DocumentVaultPage() {
   const candidateData = useCandidateData();

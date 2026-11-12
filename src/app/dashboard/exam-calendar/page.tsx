@@ -20,9 +20,9 @@ import {
   ChevronLeft
 } from 'lucide-react';
 import { storage } from '@/lib/store';
-import { fetchWithAuth } from '@/lib/axiosInstance';
-import { ApplicationRequest, JobCircular } from '@/lib/types';
-import { fetchPublicJobs } from '@/lib/public-jobs-client';
+import { fetchWithAuth } from '@/lib/axios';
+import { ApplicationRequest, JobCircular } from '@/types';
+import { fetchPublicJobs } from '@/services/jobs.service';
 
 interface CalendarEvent {
   id: string;

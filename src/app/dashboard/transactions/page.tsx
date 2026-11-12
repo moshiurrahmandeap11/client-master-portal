@@ -22,8 +22,8 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { storage } from '@/lib/store';
-import { fetchWithAuth } from '@/lib/axiosInstance';
-import { WalletTransaction, CandidateProfile } from '@/lib/types';
+import { fetchWithAuth } from '@/lib/axios';
+import { WalletTransaction, CandidateProfile } from '@/types';
 
 export default function TransactionsPage() {
   const [txs, setTxs] = useState<WalletTransaction[]>([]);

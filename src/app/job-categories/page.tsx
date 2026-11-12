@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import { serverDB } from '@/lib/db';
 import { JobTaxonomyClassifier } from '@/lib/taxonomy/classifier';
-import CategoriesDirectoryClient, { CategoryItem } from '@/components/categories/CategoriesDirectoryClient';
+import CategoriesDirectoryClient, { CategoryItem } from '@/components/shared/categories/CategoriesDirectoryClient';
 
 export const dynamic = 'force-dynamic';
 

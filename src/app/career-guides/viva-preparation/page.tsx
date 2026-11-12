@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import CareerGuideDetailClient from '@/components/CareerGuideDetailClient';
+import CareerGuideDetailClient from '@/components/guides_components/CareerGuideDetailClient';
 
 export const metadata: Metadata = {
   title: 'বিসিএস ও সরকারি চাকরির ভাইভা প্রস্তুতি ও শিষ্টাচার গাইড | চাকরি সেবা',

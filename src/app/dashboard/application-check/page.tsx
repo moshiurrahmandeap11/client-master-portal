@@ -1,5 +1,5 @@
 'use client';
-import { fetchPublicJobs } from '@/lib/public-jobs-client';
+import { fetchPublicJobs } from '@/services/jobs.service';
 
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
@@ -11,8 +11,8 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { storage } from '@/lib/store';
-import { fetchWithAuth } from '@/lib/axiosInstance';
-import { CandidateProfile, JobCircular, CandidateDocument } from '@/lib/types';
+import { fetchWithAuth } from '@/lib/axios';
+import { CandidateProfile, JobCircular, CandidateDocument } from '@/types';
 
 export default function ApplicationCheckPage() {
   const [isMounted, setIsMounted] = useState(false);

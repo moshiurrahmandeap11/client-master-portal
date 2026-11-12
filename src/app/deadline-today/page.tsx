@@ -5,7 +5,7 @@ import { Clock, AlertTriangle, ArrowRight, Building2, Calendar, MapPin, Banknote
 import { serverDB } from '@/lib/db';
 import { CentralDeadlineEngine } from '@/lib/deadlines/engine';
 import { BangladeshDateHelper } from '@/lib/feeds/timezone';
-import DeadlineCountdown from '@/components/deadlines/DeadlineCountdown';
+import DeadlineCountdown from '@/components/shared/deadlines/DeadlineCountdown';
 
 export const dynamic = 'force-dynamic';
 

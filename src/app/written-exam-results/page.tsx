@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import ExamResultsClient from '@/components/ExamResultsClient';
+import ExamResultsClient from '@/components/guides_components/ExamResultsClient';
 
 export const metadata: Metadata = {
   title: 'লিখিত পরীক্ষার ফলাফল ২০২৬ (Written Exam Results & Merit List) | চাকরি সেবা',

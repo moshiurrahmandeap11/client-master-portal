@@ -1,4 +1,4 @@
-﻿import { JobCircular } from '../types';
+﻿import { JobCircular } from '@/types';
 import { SearchNormalizer } from './normalizer';
 
 export interface ScoreResult {

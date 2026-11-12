@@ -1,4 +1,4 @@
-import { emptyCandidateProfile } from './candidate-defaults';
+import { emptyCandidateProfile } from '@/data/candidateDefaults';
 import { 
   JobCircular, 
   CandidateProfile, 
@@ -7,7 +7,7 @@ import {
   WalletTransaction, 
   NotificationItem, 
   EligibilityResult 
-} from './types';
+} from '@/types';
 
 
 export interface AuthState {

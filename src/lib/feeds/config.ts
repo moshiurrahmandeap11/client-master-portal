@@ -3,7 +3,7 @@
  * Step 07: Dynamic Feed Section Customization
  */
 
-import { GlobalFeedConfig } from './types';
+import { GlobalFeedConfig } from '@/types/feeds.types';
 
 export const DEFAULT_FEED_CONFIG: GlobalFeedConfig = {
   sections: {

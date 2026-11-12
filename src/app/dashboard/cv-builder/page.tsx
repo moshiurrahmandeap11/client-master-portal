@@ -23,7 +23,7 @@ import {
   RefreshCw,
   ArrowRight
 } from 'lucide-react';
-import { useCandidateData } from '@/components/CandidateDataProvider';
+import { useCandidateData } from '@/components/shared/CandidateDataProvider';
 
 export default function CvBuilderPage() {
   const { profile, documents, loading, refresh } = useCandidateData();

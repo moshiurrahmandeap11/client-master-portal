@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { serverDB } from '@/lib/db';
-import OrganizationsDirectoryClient, { OrgDirectoryItem } from '@/components/OrganizationsDirectoryClient';
+import OrganizationsDirectoryClient, { OrgDirectoryItem } from '@/components/guides_components/OrganizationsDirectoryClient';
 
 export const dynamic = 'force-dynamic';
 

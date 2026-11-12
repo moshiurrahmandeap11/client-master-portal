@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound, redirect, RedirectType } from 'next/navigation';
 import { serverDB } from '@/lib/db';
-import CmsPageRenderer from '@/components/CmsPageRenderer';
+import CmsPageRenderer from '@/components/shared/CmsPageRenderer';
 
 export const dynamic = 'force-dynamic';
 

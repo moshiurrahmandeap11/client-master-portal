@@ -24,10 +24,10 @@ import {
   Calendar
 } from 'lucide-react';
 import { storage } from '@/lib/store';
-import { fetchWithAuth } from '@/lib/axiosInstance';
-import { CandidateProfile, EducationRecord, ExperienceRecord } from '@/lib/types';
-import { emptyCandidateProfile as mockUserProfile } from '@/lib/candidate-defaults';
-import { BD_DIVISIONS_EN, BD_DIVISIONS_MAP, getAllDistrictsList, getDivisionForDistrict, getDistrictsForDivision, getUpazilasForDistrict, normalizeToEnglishDistrict, normalizeToEnglishDivision } from '@/lib/constants';
+import { fetchWithAuth } from '@/lib/axios';
+import { CandidateProfile, EducationRecord, ExperienceRecord } from '@/types';
+import { emptyCandidateProfile as mockUserProfile } from '@/data/candidateDefaults';
+import { BD_DIVISIONS_EN, BD_DIVISIONS_MAP, getAllDistrictsList, getDivisionForDistrict, getDistrictsForDivision, getUpazilasForDistrict, normalizeToEnglishDistrict, normalizeToEnglishDivision } from '@/constants';
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState<CandidateProfile>(mockUserProfile);

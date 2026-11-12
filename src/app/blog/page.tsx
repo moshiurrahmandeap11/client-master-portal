@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import BlogListClient from '@/components/BlogListClient';
+import BlogListClient from '@/components/guides_components/BlogListClient';
 
 export const metadata: Metadata = {
   title: 'চাকরি সেবা ব্লগ ও ক্যারিয়ার আর্টিকেল ২০২৬ | চাকরি সেবা',

@@ -3,7 +3,7 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { serverDB } from '@/lib/db';
-import ApplyClient from '@/components/ApplyClient';
+import ApplyClient from '@/components/apply_components/ApplyClient';
 
 interface Props {
   params: Promise<{ id: string }>;

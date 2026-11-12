@@ -1,4 +1,4 @@
-import { JobCircular } from '../types';
+import { JobCircular } from '@/types';
 import { 
   JobTaxonomyClassification, 
   OrganizationType, 
@@ -7,8 +7,8 @@ import {
   ExperienceLevel, 
   LocationDivision, 
   ApplicationStatus 
-} from './types';
-import { normalizeToEnglishDivision, BD_DIVISIONS_MAP } from '../constants';
+} from '@/types/taxonomy.types';
+import { normalizeToEnglishDivision, BD_DIVISIONS_MAP } from '@/constants';
 
 export class JobTaxonomyClassifier {
   /**

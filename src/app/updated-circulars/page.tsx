@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Sparkles, Clock, ArrowRight, Building2, Calendar, FileText, CheckCircle2, ShieldAlert } from 'lucide-react';
 import { serverDB } from '@/lib/db';
 import { CentralDeadlineEngine } from '@/lib/deadlines/engine';
-import UpdatedCircularsClient, { UpdatedJobItem } from '@/components/updated/UpdatedCircularsClient';
+import UpdatedCircularsClient, { UpdatedJobItem } from '@/components/shared/updated/UpdatedCircularsClient';
 
 export const dynamic = 'force-dynamic';
 

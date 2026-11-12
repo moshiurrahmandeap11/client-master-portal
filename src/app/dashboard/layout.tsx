@@ -31,9 +31,9 @@ import {
   PhoneCall
 } from 'lucide-react';
 import { storage } from '@/lib/store';
-import axiosInstance from '@/lib/axiosInstance';
-import { CandidateProfile } from '@/lib/types';
-import { emptyCandidateProfile as mockUserProfile } from '@/lib/candidate-defaults';
+import axiosInstance from '@/lib/axios';
+import { CandidateProfile } from '@/types';
+import { emptyCandidateProfile as mockUserProfile } from '@/data/candidateDefaults';
 
 interface SidebarNavItem {
   title: string;

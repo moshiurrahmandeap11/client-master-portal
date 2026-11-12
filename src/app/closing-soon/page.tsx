@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Clock } from 'lucide-react';
 import { serverDB } from '@/lib/db';
 import { JobFeedEngine } from '@/lib/feeds/engine';
-import JobFeedClient from '@/components/feeds/JobFeedClient';
+import JobFeedClient from '@/components/shared/feeds/JobFeedClient';
 
 export const dynamic = 'force-dynamic';
 

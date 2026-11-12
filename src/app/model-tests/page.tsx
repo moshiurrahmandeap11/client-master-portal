@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import ModelTestsClient from '@/components/ModelTestsClient';
+import ModelTestsClient from '@/components/guides_components/ModelTestsClient';
 
 export const metadata: Metadata = {
   title: 'অনলাইন লাইভ মডেল টেস্ট ও স্বয়ংক্রিয় মেরিট লিস্ট ২০২৬ | চাকরি সেবা',

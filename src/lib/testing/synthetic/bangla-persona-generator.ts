@@ -3,8 +3,8 @@
 // Strict 20-Slot Persona Distribution matching Section 5 specifications
 
 import { BD_64_DISTRICTS, DistrictInfo } from './bangladesh-geography';
-import { CandidateProfile, EducationRecord, ExperienceRecord } from '../../types';
-import { CareerPreferences } from '../../matching/types';
+import { CandidateProfile, EducationRecord, ExperienceRecord } from '@/types';
+import { CareerPreferences } from '@/types/matching.types';
 import crypto from 'crypto';
 
 const hashPassword = (password: string): string => {

@@ -5,7 +5,7 @@ import { Calendar, ChevronRight, Sparkles, Clock, ArrowRight, Layers, Database }
 import { serverDB } from '@/lib/db';
 import { JobFeedEngine } from '@/lib/feeds/engine';
 import { BangladeshDateHelper } from '@/lib/feeds/timezone';
-import DailyDateJumpPicker from '@/components/feeds/DailyDateJumpPicker';
+import DailyDateJumpPicker from '@/components/shared/feeds/DailyDateJumpPicker';
 
 export const dynamic = 'force-dynamic';
 

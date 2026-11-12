@@ -20,8 +20,8 @@ import {
   FileText
 } from 'lucide-react';
 import { serverDB } from '@/lib/db';
-import { JobCircular } from '@/lib/types';
-import JobLogo from '@/components/JobLogo';
+import { JobCircular } from '@/types';
+import JobLogo from '@/components/shared/JobLogo';
 
 export const dynamic = 'force-dynamic';
 

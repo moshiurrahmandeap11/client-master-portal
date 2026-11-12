@@ -10,9 +10,9 @@ import {
   DeadlineStatus, 
   JobLifecycleStatus, 
   DeadlineEvaluationResult 
-} from './types';
+} from '@/types/deadlines.types';
 import { BangladeshDateHelper, BST_OFFSET_MS } from '../feeds/timezone';
-import { JobCircular } from '../types';
+import { JobCircular } from '@/types';
 
 export class CentralDeadlineEngine {
   /**

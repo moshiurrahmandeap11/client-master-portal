@@ -5,7 +5,7 @@ import { matchJobQuery } from '../search-helper';
  * Step 07: Single Authoritative Feed Provider for All Time-based & Curated Feeds
  */
 
-import { JobCircular } from '../types';
+import { JobCircular } from '@/types';
 import { 
   FeedType, 
   FeedQueryOptions, 
@@ -13,7 +13,7 @@ import {
   DailyArchiveSummary, 
   FeedMetricsSummary,
   FeaturedPlacement 
-} from './types';
+} from '@/types/feeds.types';
 import { BangladeshDateHelper } from './timezone';
 import { FeaturedManager } from './featured';
 import { DEFAULT_FEED_CONFIG } from './config';

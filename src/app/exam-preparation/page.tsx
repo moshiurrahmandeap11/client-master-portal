@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import ExamPreparationClient from '@/components/ExamPreparationClient';
+import ExamPreparationClient from '@/components/guides_components/ExamPreparationClient';
 
 export const metadata: Metadata = {
   title: 'চাকরির পরীক্ষার পূর্ণাঙ্গ প্রস্তুতি ও বিষয়ভিত্তিক মানবন্টন ২০২৬ | চাকরি সেবা',

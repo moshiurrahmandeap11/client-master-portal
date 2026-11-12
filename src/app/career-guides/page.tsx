@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import CareerGuidesListClient from '@/components/CareerGuidesListClient';
+import CareerGuidesListClient from '@/components/guides_components/CareerGuidesListClient';
 
 export const metadata: Metadata = {
   title: 'ক্যারিয়ার গাইড ও চাকরির প্রস্তুতি সহায়িকা ২০২৬ | চাকরি সেবা',

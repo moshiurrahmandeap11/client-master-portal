@@ -20,7 +20,8 @@ import {
   Sparkles
 } from 'lucide-react';
 import { storage } from '@/lib/store';
-import axiosInstance from '@/lib/axiosInstance';
+import { authService } from '@/services/auth.service';
+import { extractErrorMessage } from '@/lib/api-error';
 
 function ForgotPasswordWizard() {
   const router = useRouter();
@@ -82,8 +83,7 @@ function ForgotPasswordWizard() {
 
     try {
       setIsLoading(true);
-      const { data } = await axiosInstance.post('/api/auth/forgot-password', {
-        action: 'request_otp',
+      const data = await authService.requestForgotPasswordOtp({
         identifier: cleanId
       });
       if (!data.success) {
@@ -96,8 +96,8 @@ function ForgotPasswordWizard() {
       setStep(2);
       setCountdown(60);
       setCanResend(false);
-    } catch (err: any) {
-      setErrorMsg(err.response?.data?.error || err.message || 'সার্ভারে সংযোগ ব্যর্থ হয়েছে।');
+    } catch (err: unknown) {
+      setErrorMsg(extractErrorMessage(err, 'সার্ভারে সংযোগ ব্যর্থ হয়েছে।'));
     } finally {
       setIsLoading(false);
     }
@@ -116,8 +116,7 @@ function ForgotPasswordWizard() {
 
     try {
       setIsLoading(true);
-      const { data } = await axiosInstance.post('/api/auth/forgot-password', {
-        action: 'verify_otp',
+      const data = await authService.verifyForgotPasswordOtp({
         identifier: identifier.trim(),
         otp: cleanOtp
       });
@@ -127,8 +126,8 @@ function ForgotPasswordWizard() {
 
       setSuccessMsg('ওটিপি সফলভাবে যাচাই হয়েছে! এবার আপনার নতুন পাসওয়ার্ড নির্ধারণ করুন।');
       setStep(3);
-    } catch (err: any) {
-      setErrorMsg(err.response?.data?.error || err.message || 'যাচাইকরণে ত্রুটি হয়েছে।');
+    } catch (err: unknown) {
+      setErrorMsg(extractErrorMessage(err, 'যাচাইকরণে ত্রুটি হয়েছে।'));
     } finally {
       setIsLoading(false);
     }
@@ -151,8 +150,7 @@ function ForgotPasswordWizard() {
 
     try {
       setIsLoading(true);
-      const { data } = await axiosInstance.post('/api/auth/forgot-password', {
-        action: 'reset_password',
+      const data = await authService.resetPassword({
         identifier: identifier.trim(),
         otp: otp.trim(),
         newPassword
@@ -178,8 +176,8 @@ function ForgotPasswordWizard() {
       setTimeout(() => {
         window.location.href = getRedirectUrl();
       }, 600);
-    } catch (err: any) {
-      setErrorMsg(err.response?.data?.error || err.message || 'পাসওয়ার্ড পরিবর্তনে ত্রুটি হয়েছে।');
+    } catch (err: unknown) {
+      setErrorMsg(extractErrorMessage(err, 'পাসওয়ার্ড পরিবর্তনে ত্রুটি হয়েছে।'));
       setIsLoading(false);
     }
   };

@@ -1,4 +1,4 @@
-import type { JobCircular } from './types';
+import type { JobCircular } from '@/types';
 
 const PUBLIC_STATUSES = new Set([
   'PUBLISHED', 'PUBLISHED_WITH_WARNINGS', 'OPEN', 'ACTIVE', 'UPCOMING',

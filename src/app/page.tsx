@@ -1,12 +1,12 @@
 'use client';
 import { matchJobQuery, matchGradeComprehensive, parseSalaryRange, toBn, toEnDigits } from '@/lib/search-helper';
-import { fetchPublicJobs } from '@/lib/public-jobs-client';
+import { fetchPublicJobs } from '@/services/jobs.service';
 import { CentralDeadlineEngine } from '@/lib/deadlines/engine';
 
-import { usePlatformContext } from '@/components/layout/ConditionalLayout';
-import HeroSection from '@/components/HeroSection';
-import JobSearchSection from '@/components/JobSearchSection';
-import JobLogo from '@/components/JobLogo';
+import { usePlatformContext } from '@/components/shared/layout/ConditionalLayout';
+import HeroSection from '@/components/shared/HeroSection';
+import JobSearchSection from '@/components/jobs_components/JobSearchSection';
+import JobLogo from '@/components/shared/JobLogo';
 
 import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
@@ -52,7 +52,7 @@ import {
   HeartHandshake,
   MessageSquare
 } from 'lucide-react';
-import { JobCircular } from '@/lib/types';
+import { JobCircular } from '@/types';
 
 const candidateReviews = [
   {

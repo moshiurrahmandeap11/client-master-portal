@@ -16,7 +16,7 @@ import {
   AlertTriangle,
   Info
 } from 'lucide-react';
-import { NotificationItem } from '@/lib/types';
+import { NotificationItem } from '@/types';
 import { storage } from '@/lib/store';
 
 export default function NotificationsPage() {

@@ -1,0 +1,12 @@
+export { default as AdmitCardsClient } from './AdmitCardsClient';
+export { default as BlogListClient } from './BlogListClient';
+export { default as CareerGuideDetailClient } from './CareerGuideDetailClient';
+export { default as CareerGuidesListClient } from './CareerGuidesListClient';
+export { default as ExamNoticesClient } from './ExamNoticesClient';
+export { default as ExamPreparationClient } from './ExamPreparationClient';
+export { default as ExamResultsClient } from './ExamResultsClient';
+export { default as ModelTestsClient } from './ModelTestsClient';
+export { default as OrganizationsDirectoryClient } from './OrganizationsDirectoryClient';
+export { default as QuestionBankClient } from './QuestionBankClient';
+export { default as SingleBlogClient } from './SingleBlogClient';
+export { default as VivaNoticesClient } from './VivaNoticesClient';

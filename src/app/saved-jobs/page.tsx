@@ -16,9 +16,9 @@ import {
   Trash2
 } from 'lucide-react';
 import { storage } from '@/lib/store';
-import { fetchPublicJobs } from '@/lib/public-jobs-client';
-import { JobCircular } from '@/lib/types';
-import DeadlineCountdown from '@/components/deadlines/DeadlineCountdown';
+import { fetchPublicJobs } from '@/services/jobs.service';
+import { JobCircular } from '@/types';
+import DeadlineCountdown from '@/components/shared/deadlines/DeadlineCountdown';
 
 export default function PublicSavedJobsPage() {
   const router = useRouter();

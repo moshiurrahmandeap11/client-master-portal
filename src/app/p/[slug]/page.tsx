@@ -2,8 +2,8 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { serverDB } from '@/lib/db';
-import CmsPageRenderer from '@/components/CmsPageRenderer';
-import { PageRecord } from '@/lib/types';
+import CmsPageRenderer from '@/components/shared/CmsPageRenderer';
+import { PageRecord } from '@/types';
 
 export const dynamic = 'force-dynamic';
 

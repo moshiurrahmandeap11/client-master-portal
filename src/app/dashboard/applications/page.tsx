@@ -30,8 +30,8 @@ import {
   Activity
 } from 'lucide-react';
 import { storage } from '@/lib/store';
-import { fetchWithAuth } from '@/lib/axiosInstance';
-import { ApplicationRequest } from '@/lib/types';
+import { fetchWithAuth } from '@/lib/axios';
+import { ApplicationRequest } from '@/types';
 
 export default function ApplicationsPage() {
   const [applications, setApplications] = useState<ApplicationRequest[]>([]);

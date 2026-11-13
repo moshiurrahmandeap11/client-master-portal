@@ -19,7 +19,9 @@ import {
   Building2,
   Clock,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  Lightbulb,
+  ArrowUpRight
 } from 'lucide-react';
 import { AdmitCardItem } from '@/types/exams.types';
 import { initialAdmitCards } from '@/data/examsData';
@@ -96,7 +98,7 @@ export default function AdmitCardsClient() {
       </div>
 
       {/* Hero Header Banner with Live Stats */}
-      <div className="bg-gradient-to-r from-slate-950 via-emerald-950 to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl border border-emerald-900/40 relative overflow-hidden">
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xs border border-slate-800 relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="max-w-2xl space-y-3">
             <span className="bg-emerald-500 text-slate-950 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider inline-flex items-center gap-1.5 shadow-sm">
@@ -222,8 +224,9 @@ export default function AdmitCardsClient() {
                 </div>
 
                 {a.instructions && (
-                  <p className="text-[11px] text-slate-500 leading-relaxed italic">
-                    💡 {a.instructions}
+                  <p className="text-[11px] text-slate-500 leading-relaxed italic flex items-start gap-1.5">
+                    <Lightbulb className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+                    <span>{a.instructions}</span>
                   </p>
                 )}
               </div>
@@ -407,7 +410,7 @@ export default function AdmitCardsClient() {
                   rel="noopener noreferrer"
                   className="font-bold text-emerald-700 hover:underline flex items-center gap-1"
                 >
-                  <span>ওয়েব লিংক ↗</span>
+                  <span className="inline-flex items-center gap-1">ওয়েব লিংক <ArrowUpRight className="w-3.5 h-3.5" /></span>
                 </a>
               </div>
             )}

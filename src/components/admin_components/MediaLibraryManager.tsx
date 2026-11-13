@@ -230,7 +230,7 @@ export default function MediaLibraryManager() {
           <button
             type="button"
             onClick={() => setIsUploadModalOpen(true)}
-            className="px-4 py-2 bg-gradient-to-r from-purple-700 to-indigo-800 hover:from-purple-800 hover:to-indigo-900 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
+            className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
           >
             <Upload className="w-3.5 h-3.5" />
             <span>নতুন মিডিয়া আপলোড</span>

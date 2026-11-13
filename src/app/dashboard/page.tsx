@@ -165,17 +165,15 @@ export default function DashboardOverview() {
   return (
     <div className="space-y-8" suppressHydrationWarning>
       {/* 1. Hero Welcome Card with Profile Completion */}
-      <div className="bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-emerald-900/40 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-        
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xs border border-slate-800 relative overflow-hidden">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 border border-emerald-400/30 rounded-full text-xs font-bold text-emerald-300">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-800 border border-slate-700 rounded-full text-xs font-bold text-emerald-400">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>স্মার্ট ক্যান্ডিডেট স্পেস</span>
               </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/10 border border-white/20 rounded-full text-xs font-bold text-white">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-800 border border-slate-700 rounded-full text-xs font-bold text-white">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
                 <span>১০০% ফ্রি প্ল্যাটফর্ম</span>
               </div>
@@ -184,24 +182,24 @@ export default function DashboardOverview() {
               {isMounted ? `স্বাগতম, ${profile.nameBn || profile.name}!` : 'স্বাগতম!'}
             </h1>
             <p className="text-slate-300 text-xs sm:text-sm max-w-xl leading-relaxed">
-              আপনার যোগ্যতা ও বয়স অনুযায়ী আজকের সিস্টেমে <strong className="text-emerald-300 font-bold">{eligibleJobs.length} টি সম্ভাব্য যোগ্য চাকরি</strong> রয়েছে। যেকোনো চাকরিতে ১-ক্লিকে নির্ভুল আবেদন করুন।
+              আপনার যোগ্যতা ও বয়স অনুযায়ী আজকের সিস্টেমে <strong className="text-emerald-400 font-bold">{eligibleJobs.length} টি সম্ভাব্য যোগ্য চাকরি</strong> রয়েছে। যেকোনো চাকরিতে ১-ক্লিকে নির্ভুল আবেদন করুন।
             </p>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15 min-w-[220px] space-y-2">
+          <div className="bg-slate-800/80 p-4 rounded-2xl border border-slate-700 min-w-[220px] space-y-2">
             <div className="flex items-center justify-between text-xs font-semibold">
               <span>প্রোফাইল সম্পূর্ণতা</span>
               <span className="text-emerald-400 font-bold">{completion}%</span>
             </div>
-            <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div className="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-emerald-400 to-teal-300 rounded-full transition-all"
+                className="h-full bg-emerald-500 rounded-full transition-all"
                 style={{ width: `${completion}%` }}
               />
             </div>
             <Link 
               href="/dashboard/profile"
-              className="text-[11px] text-emerald-300 hover:text-white flex items-center justify-between pt-1 font-semibold group"
+              className="text-[11px] text-emerald-400 hover:text-white flex items-center justify-between pt-1 font-semibold group"
             >
               <span>প্রোফাইল আপডেট করুন</span>
               <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -380,7 +378,7 @@ export default function DashboardOverview() {
                       </div>
                       {match?.matchReasonsBn?.[0] && (
                         <p className="text-[11px] text-emerald-700 font-semibold pt-0.5 line-clamp-1">
-                          ✓ {match.matchReasonsBn[0]}
+                          {match.matchReasonsBn[0]}
                         </p>
                       )}
                     </div>

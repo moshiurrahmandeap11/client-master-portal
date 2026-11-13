@@ -20,7 +20,8 @@ import {
   History,
   Building2,
   TrendingUp,
-  ShieldCheck
+  ShieldCheck,
+  X
 } from 'lucide-react';
 import { FeedMetricsSummary, GlobalFeedConfig } from '@/types/feeds.types';
 import { JobCircular } from '@/types';
@@ -229,7 +230,7 @@ export default function JobFeedManager() {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-amber-900 via-slate-900 to-emerald-950 text-white rounded-2xl p-6 sm:p-8 shadow-lg border border-amber-600/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-slate-900 text-white rounded-2xl p-6 sm:p-8 shadow-lg border border-amber-600/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-2">
             <span className="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1">
@@ -741,7 +742,7 @@ export default function JobFeedManager() {
                 onClick={() => setIsAddModalOpen(false)}
                 className="text-slate-400 hover:text-slate-600 text-sm font-bold"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 

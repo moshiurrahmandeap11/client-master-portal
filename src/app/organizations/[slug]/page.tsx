@@ -139,19 +139,18 @@ export default async function OrganizationDetailPage({ params }: PageProps) {
       </nav>
 
       {/* 2. Organization Header Card */}
-      <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 text-white rounded-3xl p-6 sm:p-10 shadow-2xl border border-emerald-900/50 relative overflow-hidden">
-        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-sm border border-slate-800 relative overflow-hidden">
         
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="flex items-start sm:items-center gap-5">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white p-2 border-2 border-emerald-500/30 shadow-xl shrink-0 flex items-center justify-center overflow-hidden">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white p-2 border border-slate-200 shadow-sm shrink-0 flex items-center justify-center overflow-hidden">
               <JobLogo logo={logoUrl} organization={orgName} size="lg" className="w-full h-full object-contain" />
             </div>
 
             <div className="space-y-2 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-bold px-3 py-0.5 rounded-full inline-flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="bg-emerald-800 text-white text-xs font-bold px-3 py-0.5 rounded-full inline-flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-300" />
                   <span>ভেরিফাইড প্রতিষ্ঠান</span>
                 </span>
                 <span className="bg-slate-800 text-slate-300 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-slate-700">
@@ -336,8 +335,8 @@ export default async function OrganizationDetailPage({ params }: PageProps) {
           </div>
         ) : (
           <div className="bg-white rounded-3xl border border-slate-200 p-8 sm:p-12 text-center space-y-4">
-            <div className="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto text-2xl">
-              🏢
+            <div className="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
+              <Building2 className="w-8 h-8" />
             </div>
             <h3 className="text-lg font-black text-slate-800">
               বর্তমানে এই প্রতিষ্ঠানে কোনো সক্রিয় নিয়োগ বিজ্ঞপ্তি নেই

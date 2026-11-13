@@ -1,6 +1,20 @@
 import React from 'react';
 import Link from 'next/link';
-import { FileQuestion, Home, Briefcase, Search, ArrowRight, ShieldCheck, Compass, HelpCircle } from 'lucide-react';
+import {
+  FileQuestion,
+  Home,
+  Briefcase,
+  Search,
+  Building2,
+  Target,
+  ShieldCheck,
+  Train,
+  Laptop,
+  HeartPulse,
+  GraduationCap,
+  Globe
+} from 'lucide-react';
+import { FaBuildingColumns, FaLandmarkFlag } from 'react-icons/fa6';
 
 export default function NotFound() {
   return (
@@ -45,23 +59,24 @@ export default function NotFound() {
         </h2>
         <div className="flex flex-wrap justify-center gap-2 max-w-2xl mx-auto">
           {[
-            { name: '🏛️ সরকারি চাকরি', href: '/government-jobs' },
-            { name: '🏦 ব্যাংক জবস', href: '/bank-jobs' },
-            { name: '🎯 বিসিএস প্রস্তুতি', href: '/categories/bcs' },
-            { name: '🛡️ ডিফেন্স ও প্রতিরক্ষা', href: '/categories/defense-jobs' },
-            { name: '🚆 বাংলাদেশ রেলওয়ে', href: '/categories/railway-jobs' },
-            { name: '💻 আইটি ও সফটওয়্যার', href: '/it-jobs' },
-            { name: '🏥 মেডিকেল ও নার্সিং', href: '/medical-jobs' },
-            { name: '🎓 শিক্ষক নিয়োগ', href: '/teacher-jobs' },
-            { name: '🌍 এনজিও ও আন্তর্জাতিক', href: '/ngo-jobs' },
-            { name: '🏢 বেসরকারি প্রতিষ্ঠান', href: '/private-jobs' }
+            { name: 'সরকারি চাকরি', href: '/government-jobs', Icon: FaLandmarkFlag },
+            { name: 'ব্যাংক জবস', href: '/bank-jobs', Icon: FaBuildingColumns },
+            { name: 'বিসিএস প্রস্তুতি', href: '/categories/bcs', Icon: Target },
+            { name: 'ডিফেন্স ও প্রতিরক্ষা', href: '/categories/defense-jobs', Icon: ShieldCheck },
+            { name: 'বাংলাদেশ রেলওয়ে', href: '/categories/railway-jobs', Icon: Train },
+            { name: 'আইটি ও সফটওয়্যার', href: '/it-jobs', Icon: Laptop },
+            { name: 'মেডিকেল ও নার্সিং', href: '/medical-jobs', Icon: HeartPulse },
+            { name: 'শিক্ষক নিয়োগ', href: '/teacher-jobs', Icon: GraduationCap },
+            { name: 'এনজিও ও আন্তর্জাতিক', href: '/ngo-jobs', Icon: Globe },
+            { name: 'বেসরকারি প্রতিষ্ঠান', href: '/private-jobs', Icon: Building2 }
           ].map((cat, idx) => (
             <Link
               key={idx}
               href={cat.href}
-              className="text-xs font-semibold px-3 py-1.5 bg-slate-100 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-300 border border-slate-200 rounded-xl transition-all"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 bg-slate-100 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-300 border border-slate-200 rounded-xl transition-all"
             >
-              {cat.name}
+              <cat.Icon className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+              <span>{cat.name}</span>
             </Link>
           ))}
         </div>

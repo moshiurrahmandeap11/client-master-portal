@@ -186,7 +186,7 @@ export default function WalletPage() {
       </div>
 
       {/* Hero Balance Card */}
-      <div className="bg-gradient-to-r from-slate-900 via-emerald-950 to-slate-900 text-white p-6 sm:p-8 rounded-3xl border border-emerald-800/40 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+      <div className="bg-slate-900 text-white p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div className="space-y-1">
           <span className="text-xs font-semibold text-slate-300">বর্তমান ওয়ালেট ব্যালেন্স</span>
           <div className="text-4xl font-black text-emerald-400">৳{profile.walletBalance || 0}</div>
@@ -271,7 +271,7 @@ export default function WalletPage() {
               }`}
             >
               {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5 text-emerald-700" />}
-              <span>{copied ? '✓ নম্বর কপি হয়েছে' : 'নম্বর কপি করুন'}</span>
+              <span>{copied ? 'নম্বর কপি হয়েছে' : 'নম্বর কপি করুন'}</span>
             </button>
           </div>
 

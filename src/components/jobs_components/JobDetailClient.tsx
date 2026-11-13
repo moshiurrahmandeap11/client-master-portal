@@ -46,8 +46,12 @@ import {
   AlertTriangle,
   Info,
   Scale,
-  BadgeCheck
+  BadgeCheck,
+  ArrowUpRight,
+  Calculator,
+  Image as ImageIcon
 } from 'lucide-react';
+import { FaLandmarkFlag } from 'react-icons/fa6';
 
 const Facebook = ({ className }: { className?: string }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24">
@@ -767,7 +771,7 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
               </div>
             </div>
             {/* Quick Apply CTA Box in Header (Desktop Only: on mobile, handled by bottom floating bar) */}
-            <div className="hidden lg:block bg-gradient-to-b from-emerald-50/90 to-teal-50/60 border border-emerald-200/90 rounded-3xl p-6 text-center space-y-4 shadow-sm relative overflow-hidden">
+            <div className="hidden lg:block bg-emerald-50 border border-emerald-200 rounded-3xl p-6 text-center space-y-4 shadow-xs relative overflow-hidden">
               <div className="space-y-1.5">
                 <div className="text-xs font-bold text-emerald-800 uppercase tracking-wider flex items-center justify-center gap-1">
                   <span>সহজ অনলাইন আবেদন সার্ভিস</span>
@@ -850,7 +854,7 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
                 ) : (
                   <Link
                     href={applyHref}
-                    className="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black text-[17px] rounded-2xl shadow-lg shadow-emerald-800/25 flex items-center justify-center gap-2 transition-all hover:scale-[1.02]"
+                    className="w-full py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-[17px] rounded-2xl shadow-xs flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
                   >
                     <span>আমাদের মাধ্যমে আবেদন করুন</span>
                     <ArrowRight className="w-5 h-5" />
@@ -892,10 +896,10 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
         {/* Smart Candidate Eligibility Audit Section (Replaced Audio Strip) */}
         <div className="mt-5 sm:mt-8 pt-4 sm:pt-6 border-t border-slate-100">
           {auth.isLoggedIn && userEvaluation ? (
-            <div className={`p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl border shadow-sm transition-all duration-300 ${
+            <div className={`p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl border shadow-xs transition-all duration-300 ${
               userEvaluation.status === 'eligible' 
-                ? 'bg-gradient-to-br from-emerald-50/80 via-teal-50/30 to-white border-emerald-300' 
-                : 'bg-gradient-to-br from-rose-50/80 via-red-50/30 to-white border-rose-300'
+                ? 'bg-emerald-50/80 border-emerald-300' 
+                : 'bg-red-50/80 border-red-300'
             }`}>
               {/* Header Summary Row (100% Mobile Responsive & Zero Cut-off) */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-w-0">
@@ -1003,7 +1007,7 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
               )}
             </div>
           ) : (
-            <div className="bg-gradient-to-br from-slate-50 via-white to-emerald-50/40 rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-sm p-4 sm:p-6 space-y-4">
+            <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 shadow-xs p-4 sm:p-6 space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm">
@@ -1027,9 +1031,9 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
                 <div className="flex items-center gap-2 self-start sm:self-center">
                   <Link
                     href="/login"
-                    className="text-xs font-bold text-slate-600 hover:text-emerald-700 hover:underline px-2 py-1"
+                    className="text-xs font-bold text-slate-600 hover:text-emerald-700 hover:underline px-2 py-1 inline-flex items-center gap-1"
                   >
-                    লগইন করে প্রোফাইল থেকে যাচাই ↗
+                    লগইন করে প্রোফাইল থেকে যাচাই <ArrowUpRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
               </div>
@@ -1103,7 +1107,7 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
                     type="button"
                     onClick={handleEvaluateGuest}
                     disabled={isEvaluatingGuest}
-                    className="w-full py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02] disabled:opacity-50"
+                    className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                   >
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>{isEvaluatingGuest ? 'যাচাই করা হচ্ছে...' : '১-ক্লিকে যোগ্যতা যাচাই'}</span>
@@ -1191,7 +1195,7 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
       </div>
 
       {/* 2.5. Keyword-rich Job Summary (Natural Editorial Snippet) */}
-      <section aria-label="নিয়োগ বিজ্ঞপ্তির সারসংক্ষেপ" className="job-summary-facts bg-gradient-to-r from-emerald-50/70 via-teal-50/40 to-slate-50/80 border border-emerald-200/90 rounded-2xl sm:rounded-3xl p-3.5 sm:p-7 shadow-2xs space-y-3">
+      <section aria-label="নিয়োগ বিজ্ঞপ্তির সারসংক্ষেপ" className="job-summary-facts bg-slate-50 border border-slate-200 rounded-2xl sm:rounded-3xl p-3.5 sm:p-7 shadow-2xs space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-emerald-200/50 pb-3">
           <div className="flex items-center gap-2">
             <span className="px-3 py-1 bg-emerald-600 text-white text-xs font-bold rounded-full shadow-2xs flex items-center gap-1.5">
@@ -1581,14 +1585,14 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
                     গণপ্রজাতন্ত্রী বাংলাদেশ সরকারের প্রচলিত নিয়োগ বিধিমালা এবং {job.organization}-এর রাজস্ব খাতভুক্ত শূন্য পদসমূহে স্থায়ীভাবে জনবল নিয়োগের নিমিত্তে প্রকৃত বাংলাদেশি নাগরিকদের নিকট হতে অনলাইনে দরখাস্ত আহ্বান করা যাচ্ছে। আগ্রহী প্রার্থীরা অনলাইনে নির্ধারিত সময়ের মধ্যে আবেদনপত্র দাখিল করতে পারবেন।
                   </p>
                   <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
-                    <span className="px-3 py-1 bg-emerald-50 text-emerald-800 font-bold rounded-lg border border-emerald-200">
-                      📌 প্রকাশ: {job.publishedDate}
+                    <span className="px-3 py-1 bg-emerald-50 text-emerald-800 font-bold rounded-lg border border-emerald-200 inline-flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5" /> প্রকাশ: {job.publishedDate}
                     </span>
-                    <span className="px-3 py-1 bg-rose-50 text-rose-800 font-bold rounded-lg border border-rose-200">
-                      ⏳ আবেদনের শেষ সময়: {job.deadline}
+                    <span className="px-3 py-1 bg-rose-50 text-rose-800 font-bold rounded-lg border border-rose-200 inline-flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5" /> আবেদনের শেষ সময়: {job.deadline}
                     </span>
-                    <span className="px-3 py-1 bg-blue-50 text-blue-800 font-bold rounded-lg border border-blue-200">
-                      🏛️ মোট শূন্যপদ: {toBn(job.totalPosts)} টি
+                    <span className="px-3 py-1 bg-blue-50 text-blue-800 font-bold rounded-lg border border-blue-200 inline-flex items-center gap-1.5">
+                      <FaLandmarkFlag className="w-3.5 h-3.5" /> মোট শূন্যপদ: {toBn(job.totalPosts)} টি
                     </span>
                   </div>
                 </div>
@@ -1657,7 +1661,7 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
                     <div className="mt-4 p-4 sm:p-5 bg-white rounded-2xl border border-amber-200/90 shadow-sm space-y-4">
                       <div className="flex items-center justify-between flex-wrap gap-2">
                         <span className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                          <span>🧮</span>
+                          <Calculator className="w-4 h-4 text-amber-600" />
                           <span>আপনার বয়স ও যোগ্যতা যাচাই করুন (Live Age Checker)</span>
                         </span>
                         <span className="text-xs text-amber-800 bg-amber-100 font-semibold px-2.5 py-1 rounded-full">
@@ -1730,10 +1734,10 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
                             <div>
                               আপনার বয়স: <strong className="text-slate-950 font-black">{toBn(ageResult.years)} বছর {toBn(ageResult.months)} মাস {toBn(ageResult.days)} দিন</strong>
                             </div>
-                            <div className="text-xs font-normal">
+                            <div className="text-xs font-normal flex items-center gap-1.5">
                               {ageResult.isEligible 
-                                ? '🎉 অভিনন্দন! আপনি নির্ধারিত বয়সসীমার মধ্যে আছেন এবং আবেদনের সম্পূর্ণ যোগ্য।' 
-                                : `⚠️ দুঃখিত! নির্ধারিত বয়সসীমার (${toBn(ageResult.minAllowedAge)}-${toBn(ageResult.maxAllowedAge)} বছর) সাথে মিলছে না।`}
+                                ? <><CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" /> অভিনন্দন! আপনি নির্ধারিত বয়সসীমার মধ্যে আছেন এবং আবেদনের সম্পূর্ণ যোগ্য।</>
+                                : <><AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" /> দুঃখিত! নির্ধারিত বয়সসীমার ({toBn(ageResult.minAllowedAge)}-{toBn(ageResult.maxAllowedAge)} বছর) সাথে মিলছে না।</>}
                             </div>
                           </div>
                           <span className={`px-3 py-1 rounded-full text-xs font-bold ${
@@ -1792,7 +1796,7 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
               content: (
                 <div className="pt-1">
                   <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-2xl p-4 sm:p-5 text-sm text-slate-800 leading-relaxed">
-                    <p className="font-semibold text-emerald-950 mb-1">🏛️ নিয়োগ পরীক্ষা ও মানবন্টন বিবরণ:</p>
+                    <p className="font-semibold text-emerald-950 mb-1 flex items-center gap-1.5"><FaLandmarkFlag className="w-4 h-4 text-emerald-700" /> নিয়োগ পরীক্ষা ও মানবন্টন বিবরণ:</p>
                     <p>{job.selectionProcess}</p>
                   </div>
                 </div>
@@ -1984,16 +1988,16 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
                 <button
                   type="button"
                   onClick={() => setViewerTab('pdf')}
-                  className={`px-3 py-1.5 rounded-lg transition-all ${viewerTab === 'pdf' ? 'bg-emerald-700 text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'}`}
+                  className={`px-3 py-1.5 rounded-lg transition-all inline-flex items-center gap-1.5 ${viewerTab === 'pdf' ? 'bg-emerald-700 text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'}`}
                 >
-                  📄 মূল অফিশিয়াল PDF
+                  <FileText className="w-3.5 h-3.5" /> মূল অফিশিয়াল PDF
                 </button>
                 <button
                   type="button"
                   onClick={() => setViewerTab('summary')}
-                  className={`px-3 py-1.5 rounded-lg transition-all ${viewerTab === 'summary' ? 'bg-emerald-700 text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'}`}
+                  className={`px-3 py-1.5 rounded-lg transition-all inline-flex items-center gap-1.5 ${viewerTab === 'summary' ? 'bg-emerald-700 text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'}`}
                 >
-                  🖼️ সারসংক্ষেপ পাতা
+                  <ImageIcon className="w-3.5 h-3.5" /> সারসংক্ষেপ পাতা
                 </button>
               </div>
             )}
@@ -2171,7 +2175,7 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
                 rel="noopener noreferrer"
                 className="text-xs text-white hover:text-emerald-300 font-bold flex items-center gap-1 underline"
               >
-                নতুন ট্যাবে বড় করে দেখুন ↗
+                নতুন ট্যাবে বড় করে দেখুন <ArrowUpRight className="w-3.5 h-3.5" />
               </a>
             </div>
             <iframe
@@ -2522,7 +2526,7 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
       </section>
 
       {/* 10. Previous Year Question Bank Promo Card */}
-      <div className="bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 text-white rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xl relative overflow-hidden border border-emerald-900/40">
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xs relative overflow-hidden border border-slate-800">
         <div className="space-y-2 max-w-xl relative z-10">
           <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs">
             <Award className="w-4 h-4 text-emerald-400" />
@@ -2538,7 +2542,7 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
 
         <Link
           href="/questions"
-          className="px-6 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 flex-shrink-0 hover:scale-105"
+          className="px-6 py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-sm rounded-2xl transition-all shadow-xs flex items-center justify-center gap-2 flex-shrink-0"
         >
           <span>প্রশ্নব্যাংক দেখুন (Free)</span>
           <ArrowRight className="w-4 h-4" />
@@ -2547,8 +2551,8 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
 
       
       {/* 10.4. Dedicated Direct Official Portal & Teletalk Subdomain Apply CTA */}
-      <section aria-label="সরাসরি অফিশিয়াল পোর্টালে আবেদন" className="bg-gradient-to-r from-emerald-950 via-teal-950 to-slate-950 text-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl border border-emerald-800/60 space-y-5">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-emerald-800/80 pb-5">
+      <section aria-label="সরাসরি অফিশিয়াল পোর্টালে আবেদন" className="bg-slate-900 text-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xs border border-slate-800 space-y-5">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
           <div className="space-y-1.5 max-w-2xl">
             <div className="flex items-center gap-2 flex-wrap">
               <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-black rounded-full flex items-center gap-1.5">
@@ -2581,14 +2585,14 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
                   href={job.officialLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-6 py-3.5 bg-white hover:bg-slate-100 text-slate-950 font-black text-sm rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 hover:scale-105"
+                  className="px-6 py-3.5 bg-white hover:bg-slate-100 text-slate-950 font-black text-sm rounded-2xl transition-all shadow-xs flex items-center justify-center gap-2"
                   title="অফিশিয়াল সাবডোমেইনে যান"
                 >
-                  <span>অফিশিয়াল সাবডোমেইনে সরাসরি আবেদন ↗</span>
+                  <span className="inline-flex items-center gap-1.5">অফিশিয়াল সাবডোমেইনে সরাসরি আবেদন <ArrowUpRight className="w-4 h-4" /></span>
                 </a>
                 <Link
                   href={applyHref}
-                  className="px-6 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 hover:scale-105"
+                  className="px-6 py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-sm rounded-2xl transition-all shadow-xs flex items-center justify-center gap-2"
                 >
                   <span>আমাদের মাধ্যমে আবেদন করুন</span>
                   <ArrowRight className="w-4 h-4" />
@@ -2713,7 +2717,7 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
           ) : (
             <Link
               href={applyHref}
-              className="px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-1.5 flex-shrink-0"
+              className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-xs flex items-center gap-1.5 flex-shrink-0"
             >
               <span>আবেদন বুকিং দিন</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -2727,7 +2731,7 @@ export default function JobDetailClient({ job, relatedJobs = [] }: { job: JobCir
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
             {/* Modal Header */}
-            <div className="p-5 sm:p-6 bg-gradient-to-r from-emerald-800 to-teal-900 text-white flex items-center justify-between">
+            <div className="p-5 sm:p-6 bg-emerald-800 text-white flex items-center justify-between">
               <div className="space-y-1">
                 <div className="text-xs font-bold text-emerald-300 uppercase tracking-wider flex items-center gap-1">
                   <Scale className="w-3.5 h-3.5" /> পদ ও গ্রেডভেদে খরচের সম্পূর্ণ বিবরণী

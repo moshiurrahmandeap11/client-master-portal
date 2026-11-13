@@ -231,7 +231,7 @@ export default function AnalyticsIntelligenceHub({ activeTab, onTabChange }: Ana
       <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-5">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-200">
+            <div className="w-12 h-12 rounded-xl bg-emerald-700 flex items-center justify-center text-white shadow-xs">
               <BarChart3 className="w-6 h-6" />
             </div>
             <div>

@@ -26,7 +26,8 @@ import {
   Trash2,
   Lock,
   Eye,
-  Activity
+  Activity,
+  Ticket
 } from 'lucide-react';
 import { CentralDeadlineEngine } from '@/lib/deadlines/engine';
 import { storage } from '@/lib/store';
@@ -240,7 +241,7 @@ export default function ApplicationsTrackingClient() {
         setSelectedApp(updatedApp);
         setApplications(prev => prev.map(a => a.id === updatedApp.id ? updatedApp : a));
         storage.updateAppStatus(updatedApp.id, 'pending_payment', 'প্রার্থী কর্তৃক TrxID সংশোধন বা পুনরায় জমা দেওয়া হয়েছে।');
-        setDisputeSuccessMessage('✓ TrxID সফলভাবে জমা হয়েছে! আমাদের টিম দ্রুত যাচাই করে অনুমোদন করবে।');
+        setDisputeSuccessMessage('TrxID সফলভাবে জমা হয়েছে! আমাদের টিম দ্রুত যাচাই করে অনুমোদন করবে।');
         setTimeout(() => {
           setIsDisputeModalOpen(false);
           setDisputeSuccessMessage(null);
@@ -259,7 +260,7 @@ export default function ApplicationsTrackingClient() {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       
       {/* Header Banner with Live Stats */}
-      <div className="bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-800 relative overflow-hidden">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
           <div className="space-y-1.5">
             <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-black rounded-full inline-flex items-center gap-1.5">
@@ -486,10 +487,10 @@ export default function ApplicationsTrackingClient() {
                             setCopiedUid(true);
                             setTimeout(() => setCopiedUid(false), 2000);
                           }}
-                          className="text-[11px] text-emerald-700 hover:underline font-bold"
+                          className="text-[11px] text-emerald-700 hover:underline font-bold inline-flex items-center gap-1"
                           title="কপি করুন"
                         >
-                          {copiedUid ? '✓ কপি' : 'কপি'}
+                          {copiedUid ? <><Check className="w-3 h-3" /> কপি</> : 'কপি'}
                         </button>
                       </div>
                     </div>
@@ -509,10 +510,10 @@ export default function ApplicationsTrackingClient() {
                               setCopiedPass(true);
                               setTimeout(() => setCopiedPass(false), 2000);
                             }}
-                            className="text-[11px] text-emerald-700 hover:underline font-bold"
+                            className="text-[11px] text-emerald-700 hover:underline font-bold inline-flex items-center gap-1"
                             title="পাসওয়ার্ড কপি"
                           >
-                            {copiedPass ? '✓ কপি' : 'কপি'}
+                            {copiedPass ? <><Check className="w-3 h-3" /> কপি</> : 'কপি'}
                           </button>
                         </div>
                       </div>
@@ -534,7 +535,7 @@ export default function ApplicationsTrackingClient() {
                     <div className="grid grid-cols-5 gap-1 text-center text-[10px]">
                       {/* Step 1: সাবমিট */}
                       <div className="space-y-1">
-                        <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto font-bold text-[10px]">✓</div>
+                        <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto font-bold text-[10px]"><Check className="w-3.5 h-3.5" /></div>
                         <span className="font-bold text-slate-900 block truncate">১. দাখিল</span>
                       </div>
                       {/* Step 2: ফি যাচাই */}
@@ -542,7 +543,7 @@ export default function ApplicationsTrackingClient() {
                         <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto font-bold text-[10px] ${
                           (selectedApp.status === 'completed' || selectedApp.status === 'submitted' || selectedApp.status === 'processing') ? 'bg-emerald-600 text-white' : 'bg-amber-500 text-white animate-pulse'
                         }`}>
-                          {(selectedApp.status === 'completed' || selectedApp.status === 'submitted' || selectedApp.status === 'processing') ? '✓' : '২'}
+                          {(selectedApp.status === 'completed' || selectedApp.status === 'submitted' || selectedApp.status === 'processing') ? <Check className="w-3.5 h-3.5" /> : '২'}
                         </div>
                         <span className="font-bold text-slate-900 block truncate">২. ফি যাচাই</span>
                       </div>
@@ -551,7 +552,7 @@ export default function ApplicationsTrackingClient() {
                         <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto font-bold text-[10px] ${
                           (selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? 'bg-emerald-600 text-white' : selectedApp.status === 'processing' ? 'bg-blue-600 text-white animate-pulse' : 'bg-slate-200 text-slate-400'
                         }`}>
-                          {(selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? '✓' : '৩'}
+                          {(selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? <Check className="w-3.5 h-3.5" /> : '৩'}
                         </div>
                         <span className="font-bold text-slate-900 block truncate">৩. ফরম পূরণ</span>
                       </div>
@@ -560,7 +561,7 @@ export default function ApplicationsTrackingClient() {
                         <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto font-bold text-[10px] ${
                           (selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-400'
                         }`}>
-                          {(selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? '✓' : '৪'}
+                          {(selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? <Check className="w-3.5 h-3.5" /> : '৪'}
                         </div>
                         <span className="font-bold text-slate-900 block truncate">৪. স্লিপ রেডি</span>
                       </div>
@@ -569,7 +570,7 @@ export default function ApplicationsTrackingClient() {
                         <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto font-bold text-[10px] ${
                           selectedApp.admitCardUrl ? 'bg-emerald-600 text-white' : (selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? 'bg-indigo-600 text-white animate-pulse' : 'bg-slate-200 text-slate-400'
                         }`}>
-                          {selectedApp.admitCardUrl ? '✓' : '৫'}
+                          {selectedApp.admitCardUrl ? <Check className="w-3.5 h-3.5" /> : '৫'}
                         </div>
                         <span className="font-bold text-slate-900 block truncate">৫. প্রবেশপত্র</span>
                       </div>
@@ -621,13 +622,14 @@ export default function ApplicationsTrackingClient() {
                           href="/dashboard/admit-cards"
                           className="w-full py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border border-indigo-200 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer text-xs"
                         >
-                          <Calendar className="w-3.5 h-3.5 text-indigo-700" />
-                          <span>🎫 প্রবেশপত্র ও পরীক্ষার সিট প্ল্যান ট্র্যাক করুন</span>
+                          <Ticket className="w-3.5 h-3.5 text-indigo-700" />
+                          <span>প্রবেশপত্র ও পরীক্ষার সিট প্ল্যান ট্র্যাক করুন</span>
                         </Link>
                       </>
                     ) : (
-                      <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-center text-amber-900 font-bold text-[11px]">
-                        ⏳ আবেদন সম্পন্ন হওয়ামাত্রই অফিশিয়াল অ্যাপ্লিকেশন কপি উন্মুক্ত হবে
+                      <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-center text-amber-900 font-bold text-[11px] flex items-center justify-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                        <span>আবেদন সম্পন্ন হওয়ামাত্রই অফিশিয়াল অ্যাপ্লিকেশন কপি উন্মুক্ত হবে</span>
                       </div>
                     )}
 
@@ -637,7 +639,7 @@ export default function ApplicationsTrackingClient() {
                       className="w-full py-2.5 bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer text-xs shadow-2xs"
                     >
                       <Printer className="w-3.5 h-3.5 text-emerald-700" />
-                      <span>🖨️ অফিসিয়াল মানি রিসিট ও ভাউচার</span>
+                      <span>অফিসিয়াল মানি রিসিট ও ভাউচার</span>
                     </button>
 
                     {(selectedApp.status === 'pending_payment' || selectedApp.status === 'rejected') && (
@@ -651,7 +653,7 @@ export default function ApplicationsTrackingClient() {
                         className="w-full py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer text-xs"
                       >
                         <Edit3 className="w-3.5 h-3.5 text-amber-700" />
-                        <span>✏️ TrxID সংশোধন বা পুনরায় জমা দিন</span>
+                        <span>TrxID সংশোধন বা পুনরায় জমা দিন</span>
                       </button>
                     )}
                   </div>

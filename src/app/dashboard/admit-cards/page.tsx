@@ -198,7 +198,7 @@ export default function AdmitCardsPage() {
                         ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' 
                         : 'bg-blue-50 text-blue-800 border border-blue-200'
                     }`}>
-                      {isCompleted ? '✓ আবেদন সম্পন্ন ও ভেরিফাইড' : '⏳ আবেদন প্রক্রিয়াধীন (Processing)'}
+                      {isCompleted ? 'আবেদন সম্পন্ন ও ভেরিফাইড' : 'আবেদন প্রক্রিয়াধীন (Processing)'}
                     </span>
 
                     <span className="text-[11px] text-slate-500">

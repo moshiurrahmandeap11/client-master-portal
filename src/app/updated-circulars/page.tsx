@@ -126,16 +126,16 @@ export default function UpdatedCircularsPage() {
 
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header Banner */}
-        <div className="bg-gradient-to-br from-purple-950 via-slate-900 to-indigo-950 text-white rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xl border border-purple-800/40 relative overflow-hidden">
+        <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xs border border-slate-800 relative overflow-hidden">
           <div className="max-w-3xl space-y-3 relative z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/20 border border-purple-400/40 text-purple-300 text-xs font-bold">
-              <Sparkles className="w-4 h-4 text-purple-400" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-emerald-400 text-xs font-bold">
+              <Sparkles className="w-4 h-4 text-emerald-400" />
               <span>রিয়েল-টাইম সংশোধিত ও আপডেট নোটিশ হাব</span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-white">
               সংশোধিত ও সময় বর্ধিত সার্কুলার ({CentralDeadlineEngine.toBn(updatedList.length)}টি বিজ্ঞপ্তি)
             </h1>
-            <p className="text-sm sm:text-base text-purple-100/90 leading-relaxed">
+            <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
               সংশ্লিষ্ট প্রতিষ্ঠান কর্তৃক যেসকল নিয়োগ বিজ্ঞপ্তির আবেদনের সময়সীমা বর্ধিত করা হয়েছে, পদসংখ্যা পরিবর্তন হয়েছে কিংবা অফিশিয়াল সংশোধনী গেজেট (Corrigendum) প্রকাশিত হয়েছে।
             </p>
           </div>

@@ -45,7 +45,9 @@ import {
   Globe,
   CheckSquare,
   Square,
-  PanelTop
+  PanelTop,
+  X,
+  Zap
 } from 'lucide-react';
 import { PageRecord, PageSection, SectionType, PageRevision } from '@/types';
 import BuilderLeftSidebar from '@/components/admin_components/builder/BuilderLeftSidebar';
@@ -130,7 +132,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
   const [chromeSiteName, setChromeSiteName] = useState('চাকরি সেবা (Chakri Sheba)');
   const [chromeSiteTagline, setChromeSiteTagline] = useState('নিউজ ও ১০০% নির্ভুল আবেদন পোর্টাল');
   const [chromeLogoUrl, setChromeLogoUrl] = useState('');
-  const [chromeAnnouncementText, setChromeAnnouncementText] = useState('⚡ সরকারি ও ব্যাংক চাকরির শতভাগ নির্ভুল অনলাইন আবেদন ও এসএমএস ট্র্যাকিং সেবা সক্রিয় রয়েছে।');
+  const [chromeAnnouncementText, setChromeAnnouncementText] = useState('সরকারি ও ব্যাংক চাকরির শতভাগ নির্ভুল অনলাইন আবেদন ও এসএমএস ট্র্যাকিং সেবা সক্রিয় রয়েছে।');
   const [chromeAnnouncementUrl, setChromeAnnouncementUrl] = useState('/jobs');
   const [chromeAnnouncementEnabled, setChromeAnnouncementEnabled] = useState(true);
   const [chromeWhatsapp, setChromeWhatsapp] = useState('8801774366643');
@@ -384,7 +386,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
         jobsPerPage: 9,
         columns: 3
       } : type === 'how-it-works' ? {
-        badge: '⚡ ৪-ধাপে সহজ আবেদন',
+        badge: '৪-ধাপে সহজ আবেদন',
         items: [
           { step: 1, title: 'সার্কুলার নির্বাচন', desc: 'পছন্দের চাকরি বাছাই করুন' },
           { step: 2, title: 'তথ্য পূরণ', desc: 'সঠিক তথ্য দিন' },
@@ -392,7 +394,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
           { step: 4, title: 'স্লিপ গ্রহণ', desc: 'অ্যাপ্লিকেন্ট কপি ডাউনলোড' }
         ]
       } : type === 'testimonials' ? {
-        badge: '★ ৫২,০০০+ সফল আবেদন',
+        badge: '৫২,০০০+ সফল আবেদন',
         items: [
           { name: 'মোঃ তানভীর হাসান', role: 'সহকারী পরিচালক • বাংলাদেশ ব্যাংক', quote: 'চাকরি সেবা ছাড়া এত দ্রুত ও নির্ভুল আবেদন অসম্ভব ছিল!' },
           { name: 'নুসরাত জাহান', role: 'সহকারী শিক্ষক • প্রাথমিক শিক্ষা অধিদপ্তর', quote: 'ছবি ও স্বাক্ষর সাইজিং নিয়ে আর কোনো চিন্তাই করতে হয় না।' }
@@ -413,7 +415,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
         buttonLabel: 'সার্কুলার দেখুন',
         buttonUrl: '/jobs'
       } : type === 'hero' ? {
-        badge: '⚡ বিশেষ বিজ্ঞপ্তি',
+        badge: 'বিশেষ বিজ্ঞপ্তি',
         ctaText: 'সার্কুলার দেখুন',
         ctaUrl: '/jobs',
         secondaryCtaText: 'আবেদন প্রক্রিয়া জানুন',
@@ -583,7 +585,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
             >
               {pages.map(p => (
                 <option key={p.id} value={p.id}>
-                  {p.title} ({p.slug}) {p.status === 'published' ? '● লাইভ' : '○ ড্রাফট'}
+                  {p.title} ({p.slug}) - {p.status === 'published' ? 'লাইভ' : 'ড্রাফট'}
                 </option>
               ))}
             </select>
@@ -1013,7 +1015,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
                                 {/* Badge Pill */}
                                 <div className="inline-flex items-center gap-2 bg-[#022822]/90 border border-emerald-500/40 text-emerald-300 px-3.5 py-1 rounded-full text-xs font-bold tracking-wide shadow-xs">
                                   <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                                  <span>{sec.content?.badge || '⚡ ২০২৬ এর সর্বশেষ নিয়োগ সার্কুলার'}</span>
+                                  <span>{sec.content?.badge || '২০২৬ এর সর্বশেষ নিয়োগ সার্কুলার'}</span>
                                 </div>
 
                                 {/* Dynamic H2 Title */}
@@ -1051,7 +1053,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
 
                                 {/* Dual Action Buttons */}
                                 <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
-                                  <span className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-xs sm:text-sm shadow-lg flex items-center gap-2">
+                                  <span className="px-4 py-2.5 rounded-xl bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-lg flex items-center gap-2">
                                     <FileText className="w-4 h-4" />
                                     <span>{sec.content?.ctaText || sec.content?.buttonLabel || 'চাকরির বিজ্ঞপ্তি দেখুন'}</span>
                                     <ArrowRight className="w-3.5 h-3.5" />
@@ -1120,7 +1122,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
                                   </div>
                                 ) : (
                                 <div className="relative p-6 rounded-3xl bg-emerald-900/30 border border-emerald-500/30 backdrop-blur-md text-center space-y-3 shadow-2xl">
-                                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 mx-auto flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                                  <div className="w-16 h-16 rounded-2xl bg-emerald-700 mx-auto flex items-center justify-center shadow-lg shadow-emerald-500/30">
                                     <Briefcase className="w-8 h-8 text-slate-950" />
                                   </div>
                                   <div className="space-y-1">
@@ -1171,7 +1173,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
                                 {/* 4 Status Cards */}
                                 {sec.content?.showStatusCards !== false && (
                                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                                    <div className="p-3 bg-gradient-to-br from-emerald-600 to-teal-700 text-white rounded-2xl shadow-xs">
+                                    <div className="p-3 bg-emerald-700 text-white rounded-2xl shadow-xs">
                                       <span className="text-[11px] font-bold opacity-90 block">আজ নতুন</span>
                                       <span className="text-2xl font-black block">২৯ টি</span>
                                       <span className="text-[10px] opacity-80">তাজা বিজ্ঞপ্তি</span>
@@ -1335,7 +1337,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
                                 className="w-full"
                               />
                               {(sec.title || sec.content?.badge) && (
-                                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/35 to-transparent flex flex-col justify-end p-6 text-white text-left space-y-2">
+                                <div className="absolute inset-0 bg-slate-950/60 flex flex-col justify-end p-6 text-white text-left space-y-2">
                                   {sec.content?.badge && (
                                     <span className="inline-block px-2.5 py-0.5 bg-emerald-600 text-white rounded-md text-[10px] font-bold uppercase w-fit">
                                       {sec.content.badge}
@@ -1386,7 +1388,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
                               <div key={fi} className="p-3 bg-white/80 border border-slate-200/90 rounded-xl text-left space-y-1 shadow-xs">
                                 <div className="text-xs font-bold text-slate-800 flex items-center justify-between">
                                   <span>{f.q || f.title}</span>
-                                  <span className="text-slate-400 text-[10px]">▼</span>
+                                  <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
                                 </div>
                                 <p className="text-[11px] text-slate-600 line-clamp-2">{f.a || f.desc}</p>
                               </div>
@@ -1422,7 +1424,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
                 <div className="border-t border-slate-200 bg-slate-900 relative z-10">
                   <div className="bg-slate-800 text-[10px] text-slate-300 px-3 py-1 flex items-center justify-between font-mono">
                     <span className="flex items-center gap-1.5">
-                      <span>🌐 ওয়েবসাইট লাইভ ফুটার (Footer Preview)</span>
+                      <span className="inline-flex items-center gap-1.5"><Globe className="w-3.5 h-3.5 text-emerald-400" /> ওয়েবসাইট লাইভ ফুটার (Footer Preview)</span>
                     </span>
                     <button 
                       type="button"
@@ -1470,7 +1472,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
                   <Eye className={`w-3.5 h-3.5 ${activeSection.isVisible !== false ? 'text-emerald-600' : 'text-rose-600'}`} />
                   <span>{activeSection.isVisible !== false ? 'লাইভে দৃশ্যমান' : 'লুকানো (হাইড)'}</span>
                 </button>
-                <button onClick={() => setActiveSectionId(null)} className="text-xs font-bold text-slate-400 hover:text-slate-700 p-1">✕</button>
+                <button onClick={() => setActiveSectionId(null)} className="text-xs font-bold text-slate-400 hover:text-slate-700 p-1"><X className="w-4 h-4" /></button>
               </div>
             </div>
 
@@ -1790,7 +1792,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
                             }}
                             className="text-red-500 hover:text-red-700 text-xs font-bold"
                           >
-                            ✕
+                            <X className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </div>
@@ -1817,7 +1819,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
                           } : s)
                         }));
                       }}
-                      placeholder="উদা: ⚡ বিশেষ বিজ্ঞপ্তি"
+                      placeholder="উদা: বিশেষ বিজ্ঞপ্তি"
                       className="w-full px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-900"
                     />
                   </div>
@@ -2621,7 +2623,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
                 <Settings className="w-5 h-5 text-emerald-700" />
                 <h3 className="text-base font-black text-slate-900">পৃষ্ঠার সেটিংস ও এসইও মেটাডাটা</h3>
               </div>
-              <button onClick={() => setShowPageSettingsModal(false)} className="text-slate-400 hover:text-slate-600 text-sm font-bold">✕</button>
+              <button onClick={() => setShowPageSettingsModal(false)} className="text-slate-400 hover:text-slate-600 text-sm font-bold"><X className="w-4 h-4" /></button>
             </div>
 
             <div className="space-y-3 text-xs">
@@ -2704,7 +2706,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
                 <History className="w-5 h-5 text-emerald-700" />
                 <h3 className="text-base font-black text-slate-900">সংস্করণ ইতিহাস ও রিস্টোর</h3>
               </div>
-              <button onClick={() => setShowHistoryModal(false)} className="text-slate-400 hover:text-slate-600 text-sm font-bold">✕</button>
+              <button onClick={() => setShowHistoryModal(false)} className="text-slate-400 hover:text-slate-600 text-sm font-bold"><X className="w-4 h-4" /></button>
             </div>
             <div className="space-y-2 max-h-60 overflow-y-auto">
               {(currentPage?.revisions || []).map((rev) => (
@@ -2769,7 +2771,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
                 <Sliders className="w-5 h-5 text-emerald-700" />
                 <h3 className="text-base font-black text-slate-900">হেডার ও ফুটার থিম ও কন্টেন্ট কাস্টমাইজার</h3>
               </div>
-              <button onClick={() => setShowChromeSettingsModal(false)} className="text-slate-400 hover:text-slate-600 text-sm font-bold">✕</button>
+              <button onClick={() => setShowChromeSettingsModal(false)} className="text-slate-400 hover:text-slate-600 text-sm font-bold"><X className="w-4 h-4" /></button>
             </div>
 
             {chromeSaveSuccess && (
@@ -2861,7 +2863,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
                 {/* Announcement Top Banner */}
                 <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-black text-slate-800">⚡ টপ নোটিশ বার (Announcement Banner)</span>
+                    <span className="font-black text-slate-800 inline-flex items-center gap-1.5"><Zap className="w-4 h-4 text-amber-500" /> টপ নোটিশ বার (Announcement Banner)</span>
                     <label className="flex items-center gap-1.5 font-bold text-slate-700 cursor-pointer">
                       <input
                         type="checkbox"
@@ -3113,7 +3115,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
                                       }}
                                       className="col-span-1 text-red-500 hover:text-red-700 text-xs font-bold text-center cursor-pointer"
                                     >
-                                      ✕
+                                      <X className="w-3.5 h-3.5" />
                                     </button>
                                   </div>
                                 ))
@@ -3497,7 +3499,7 @@ export default function WebsiteBuilder({ initialPageId, onNavigateToPages }: Web
                                         className="col-span-1 text-red-500 hover:text-red-700 text-xs font-bold text-center cursor-pointer"
                                         title="মুছে ফেলুন"
                                       >
-                                        ✕
+                                        <X className="w-3.5 h-3.5" />
                                       </button>
                                     </div>
                                   ))

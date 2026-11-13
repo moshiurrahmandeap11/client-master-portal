@@ -234,9 +234,9 @@ export default function TransactionsPage() {
             className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 outline-none focus:border-emerald-600 cursor-pointer"
           >
             <option value="all">সব স্ট্যাটাস</option>
-            <option value="completed">✓ অনুমোদিত / সফল</option>
-            <option value="pending">⏳ অপেক্ষমাণ</option>
-            <option value="failed">✕ বাতিল</option>
+            <option value="completed">অনুমোদিত / সফল</option>
+            <option value="pending">অপেক্ষমাণ</option>
+            <option value="failed">বাতিল</option>
           </select>
         </div>
       </div>
@@ -300,7 +300,13 @@ export default function TransactionsPage() {
                       ? 'text-rose-800 bg-rose-50 border-rose-200'
                       : 'text-emerald-800 bg-emerald-50 border-emerald-200'
                   }`}>
-                    {tx.status === 'pending' ? '⏳ যাচাইয়ের অপেক্ষায়' : tx.status === 'failed' ? '✕ বাতিল' : '✓ সফল'}
+                    {tx.status === 'pending' ? (
+                      <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" /> যাচাইয়ের অপেক্ষায়</span>
+                    ) : tx.status === 'failed' ? (
+                      <span className="inline-flex items-center gap-1"><X className="w-3 h-3" /> বাতিল</span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> সফল</span>
+                    )}
                   </span>
                 </div>
 
@@ -390,7 +396,13 @@ export default function TransactionsPage() {
                       ? 'bg-amber-100 text-amber-800'
                       : 'bg-rose-100 text-rose-800'
                   }`}>
-                    {selectedReceipt.status === 'completed' ? '✓ পেইড / অনুমোদিত' : selectedReceipt.status === 'pending' ? '⏳ অপেক্ষমাণ' : '✕ বাতিল'}
+                    {selectedReceipt.status === 'completed' ? (
+                      <span className="inline-flex items-center gap-1"><CheckCircle2 className="w-3.5 h-3.5" /> পেইড / অনুমোদিত</span>
+                    ) : selectedReceipt.status === 'pending' ? (
+                      <span className="inline-flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> অপেক্ষমাণ</span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1"><X className="w-3.5 h-3.5" /> বাতিল</span>
+                    )}
                   </span>
                 </div>
               </div>

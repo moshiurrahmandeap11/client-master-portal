@@ -14,7 +14,8 @@ import {
   FileText,
   HelpCircle,
   Bookmark,
-  ChevronLeft
+  ChevronLeft,
+  ArrowUpRight
 } from 'lucide-react';
 import { careerGuidesData } from '@/data/preparationData';
 
@@ -80,7 +81,7 @@ export default function CareerGuideDetailClient({ slug }: CareerGuideDetailClien
 
         {/* Key Takeaways Card */}
         {guide.keyTakeaways && guide.keyTakeaways.length > 0 && (
-          <div className="bg-gradient-to-br from-emerald-50/80 to-teal-50/60 rounded-2xl border border-emerald-200/90 p-5 sm:p-6 space-y-3">
+          <div className="bg-emerald-50 rounded-2xl border border-emerald-200 p-5 sm:p-6 space-y-3">
             <span className="text-xs font-black text-emerald-950 flex items-center gap-1.5 uppercase tracking-wide">
               <Sparkles className="w-4 h-4 text-emerald-700" />
               <span>প্রধান সারসংক্ষেপ ও গুরুত্বপূর্ণ দিকসমূহ:</span>
@@ -223,9 +224,9 @@ export default function CareerGuideDetailClient({ slug }: CareerGuideDetailClien
 
             <Link
               href="/career-guides"
-              className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold transition-all ml-auto"
+              className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold transition-all ml-auto inline-flex items-center gap-1"
             >
-              সকল গাইড দেখুন ↗
+              সকল গাইড দেখুন <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>

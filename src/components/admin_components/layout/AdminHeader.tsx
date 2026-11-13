@@ -106,7 +106,7 @@ export default function AdminHeader({
             onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
             className="flex items-center gap-2 p-1 rounded-full hover:ring-2 hover:ring-indigo-500/20 transition-all"
           >
-            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+            <div className="w-9 h-9 rounded-full bg-emerald-700 flex items-center justify-center text-white text-xs font-bold shadow-xs">
               সি এস
             </div>
           </button>

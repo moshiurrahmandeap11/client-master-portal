@@ -17,7 +17,8 @@ import {
   Play, 
   Sparkles, 
   Lock, 
-  ArrowRight
+  ArrowRight,
+  Zap as ZapIcon
 } from 'lucide-react';
 import { Coupon, RaffleCampaign } from '@/types';
 import { getAdminHeaders } from '@/lib/axios';
@@ -396,7 +397,7 @@ export default function CouponsRaffleManagement({ initialTab = 'coupons' }: Coup
               {couponsSubTab === 'coupons' ? (
                 <button
                   onClick={() => setShowCreateCouponModal(!showCreateCouponModal)}
-                  className="px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white text-xs font-bold rounded-xl shadow-md flex items-center gap-1.5 transition-all"
+                  className="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-xl shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   <span>{showCreateCouponModal ? 'ফর্ম বন্ধ করুন' : 'নতুন কুপন তৈরি'}</span>
@@ -404,7 +405,7 @@ export default function CouponsRaffleManagement({ initialTab = 'coupons' }: Coup
               ) : (
                 <button
                   onClick={() => setShowCreateRaffleModal(!showCreateRaffleModal)}
-                  className="px-4 py-2.5 bg-gradient-to-r from-teal-700 to-emerald-800 hover:from-teal-800 hover:to-emerald-900 text-white text-xs font-bold rounded-xl shadow-md flex items-center gap-1.5 transition-all"
+                  className="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-xl shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   <span>{showCreateRaffleModal ? 'ফর্ম বন্ধ করুন' : 'নতুন ক্যাম্পেইন তৈরি'}</span>
@@ -744,7 +745,7 @@ export default function CouponsRaffleManagement({ initialTab = 'coupons' }: Coup
 
                         <div className="flex items-center justify-between pt-1 text-xs">
                           <span className="text-[10px] text-slate-500">
-                            {c.allowCombineWithRaffle ? '⚡ র‍্যাফেলের সাথে স্ট্যাকযোগ্য' : '🔒 একক কুপন (স্ট্যাকিং নিষেধ)'}
+                            {c.allowCombineWithRaffle ? <span className="inline-flex items-center gap-1"><ZapIcon className="w-3 h-3 text-amber-500" /> র‍্যাফেলের সাথে স্ট্যাকযোগ্য</span> : <span className="inline-flex items-center gap-1"><Lock className="w-3 h-3" /> একক কুপন (স্ট্যাকিং নিষেধ)</span>}
                           </span>
 
                           <div className="flex items-center gap-2">

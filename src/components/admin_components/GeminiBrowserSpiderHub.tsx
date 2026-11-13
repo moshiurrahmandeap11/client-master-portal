@@ -34,7 +34,8 @@ import {
   Monitor,
   Maximize2,
   ChevronRight,
-  Clock
+  Clock,
+  Camera
 } from 'lucide-react';
 import { JobCircular } from '@/types';
 import JobLogo from '@/components/shared/JobLogo';
@@ -98,12 +99,12 @@ export default function GeminiBrowserSpiderHub({
   const [selectedOverviewJobId, setSelectedOverviewJobId] = useState<string>('job-breb-demo-2026');
 
   const [logs, setLogs] = useState<string[]>([
-    '🤖 [Internal Chromium Engine] সিস্টেমের নিজস্ব স্ট্যান্ডঅ্যালোন ব্রাউজার ইনিশিয়ালাইজড...',
-    '🛡️ [Audit Agent] অটোনোমাস সিস্টেম অডিট ও সেলফ-হিলিং এজেন্ট প্রস্তুত',
-    '🌐 [Alljobs Engine] সকল সরকারি প্রতিষ্ঠানের সাথে এপিআই সংযোগ বিদ্যমান',
-    '📄 [Zero API Cost] গুগল জেমিনি ওয়েব সেশন সক্রিয় ও স্থায়ীভাবে সংরক্ষিত',
-    '📁 [Storage] .browser_profile/gemini_session/ সেশন প্রোফাইল প্রস্তুত',
-    '✨ [Ready] এডিট, আপডেট ও ১-ক্লিক পাবলিশ কন্ট্রোল সক্রিয়'
+    '[BOT] [Internal Chromium Engine] সিস্টেমের নিজস্ব স্ট্যান্ডঅ্যালোন ব্রাউজার ইনিশিয়ালাইজড...',
+    '[AUDIT] [Audit Agent] অটোনোমাস সিস্টেম অডিট ও সেলফ-হিলিং এজেন্ট প্রস্তুত',
+    '[NET] [Alljobs Engine] সকল সরকারি প্রতিষ্ঠানের সাথে এপিআই সংযোগ বিদ্যমান',
+    '[DOC] [Zero API Cost] গুগল জেমিনি ওয়েব সেশন সক্রিয় ও স্থায়ীভাবে সংরক্ষিত',
+    '[DIR] [Storage] .browser_profile/gemini_session/ সেশন প্রোফাইল প্রস্তুত',
+    '[AI] [Ready] এডিট, আপডেট ও ১-ক্লিক পাবলিশ কন্ট্রোল সক্রিয়'
   ]);
 
   const addLog = (msg: string) => {
@@ -114,7 +115,7 @@ export default function GeminiBrowserSpiderHub({
   const handleFetchLiveScreen = async (targetUrl?: string) => {
     setIsLoadingScreen(true);
     const url = targetUrl || browserInputUrl;
-    addLog(`📸 লাইভ ক্রোম ব্রাউজার স্ক্রিন ক্যাপচার করা হচ্ছে: ${url}...`);
+    addLog(`[CAP] লাইভ ক্রোম ব্রাউজার স্ক্রিন ক্যাপচার করা হচ্ছে: ${url}...`);
     try {
       const res = await fetch('/api/admin/spider/gemini-browser', {
         method: 'POST',
@@ -124,12 +125,12 @@ export default function GeminiBrowserSpiderHub({
       const data = await res.json();
       if (res.ok && data.success) {
         setLiveScreen(data);
-        addLog(`✅ ক্রোম স্ক্রিন আপডেট সম্পন্ন! ইউআরএল: ${data.url || url} (${data.isLoggedIn ? 'গুগল লগইন সক্রিয়' : 'গেস্ট মোড'})`);
+        addLog(`[OK] ক্রোম স্ক্রিন আপডেট সম্পন্ন! ইউআরএল: ${data.url || url} (${data.isLoggedIn ? 'গুগল লগইন সক্রিয়' : 'গেস্ট মোড'})`);
       } else {
-        addLog(`⚠️ স্ক্রিনশট ত্রুটি: ${data.message || 'ব্যর্থ হয়েছে'}`);
+        addLog(`[WARN] স্ক্রিনশট ত্রুটি: ${data.message || 'ব্যর্থ হয়েছে'}`);
       }
     } catch (e: any) {
-      addLog(`❌ নেটওয়ার্ক এরর: ${e.message}`);
+      addLog(`[ERR] নেটওয়ার্ক এরর: ${e.message}`);
     } finally {
       setIsLoadingScreen(false);
     }
@@ -137,7 +138,7 @@ export default function GeminiBrowserSpiderHub({
 
   const handleLaunchDesktopChrome = async () => {
     setIsLaunchingDesktopChrome(true);
-    addLog('🚀 ডেস্কটপে দৃশ্যমান ক্রোম ব্রাউজার চালু করা হচ্ছে (Google Login)...');
+    addLog('[RUN] ডেস্কটপে দৃশ্যমান ক্রোম ব্রাউজার চালু করা হচ্ছে (Google Login)...');
     try {
       const res = await fetch('/api/admin/spider/gemini-browser', {
         method: 'POST',
@@ -146,7 +147,7 @@ export default function GeminiBrowserSpiderHub({
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        addLog(`✅ ${data.message}`);
+        addLog(`[OK] ${data.message}`);
         alert(data.message);
       } else {
         alert(data.message || 'ক্রোম ব্রাউজার চালু করতে সমস্যা হয়েছে');
@@ -161,7 +162,7 @@ export default function GeminiBrowserSpiderHub({
   const handleRunLiveAutomation = async () => {
     setIsRunningLiveAutomation(true);
     setActiveStudioTab('auto_trace');
-    addLog(`⚡ লাইভ স্পাইডার অটোমেশন শুরু: ${extractorPdfUrl}...`);
+    addLog(`[SYNC] লাইভ স্পাইডার অটোমেশন শুরু: ${extractorPdfUrl}...`);
     try {
       const res = await fetch('/api/admin/spider/gemini-browser', {
         method: 'POST',
@@ -171,7 +172,7 @@ export default function GeminiBrowserSpiderHub({
       const data = await res.json();
       if (res.ok && data.success) {
         setAutomationResult(data);
-        addLog(`🎉 লাইভ অটোমেশন সম্পন্ন! ৫টি ধাপ সফলভাবে শেষ হয়েছে।`);
+        addLog(`[DONE] লাইভ অটোমেশন সম্পন্ন! ৫টি ধাপ সফলভাবে শেষ হয়েছে।`);
         if (data.steps && data.steps.length > 0) {
           const lastStepWithImg = [...data.steps].reverse().find((s: any) => s.screenshot);
           if (lastStepWithImg) {
@@ -181,7 +182,7 @@ export default function GeminiBrowserSpiderHub({
         await fetchStatus();
         if (onRefreshData) onRefreshData();
       } else {
-        addLog(`❌ অটোমেশন ত্রুটি: ${data.message}`);
+        addLog(`[ERR] অটোমেশন ত্রুটি: ${data.message}`);
         alert(data.message || 'অটোমেশন রান ব্যর্থ হয়েছে');
       }
     } catch (e: any) {
@@ -216,7 +217,7 @@ export default function GeminiBrowserSpiderHub({
 
   const handleRunAudit = async (autoRepair = true) => {
     setIsRunningAudit(true);
-    addLog('🛡️ অটোনোমাস সিস্টেম অডিট ও সেলফ-হিলিং শুরু হয়েছে...');
+    addLog('[AUDIT] অটোনোমাস সিস্টেম অডিট ও সেলফ-হিলিং শুরু হয়েছে...');
     try {
       const res = await fetch('/api/admin/audit', {
         method: 'POST',
@@ -226,17 +227,17 @@ export default function GeminiBrowserSpiderHub({
       const data = await res.json();
       if (res.ok && data.success) {
         setAuditReport(data.report);
-        addLog(`✅ অডিট সম্পন্ন! সামগ্রিক হেলথ স্কোর: ${data.report.overallScore}/১০০ (${data.report.overallStatus})`);
+        addLog(`[OK] অডিট সম্পন্ন! সামগ্রিক হেলথ স্কোর: ${data.report.overallScore}/১০০ (${data.report.overallStatus})`);
         if (data.report.databaseStats?.repairedCount > 0) {
-          addLog(`🔧 ${data.report.databaseStats.repairedCount}টি সার্কুলার স্বয়ংক্রিয়ভাবে রিপেয়ার ও ইনটিগ্রিটি ফিক্স করা হয়েছে।`);
+          addLog(`[FIX] ${data.report.databaseStats.repairedCount}টি সার্কুলার স্বয়ংক্রিয়ভাবে রিপেয়ার ও ইনটিগ্রিটি ফিক্স করা হয়েছে।`);
         }
         await fetchStatus();
         if (onRefreshData) onRefreshData();
       } else {
-        addLog(`❌ অডিট ব্যর্থ: ${data.error}`);
+        addLog(`[ERR] অডিট ব্যর্থ: ${data.error}`);
       }
     } catch (e: any) {
-      addLog(`❌ অডিট এরর: ${e.message}`);
+      addLog(`[ERR] অডিট এরর: ${e.message}`);
     } finally {
       setIsRunningAudit(false);
     }
@@ -284,7 +285,7 @@ export default function GeminiBrowserSpiderHub({
 
   const handleLaunchBrowser = async () => {
     setIsLaunching(true);
-    addLog('🚀 সিস্টেমের নিজস্ব স্ট্যান্ডঅ্যালোন ব্রাউজার চালুর রিকোয়েস্ট পাঠানো হচ্ছে...');
+    addLog('[RUN] সিস্টেমের নিজস্ব স্ট্যান্ডঅ্যালোন ব্রাউজার চালুর রিকোয়েস্ট পাঠানো হচ্ছে...');
     try {
       const res = await fetch('/api/admin/spider/gemini-browser', {
         method: 'POST',
@@ -293,16 +294,16 @@ export default function GeminiBrowserSpiderHub({
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        addLog(`✅ ${data.message}`);
-        addLog('👉 প্রদর্শিত স্ট্যান্ডঅ্যালোন ব্রাউজারে gemini.google.com-এ আপনার গুগল একাউন্টে সাইন-ইন করে নিন। সেশনটি স্থায়ীভাবে সংরক্ষিত থাকবে।');
+        addLog(`[OK] ${data.message}`);
+        addLog('[INFO] প্রদর্শিত স্ট্যান্ডঅ্যালোন ব্রাউজারে gemini.google.com-এ আপনার গুগল একাউন্টে সাইন-ইন করে নিন। সেশনটি স্থায়ীভাবে সংরক্ষিত থাকবে।');
         alert(data.message);
         await fetchStatus();
       } else {
-        addLog(`❌ ব্রাউজার চালু ব্যর্থ: ${data.error || data.message}`);
+        addLog(`[ERR] ব্রাউজার চালু ব্যর্থ: ${data.error || data.message}`);
         alert(data.error || data.message || 'ব্রাউজার চালু করতে সমস্যা হয়েছে');
       }
     } catch (e: any) {
-      addLog(`❌ নেটওয়ার্ক এরর: ${e.message}`);
+      addLog(`[ERR] নেটওয়ার্ক এরর: ${e.message}`);
       alert(`ত্রুটি: ${e.message}`);
     } finally {
       setIsLaunching(false);
@@ -320,12 +321,12 @@ export default function GeminiBrowserSpiderHub({
       const data = await res.json();
       if (res.ok && data.success) {
         setIsAutoPublish(data.autoPublish);
-        addLog(`⚙️ পাবলিশ পলিসি আপডেট: ${data.message}`);
+        addLog(`[CFG] পাবলিশ পলিসি আপডেট: ${data.message}`);
       } else {
         alert(data.error || 'পলিসি পরিবর্তন ব্যর্থ হয়েছে।');
       }
     } catch (e: any) {
-      addLog(`❌ ত্রুটি: ${e.message}`);
+      addLog(`[ERR] ত্রুটি: ${e.message}`);
     } finally {
       setIsTogglingAutoPublish(false);
     }
@@ -339,7 +340,7 @@ export default function GeminiBrowserSpiderHub({
     }
     setIsExtractingCircular(true);
     setExtractedCircularResult(null);
-    addLog(`✨ অভ্যন্তরীণ জেমিনি ব্রাউজার এজেন্ট দিয়ে সম্পূর্ণ সার্কুলার বিশ্লেষণ শুরু: ${url}`);
+    addLog(`[AI] অভ্যন্তরীণ জেমিনি ব্রাউজার এজেন্ট দিয়ে সম্পূর্ণ সার্কুলার বিশ্লেষণ শুরু: ${url}`);
     try {
       const res = await fetch('/api/admin/spider/gemini-browser', {
         method: 'POST',
@@ -349,9 +350,9 @@ export default function GeminiBrowserSpiderHub({
       const data = await res.json();
       if (res.ok && data.success && data.job) {
         setExtractedCircularResult(data.job);
-        addLog(`🎉 জেমিনি ব্রাউজার বিশ্লেষণ সম্পন্ন! ${data.job.organization} - পদ সংখ্যা: ${data.job.positions?.length || 1}টি, ডেডলাইন: ${data.job.deadline}`);
+        addLog(`[DONE] জেমিনি ব্রাউজার বিশ্লেষণ সম্পন্ন! ${data.job.organization} - পদ সংখ্যা: ${data.job.positions?.length || 1}টি, ডেডলাইন: ${data.job.deadline}`);
       } else {
-        addLog(`❌ এআই স্ক্যান ত্রুটি: ${data.error}`);
+        addLog(`[ERR] এআই স্ক্যান ত্রুটি: ${data.error}`);
         alert(data.error || 'সার্কুলার স্ক্যান করতে সমস্যা হয়েছে।');
       }
     } catch (e: any) {
@@ -364,7 +365,7 @@ export default function GeminiBrowserSpiderHub({
   const handleSaveExtractedJob = async (publishImmediately: boolean) => {
     if (!extractedCircularResult) return;
     setIsSavingExtractedJob(true);
-    addLog(`🚀 সার্কুলারটি ডাটাবেজে ${publishImmediately ? 'লাইভ পাবলিশ' : 'ড্রাফট হিসেবে সেভ'} করা হচ্ছে...`);
+    addLog(`[RUN] সার্কুলারটি ডাটাবেজে ${publishImmediately ? 'লাইভ পাবলিশ' : 'ড্রাফট হিসেবে সেভ'} করা হচ্ছে...`);
     try {
       const jobToSave = {
         ...extractedCircularResult,
@@ -382,7 +383,7 @@ export default function GeminiBrowserSpiderHub({
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        addLog(`✅ ${data.message}`);
+        addLog(`[OK] ${data.message}`);
         alert(data.message);
         setExtractedCircularResult(null);
         await fetchStatus();
@@ -399,7 +400,7 @@ export default function GeminiBrowserSpiderHub({
 
   const handleRunSync = async () => {
     setIsSyncing(true);
-    addLog('⚡ অলজবস লাইভ সার্কুলার কালেকশন শুরু হয়েছে...');
+    addLog('[SYNC] অলজবস লাইভ সার্কুলার কালেকশন শুরু হয়েছে...');
     try {
       const res = await fetch('/api/admin/spider/gemini-browser', {
         method: 'POST',
@@ -408,17 +409,17 @@ export default function GeminiBrowserSpiderHub({
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        addLog(`✅ ${data.message}`);
-        addLog(`📊 মোট প্রতিষ্ঠান: ${data.stats?.totalOrgsFound}, নতুন যুক্ত: ${data.stats?.newJobsAdded}, আপডেট: ${data.stats?.updatedJobs}`);
+        addLog(`[OK] ${data.message}`);
+        addLog(`[STAT] মোট প্রতিষ্ঠান: ${data.stats?.totalOrgsFound}, নতুন যুক্ত: ${data.stats?.newJobsAdded}, আপডেট: ${data.stats?.updatedJobs}`);
         await fetchStatus();
         if (onRefreshData) onRefreshData();
         alert(data.message);
       } else {
-        addLog(`❌ সিঙ্ক ব্যর্থ: ${data.error}`);
+        addLog(`[ERR] সিঙ্ক ব্যর্থ: ${data.error}`);
         alert(data.error || 'সিঙ্ক ব্যর্থ হয়েছে');
       }
     } catch (e: any) {
-      addLog(`❌ নেটওয়ার্ক এরর: ${e.message}`);
+      addLog(`[ERR] নেটওয়ার্ক এরর: ${e.message}`);
       alert(`ত্রুটি: ${e.message}`);
     } finally {
       setIsSyncing(false);
@@ -427,7 +428,7 @@ export default function GeminiBrowserSpiderHub({
 
   const handleTogglePublish = async (job: JobCircular) => {
     setActionJobId(job.id);
-    addLog(`🔄 পাবলিকেশন স্ট্যাটাস পরিবর্তন করা হচ্ছে: ${job.title}...`);
+    addLog(`[UPD] পাবলিকেশন স্ট্যাটাস পরিবর্তন করা হচ্ছে: ${job.title}...`);
     try {
       const res = await fetch('/api/admin/spider/gemini-browser', {
         method: 'POST',
@@ -436,15 +437,15 @@ export default function GeminiBrowserSpiderHub({
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        addLog(`✅ ${data.message}`);
+        addLog(`[OK] ${data.message}`);
         await fetchStatus();
         if (onRefreshData) onRefreshData();
       } else {
-        addLog(`❌ স্ট্যাটাস পরিবর্তন ব্যর্থ: ${data.error}`);
+        addLog(`[ERR] স্ট্যাটাস পরিবর্তন ব্যর্থ: ${data.error}`);
         alert(data.error || 'পরিবর্তন ব্যর্থ হয়েছে');
       }
     } catch (e: any) {
-      addLog(`❌ ত্রুটি: ${e.message}`);
+      addLog(`[ERR] ত্রুটি: ${e.message}`);
     } finally {
       setActionJobId(null);
     }
@@ -455,7 +456,7 @@ export default function GeminiBrowserSpiderHub({
     
     if (onDeleteJob) {
       onDeleteJob(job.id, job.title);
-      addLog(`🗑️ সার্কুলার মোছার রিকোয়েস্ট পাঠানো হয়েছে: ${job.id}`);
+      addLog(`[DEL] সার্কুলার মোছার রিকোয়েস্ট পাঠানো হয়েছে: ${job.id}`);
       return;
     }
 
@@ -468,14 +469,14 @@ export default function GeminiBrowserSpiderHub({
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        addLog(`✅ সার্কুলার মুছে ফেলা হয়েছে: ${job.title}`);
+        addLog(`[OK] সার্কুলার মুছে ফেলা হয়েছে: ${job.title}`);
         await fetchStatus();
         if (onRefreshData) onRefreshData();
       } else {
-        addLog(`❌ মোছা ব্যর্থ: ${data.error}`);
+        addLog(`[ERR] মোছা ব্যর্থ: ${data.error}`);
       }
     } catch (e: any) {
-      addLog(`❌ এরর: ${e.message}`);
+      addLog(`[ERR] এরর: ${e.message}`);
     } finally {
       setActionJobId(null);
     }
@@ -503,7 +504,7 @@ export default function GeminiBrowserSpiderHub({
       return;
     }
     setIsBulkProcessing(true);
-    addLog(`🗑️ নির্বাচিত ${selectedJobIds.length}টি সার্কুলার ডিলিট করা হচ্ছে...`);
+    addLog(`[DEL] নির্বাচিত ${selectedJobIds.length}টি সার্কুলার ডিলিট করা হচ্ছে...`);
     try {
       const res = await fetch('/api/admin/spider/gemini-browser', {
         method: 'POST',
@@ -512,7 +513,7 @@ export default function GeminiBrowserSpiderHub({
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        addLog(`✅ ${data.message || 'সার্কুলারগুলো মুছে ফেলা হয়েছে'}`);
+        addLog(`[OK] ${data.message || 'সার্কুলারগুলো মুছে ফেলা হয়েছে'}`);
         alert(data.message || 'সার্কুলারগুলো মুছে ফেলা হয়েছে');
         setSelectedJobIds([]);
         await fetchStatus();
@@ -531,7 +532,7 @@ export default function GeminiBrowserSpiderHub({
     if (selectedJobIds.length === 0) return;
     setIsBulkProcessing(true);
     const action = targetStatus === 'PUBLISHED' ? 'bulk_publish' : 'bulk_draft';
-    addLog(`🔄 নির্বাচিত ${selectedJobIds.length}টি সার্কুলার ${targetStatus === 'PUBLISHED' ? 'লাইভ পাবলিশ' : 'ড্রাফট'} করা হচ্ছে...`);
+    addLog(`[UPD] নির্বাচিত ${selectedJobIds.length}টি সার্কুলার ${targetStatus === 'PUBLISHED' ? 'লাইভ পাবলিশ' : 'ড্রাফট'} করা হচ্ছে...`);
     try {
       const res = await fetch('/api/admin/spider/gemini-browser', {
         method: 'POST',
@@ -540,7 +541,7 @@ export default function GeminiBrowserSpiderHub({
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        addLog(`✅ ${data.message}`);
+        addLog(`[OK] ${data.message}`);
         alert(data.message);
         setSelectedJobIds([]);
         await fetchStatus();
@@ -560,10 +561,10 @@ export default function GeminiBrowserSpiderHub({
   return (
     <div className="space-y-6">
       {/* 1. TOP HEADER & TELEMETRY */}
-      <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-950 rounded-3xl p-6 text-white shadow-xl border border-slate-700/60">
+      <div className="bg-slate-900 rounded-3xl p-6 text-white shadow-xl border border-slate-700/60">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white shadow-lg">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-700 flex items-center justify-center text-white shadow-lg">
               <Sparkles className="w-6 h-6" />
             </div>
             <div>
@@ -583,7 +584,7 @@ export default function GeminiBrowserSpiderHub({
             <button
               onClick={handleLaunchBrowser}
               disabled={isLaunching}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white text-xs font-black flex items-center gap-2 transition-all shadow-lg shadow-emerald-900/30 disabled:opacity-50 cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black flex items-center gap-2 transition-all shadow-lg shadow-emerald-900/30 disabled:opacity-50 cursor-pointer"
               title="সিস্টেমের নিজস্ব স্ট্যান্ডঅ্যালোন ব্রাউজার চালু করে জেমিনি সাইন-ইন উইন্ডো খুলুন"
             >
               <Globe className="w-3.5 h-3.5" />
@@ -637,7 +638,7 @@ export default function GeminiBrowserSpiderHub({
         {/* Studio Header */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-200">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-lg">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-700 flex items-center justify-center text-white shadow-lg">
               <Monitor className="w-6 h-6" />
             </div>
             <div>
@@ -661,21 +662,21 @@ export default function GeminiBrowserSpiderHub({
               type="button"
               onClick={handleLaunchDesktopChrome}
               disabled={isLaunchingDesktopChrome}
-              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white text-xs font-black flex items-center gap-2 transition-all shadow-md shadow-purple-900/20 cursor-pointer disabled:opacity-50"
+              className="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black flex items-center gap-2 transition-all shadow-md shadow-purple-900/20 cursor-pointer disabled:opacity-50"
               title="আপনার ডেস্কটপে দৃশ্যমান ক্রোম উইন্ডো ওপেন করুন যাতে গুগল অ্যাকাউন্টে লগইন করতে পারেন"
             >
               <Globe className="w-4 h-4 text-purple-200" />
-              <span>{isLaunchingDesktopChrome ? 'উইন্ডো ওপেন হচ্ছে...' : '🖥️ দৃশ্যমান ক্রোম উইন্ডো খুলুন (Google Login)'}</span>
+              <span>{isLaunchingDesktopChrome ? 'উইন্ডো ওপেন হচ্ছে...' : 'দৃশ্যমান ক্রোম উইন্ডো খুলুন (Google Login)'}</span>
             </button>
 
             <button
               type="button"
               onClick={handleRunLiveAutomation}
               disabled={isRunningLiveAutomation}
-              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-black flex items-center gap-2 transition-all shadow-md shadow-emerald-900/20 cursor-pointer disabled:opacity-50"
+              className="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black flex items-center gap-2 transition-all shadow-md shadow-emerald-900/20 cursor-pointer disabled:opacity-50"
             >
               <Play className={`w-4 h-4 text-emerald-100 ${isRunningLiveAutomation ? 'animate-spin' : ''}`} />
-              <span>{isRunningLiveAutomation ? 'অটোমেশন চলছে...' : '▶️ লাইভ অটো-প্রসেস চালান ও দেখুন'}</span>
+              <span>{isRunningLiveAutomation ? 'অটোমেশন চলছে...' : 'লাইভ অটো-প্রসেস চালান ও দেখুন'}</span>
             </button>
           </div>
         </div>
@@ -727,12 +728,13 @@ export default function GeminiBrowserSpiderHub({
           </div>
 
           <div className="flex items-center gap-2">
-            <span className={`text-[11px] font-bold px-3 py-1 rounded-full border ${
+            <span className={`inline-flex items-center gap-1.5 text-[11px] font-bold px-3 py-1 rounded-full border ${
               liveScreen?.isLoggedIn
                 ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
                 : 'bg-amber-50 text-amber-800 border-amber-300'
             }`}>
-              {liveScreen?.isLoggedIn ? '🟢 গুগল সেশন লগইন করা' : '🟡 স্ট্যান্ডঅ্যালোন মোড (লগইন ঐচ্ছিক)'}
+              <span className={`w-2 h-2 rounded-full ${liveScreen?.isLoggedIn ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+              <span>{liveScreen?.isLoggedIn ? 'গুগল সেশন লগইন করা' : 'স্ট্যান্ডঅ্যালোন মোড (লগইন ঐচ্ছিক)'}</span>
             </span>
           </div>
         </div>
@@ -816,9 +818,9 @@ export default function GeminiBrowserSpiderHub({
                   <button
                     type="button"
                     onClick={() => handleFetchLiveScreen()}
-                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer"
+                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer inline-flex items-center gap-1.5"
                   >
-                    📸 ক্রোম স্ক্রিনশট লোড করুন
+                    <Camera className="w-3.5 h-3.5" /> ক্রোম স্ক্রিনশট লোড করুন
                   </button>
                 </div>
               )}
@@ -892,8 +894,8 @@ export default function GeminiBrowserSpiderHub({
                     <div className="font-bold text-xs text-slate-900 leading-tight">{s.name}</div>
                     <p className="text-[11px] text-slate-500 leading-relaxed line-clamp-3">{s.details}</p>
                     {s.screenshot && (
-                      <span className="text-[10px] font-bold text-emerald-700 underline block pt-1">
-                        📸 স্ক্রিনশট দেখুন
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 underline pt-1">
+                        <Eye className="w-3 h-3" /> স্ক্রিনশট দেখুন
                       </span>
                     )}
                   </div>
@@ -1036,12 +1038,13 @@ export default function GeminiBrowserSpiderHub({
                 <p className="text-[11px] text-slate-500 font-medium">সিস্টেমের নিজস্ব স্ট্যান্ডঅ্যালোন ব্রাউজার</p>
               </div>
             </div>
-            <span className={`text-[10px] font-black px-2.5 py-1 rounded-full border ${
+            <span className={`inline-flex items-center gap-1.5 text-[10px] font-black px-2.5 py-1 rounded-full border ${
               isBrowserConnected 
                 ? 'bg-emerald-50 text-emerald-800 border-emerald-300' 
                 : 'bg-amber-50 text-amber-800 border-amber-300'
             }`}>
-              {isBrowserConnected ? '🟢 সেশন সক্রিয়' : '🟡 ব্রাউজার কানেক্টেড'}
+              <span className={`w-2 h-2 rounded-full ${isBrowserConnected ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+              <span>{isBrowserConnected ? 'সেশন সক্রিয়' : 'ব্রাউজার কানেক্টেড'}</span>
             </span>
           </div>
 
@@ -1068,7 +1071,7 @@ export default function GeminiBrowserSpiderHub({
               type="button"
               onClick={handleLaunchBrowser}
               disabled={isLaunching}
-              className="w-full py-2.5 bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-800 hover:to-indigo-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer disabled:opacity-50"
+              className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer disabled:opacity-50"
             >
               <Globe className="w-4 h-4 text-purple-200" />
               <span>{isLaunching ? 'ব্রাউজার ওপেন হচ্ছে...' : 'অভ্যন্তরীণ জেমিনি সাইন-ইন উইন্ডো খুলুন'}</span>
@@ -1091,12 +1094,13 @@ export default function GeminiBrowserSpiderHub({
                 <p className="text-[11px] text-slate-500 font-medium">অটো-পাবলিশ বনাম অ্যাডমিন ড্রাফট</p>
               </div>
             </div>
-            <span className={`text-[10px] font-black px-2.5 py-1 rounded-full border ${
+            <span className={`inline-flex items-center gap-1.5 text-[10px] font-black px-2.5 py-1 rounded-full border ${
               isAutoPublish
                 ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
                 : 'bg-amber-50 text-amber-800 border-amber-300'
             }`}>
-              {isAutoPublish ? '🟢 অটো-পাবলিশ' : '🟠 ড্রাফট রিভিউ'}
+              <span className={`w-2 h-2 rounded-full ${isAutoPublish ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+              <span>{isAutoPublish ? 'অটো-পাবলিশ' : 'ড্রাফট রিভিউ'}</span>
             </span>
           </div>
 
@@ -1117,9 +1121,17 @@ export default function GeminiBrowserSpiderHub({
               </button>
             </div>
             <p className="text-[11px] text-slate-600 leading-relaxed">
-              {isAutoPublish
-                ? '✅ জেমিনি বা অলজবস থেকে যেকোনো নতুন সার্কুলার পাওয়া মাত্রই স্বয়ংক্রিয়ভাবে ওয়েবসাইটে লাইভ প্রকাশ হয়ে যাবে।'
-                : '🔒 নতুন সার্কুলারগুলো আগে ড্রাফটে জমা থাকবে। অ্যাডমিন ভেরিফাই করে ১-ক্লিকে ওয়েবসাইটে লাইভ পাবলিশ করবেন।'}
+              {isAutoPublish ? (
+                <span className="inline-flex items-start gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                  <span>জেমিনি বা অলজবস থেকে যেকোনো নতুন সার্কুলার পাওয়া মাত্রই স্বয়ংক্রিয়ভাবে ওয়েবসাইটে লাইভ প্রকাশ হয়ে যাবে।</span>
+                </span>
+              ) : (
+                <span className="inline-flex items-start gap-1.5">
+                  <Lock className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+                  <span>নতুন সার্কুলারগুলো আগে ড্রাফটে জমা থাকবে। অ্যাডমিন ভেরিফাই করে ১-ক্লিকে ওয়েবসাইটে লাইভ পাবলিশ করবেন।</span>
+                </span>
+              )}
             </p>
           </div>
 
@@ -1161,7 +1173,7 @@ export default function GeminiBrowserSpiderHub({
               type="button"
               onClick={() => handleRunAIExtraction()}
               disabled={isExtractingCircular || !extractorPdfUrl.trim()}
-              className="w-full py-2.5 bg-gradient-to-r from-indigo-700 to-purple-800 hover:from-indigo-800 hover:to-purple-900 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-sm disabled:opacity-50 cursor-pointer"
+              className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-sm disabled:opacity-50 cursor-pointer"
             >
               <Sparkles className={`w-4 h-4 text-amber-300 ${isExtractingCircular ? 'animate-spin' : ''}`} />
               <span>{isExtractingCircular ? 'জেমিনি ব্রাউজার স্ক্যান করছে...' : 'জেমিনি ব্রাউজার দিয়ে সার্কুলার প্রসেস করুন'}</span>
@@ -1296,10 +1308,10 @@ export default function GeminiBrowserSpiderHub({
       )}
 
       {/* 2.5 AUTONOMOUS SYSTEM AUDIT AGENT PANEL */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-5 sm:p-6 text-white border border-indigo-700/50 shadow-xl space-y-4">
+      <div className="bg-slate-900 rounded-3xl p-5 sm:p-6 text-white border border-indigo-700/50 shadow-xl space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-indigo-800/60">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-indigo-500 flex items-center justify-center text-white shadow-md">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-700 flex items-center justify-center text-white shadow-md">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
@@ -1322,7 +1334,7 @@ export default function GeminiBrowserSpiderHub({
               type="button"
               onClick={() => handleRunAudit(true)}
               disabled={isRunningAudit}
-              className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center gap-2 cursor-pointer disabled:opacity-50"
+              className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center gap-2 cursor-pointer disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isRunningAudit ? 'animate-spin' : ''}`} />
               <span>{isRunningAudit ? 'অডিট ও রিপেয়ার চলছে...' : 'ফুল সিস্টেম অডিট ও অটো-রিপেয়ার চালান'}</span>
@@ -1453,7 +1465,7 @@ export default function GeminiBrowserSpiderHub({
 
         {/* Floating Bulk Action Bar */}
         {selectedJobIds.length > 0 && (
-          <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-gradient-to-r from-slate-900 to-purple-950 text-white rounded-2xl shadow-lg border border-purple-800/50 animate-fadeIn">
+          <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-slate-900 text-white rounded-2xl shadow-lg border border-purple-800/50 animate-fadeIn">
             <div className="flex items-center gap-2.5">
               <span className="flex items-center justify-center w-7 h-7 rounded-full bg-purple-500 text-white font-black text-xs">
                 {selectedJobIds.length}
@@ -1713,11 +1725,11 @@ export default function GeminiBrowserSpiderHub({
             <div key={index} className="flex items-start gap-2">
               <span className="text-slate-500 shrink-0">&gt;</span>
               <span className={
-                log.includes('✅') ? 'text-emerald-300 font-bold' :
-                log.includes('❌') ? 'text-rose-400 font-bold' :
-                log.includes('🚀') ? 'text-teal-300 font-bold' :
-                log.includes('⚡') ? 'text-amber-300 font-bold' :
-                log.includes('🔄') ? 'text-blue-300 font-bold' :
+                log.includes('[OK]') || log.includes('[DONE]') ? 'text-emerald-300 font-bold' :
+                log.includes('[ERR]') ? 'text-rose-400 font-bold' :
+                log.includes('[RUN]') || log.includes('[AUDIT]') ? 'text-teal-300 font-bold' :
+                log.includes('[SYNC]') || log.includes('[WARN]') ? 'text-amber-300 font-bold' :
+                log.includes('[UPD]') || log.includes('[FIX]') ? 'text-blue-300 font-bold' :
                 'text-slate-300'
               }>
                 {log}

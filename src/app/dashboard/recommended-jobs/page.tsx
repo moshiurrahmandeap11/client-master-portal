@@ -158,7 +158,7 @@ export default function RecommendedJobsPage() {
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-16" data-testid="recommended-jobs-page">
       {/* Header and Banner */}
-      <div className="bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xs border border-slate-800 relative overflow-hidden">
         <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
         
         <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">

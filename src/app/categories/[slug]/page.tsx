@@ -211,14 +211,14 @@ export default async function CategoryLandingPage(props: Props) {
       </nav>
 
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-slate-950 via-emerald-950 to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl border border-emerald-900/40">
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-sm border border-slate-800">
         <div className="flex flex-col sm:flex-row items-start gap-5">
-          <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 shrink-0 shadow-inner">
+          <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-800 text-white shrink-0 shadow-xs">
             <IconComponent className="w-8 h-8 sm:w-10 sm:h-10" />
           </div>
           <div className="max-w-3xl space-y-3 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="bg-emerald-500 text-slate-950 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
+              <span className="bg-emerald-700 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
                 {category.name_en}
               </span>
               {parentCategory && (

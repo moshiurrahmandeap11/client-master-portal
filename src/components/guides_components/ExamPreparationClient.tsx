@@ -86,7 +86,7 @@ export default function ExamPreparationClient() {
       </div>
 
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-slate-950 via-emerald-950 to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl border border-emerald-900/40 relative overflow-hidden">
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xs border border-slate-800 relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="max-w-2xl space-y-3">
             <span className="bg-emerald-500 text-slate-950 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider inline-flex items-center gap-1.5 shadow-sm">
@@ -197,7 +197,7 @@ export default function ExamPreparationClient() {
                   onClick={() => setActiveSubjectId(s.id)}
                   className={`w-full p-3.5 rounded-2xl text-left transition-all flex items-center justify-between gap-3 cursor-pointer ${
                     isSelected
-                      ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md font-bold'
+                      ? 'bg-emerald-700 text-white shadow-xs font-bold'
                       : 'bg-slate-50 hover:bg-slate-100 text-slate-800 font-semibold border border-slate-100'
                   }`}
                 >
@@ -218,12 +218,12 @@ export default function ExamPreparationClient() {
           </div>
 
           {/* Subject Strategy Card */}
-          <div className="bg-gradient-to-br from-amber-50 to-orange-50/60 rounded-3xl border border-amber-200 p-5 space-y-2.5">
-            <span className="text-xs font-black text-amber-900 flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-amber-700" />
+          <div className="bg-slate-50 rounded-3xl border border-slate-200 p-5 space-y-2.5">
+            <span className="text-xs font-black text-slate-900 flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4 text-emerald-700" />
               <span>বিষয়ভিত্তিক প্রস্তুতির কৌশল:</span>
             </span>
-            <p className="text-xs text-amber-950 leading-relaxed">
+            <p className="text-xs text-slate-700 leading-relaxed">
               {activeSubject.preparationStrategy}
             </p>
           </div>
@@ -263,7 +263,7 @@ export default function ExamPreparationClient() {
               {/* Progress bar line */}
               <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
                 <div 
-                  className="bg-gradient-to-r from-emerald-500 to-teal-600 h-full transition-all duration-300 rounded-full"
+                  className="bg-emerald-600 h-full transition-all duration-300 rounded-full"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>

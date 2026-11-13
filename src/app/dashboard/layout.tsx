@@ -28,7 +28,8 @@ import {
   ChevronRight,
   ShieldCheck,
   ShieldAlert,
-  PhoneCall
+  PhoneCall,
+  ArrowUpRight
 } from 'lucide-react';
 import { storage } from '@/lib/store';
 import axiosInstance from '@/lib/axios';
@@ -264,20 +265,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <div className="min-h-screen bg-slate-50 flex flex-col" suppressHydrationWarning>
       {/* Sticky Admin Impersonation Banner */}
       {impersonatingName && (
-        <div className="bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 text-slate-950 px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-md sticky top-0 z-50 border-b border-amber-600">
+        <div className="bg-red-600 text-white px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-xs sticky top-0 z-50 border-b border-red-700">
           <div className="flex items-center gap-2">
-            <span className="p-1 bg-black text-amber-400 rounded-md">
+            <span className="p-1 bg-black text-white rounded-md">
               <ShieldAlert className="w-3.5 h-3.5" />
             </span>
             <span>
-              ⚠️ সতর্কবার্তা: আপনি সাপোর্ট দেওয়ার জন্য এই প্রার্থীর অ্যাকাউন্টে অ্যাডমিন হিসেবে প্রবেশ করেছেন (&ldquo;{impersonatingName}&rdquo;)।
+              সতর্কবার্তা: আপনি সাপোর্ট দেওয়ার জন্য এই প্রার্থীর অ্যাকাউন্টে অ্যাডমিন হিসেবে প্রবেশ করেছেন (&ldquo;{impersonatingName}&rdquo;)।
             </span>
           </div>
           <button
             onClick={handleExitImpersonation}
-            className="px-3.5 py-1.5 bg-slate-950 hover:bg-black text-amber-300 rounded-lg text-xs font-bold transition-all shadow-sm flex items-center gap-1 cursor-pointer shrink-0 border border-amber-500/30"
+            className="px-3.5 py-1.5 bg-black hover:bg-slate-900 text-white rounded-lg text-xs font-bold transition-all shadow-xs flex items-center gap-1 cursor-pointer shrink-0 border border-red-400"
           >
-            <span>অ্যাডমিন প্যানেলে ফিরুন ↗</span>
+            <span>অ্যাডমিন প্যানেলে ফিরুন</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
           </button>
         </div>
       )}
@@ -336,7 +338,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           ${mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}>
           {/* Sidebar Candidate Profile Snapshot Header */}
-          <div className="p-5 border-b border-slate-100 bg-gradient-to-b from-slate-50/70 to-white">
+          <div className="p-5 border-b border-slate-100 bg-white">
             <div className="flex items-center justify-between mb-3 lg:hidden">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">মেনু নেভিগেশন</span>
               <button onClick={() => setMobileSidebarOpen(false)} aria-label="মেনু বন্ধ করুন" className="p-1 text-slate-400 hover:text-slate-600">

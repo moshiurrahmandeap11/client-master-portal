@@ -44,7 +44,7 @@ export default function CareerGuidesListClient() {
       </div>
 
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-slate-950 via-emerald-950 to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl border border-emerald-900/40 relative overflow-hidden">
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xs border border-slate-800 relative overflow-hidden">
         <div className="max-w-3xl space-y-3">
           <span className="bg-emerald-500 text-slate-950 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider inline-flex items-center gap-1.5 shadow-sm">
             <Sparkles className="w-3.5 h-3.5" />

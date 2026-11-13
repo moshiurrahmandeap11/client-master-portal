@@ -24,7 +24,8 @@ import {
   SlidersHorizontal,
   RotateCcw,
   Banknote,
-  MapPin
+  MapPin,
+  X
 } from 'lucide-react';
 import { JobCircular } from '@/types';
 import { storage } from '@/lib/store';
@@ -800,10 +801,9 @@ function JobListingViewContent({
       )}
 
       {/* 2. Hero Header */}
-      <div className="bg-gradient-to-br from-emerald-900 via-teal-900 to-slate-900 rounded-3xl p-6 sm:p-10 text-white relative overflow-hidden shadow-xl">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
+      <div className="bg-slate-900 rounded-3xl p-6 sm:p-10 text-white relative overflow-hidden shadow-sm border border-slate-800">
         <div className="relative z-10 space-y-3 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 border border-emerald-400/30 rounded-full text-xs font-bold text-emerald-300">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-800 border border-slate-700 rounded-full text-xs font-bold text-emerald-400">
             <Sparkles className="w-3.5 h-3.5" />
             <span>{badge}</span>
           </div>
@@ -847,7 +847,7 @@ function JobListingViewContent({
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs p-1"
                 title="সার্চ মুছুন"
               >
-                ✕
+                <X className="w-3.5 h-3.5" />
               </button>
             )}
           </div>

@@ -20,7 +20,8 @@ import {
   Radio, 
   ChevronRight,
   ExternalLink,
-  Plus
+  Plus,
+  Lightbulb as LightbulbIcon
 } from 'lucide-react';
 
 interface SmsNotificationsManagementProps {
@@ -435,7 +436,7 @@ export default function SmsNotificationsManagement({
                     : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                 }`}
               >
-                {selectedGateway === 'Teletalk SMS' ? '✓ প্রধান গেটওয়ে নির্বাচিত' : 'প্রধান গেটওয়ে হিসেবে সেট করুন'}
+                {selectedGateway === 'Teletalk SMS' ? <span className="inline-flex items-center gap-1"><Check className="w-3.5 h-3.5" /> প্রধান গেটওয়ে নির্বাচিত</span> : 'প্রধান গেটওয়ে হিসেবে সেট করুন'}
               </button>
             </div>
 
@@ -470,7 +471,7 @@ export default function SmsNotificationsManagement({
                     : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                 }`}
               >
-                {selectedGateway === 'Greenweb BD' ? '✓ প্রধান গেটওয়ে নির্বাচিত' : 'প্রধান গেটওয়ে হিসেবে সেট করুন'}
+                {selectedGateway === 'Greenweb BD' ? <span className="inline-flex items-center gap-1"><Check className="w-3.5 h-3.5" /> প্রধান গেটওয়ে নির্বাচিত</span> : 'প্রধান গেটওয়ে হিসেবে সেট করুন'}
               </button>
             </div>
 
@@ -505,7 +506,7 @@ export default function SmsNotificationsManagement({
                     : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                 }`}
               >
-                {selectedGateway === 'SSL Wireless' ? '✓ প্রধান গেটওয়ে নির্বাচিত' : 'প্রধান গেটওয়ে হিসেবে সেট করুন'}
+                {selectedGateway === 'SSL Wireless' ? <span className="inline-flex items-center gap-1"><Check className="w-3.5 h-3.5" /> প্রধান গেটওয়ে নির্বাচিত</span> : 'প্রধান গেটওয়ে হিসেবে সেট করুন'}
               </button>
             </div>
           </div>
@@ -829,8 +830,9 @@ export default function SmsNotificationsManagement({
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-100 text-[11px] text-slate-500 bg-slate-50 p-3 rounded-xl">
-                💡 <span className="font-bold text-slate-700">টিপস:</span> ব্রডকাস্ট নোটিফিকেশন একইসাথে প্রার্থীর একাউন্ট অ্যালার্ট ও পুশ নোটিফিকেশন হিসেবে সংরক্ষিত থাকে।
+              <div className="pt-4 border-t border-slate-100 text-[11px] text-slate-500 bg-slate-50 p-3 rounded-xl flex items-start gap-2">
+                <LightbulbIcon className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                <span><span className="font-bold text-slate-700">টিপস:</span> ব্রডকাস্ট নোটিফিকেশন একইসাথে প্রার্থীর একাউন্ট অ্যালার্ট ও পুশ নোটিফিকেশন হিসেবে সংরক্ষিত থাকে।</span>
               </div>
             </div>
           </div>

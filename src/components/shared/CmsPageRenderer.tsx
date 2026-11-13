@@ -21,6 +21,7 @@ import {
   Clock,
   RotateCcw
 } from 'lucide-react';
+import { FaStar } from 'react-icons/fa6';
 import { PageRecord, PageSection, JobCircular } from '@/types';
 import JobCard from '@/components/shared/JobCard';
 
@@ -225,9 +226,9 @@ function SectionBlock({ section, initialJobs = [] }: { section: PageSection; ini
               className="w-full transition-transform duration-300 group-hover:scale-105"
             />
             {(section.title || content.badge || content.buttonLabel) && (
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent flex flex-col justify-end p-6 sm:p-10 text-white space-y-3">
+              <div className="absolute inset-0 bg-slate-950/60 flex flex-col justify-end p-6 sm:p-10 text-white space-y-3">
                 {content.badge && (
-                  <span className="inline-block px-3 py-1 bg-emerald-600 text-white rounded-full text-xs font-bold uppercase tracking-wider w-fit">
+                  <span className="inline-block px-3 py-1 bg-emerald-700 text-white rounded-full text-xs font-bold uppercase tracking-wider w-fit">
                     {content.badge}
                   </span>
                 )}
@@ -297,7 +298,7 @@ function SectionBlock({ section, initialJobs = [] }: { section: PageSection; ini
               { value: '৩,৫০০+', label: 'সফল চাকরি আবেদন' },
               { value: '১০০%', label: 'ভেরিফাইড সার্কুলার' },
               { value: '২৪/৭', label: 'লাইভ সাপোর্ট ডেস্ক' },
-              { value: '৪.৯ ★', label: 'গড় ক্যান্ডিডেট রেটিং' }
+              { value: '৪.৯/৫', label: 'গড় ক্যান্ডিডেট রেটিং' }
             ]).map((stat: any, i: number) => (
               <div key={i} className="bg-white p-5 rounded-2xl border border-slate-200/90 text-center space-y-1 shadow-2xs">
                 <div className="text-2xl sm:text-3xl font-black text-emerald-700">{stat.value || stat.title}</div>
@@ -360,7 +361,11 @@ function SectionBlock({ section, initialJobs = [] }: { section: PageSection; ini
             ]).map((rev: any, rIdx: number) => (
               <div key={rIdx} className="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex text-amber-400 text-sm">★★★★★</div>
+                  <div className="flex items-center gap-0.5 text-amber-400">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <FaStar key={s} className="w-3.5 h-3.5" />
+                    ))}
+                  </div>
                   <span className="text-xs text-emerald-700 bg-emerald-50 font-bold px-2 py-0.5 rounded-md">ভেরিফাইড</span>
                 </div>
                 <p className="text-sm text-slate-700 italic leading-relaxed">“{rev.quote || rev.desc}”</p>
@@ -496,7 +501,7 @@ function SectionBlock({ section, initialJobs = [] }: { section: PageSection; ini
     case 'cta':
       return (
         <div className={`${mwClass} mx-auto px-4 sm:px-6 lg:px-8 ${customClass}`}>
-          <div className="bg-gradient-to-r from-emerald-800 to-teal-900 text-white rounded-3xl p-8 sm:p-12 shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="bg-emerald-800 text-white rounded-3xl p-8 sm:p-12 shadow-xs flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-2 text-center md:text-left">
               {content.badge && (
                 <span className="inline-block px-3 py-1 bg-white/20 text-white rounded-full text-xs font-bold uppercase tracking-wider mb-1">

@@ -354,7 +354,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
       
       {/* 1. TOP ANNOUNCEMENT TICKER (Dynamic from Admin CMS) */}
       {(platformSettings?.general?.announcementEnabled !== false) && (
-        <div className="bg-gradient-to-r from-slate-950 via-emerald-950 to-slate-900 text-white text-[11px] sm:text-xs py-1.5 px-4 sm:px-6 lg:px-8 border-b border-emerald-900/40">
+        <div className="bg-slate-900 text-white text-[11px] sm:text-xs py-1.5 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
           <div className="w-full flex items-center justify-between">
             <div className="flex items-center gap-2 overflow-hidden">
               <span className="bg-red-600 text-white px-2 py-0.5 rounded-full text-[12px] sm:text-[13px] font-black uppercase tracking-wider animate-pulse flex-shrink-0">
@@ -398,7 +398,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                 className="h-10 sm:h-11 w-auto max-w-[160px] object-contain group-hover:scale-105 transition-transform"
               />
             ) : (
-              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-br from-emerald-600 via-teal-700 to-emerald-900 flex items-center justify-center text-white shadow-md shadow-emerald-800/25 group-hover:scale-105 transition-transform relative overflow-hidden">
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-emerald-700 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform relative overflow-hidden">
                 <Briefcase className="w-5 h-5 text-white" />
                 <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-red-600 rounded-full border-2 border-white"></div>
               </div>

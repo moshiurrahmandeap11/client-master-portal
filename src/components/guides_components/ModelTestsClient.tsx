@@ -160,7 +160,7 @@ export default function ModelTestsClient() {
       {mode === 'list' && (
         <div className="space-y-8">
           {/* Hero Banner */}
-          <div className="bg-gradient-to-r from-slate-950 via-emerald-950 to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl border border-emerald-900/40 relative overflow-hidden">
+          <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xs border border-slate-800 relative overflow-hidden">
             <div className="max-w-2xl space-y-3">
               <span className="bg-emerald-500 text-slate-950 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider inline-flex items-center gap-1.5 shadow-sm">
                 <Trophy className="w-3.5 h-3.5" />
@@ -221,7 +221,7 @@ export default function ModelTestsClient() {
                     <button
                       type="button"
                       onClick={() => handleStartTest(test)}
-                      className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer hover:scale-105"
+                      className="w-full sm:w-auto px-6 py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <span>টেস্ট শুরু করুন</span>
                       <ArrowRight className="w-4 h-4" />
@@ -353,7 +353,7 @@ export default function ModelTestsClient() {
               <button
                 type="button"
                 onClick={handleSubmitTest}
-                className="flex-1 sm:flex-none px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer hover:scale-105"
+                className="flex-1 sm:flex-none px-6 py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>টেস্ট সাবমিট করুন ও ফলাফল দেখুন</span>
                 <Check className="w-4 h-4" />
@@ -370,7 +370,7 @@ export default function ModelTestsClient() {
         <div className="space-y-8">
           
           {/* Result Score Card */}
-          <div className="bg-gradient-to-br from-slate-950 via-emerald-950 to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl border border-emerald-900/50 space-y-6">
+          <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xs border border-slate-800 space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
               <div>
                 <span className="bg-emerald-500 text-slate-950 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider inline-flex items-center gap-1.5 shadow-sm">
@@ -399,8 +399,8 @@ export default function ModelTestsClient() {
               <Trophy className="w-5 h-5 shrink-0 text-emerald-400" />
               <span>
                 {resultsSummary.netScore >= activeTest.passingScore
-                  ? `🎉 অভিনন্দন! আপনি সফলভাবে পাস করেছেন (পাস মার্কস ছিল ${toBn(activeTest.passingScore)})। আপনার প্রস্তুতি সঠিক ট্র্যাকে রয়েছে।`
-                  : `⚠️ পাস করতে আরও কিছু নম্বর প্রয়োজন ছিল (পাস মার্কস ছিল ${toBn(activeTest.passingScore)})। দুর্বল অধ্যায়গুলোতে বেশি নজর দিন এবং রিভিশন দিন।`}
+                  ? `অভিনন্দন! আপনি সফলভাবে পাস করেছেন (পাস মার্কস ছিল ${toBn(activeTest.passingScore)})। আপনার প্রস্তুতি সঠিক ট্র্যাকে রয়েছে।`
+                  : `পাস করতে আরও কিছু নম্বর প্রয়োজন ছিল (পাস মার্কস ছিল ${toBn(activeTest.passingScore)})। দুর্বল অধ্যায়গুলোতে বেশি নজর দিন এবং রিভিশন দিন।`}
               </span>
             </div>
 

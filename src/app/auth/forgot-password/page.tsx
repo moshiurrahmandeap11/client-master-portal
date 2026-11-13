@@ -188,11 +188,11 @@ function ForgotPasswordWizard() {
         
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500 to-amber-700 text-white flex items-center justify-center mx-auto shadow-md">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-700 text-white flex items-center justify-center mx-auto shadow-xs">
             <KeyRound className="w-6 h-6" />
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-            পাসওয়ার্ড <span className="text-amber-600">রিকভারি ও রিসেট</span>
+            পাসওয়ার্ড <span className="text-emerald-700">রিকভারি ও রিসেট</span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 font-medium">
             ৩টি সহজ ধাপে নিরাপদ ওটিপি যাচাইয়ের মাধ্যমে পাসওয়ার্ড উদ্ধার করুন
@@ -202,17 +202,17 @@ function ForgotPasswordWizard() {
         {/* 3-Step Progress Indicator */}
         <div className="grid grid-cols-3 gap-2 text-center text-[11px] font-bold">
           <div className={`p-2 rounded-xl transition-all ${
-            step === 1 ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-slate-100 text-slate-400'
+            step === 1 ? 'bg-emerald-50 text-emerald-900 border border-emerald-300' : 'bg-slate-100 text-slate-400'
           }`}>
             <span>১. তথ্য দিন</span>
           </div>
           <div className={`p-2 rounded-xl transition-all ${
-            step === 2 ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-slate-100 text-slate-400'
+            step === 2 ? 'bg-emerald-50 text-emerald-900 border border-emerald-300' : 'bg-slate-100 text-slate-400'
           }`}>
             <span>২. ওটিপি যাচাই</span>
           </div>
           <div className={`p-2 rounded-xl transition-all ${
-            step === 3 ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' : 'bg-slate-100 text-slate-400'
+            step === 3 ? 'bg-emerald-50 text-emerald-900 border border-emerald-300' : 'bg-slate-100 text-slate-400'
           }`}>
             <span>৩. নতুন পাসওয়ার্ড</span>
           </div>
@@ -399,7 +399,7 @@ function ForgotPasswordWizard() {
                   <span className={`text-[10px] font-bold ${
                     newPassword === confirmPassword ? 'text-emerald-700' : 'text-rose-600'
                   }`}>
-                    {newPassword === confirmPassword ? '✓ মিল রয়েছে' : 'অমিল'}
+                    {newPassword === confirmPassword ? 'মিল রয়েছে' : 'অমিল'}
                   </span>
                 )}
               </div>

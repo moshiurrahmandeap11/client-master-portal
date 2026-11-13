@@ -72,9 +72,23 @@ import {
   MessageCircle, 
   GraduationCap, 
   Award, 
-  Calendar, 
-  User 
+  Calendar,
+  User,
+  Smartphone,
+  Wallet,
+  Building2,
+  MapPin,
+  Home,
+  BadgeCheck,
+  IdCard,
+  Camera,
+  Folder,
+  Inbox,
+  Lightbulb,
+  MessageSquareWarning,
+  Headphones
 } from 'lucide-react';
+import { FaLandmarkFlag, FaBuildingColumns } from 'react-icons/fa6';
 import CouponsRaffleManagement from '@/components/admin_components/CouponsRaffleManagement';
 import WebsiteBuilder from '@/components/admin_components/WebsiteBuilder';
 import SourceRegistryManagement from '@/components/admin_components/SourceRegistryManagement';
@@ -852,7 +866,7 @@ function AdminContent() {
           if (res.ok) successCount++;
         } catch (e) {}
       }
-      alert(`✓ ${successCount} টি পেমেন্ট সফলভাবে এক ক্লিকে অনুমোদন করা হয়েছে!`);
+      alert(`${successCount} টি পেমেন্ট সফলভাবে এক ক্লিকে অনুমোদন করা হয়েছে!`);
       setSelectedPaymentIds([]);
       fetchAllAdminData();
     } catch {
@@ -1777,8 +1791,8 @@ function AdminContent() {
           badgeColor: 'bg-emerald-600 text-white',
           keywords: ['এসএমএস', 'sms', 'notification', 'মেসেজ', 'ব্রডকাস্ট', 'টেমপ্লেট', 'অভিযোগ', 'সাপোর্ট'],
           subTabs: [
-            { id: 'job-reports', label: '🚨 ভুয়া সার্কুলার ও অভিযোগ সেল' },
-            { id: 'support-tickets', label: '🎧 সাপোর্ট টিকেট ও হেল্পডেস্ক' },
+            { id: 'job-reports', label: 'ভুয়া সার্কুলার ও অভিযোগ সেল' },
+            { id: 'support-tickets', label: 'সাপোর্ট টিকেট ও হেল্পডেস্ক' },
             { id: 'notifications', label: 'নোটিফিকেশন ও ব্রডকাস্ট' },
             { id: 'sms-status', label: 'এসএমএস গেটওয়ে ও ব্যালেন্স' },
             { id: 'templates-delivery', label: 'মেসেজ টেমপ্লেট ও ডেলিভারি লগ' }
@@ -1918,7 +1932,7 @@ function AdminContent() {
       'pending-approval': { group: 'সার্কুলার ও নিয়োগ হাব', label: 'অনুমোদনের অপেক্ষায়' },
       'archived-jobs': { group: 'সার্কুলার ও নিয়োগ হাব', label: 'সংরক্ষিত চাকরি' },
       'job-locations': { group: 'সার্কুলার ও নিয়োগ হাব', label: 'চাকরির অবস্থান ও জেলা' },
-      'job-reports': { group: 'যোগাযোগ ও মেসেজিং', label: '🚨 ভুয়া সার্কুলার ও অভিযোগ সেল' },
+      'job-reports': { group: 'যোগাযোগ ও মেসেজিং', label: 'ভুয়া সার্কুলার ও অভিযোগ সেল' },
       'new-candidates': { group: 'প্রার্থী ও প্রতিষ্ঠান হাব', label: 'নতুন নিবন্ধিত প্রার্থী' },
       'candidate-cv': { group: 'প্রার্থী ও প্রতিষ্ঠান হাব', label: 'সিভি ও ডকুমেন্ট ভল্ট' },
       'suspended-accounts': { group: 'প্রার্থী ও প্রতিষ্ঠান হাব', label: 'স্থগিত অ্যাকাউন্ট' },
@@ -1929,7 +1943,7 @@ function AdminContent() {
       'failed-jobs': { group: 'অটোমেশন ও লাইভ এজেন্ট', label: 'ব্যর্থ কাজ ও এরর লগ' },
       'schema-markup': { group: 'ওয়েবসাইট ও কন্টেন্ট সিএমএস', label: 'JobPosting Schema Markup' },
       'sitemap-settings': { group: 'ওয়েবসাইট ও কন্টেন্ট সিএমএস', label: 'Sitemap ও Robots সেটিংস' },
-      'support-tickets': { group: 'যোগাযোগ ও মেসেজিং', label: '🎧 সাপোর্ট টিকেট ও হেল্পডেস্ক' }
+      'support-tickets': { group: 'যোগাযোগ ও মেসেজিং', label: 'সাপোর্ট টিকেট ও হেল্পডেস্ক' }
     };
 
     if (SUB_TAB_TITLES[activeTab]) {
@@ -1965,9 +1979,9 @@ function AdminContent() {
       );
     }
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl p-8 border border-slate-200 relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-emerald-600 via-teal-500 to-amber-500" />
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-emerald-700" />
           
           <div className="text-center space-y-3 mb-8">
             <div className="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center mx-auto shadow-inner">
@@ -2074,7 +2088,7 @@ function AdminContent() {
                 title="টেলিটক অলজবস থেকে সরাসরি নতুন সার্কুলার সংগ্রহ করুন"
               >
                 <RefreshCw className={`w-3.5 h-3.5 text-teal-700 ${isSyncingAlljobs ? 'animate-spin' : ''}`} />
-                <span>{isSyncingAlljobs ? 'সিঙ্ক চলছে...' : '⚡ অলজবস লাইভ সিঙ্ক'}</span>
+                <span>{isSyncingAlljobs ? 'সিঙ্ক চলছে...' : 'অলজবস লাইভ সিঙ্ক'}</span>
               </button>
 
               <button
@@ -2089,7 +2103,7 @@ function AdminContent() {
                     <button
                 type="button"
                 onClick={handleOpenCreateJob}
-                className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
+                className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
                 title="নতুন নিয়োগ বিজ্ঞপ্তি তৈরি করুন"
               >
                 <PlusCircle className="w-4 h-4" />
@@ -2162,10 +2176,10 @@ function AdminContent() {
                   type="button"
                   onClick={runLiveDiagnostics}
                   disabled={isRunningDiagnostics}
-                  className="px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 active:scale-95 text-white rounded-xl text-xs font-black shadow-md shadow-emerald-700/20 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 whitespace-nowrap"
+                  className="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 active:scale-95 text-white rounded-xl text-xs font-bold shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 whitespace-nowrap"
                 >
                   <RefreshCw className={`w-4 h-4 ${isRunningDiagnostics ? 'animate-spin' : ''}`} />
-                  <span>{isRunningDiagnostics ? 'ডায়াগনস্টিক চলছে...' : '⚡ লাইভ ডায়াগনস্টিক টেস্ট চালান'}</span>
+                  <span>{isRunningDiagnostics ? 'ডায়াগনস্টিক চলছে...' : 'লাইভ ডায়াগনস্টিক টেস্ট চালান'}</span>
                 </button>
               </div>
               
@@ -2352,7 +2366,7 @@ function AdminContent() {
                             : 'bg-white text-pink-700 hover:bg-pink-50 border border-pink-200'
                         }`}
                       >
-                        <span>📱 বিকাশ</span>
+                        <span className="inline-flex items-center gap-1"><Smartphone className="w-3.5 h-3.5" /> বিকাশ</span>
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           paymentGatewayFilter === 'bKash' ? 'bg-white/25 text-white' : 'bg-pink-100 text-pink-800'
                         }`}>
@@ -2369,7 +2383,7 @@ function AdminContent() {
                             : 'bg-white text-orange-700 hover:bg-orange-50 border border-orange-200'
                         }`}
                       >
-                        <span>🔴 নগদ</span>
+                        <span className="inline-flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-orange-500 inline-block" /> নগদ</span>
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           paymentGatewayFilter === 'Nagad' ? 'bg-white/25 text-white' : 'bg-orange-100 text-orange-800'
                         }`}>
@@ -2386,7 +2400,7 @@ function AdminContent() {
                             : 'bg-white text-emerald-800 hover:bg-emerald-50 border border-emerald-200'
                         }`}
                       >
-                        <span>💳 ওয়ালেট</span>
+                        <span className="inline-flex items-center gap-1"><Wallet className="w-3.5 h-3.5" /> ওয়ালেট</span>
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           paymentGatewayFilter === 'Wallet' ? 'bg-white/25 text-white' : 'bg-emerald-100 text-emerald-800'
                         }`}>
@@ -2423,7 +2437,7 @@ function AdminContent() {
                           disabled={isBulkApproving}
                           className="px-4 py-1.5 bg-white text-emerald-900 rounded-xl shadow-xs hover:bg-emerald-50 transition-all cursor-pointer flex items-center gap-1.5"
                         >
-                          {isBulkApproving ? 'অনুমোদন হচ্ছে...' : `✓ নির্বাচিত ${selectedPaymentIds.length} টি পেমেন্ট একসাথে অনুমোদন করুন`}
+                          {isBulkApproving ? 'অনুমোদন হচ্ছে...' : <span className="inline-flex items-center gap-1"><Check className="w-3.5 h-3.5" /> নির্বাচিত {selectedPaymentIds.length} টি পেমেন্ট একসাথে অনুমোদন করুন</span>}
                         </button>
                       </div>
                     </div>
@@ -2464,7 +2478,7 @@ function AdminContent() {
                             : 'bg-white text-blue-900 hover:bg-blue-50 border border-blue-200'
                         }`}
                       >
-                        <span>🏛️ টেলিটক</span>
+                        <span className="inline-flex items-center gap-1"><FaLandmarkFlag className="w-3 h-3" /> টেলিটক</span>
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           processingChannelFilter === 'teletalk' ? 'bg-white/25 text-white' : 'bg-blue-100 text-blue-800'
                         }`}>
@@ -2481,7 +2495,7 @@ function AdminContent() {
                             : 'bg-white text-blue-900 hover:bg-blue-50 border border-blue-200'
                         }`}
                       >
-                        <span>🏦 বাংলাদেশ ব্যাংক</span>
+                        <span className="inline-flex items-center gap-1"><FaBuildingColumns className="w-3 h-3" /> বাংলাদেশ ব্যাংক</span>
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           processingChannelFilter === 'bank_erecruitment' ? 'bg-white/25 text-white' : 'bg-blue-100 text-blue-800'
                         }`}>
@@ -2498,7 +2512,7 @@ function AdminContent() {
                             : 'bg-white text-blue-900 hover:bg-blue-50 border border-blue-200'
                         }`}
                       >
-                        <span>🏢 কর্পোরেট / Bdjobs</span>
+                        <span className="inline-flex items-center gap-1"><Building2 className="w-3 h-3" /> কর্পোরেট / Bdjobs</span>
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           processingChannelFilter === 'corporate_portal' ? 'bg-white/25 text-white' : 'bg-blue-100 text-blue-800'
                         }`}>
@@ -2515,7 +2529,7 @@ function AdminContent() {
                             : 'bg-white text-blue-900 hover:bg-blue-50 border border-blue-200'
                         }`}
                       >
-                        <span>✉️ HR ইমেইল</span>
+                        <span className="inline-flex items-center gap-1"><Mail className="w-3 h-3" /> HR ইমেইল</span>
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           processingChannelFilter === 'hr_email' ? 'bg-white/25 text-white' : 'bg-blue-100 text-blue-800'
                         }`}>
@@ -2532,7 +2546,7 @@ function AdminContent() {
                             : 'bg-white text-blue-900 hover:bg-blue-50 border border-blue-200'
                         }`}
                       >
-                        <span>🎓 পোর্টাল / অন্যান্য</span>
+                        <span className="inline-flex items-center gap-1"><GraduationCap className="w-3 h-3" /> পোর্টাল / অন্যান্য</span>
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           processingChannelFilter === 'custom_portal' ? 'bg-white/25 text-white' : 'bg-blue-100 text-blue-800'
                         }`}>
@@ -2550,15 +2564,15 @@ function AdminContent() {
                           onChange={(e) => setProcessingSortOrder(e.target.value as any)}
                           className="bg-transparent text-xs font-bold text-slate-800 focus:outline-none cursor-pointer"
                         >
-                          <option value="deadline_urgent">⚡ জরুরি ডেডলাইন আগে</option>
-                          <option value="newest">🕒 সর্বশেষ আবেদন আগে</option>
-                          <option value="oldest">⏳ পুরোনো আবেদন আগে</option>
-                          <option value="channel">🏛️ চ্যানেল অনুসারে গ্রুপ</option>
+                          <option value="deadline_urgent">জরুরি ডেডলাইন আগে</option>
+                          <option value="newest">সর্বশেষ আবেদন আগে</option>
+                          <option value="oldest">পুরোনো আবেদন আগে</option>
+                          <option value="channel">চ্যানেল অনুসারে গ্রুপ</option>
                         </select>
                       </div>
 
-                      <div className="text-xs text-rose-700 bg-rose-50 px-3 py-1.5 rounded-xl border border-rose-200 font-bold whitespace-nowrap flex items-center gap-1 shrink-0">
-                        <span>🔴 আজ শেষ:</span>
+                      <div className="text-xs text-rose-700 bg-rose-50 px-3 py-1.5 rounded-xl border border-rose-200 font-bold whitespace-nowrap flex items-center gap-1.5 shrink-0">
+                        <span className="inline-flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-rose-600 animate-pulse" /> আজ শেষ:</span>
                         <span className="font-mono text-sm font-black">
                           {applications.filter(a => {
                             if (a.status !== 'processing') return false;
@@ -2607,7 +2621,7 @@ function AdminContent() {
                             : 'bg-white text-emerald-800 hover:bg-emerald-50 border border-emerald-200'
                         }`}
                       >
-                        <span>✓ সফল সম্পন্ন</span>
+                        <span className="inline-flex items-center gap-1"><Check className="w-3 h-3" /> সফল সম্পন্ন</span>
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           completedSubFilter === 'completed' ? 'bg-white/25 text-white' : 'bg-emerald-100 text-emerald-800'
                         }`}>
@@ -2625,7 +2639,7 @@ function AdminContent() {
                         }`}
                         title="যেসব সম্পন্ন আবেদনের অ্যাপ্লিক্যান্ট কপি PDF এখনো আপলোড হয়নি"
                       >
-                        <span>⚠️ কপি আপলোড বাকি</span>
+                        <span className="inline-flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> কপি আপলোড বাকি</span>
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           completedSubFilter === 'pdf_missing' ? 'bg-white/25 text-white' : 'bg-amber-200 text-amber-900 font-mono'
                         }`}>
@@ -2643,7 +2657,7 @@ function AdminContent() {
                         }`}
                         title="যেসব আবেদনের অ্যাপ্লিক্যান্ট কপি আপলোড সম্পন্ন"
                       >
-                        <span>📄 কপি ডেলিভার্ড</span>
+                        <span className="inline-flex items-center gap-1"><FileText className="w-3 h-3" /> কপি ডেলিভার্ড</span>
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           completedSubFilter === 'pdf_ready' ? 'bg-white/25 text-white' : 'bg-blue-100 text-blue-800'
                         }`}>
@@ -2660,7 +2674,7 @@ function AdminContent() {
                             : 'bg-white text-rose-700 hover:bg-rose-50 border border-rose-200'
                         }`}
                       >
-                        <span>✕ বাতিলকৃত আবেদন</span>
+                        <span className="inline-flex items-center gap-1"><X className="w-3 h-3" /> বাতিলকৃত আবেদন</span>
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           completedSubFilter === 'rejected' ? 'bg-white/25 text-white' : 'bg-rose-100 text-rose-800'
                         }`}>
@@ -2716,7 +2730,7 @@ function AdminContent() {
                         : 'bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200/60'
                     }`}
                   >
-                    <span>⏳ অপেক্ষমাণ পেমেন্ট</span>
+                    <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" /> অপেক্ষমাণ পেমেন্ট</span>
                     <span className="px-1.5 py-0.2 bg-amber-200/50 rounded-full text-[10px]">
                       {applications.filter(a => a.status === 'pending_payment').length}
                     </span>
@@ -2731,7 +2745,7 @@ function AdminContent() {
                         : 'bg-blue-50 text-blue-800 hover:bg-blue-100 border border-blue-200/60'
                     }`}
                   >
-                    <span>⚙️ প্রসেসিং কিউ</span>
+                    <span className="inline-flex items-center gap-1"><RefreshCw className="w-3 h-3" /> প্রসেসিং কিউ</span>
                     <span className="px-1.5 py-0.2 bg-blue-200/50 rounded-full text-[10px]">
                       {applications.filter(a => a.status === 'processing').length}
                     </span>
@@ -2746,7 +2760,7 @@ function AdminContent() {
                         : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200/60'
                     }`}
                   >
-                    <span>✓ সম্পন্ন</span>
+                    <span className="inline-flex items-center gap-1"><Check className="w-3 h-3" /> সম্পন্ন</span>
                     <span className="px-1.5 py-0.2 bg-emerald-200/50 rounded-full text-[10px]">
                       {applications.filter(a => a.status === 'completed').length}
                     </span>
@@ -2761,7 +2775,7 @@ function AdminContent() {
                         : 'bg-rose-50 text-rose-800 hover:bg-rose-100 border border-rose-200/60'
                     }`}
                   >
-                    <span>✕ বাতিল</span>
+                    <span className="inline-flex items-center gap-1"><X className="w-3 h-3" /> বাতিল</span>
                     <span className="px-1.5 py-0.2 bg-rose-200/50 rounded-full text-[10px]">
                       {applications.filter(a => a.status === 'rejected').length}
                     </span>
@@ -2836,8 +2850,8 @@ function AdminContent() {
                               <div className="flex items-center gap-1.5">
                                 <span className="font-bold text-slate-900">{app.id}</span>
                                 {isUrgentDeadline && (
-                                  <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-100 text-rose-700 animate-pulse" title="ডেডলাইন ১ দিনের মধ্যে!">
-                                    ⚡ জরুরি
+                                  <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-rose-100 text-rose-700 animate-pulse inline-flex items-center gap-0.5" title="ডেডলাইন ১ দিনের মধ্যে!">
+                                    <Zap className="w-2.5 h-2.5" /> জরুরি
                                   </span>
                                 )}
                               </div>
@@ -2873,12 +2887,12 @@ function AdminContent() {
                               {/* Candidate Trust Score & Sender Phone */}
                               <div className="flex flex-wrap items-center gap-1.5 mt-1">
                                 {candCompletedCount > 0 ? (
-                                  <span className="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">
-                                    🟢 বিশ্বস্ত ({candCompletedCount} টি সম্পন্ন)
+                                  <span className="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200 inline-flex items-center gap-1">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 inline-block" /> বিশ্বস্ত ({candCompletedCount} টি সম্পন্ন)
                                   </span>
                                 ) : (
-                                  <span className="text-[9px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded">
-                                    ⚪ নতুন আবেদনকারী
+                                  <span className="text-[9px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded inline-flex items-center gap-1">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-slate-400 inline-block" /> নতুন আবেদনকারী
                                   </span>
                                 )}
 
@@ -2892,10 +2906,10 @@ function AdminContent() {
                                   <button
                                     type="button"
                                     onClick={() => setPaymentProofApp(app)}
-                                    className="text-[9px] font-bold text-blue-800 bg-blue-50 hover:bg-blue-100 px-1.5 py-0.2 rounded border border-blue-200 cursor-pointer"
+                                    className="text-[9px] font-bold text-blue-800 bg-blue-50 hover:bg-blue-100 px-1.5 py-0.2 rounded border border-blue-200 cursor-pointer inline-flex items-center gap-1"
                                     title="পেমেন্ট স্লিপের স্ক্রিনশট প্রিভিউ দেখুন"
                                   >
-                                    📷 প্রুফ
+                                    <Camera className="w-2.5 h-2.5" /> প্রুফ
                                   </button>
                                 )}
                               </div>
@@ -2971,7 +2985,7 @@ function AdminContent() {
                               {isDuplicateTrx && (
                                 <div className="mt-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-bold">
                                   <AlertTriangle className="w-2.5 h-2.5 text-rose-600" />
-                                  <span>🚨 ডুপ্লিকেট TrxID ({duplicateTrxMap[cleanTrx]} বার)</span>
+                                  <span>ডুপ্লিকেট TrxID ({duplicateTrxMap[cleanTrx]} বার)</span>
                                 </div>
                               )}
 
@@ -2982,19 +2996,19 @@ function AdminContent() {
                                     href={`https://wa.me/88${app.candidatePhone ? app.candidatePhone.replace(/\D/g, '') : ''}?text=${encodeURIComponent(`আসসালামু আলাইকুম ${app.candidateName}, চাকরি সেবা অ্যাডমিন টিম থেকে আপনার "${app.jobTitle}" আবেদনের জন্য যোগাযোগ করা হচ্ছে। নির্ধারিত ফি ৳${app.totalAmount || 0}-এর বিপরীতে প্রেরিত TrxID-তে সমস্যা পাওয়া গেছে। অনুগ্রহ করে যাচাই করে জানান।`)}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-[9px] font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 px-1.5 py-0.5 rounded border border-amber-200 transition-colors"
+                                    className="text-[9px] font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 px-1.5 py-0.5 rounded border border-amber-200 transition-colors inline-flex items-center gap-1"
                                     title="টাকা কম বা অমিল থাকলে হোয়াটসঅ্যাপ মেসেজ পাঠান"
                                   >
-                                    💬 টাকা অমিল
+                                    <MessageSquare className="w-2.5 h-2.5" /> টাকা অমিল
                                   </a>
                                   <a
                                     href={`https://wa.me/88${app.candidatePhone ? app.candidatePhone.replace(/\D/g, '') : ''}?text=${encodeURIComponent(`আসসালামু আলাইকুম ${app.candidateName}, আপনার "${app.jobTitle}" আবেদনে প্রদত্ত TrxID "${app.trxId || ''}" টি ভুল দেখাচ্ছে বা ব্যাংকিং লেজারে ম্যাচ করছে না। অনুগ্রহ করে সঠিক TrxID টি লিখে জানান।`)}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-[9px] font-bold text-rose-800 bg-rose-50 hover:bg-rose-100 px-1.5 py-0.5 rounded border border-rose-200 transition-colors"
+                                    className="text-[9px] font-bold text-rose-800 bg-rose-50 hover:bg-rose-100 px-1.5 py-0.5 rounded border border-rose-200 transition-colors inline-flex items-center gap-1"
                                     title="ভুল TrxID হলে হোয়াটসঅ্যাপ মেসেজ পাঠান"
                                   >
-                                    💬 TrxID ভুল
+                                    <MessageSquare className="w-2.5 h-2.5" /> TrxID ভুল
                                   </a>
                                 </div>
                               )}
@@ -3006,7 +3020,7 @@ function AdminContent() {
                                 <div className="space-y-1">
                                   <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">
                                     <CheckCircle2 className="w-3 h-3 text-emerald-700" />
-                                    <span>✓ সম্পন্ন</span>
+                                    <span>সম্পন্ন</span>
                                   </span>
                                   {app.teleTalkTrackingId && (
                                     <div className="text-[10px] font-mono font-bold text-slate-700 bg-slate-100 px-1.5 py-0.2 rounded border border-slate-200 flex items-center gap-1 w-fit">
@@ -3023,11 +3037,11 @@ function AdminContent() {
                                   )}
                                   {(!app.applicantCopyPdfUrl && !app.pdfUrl) ? (
                                     <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-50 text-amber-800 border border-amber-300">
-                                      ⚠️ কপি বাকি
+                                      <AlertTriangle className="w-2.5 h-2.5" /> কপি বাকি
                                     </span>
                                   ) : (
                                     <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[9px] font-bold bg-blue-50 text-blue-800 border border-blue-200">
-                                      📄 কপি রেডি
+                                      <FileText className="w-2.5 h-2.5" /> কপি রেডি
                                     </span>
                                   )}
                                 </div>
@@ -3035,19 +3049,19 @@ function AdminContent() {
                                 <div className="space-y-1">
                                   <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-100 text-blue-800">
                                     <Clock className="w-3 h-3 text-blue-700" />
-                                    <span>● প্রসেসিং</span>
+                                    <span>প্রসেসিং</span>
                                   </span>
                                   {(() => {
                                     const job = jobs.find(j => j.id === app.jobId);
                                     const ch = detectSubmissionChannel(app, job);
                                     return (
-                                      <div className="text-[10px] font-bold text-blue-700 bg-blue-50/90 px-1.5 py-0.2 rounded border border-blue-200 w-fit">
-                                        {ch === 'bank_erecruitment' ? '🏦 বাংলাদেশ ব্যাংক' :
-                                         ch === 'corporate_portal' ? '🏢 কর্পোরেট' :
-                                         ch === 'hr_email' ? '✉️ HR ইমেইল' :
-                                         ch === 'custom_portal' ? '🎓 পোর্টাল' :
-                                         ch === 'postal_offline' ? '📮 ডাকযোগে' :
-                                         '🏛️ টেলিটক সরকারি'}
+                                      <div className="text-[10px] font-bold text-blue-700 bg-blue-50/90 px-1.5 py-0.2 rounded border border-blue-200 w-fit inline-flex items-center gap-1">
+                                        {ch === 'bank_erecruitment' ? <><FaBuildingColumns className="w-2.5 h-2.5" /> বাংলাদেশ ব্যাংক</> :
+                                         ch === 'corporate_portal' ? <><Building2 className="w-2.5 h-2.5" /> কর্পোরেট</> :
+                                         ch === 'hr_email' ? <><Mail className="w-2.5 h-2.5" /> HR ইমেইল</> :
+                                         ch === 'custom_portal' ? <><GraduationCap className="w-2.5 h-2.5" /> পোর্টাল</> :
+                                         ch === 'postal_offline' ? <><Send className="w-2.5 h-2.5" /> ডাকযোগে</> :
+                                         <><FaLandmarkFlag className="w-2.5 h-2.5" /> টেলিটক সরকারি</>}
                                       </div>
                                     );
                                   })()}
@@ -3055,13 +3069,13 @@ function AdminContent() {
                               ) : app.status === 'pending_payment' ? (
                                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800">
                                   <Clock className="w-3 h-3 text-amber-700" />
-                                  <span>⏳ অপেক্ষমাণ</span>
+                                  <span>অপেক্ষমাণ</span>
                                 </span>
                               ) : (
                                 <div className="space-y-1">
                                   <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800">
                                     <X className="w-3 h-3 text-rose-700" />
-                                    <span>✕ বাতিল</span>
+                                    <span>বাতিল</span>
                                   </span>
                                   {(app.notes || app.rejectionReason) && (
                                     <div className="text-[10px] font-medium text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200 max-w-[140px] line-clamp-1" title={app.rejectionReason || app.notes}>
@@ -3274,7 +3288,7 @@ function AdminContent() {
                       title="প্রার্থীর সম্পূর্ণ মাস্টার ভল্ট ও ৩৬০° প্রোফাইল দেখুন"
                     >
                       <User className="w-3.5 h-3.5 text-emerald-700" />
-                      <span>🔍 প্রার্থীর সম্পূর্ণ মাস্টার ভল্ট ও ৩৬০° প্রোফাইল দেখুন</span>
+                      <span>প্রার্থীর সম্পূর্ণ মাস্টার ভল্ট ও ৩৬০° প্রোফাইল দেখুন</span>
                     </button>
 
                     <button
@@ -3521,22 +3535,20 @@ function AdminContent() {
 
                     <div className="grid grid-cols-2 gap-2 text-xs">
                       {[
-                        { label: 'প্রার্থীর NID (Front)', url: inspectingCandidate?.nidFrontUrl, icon: '🪪' },
-                        { label: 'প্রার্থীর NID (Back)', url: inspectingCandidate?.nidBackUrl, icon: '🪪' },
+                        { label: 'প্রার্থীর NID (Front)', url: inspectingCandidate?.nidFrontUrl },
+                        { label: 'প্রার্থীর NID (Back)', url: inspectingCandidate?.nidBackUrl },
                         { 
                           label: 'পিতার NID ফাইল', 
-                          url: (inspectingCandidate?.fatherNid?.startsWith('http') || inspectingCandidate?.fatherNid?.startsWith('/api')) ? inspectingCandidate?.fatherNid : null, 
-                          icon: '👨‍🦳' 
+                          url: (inspectingCandidate?.fatherNid?.startsWith('http') || inspectingCandidate?.fatherNid?.startsWith('/api')) ? inspectingCandidate?.fatherNid : null
                         },
                         { 
                           label: 'মাতার NID ফাইল', 
-                          url: (inspectingCandidate?.motherNid?.startsWith('http') || inspectingCandidate?.motherNid?.startsWith('/api')) ? inspectingCandidate?.motherNid : null, 
-                          icon: '👵' 
+                          url: (inspectingCandidate?.motherNid?.startsWith('http') || inspectingCandidate?.motherNid?.startsWith('/api')) ? inspectingCandidate?.motherNid : null
                         },
-                        { label: 'নাগরিক সনদ / চেয়ারম্যান সনদ', url: inspectingCandidate?.nagorikCertificateUrl, icon: '🏛️' },
-                        { label: 'জন্ম নিবন্ধন সনদ', url: inspectingCandidate?.birthCertificateUrl, icon: '📜' },
-                        { label: 'চারিত্রিক সনদপত্র', url: inspectingCandidate?.characterCertificateUrl, icon: '🎖️' },
-                        { label: 'কোটা / বিশেষ সুবিধা সনদ', url: inspectingCandidate?.quotaCertificateUrl, icon: '🌟' }
+                        { label: 'নাগরিক সনদ / চেয়ারম্যান সনদ', url: inspectingCandidate?.nagorikCertificateUrl },
+                        { label: 'জন্ম নিবন্ধন সনদ', url: inspectingCandidate?.birthCertificateUrl },
+                        { label: 'চারিত্রিক সনদপত্র', url: inspectingCandidate?.characterCertificateUrl },
+                        { label: 'কোটা / বিশেষ সুবিধা সনদ', url: inspectingCandidate?.quotaCertificateUrl }
                       ].map((doc, idx) => (
                         <div 
                           key={idx} 
@@ -3545,7 +3557,7 @@ function AdminContent() {
                           }`}
                         >
                           <div className="flex items-center gap-1.5 min-w-0">
-                            <span className="text-sm">{doc.icon}</span>
+                            <FileText className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
                             <span className="font-bold text-slate-800 text-[11px] truncate">{doc.label}</span>
                           </div>
 
@@ -3612,8 +3624,8 @@ function AdminContent() {
                         </span>
                       </h4>
                       {copiedFieldKey && (
-                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full animate-fadeIn border border-emerald-200">
-                          ✓ {copiedFieldKey} কপি হয়েছে!
+                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full animate-fadeIn border border-emerald-200 inline-flex items-center gap-1">
+                          <Check className="w-3 h-3" /> {copiedFieldKey} কপি হয়েছে!
                         </span>
                       )}
                     </div>
@@ -3708,8 +3720,8 @@ function AdminContent() {
                                inspectingApp.paymentMethod === 'Wallet' ? 'ডিজিটাল ওয়ালেট (Wallet Balance)' :
                                inspectingApp.paymentMethod === 'Bank' ? 'ব্যাংক ট্রান্সফার (Bank Deposit)' : inspectingApp.paymentMethod}
                             </span>
-                            <span className="text-[10px] text-slate-400 font-mono">
-                              ({inspectingApp.verificationType === 'officially_verified' ? '✓ ভেরিফায়েড' : 'ইউজার প্রদত্ত'})
+                            <span className="text-[10px] text-slate-400 font-mono inline-flex items-center gap-1">
+                              ({inspectingApp.verificationType === 'officially_verified' ? 'ভেরিফায়েড' : 'ইউজার প্রদত্ত'})
                             </span>
                           </div>
                         </div>
@@ -3797,16 +3809,16 @@ function AdminContent() {
                     {/* Auto-detected Channel Indicator Badge */}
                     <div className="flex items-center justify-between text-[11px] bg-white p-2.5 rounded-xl border border-blue-200">
                       <span className="text-slate-600 font-bold flex items-center gap-1.5">
-                        <span className="text-amber-500">✨</span>
+                        <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                         <span>সার্কুলার ক্যাটাগরি অনুযায়ী স্বয়ংক্রিয় চ্যানেল:</span>
                       </span>
-                      <span className="font-black text-blue-800 bg-blue-50 px-2.5 py-0.5 rounded-lg border border-blue-300">
-                        {drawerSubmissionChannel === 'bank_erecruitment' ? '🏦 বাংলাদেশ ব্যাংক ই-রিক্রুটমেন্ট' :
-                         drawerSubmissionChannel === 'corporate_portal' ? '🏢 বেসরকারি / Bdjobs পোর্টাল' :
-                         drawerSubmissionChannel === 'custom_portal' ? '🎓 বিশ্ববিদ্যালয় / স্বায়ত্তশাসিত পোর্টাল' :
-                         drawerSubmissionChannel === 'postal_offline' ? '📮 রেজিস্ট্রি ডাকযোগে / চালান' :
-                         drawerSubmissionChannel === 'hr_email' ? '✉️ সরাসরি HR ইমেইল' :
-                         '🏛️ টেলিটক সরকারি পোর্টাল'}
+                      <span className="font-black text-blue-800 bg-blue-50 px-2.5 py-0.5 rounded-lg border border-blue-300 inline-flex items-center gap-1">
+                        {drawerSubmissionChannel === 'bank_erecruitment' ? <><FaBuildingColumns className="w-3 h-3" /> বাংলাদেশ ব্যাংক ই-রিক্রুটমেন্ট</> :
+                         drawerSubmissionChannel === 'corporate_portal' ? <><Building2 className="w-3 h-3" /> বেসরকারি / Bdjobs পোর্টাল</> :
+                         drawerSubmissionChannel === 'custom_portal' ? <><GraduationCap className="w-3 h-3" /> বিশ্ববিদ্যালয় / স্বায়ত্তশাসিত পোর্টাল</> :
+                         drawerSubmissionChannel === 'postal_offline' ? <><Send className="w-3 h-3" /> রেজিস্ট্রি ডাকযোগে / চালান</> :
+                         drawerSubmissionChannel === 'hr_email' ? <><Mail className="w-3 h-3" /> সরাসরি HR ইমেইল</> :
+                         <><FaLandmarkFlag className="w-3 h-3" /> টেলিটক সরকারি পোর্টাল</>}
                       </span>
                     </div>
 
@@ -3815,56 +3827,56 @@ function AdminContent() {
                       <button
                         type="button"
                         onClick={() => setDrawerSubmissionChannel('teletalk')}
-                        className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition-colors cursor-pointer ${
+                        className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition-colors cursor-pointer inline-flex items-center gap-1 ${
                           drawerSubmissionChannel === 'teletalk' ? 'bg-blue-700 text-white shadow-2xs' : 'bg-white text-slate-700 border border-slate-200'
                         }`}
                       >
-                        🏛️ টেলিটক সরকারি
+                        <FaLandmarkFlag className="w-3 h-3" /> টেলিটক সরকারি
                       </button>
                       <button
                         type="button"
                         onClick={() => setDrawerSubmissionChannel('bank_erecruitment')}
-                        className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition-colors cursor-pointer ${
+                        className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition-colors cursor-pointer inline-flex items-center gap-1 ${
                           drawerSubmissionChannel === 'bank_erecruitment' ? 'bg-blue-700 text-white shadow-2xs' : 'bg-white text-slate-700 border border-slate-200'
                         }`}
                       >
-                        🏦 বাংলাদেশ ব্যাংক
+                        <FaBuildingColumns className="w-3 h-3" /> বাংলাদেশ ব্যাংক
                       </button>
                       <button
                         type="button"
                         onClick={() => setDrawerSubmissionChannel('corporate_portal')}
-                        className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition-colors cursor-pointer ${
+                        className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition-colors cursor-pointer inline-flex items-center gap-1 ${
                           drawerSubmissionChannel === 'corporate_portal' ? 'bg-blue-700 text-white shadow-2xs' : 'bg-white text-slate-700 border border-slate-200'
                         }`}
                       >
-                        🏢 বেসরকারি / Bdjobs
+                        <Building2 className="w-3 h-3" /> বেসরকারি / Bdjobs
                       </button>
                       <button
                         type="button"
                         onClick={() => setDrawerSubmissionChannel('hr_email')}
-                        className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition-colors cursor-pointer ${
+                        className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition-colors cursor-pointer inline-flex items-center gap-1 ${
                           drawerSubmissionChannel === 'hr_email' ? 'bg-blue-700 text-white shadow-2xs' : 'bg-white text-slate-700 border border-slate-200'
                         }`}
                       >
-                        ✉️ সরাসরি HR ইমেইল
+                        <Mail className="w-3 h-3" /> সরাসরি HR ইমেইল
                       </button>
                       <button
                         type="button"
                         onClick={() => setDrawerSubmissionChannel('custom_portal')}
-                        className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition-colors cursor-pointer ${
+                        className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition-colors cursor-pointer inline-flex items-center gap-1 ${
                           drawerSubmissionChannel === 'custom_portal' ? 'bg-blue-700 text-white shadow-2xs' : 'bg-white text-slate-700 border border-slate-200'
                         }`}
                       >
-                        🎓 বিশ্ববিদ্যালয় / কাস্টম পোর্টাল
+                        <GraduationCap className="w-3 h-3" /> বিশ্ববিদ্যালয় / কাস্টম পোর্টাল
                       </button>
                       <button
                         type="button"
                         onClick={() => setDrawerSubmissionChannel('postal_offline')}
-                        className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition-colors cursor-pointer ${
+                        className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition-colors cursor-pointer inline-flex items-center gap-1 ${
                           drawerSubmissionChannel === 'postal_offline' ? 'bg-blue-700 text-white shadow-2xs' : 'bg-white text-slate-700 border border-slate-200'
                         }`}
                       >
-                        📮 ডাকযোগে / চালান আবেদন
+                        <Send className="w-3 h-3" /> ডাকযোগে / চালান আবেদন
                       </button>
                     </div>
 
@@ -3903,7 +3915,7 @@ function AdminContent() {
                           {/* 16222 SMS Fee Generator */}
                           {drawerTrackingId && (
                             <div className="p-2.5 bg-blue-100/60 rounded-lg border border-blue-200 text-[11px] space-y-1.5">
-                              <span className="font-bold text-blue-900 block">📲 টেলিটক ১৬২২২ এসএমএস কোড জেনারেটর:</span>
+                              <span className="font-bold text-blue-900 flex items-center gap-1.5"><Smartphone className="w-3.5 h-3.5" /> টেলিটক ১৬২২২ এসএমএস কোড জেনারেটর:</span>
                               <div className="flex items-center justify-between bg-white px-2 py-1 rounded border border-blue-200 font-mono">
                                 <span>১ম SMS: <strong>BPSC {drawerTrackingId}</strong></span>
                                 <button
@@ -3992,8 +4004,9 @@ function AdminContent() {
                               className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs font-mono font-bold bg-white"
                             />
                           </div>
-                          <div className="p-2 bg-blue-50 rounded-lg border border-blue-200 text-[11px] text-blue-800">
-                            💡 ইমেইলে সিভি প্রেরণের পর জিমেইল/আউটলুকের সেন্ট মেসেজ স্ক্রিনশট বা পিডিএফ কনফার্মেশন কপি নিচের আপলোড বক্সে সংযুক্ত করুন।
+                          <div className="p-2 bg-blue-50 rounded-lg border border-blue-200 text-[11px] text-blue-800 flex items-start gap-1.5">
+                            <Lightbulb className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+                            <span>ইমেইলে সিভি প্রেরণের পর জিমেইল/আউটলুকের সেন্ট মেসেজ স্ক্রিনশট বা পিডিএফ কনফার্মেশন কপি নিচের আপলোড বক্সে সংযুক্ত করুন।</span>
                           </div>
                         </div>
                       )}
@@ -4078,7 +4091,7 @@ function AdminContent() {
                             className="cursor-pointer flex flex-col items-center justify-center gap-1 text-xs text-blue-700 hover:text-blue-900 font-bold"
                           >
                             <Upload className="w-5 h-5 text-blue-600" />
-                            <span>{isUploadingPdf ? 'সার্ভারে ফাইল আপলোড হচ্ছে...' : '📁 কম্পিউটার থেকে সরাসরি PDF ফাইল নির্বাচন করুন'}</span>
+                            <span>{isUploadingPdf ? 'সার্ভারে ফাইল আপলোড হচ্ছে...' : 'কম্পিউটার থেকে সরাসরি PDF ফাইল নির্বাচন করুন'}</span>
                             <span className="text-[10px] text-slate-400 font-normal">সর্বোচ্চ ১০ মেগাবাইট (PDF, JPG, PNG)</span>
                           </label>
                         </div>
@@ -4090,8 +4103,8 @@ function AdminContent() {
                               {uploadSuccessMessage}
                             </span>
                             {drawerPdfUrl && (
-                              <a href={drawerPdfUrl} target="_blank" rel="noopener noreferrer" className="text-emerald-700 hover:underline">
-                                প্রিভিউ দেখুন ↗
+                              <a href={drawerPdfUrl} target="_blank" rel="noopener noreferrer" className="text-emerald-700 hover:underline inline-flex items-center gap-0.5">
+                                প্রিভিউ দেখুন <ArrowUpRight className="w-3 h-3" />
                               </a>
                             )}
                           </div>
@@ -4137,12 +4150,12 @@ function AdminContent() {
                           <CheckCircle className="w-4 h-4" />
                           <span>
                             {isSubmittingDrawer ? 'আপডেট হচ্ছে...' :
-                             drawerSubmissionChannel === 'teletalk' ? '✓ টেলিটক আবেদন সম্পন্ন ও স্লিপ রিলিজ করুন' :
-                             drawerSubmissionChannel === 'bank_erecruitment' ? '✓ বাংলাদেশ ব্যাংক আবেদন সম্পন্ন ও স্লিপ কনফার্ম করুন' :
-                             drawerSubmissionChannel === 'corporate_portal' ? '✓ কর্পোরেট / Bdjobs আবেদন সম্পন্ন ও স্লিপ রিলিজ করুন' :
-                             drawerSubmissionChannel === 'hr_email' ? '✓ ইমেইল আবেদন নিশ্চিত ও কনফার্মেশন পাঠান' :
-                             drawerSubmissionChannel === 'custom_portal' ? '✓ পোর্টাল আবেদন সম্পন্ন ও স্লিপ রিলিজ করুন' :
-                             '✓ অফলাইন/ডাকযোগে আবেদন নিশ্চিত ও চালান স্লিপ দিন'}
+                             drawerSubmissionChannel === 'teletalk' ? 'টেলিটক আবেদন সম্পন্ন ও স্লিপ রিলিজ করুন' :
+                             drawerSubmissionChannel === 'bank_erecruitment' ? 'বাংলাদেশ ব্যাংক আবেদন সম্পন্ন ও স্লিপ কনফার্ম করুন' :
+                             drawerSubmissionChannel === 'corporate_portal' ? 'কর্পোরেট / Bdjobs আবেদন সম্পন্ন ও স্লিপ রিলিজ করুন' :
+                             drawerSubmissionChannel === 'hr_email' ? 'ইমেইল আবেদন নিশ্চিত ও কনফার্মেশন পাঠান' :
+                             drawerSubmissionChannel === 'custom_portal' ? 'পোর্টাল আবেদন সম্পন্ন ও স্লিপ রিলিজ করুন' :
+                             'অফলাইন/ডাকযোগে আবেদন নিশ্চিত ও চালান স্লিপ দিন'}
                           </span>
                         </button>
                       </div>
@@ -4230,7 +4243,7 @@ function AdminContent() {
                       title="অফিসিয়াল ক্যাশ মানি রিসিট ও কনফার্মেশন স্লিপ প্রিন্ট করুন"
                     >
                       <Printer className="w-3.5 h-3.5 text-slate-700" />
-                      <span>🖨️ অফিসিয়াল রসিদ প্রিন্ট</span>
+                      <span>অফিসিয়াল রসিদ প্রিন্ট</span>
                     </button>
 
                     <button
@@ -4338,7 +4351,7 @@ function AdminContent() {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-4 border-b border-slate-100">
                   <div className="flex items-center gap-3">
                     <div className="w-11 h-11 rounded-2xl bg-emerald-700 text-white flex items-center justify-center font-bold text-xl shadow-sm">
-                      📁
+                      <Folder className="w-5 h-5" />
                     </div>
                     <div>
                       <h2 className="font-black text-base text-slate-900">অ্যাপ্লিক্যান্ট কপি ও অফিশিয়াল ডকুমেন্টস রিপোজিটরি</h2>
@@ -4377,7 +4390,7 @@ function AdminContent() {
                 <div className="p-4 bg-emerald-50/60 border border-emerald-200 rounded-2xl space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="p-1 bg-emerald-200 text-emerald-900 rounded-lg text-xs">📤</span>
+                      <span className="p-1.5 bg-emerald-200 text-emerald-900 rounded-lg inline-flex items-center justify-center"><Upload className="w-3.5 h-3.5" /></span>
                       <h4 className="font-black text-xs sm:text-sm text-emerald-950">কুইক ড্রপজোন: অফিশিয়াল অ্যাপ্লিক্যান্ট কপি আপলোড ও অটো-লিঙ্ক</h4>
                     </div>
                     <span className="text-[10px] text-emerald-800 font-bold bg-white px-2 py-0.5 rounded-full border border-emerald-200">
@@ -4396,10 +4409,10 @@ function AdminContent() {
                       >
                         <option value="">-- আবেদনকারী নির্বাচন করুন --</option>
                         {completedMissingPdf.length > 0 && (
-                          <optgroup label="⚠️ কপি আপলোড বাকি থাকা আবেদন (অগ্রাধিকার):">
+                          <optgroup label="কপি আপলোড বাকি থাকা আবেদন (অগ্রাধিকার):">
                             {completedMissingPdf.map(a => (
                               <option key={a.id} value={a.id}>
-                                ⚠️ {a.candidateName} — {a.jobTitle.slice(0, 25)} ({a.id})
+                                {a.candidateName} — {a.jobTitle.slice(0, 25)} ({a.id})
                               </option>
                             ))}
                           </optgroup>
@@ -4431,7 +4444,7 @@ function AdminContent() {
                       <label className="text-[10px] font-bold text-emerald-900 block sm:hidden">ফাইল নির্বাচন:</label>
                       <label className={`w-full px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-xs flex items-center justify-center gap-2 cursor-pointer transition-all ${isQuickUploadingDoc ? 'opacity-60 cursor-not-allowed' : ''}`}>
                         <Upload className="w-3.5 h-3.5" />
-                        <span>{isQuickUploadingDoc ? 'আপলোড হচ্ছে...' : '📁 ফাইল সিলেক্ট বা ড্রপ করুন'}</span>
+                        <span>{isQuickUploadingDoc ? 'আপলোড হচ্ছে...' : 'ফাইল সিলেক্ট বা ড্রপ করুন'}</span>
                         <input
                           type="file"
                           accept=".pdf,image/png,image/jpeg"
@@ -4475,7 +4488,7 @@ function AdminContent() {
                           : 'bg-white text-blue-900 hover:bg-blue-50 border border-blue-200'
                       }`}
                     >
-                      <span>🏛️ টেলিটক স্লিপ</span>
+                      <span className="inline-flex items-center gap-1"><FaLandmarkFlag className="w-3 h-3" /> টেলিটক স্লিপ</span>
                       <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                         docCategoryFilter === 'teletalk' ? 'bg-white/25 text-white' : 'bg-blue-100 text-blue-800'
                       }`}>
@@ -4492,7 +4505,7 @@ function AdminContent() {
                           : 'bg-white text-emerald-900 hover:bg-emerald-50 border border-emerald-200'
                       }`}
                     >
-                      <span>🏦 ব্যাংক কনফার্মেশন</span>
+                      <span className="inline-flex items-center gap-1"><FaBuildingColumns className="w-3 h-3" /> ব্যাংক কনফার্মেশন</span>
                       <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                         docCategoryFilter === 'bank' ? 'bg-white/25 text-white' : 'bg-emerald-100 text-emerald-800'
                       }`}>
@@ -4509,7 +4522,7 @@ function AdminContent() {
                           : 'bg-white text-indigo-900 hover:bg-indigo-50 border border-indigo-200'
                       }`}
                     >
-                      <span>🎫 এডমিট কার্ড</span>
+                      <span className="inline-flex items-center gap-1"><IdCard className="w-3 h-3" /> এডমিট কার্ড</span>
                       <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                         docCategoryFilter === 'admit_card' ? 'bg-white/25 text-white' : 'bg-indigo-100 text-indigo-800'
                       }`}>
@@ -4527,7 +4540,7 @@ function AdminContent() {
                       }`}
                       title="যেসব সম্পন্ন আবেদনে এখনো অ্যাপ্লিক্যান্ট কপি আপলোড করা হয়নি"
                     >
-                      <span>⚠️ কপি আপলোড বাকি</span>
+                      <span className="inline-flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> কপি আপলোড বাকি</span>
                       <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                         docCategoryFilter === 'missing' ? 'bg-white/25 text-white' : 'bg-rose-200 text-rose-900 font-mono'
                       }`}>
@@ -4573,7 +4586,7 @@ function AdminContent() {
                         className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl flex items-center gap-1.5 shadow-2xs cursor-pointer transition-colors"
                       >
                         <MessageCircle className="w-3.5 h-3.5" />
-                        <span>✓ একসাথে হোয়াটসঅ্যাপ ডাউনলোড নোটিশ পাঠান</span>
+                        <span>একসাথে হোয়াটসঅ্যাপ ডাউনলোড নোটিশ পাঠান</span>
                       </button>
                     </div>
                   </div>
@@ -4595,8 +4608,8 @@ function AdminContent() {
 
                 {/* Documents Grid */}
                 {displayList.length === 0 ? (
-                  <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-3xl space-y-2">
-                    <div className="text-3xl">📭</div>
+                  <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-3xl space-y-2 flex flex-col items-center">
+                    <Inbox className="w-8 h-8 text-slate-300" />
                     <div className="font-bold text-slate-700 text-sm">কোনো অ্যাপ্লিক্যান্ট কপি পাওয়া যায়নি</div>
                     <p className="text-xs text-slate-400">ফিল্টার পরিবর্তন করে দেখুন অথবা উপরের ড্রপজোন থেকে সরাসরি কপি আপলোড করুন</p>
                   </div>
@@ -4632,8 +4645,8 @@ function AdminContent() {
                                   channel === 'teletalk' ? 'bg-blue-50 text-blue-800 border border-blue-200' :
                                   'bg-purple-50 text-purple-800 border border-purple-200'
                                 }`}>
-                                  {channel === 'bank_erecruitment' ? '🏦 বাংলাদেশ ব্যাংক' :
-                                   channel === 'teletalk' ? '🏛️ টেলিটক সরকারি' : '🎓 পোর্টাল আবেদন'}
+                                  {channel === 'bank_erecruitment' ? <><FaBuildingColumns className="w-3 h-3" /> বাংলাদেশ ব্যাংক</> :
+                                   channel === 'teletalk' ? <><FaLandmarkFlag className="w-3 h-3" /> টেলিটক সরকারি</> : <><GraduationCap className="w-3 h-3" /> পোর্টাল আবেদন</>}
                                 </span>
                                 <h4 className="font-bold text-xs sm:text-sm text-slate-900 line-clamp-1" title={app.jobTitle}>
                                   {app.jobTitle}
@@ -4684,7 +4697,7 @@ function AdminContent() {
                             ) : (
                               <span className="inline-flex items-center gap-1 text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-300">
                                 <AlertTriangle className="w-3 h-3 text-amber-600" />
-                                <span>⚠️ কপি আপলোড অপেক্ষমাণ</span>
+                                <span>কপি আপলোড অপেক্ষমাণ</span>
                               </span>
                             )}
 
@@ -4795,7 +4808,7 @@ function AdminContent() {
                 {/* Lightbox Header */}
                 <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                   <div className="flex items-center gap-2">
-                    <span className="p-1.5 bg-blue-100 text-blue-800 rounded-lg font-bold">📄</span>
+                    <span className="p-1.5 bg-blue-100 text-blue-800 rounded-lg font-bold inline-flex items-center justify-center"><FileText className="w-4 h-4" /></span>
                     <div>
                       <h3 className="font-black text-slate-900 text-sm sm:text-base line-clamp-1">{previewPdfTitle || 'অ্যাপ্লিক্যান্ট কপি প্রিভিউ'}</h3>
                       <p className="text-[10px] text-slate-400 font-mono">অফিসিয়াল ডকুমেন্ট ভিউয়ার ও অডিট স্ক্রিন</p>
@@ -4925,7 +4938,7 @@ function AdminContent() {
                       type="button"
                       onClick={handleSyncAlljobs}
                       disabled={isSyncingAlljobs}
-                      className="px-4 py-2 bg-gradient-to-r from-teal-600 to-emerald-700 hover:from-teal-700 hover:to-emerald-800 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm shadow-emerald-900/10 disabled:opacity-50 cursor-pointer"
+                      className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs disabled:opacity-50 cursor-pointer"
                       title="Alljobs Teletalk থেকে সরাসরি সকল সরকারি সার্কুলার ও মূল PDF লিংক সিঙ্ক করুন"
                     >
                       <RefreshCw className={`w-3.5 h-3.5 ${isSyncingAlljobs ? 'animate-spin' : ''}`} />
@@ -5032,9 +5045,9 @@ function AdminContent() {
 
                 {/* Floating Bulk Action Bar */}
                 {selectedJobIds.length > 0 && (
-                  <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-2xl shadow-lg border border-indigo-800/50">
+                  <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-slate-900 text-white rounded-2xl shadow-sm border border-slate-800">
                     <div className="flex items-center gap-2.5">
-                      <span className="flex items-center justify-center w-7 h-7 rounded-full bg-emerald-500 text-slate-950 font-black text-xs">
+                      <span className="flex items-center justify-center w-7 h-7 rounded-full bg-emerald-700 text-white font-bold text-xs">
                         {selectedJobIds.length}
                       </span>
                       <span className="text-xs font-bold text-slate-200">
@@ -5550,7 +5563,7 @@ function AdminContent() {
                               type="button"
                               onClick={() => handleApproveDraft(draft)}
                               disabled={isApprovingDraft}
-                              className="px-3.5 py-1.5 bg-gradient-to-r from-emerald-700 to-teal-800 hover:from-emerald-800 hover:to-teal-900 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 disabled:opacity-50"
+                              className="px-3.5 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 disabled:opacity-50"
                             >
                               <Check className="w-3.5 h-3.5" />
                               <span>অনুমোদন ও লাইভ করুন</span>
@@ -5640,7 +5653,7 @@ function AdminContent() {
                           type="button"
                           disabled={isGeneratingAi}
                           onClick={() => handleGenerateAiContent(editingDraft)}
-                          className="py-2 px-3 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs transition-all text-xs disabled:opacity-50"
+                          className="py-2 px-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs transition-all text-xs disabled:opacity-50"
                         >
                           {isGeneratingAi ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
                           <span>{editingDraft.aiGeneratedContent ? 'AI বাংলা কনটেন্ট রিফ্রেশ' : 'Gemini AI খাঁটি বাংলা কনটেন্ট প্রস্তুত করুন'}</span>
@@ -5810,7 +5823,7 @@ function AdminContent() {
                             faqItems: editingDraft.aiGeneratedContent?.faqItems,
                             aiGeneratedAt: editingDraft.aiGeneratedContent?.generatedAt
                           })}
-                          className="px-5 py-2 bg-gradient-to-r from-emerald-700 to-teal-800 hover:from-emerald-800 hover:to-teal-900 text-white font-bold rounded-xl shadow-sm flex items-center gap-1.5 disabled:opacity-50"
+                          className="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl shadow-xs flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
                         >
                           {isApprovingDraft ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
                           <span>অনুমোদন করে লাইভ প্রকাশ করুন</span>
@@ -6010,8 +6023,8 @@ function AdminContent() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="font-black text-lg text-slate-900">{profileModalCandidate.name}</h3>
-                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
-                      ✓ ভেরিফাইড চাকরিপ্রার্থী
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 inline-flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" /> ভেরিফাইড চাকরিপ্রার্থী
                     </span>
                   </div>
                   <div className="text-xs text-slate-500 flex items-center gap-2 mt-0.5">
@@ -6043,7 +6056,7 @@ function AdminContent() {
                   <div className="text-2xl font-black text-emerald-900 mt-1">
                     ৳{profileModalCandidate.walletBalance || 450}
                   </div>
-                  <span className="text-[10px] text-emerald-700 font-bold mt-1">✓ স্বয়ংক্রিয় ফি কর্তনের জন্য প্রস্তুত</span>
+                  <span className="text-[10px] text-emerald-700 font-bold mt-1 inline-flex items-center gap-1"><Check className="w-3 h-3" /> স্বয়ংক্রিয় ফি কর্তনের জন্য প্রস্তুত</span>
                 </div>
 
                 <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 flex flex-col justify-between">
@@ -6059,7 +6072,7 @@ function AdminContent() {
                   <div className="text-sm font-black font-mono text-purple-900 mt-1">
                     {profileModalCandidate.nid || '19952692518000214'}
                   </div>
-                  <span className="text-[10px] text-purple-700 font-bold mt-1">✓ ডিজিটাল ভেরিফাইড</span>
+                  <span className="text-[10px] text-purple-700 font-bold mt-1 inline-flex items-center gap-1"><Check className="w-3 h-3" /> ডিজিটাল ভেরিফাইড</span>
                 </div>
               </div>
 
@@ -6098,22 +6111,20 @@ function AdminContent() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
                   {[
-                    { label: 'প্রার্থীর NID (Front)', url: profileModalCandidate.nidFrontUrl, icon: '🪪' },
-                    { label: 'প্রার্থীর NID (Back)', url: profileModalCandidate.nidBackUrl, icon: '🪪' },
+                    { label: 'প্রার্থীর NID (Front)', url: profileModalCandidate.nidFrontUrl },
+                    { label: 'প্রার্থীর NID (Back)', url: profileModalCandidate.nidBackUrl },
                     { 
                       label: 'পিতার এনআইডি', 
-                      url: (profileModalCandidate.fatherNid?.startsWith('http') || profileModalCandidate.fatherNid?.startsWith('/api')) ? profileModalCandidate.fatherNid : null, 
-                      icon: '👨‍🦳' 
+                      url: (profileModalCandidate.fatherNid?.startsWith('http') || profileModalCandidate.fatherNid?.startsWith('/api')) ? profileModalCandidate.fatherNid : null
                     },
                     { 
                       label: 'মাতার এনআইডি', 
-                      url: (profileModalCandidate.motherNid?.startsWith('http') || profileModalCandidate.motherNid?.startsWith('/api')) ? profileModalCandidate.motherNid : null, 
-                      icon: '👵' 
+                      url: (profileModalCandidate.motherNid?.startsWith('http') || profileModalCandidate.motherNid?.startsWith('/api')) ? profileModalCandidate.motherNid : null
                     },
-                    { label: 'নাগরিক সনদ / চেয়ারম্যান সনদ', url: profileModalCandidate.nagorikCertificateUrl, icon: '🏛️' },
-                    { label: 'জন্ম নিবন্ধন সনদ', url: profileModalCandidate.birthCertificateUrl, icon: '📜' },
-                    { label: 'চারিত্রিক সনদপত্র', url: profileModalCandidate.characterCertificateUrl, icon: '🎖️' },
-                    { label: 'কোটা / বিশেষ সুবিধা সনদ', url: profileModalCandidate.quotaCertificateUrl, icon: '🌟' }
+                    { label: 'নাগরিক সনদ / চেয়ারম্যান সনদ', url: profileModalCandidate.nagorikCertificateUrl },
+                    { label: 'জন্ম নিবন্ধন সনদ', url: profileModalCandidate.birthCertificateUrl },
+                    { label: 'চারিত্রিক সনদপত্র', url: profileModalCandidate.characterCertificateUrl },
+                    { label: 'কোটা / বিশেষ সুবিধা সনদ', url: profileModalCandidate.quotaCertificateUrl }
                   ].map((doc, idx) => (
                     <div 
                       key={idx} 
@@ -6122,11 +6133,11 @@ function AdminContent() {
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        <span className="text-base">{doc.icon}</span>
+                        <FileText className="w-4 h-4 text-emerald-700 shrink-0" />
                         <div className="min-w-0">
                           <span className="font-bold text-slate-900 block truncate">{doc.label}</span>
-                          <span className={`text-[10px] font-bold ${doc.url ? 'text-emerald-700' : 'text-slate-400'}`}>
-                            {doc.url ? '✓ আপলোডকৃত' : 'সংরক্ষণ করা হয়নি'}
+                          <span className={`text-[10px] font-bold inline-flex items-center gap-0.5 ${doc.url ? 'text-emerald-700' : 'text-slate-400'}`}>
+                            {doc.url ? <><Check className="w-3 h-3" /> আপলোডকৃত</> : 'সংরক্ষণ করা হয়নি'}
                           </span>
                         </div>
                       </div>
@@ -6166,7 +6177,7 @@ function AdminContent() {
                       return (
                         <div key={idx} className="p-2.5 rounded-xl border border-emerald-300 bg-emerald-50/50 text-xs flex flex-col justify-between">
                           <div className="flex items-center gap-2">
-                            <span className="text-base">📜</span>
+                            <FileText className="w-4 h-4 text-emerald-700 shrink-0" />
                             <div className="min-w-0">
                               <span className="font-bold text-slate-900 block truncate">{doc.title}</span>
                               <span className="text-[10px] text-emerald-700 font-bold block">{doc.category || 'কাস্টম সনদ'} • {doc.uploadDate || 'সংরক্ষিত'}</span>
@@ -6274,12 +6285,12 @@ function AdminContent() {
                               <div className="text-[10px] text-slate-500 font-sans">{a.paymentMethod}</div>
                             </td>
                             <td className="py-2.5 px-3">
-                              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                              <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold inline-flex items-center gap-1 ${
                                 a.status === 'completed' ? 'bg-emerald-100 text-emerald-800' :
                                 a.status === 'processing' ? 'bg-blue-100 text-blue-800' :
                                 a.status === 'pending_payment' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'
                               }`}>
-                                {a.status === 'completed' ? '✓ সম্পন্ন' : a.status === 'processing' ? '● প্রসেসিং' : a.status === 'pending_payment' ? '⏳ অপেক্ষমাণ' : '✕ বাতিল'}
+                                {a.status === 'completed' ? 'সম্পন্ন' : a.status === 'processing' ? 'প্রসেসিং' : a.status === 'pending_payment' ? 'অপেক্ষমাণ' : 'বাতিল'}
                               </span>
                             </td>
                           </tr>
@@ -6428,8 +6439,8 @@ function AdminContent() {
               {/* Header */}
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-xl bg-blue-700 text-white flex items-center justify-center font-bold text-base shadow-sm">
-                    📋
+                  <div className="w-9 h-9 rounded-xl bg-blue-700 text-white flex items-center justify-center font-bold shadow-sm">
+                    <Copy className="w-4 h-4" />
                   </div>
                   <div>
                     <h3 className="font-black text-slate-900 text-sm sm:text-base">১-ক্লিক ফরম ফিলাপ অ্যাসিস্ট্যান্ট (Quick Form Copier)</h3>
@@ -6448,23 +6459,23 @@ function AdminContent() {
               </div>
 
               {/* Master 1-Click Complete Data Copier Banner */}
-              <div className="p-3 bg-gradient-to-r from-emerald-700 to-teal-800 text-white rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-sm">
+              <div className="p-3 bg-slate-900 text-white rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border border-slate-800 shadow-xs">
                 <div>
                   <div className="font-black text-xs sm:text-sm flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4 text-amber-300" />
+                    <Sparkles className="w-4 h-4 text-emerald-400" />
                     <span>স্মার্ট মাস্টার প্রোফাইল ডাটা জেনারেটর</span>
                   </div>
-                  <p className="text-[11px] text-emerald-100">
+                  <p className="text-[11px] text-slate-300">
                     নাম, পিতা-মাতা, NID, বর্তমান ও স্থায়ী ঠিকানাসহ যাবতীয় ফিল্ড একসাথে ফরম্যাট করে ক্লিপবোর্ডে কপি করুন
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={handleCopyMaster}
-                  className="px-4 py-2 bg-white text-emerald-900 rounded-xl text-xs font-black shadow-xs hover:bg-emerald-50 transition-all cursor-pointer flex items-center justify-center gap-1.5 shrink-0"
+                  className="px-4 py-2 bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs hover:bg-emerald-800 transition-all cursor-pointer flex items-center justify-center gap-1.5 shrink-0"
                 >
                   <Copy className="w-3.5 h-3.5 text-emerald-700" />
-                  <span>🌟 সম্পূর্ণ তথ্য মাস্টার কপি</span>
+                  <span>সম্পূর্ণ তথ্য মাস্টার কপি</span>
                 </button>
               </div>
 
@@ -6489,15 +6500,15 @@ function AdminContent() {
 
               {/* Copy Feedback Notification */}
               {copiedFieldKey && (
-                <div className="p-2 bg-emerald-100 border border-emerald-300 rounded-xl text-center text-xs font-bold text-emerald-900 animate-fadeIn">
-                  ✓ {copiedFieldKey} ক্লিপবোর্ডে সফলভাবে কপি হয়েছে!
+                <div className="p-2 bg-emerald-100 border border-emerald-300 rounded-xl text-center text-xs font-bold text-emerald-900 animate-fadeIn flex items-center justify-center gap-1.5">
+                  <Check className="w-3.5 h-3.5 text-emerald-700" /> {copiedFieldKey} ক্লিপবোর্ডে সফলভাবে কপি হয়েছে!
                 </div>
               )}
 
               {/* Official Media & Verification Documents (Photo, Signature, NID Cards Front & Back) */}
               <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl space-y-2 text-xs shadow-2xs">
                 <div className="font-black text-slate-800 uppercase text-[10px] tracking-wider text-emerald-800 flex items-center justify-between">
-                  <span>📸 প্রার্থীর অফিসিয়াল ডকুমেন্টস ও ভেরিফিকেশন ফাইলস</span>
+                  <span className="inline-flex items-center gap-1.5"><Camera className="w-3.5 h-3.5" /> প্রার্থীর অফিসিয়াল ডকুমেন্টস ও ভেরিফিকেশন ফাইলস</span>
                   <span className="text-[10px] text-slate-500 font-normal">টেলিটক ও ব্যাংক আবেদনের জন্য এক ক্লিকে ডাউনলোড</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
@@ -6542,7 +6553,7 @@ function AdminContent() {
                     <div className="min-w-0 pr-1">
                       <span className="font-bold text-slate-800 block text-xs truncate">এনআইডি (Front)</span>
                       <span className="text-[10px] text-purple-700 font-bold block truncate">
-                        {nidFront ? 'স্মার্ট এনআইডি কার্ড' : '⚠️ আপলোড বাকি'}
+                        {nidFront ? 'স্মার্ট এনআইডি কার্ড' : 'আপলোড বাকি'}
                       </span>
                     </div>
                     {nidFront ? (
@@ -6579,7 +6590,7 @@ function AdminContent() {
                     <div className="min-w-0 pr-1">
                       <span className="font-bold text-slate-800 block text-xs truncate">এনআইডি (Back)</span>
                       <span className="text-[10px] text-purple-700 font-bold block truncate">
-                        {nidBack ? 'পেছনের অংশ' : '⚠️ আপলোড বাকি'}
+                        {nidBack ? 'পেছনের অংশ' : 'আপলোড বাকি'}
                       </span>
                     </div>
                     {nidBack ? (
@@ -6616,7 +6627,7 @@ function AdminContent() {
               {/* 1-Click Personal Data Copier */}
               <div className="space-y-2 text-xs">
                 <div className="font-black text-slate-800 uppercase text-[10px] tracking-wider text-emerald-800 flex items-center justify-between">
-                  <span>👤 ব্যক্তিগত বিবরণ (ক্লিক করলেই কপি হবে)</span>
+                  <span className="inline-flex items-center gap-1.5"><User className="w-3.5 h-3.5" /> ব্যক্তিগত বিবরণ (ক্লিক করলেই কপি হবে)</span>
                   <span className="text-[10px] font-normal text-slate-500">যেকোনো ফিল্ডে ক্লিক করুন</span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -6653,13 +6664,13 @@ function AdminContent() {
               {/* COMPLETE ADDRESS DETAILS (PRESENT & PERMANENT) */}
               <div className="space-y-3 text-xs pt-1">
                 <div className="font-black text-slate-800 uppercase text-[10px] tracking-wider text-emerald-800 flex items-center justify-between">
-                  <span>🏠 প্রার্থীর পূর্ণাঙ্গ ঠিকানা বিবরণ (সরকারি ও ব্যাংক আবেদনের জন্য আবশ্যক)</span>
+                  <span className="inline-flex items-center gap-1.5"><Home className="w-3.5 h-3.5" /> প্রার্থীর পূর্ণাঙ্গ ঠিকানা বিবরণ (সরকারি ও ব্যাংক আবেদনের জন্য আবশ্যক)</span>
                   <button
                     type="button"
                     onClick={() => handleCopyField(presentFull, 'সম্পূর্ণ বর্তমান ঠিকানা')}
-                    className="text-emerald-700 hover:underline font-bold text-[10px] cursor-pointer"
+                    className="text-emerald-700 hover:underline font-bold text-[10px] cursor-pointer inline-flex items-center gap-1"
                   >
-                    📋 সম্পূর্ণ ঠিকানা কপি
+                    <Copy className="w-3 h-3" /> সম্পূর্ণ ঠিকানা কপি
                   </button>
                 </div>
 
@@ -6667,14 +6678,15 @@ function AdminContent() {
                 <div className="p-3 bg-emerald-50/40 border border-emerald-200/90 rounded-2xl space-y-2 shadow-2xs">
                   <div className="flex items-center justify-between">
                     <span className="font-black text-emerald-950 text-xs flex items-center gap-1">
-                      <span>📍 বর্তমান ঠিকানা (Present Address)</span>
+                      <MapPin className="w-3.5 h-3.5 text-emerald-700" />
+                      <span>বর্তমান ঠিকানা (Present Address)</span>
                     </span>
                     <button
                       type="button"
                       onClick={() => handleCopyField(presentFull, 'সম্পূর্ণ বর্তমান ঠিকানা')}
-                      className="px-2.5 py-0.5 bg-emerald-200/80 hover:bg-emerald-300 text-emerald-900 rounded-md text-[10px] font-bold cursor-pointer transition-colors shadow-2xs"
+                      className="px-2.5 py-0.5 bg-emerald-200/80 hover:bg-emerald-300 text-emerald-900 rounded-md text-[10px] font-bold cursor-pointer transition-colors shadow-2xs inline-flex items-center gap-1"
                     >
-                      📋 সম্পূর্ণ ঠিকানা কপি
+                      <Copy className="w-3 h-3" /> সম্পূর্ণ ঠিকানা কপি
                     </button>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -6705,14 +6717,15 @@ function AdminContent() {
                 <div className="p-3 bg-slate-50 border border-slate-200 rounded-2xl space-y-2 shadow-2xs">
                   <div className="flex items-center justify-between">
                     <span className="font-black text-slate-800 text-xs flex items-center gap-1">
-                      <span>🏛️ স্থায়ী ঠিকানা (Permanent Address)</span>
+                      <FaLandmarkFlag className="w-3.5 h-3.5 text-slate-700" />
+                      <span>স্থায়ী ঠিকানা (Permanent Address)</span>
                     </span>
                     <button
                       type="button"
                       onClick={() => handleCopyField(permanentFull, 'সম্পূর্ণ স্থায়ী ঠিকানা')}
-                      className="px-2.5 py-0.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-md text-[10px] font-bold cursor-pointer transition-colors"
+                      className="px-2.5 py-0.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-md text-[10px] font-bold cursor-pointer transition-colors inline-flex items-center gap-1"
                     >
-                      📋 সম্পূর্ণ ঠিকানা কপি
+                      <Copy className="w-3 h-3" /> সম্পূর্ণ ঠিকানা কপি
                     </button>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -6742,8 +6755,9 @@ function AdminContent() {
 
               {/* Academic Credentials 1-Click Copier */}
               <div className="space-y-2 text-xs pt-1">
-                <div className="font-black text-slate-800 uppercase text-[10px] tracking-wider text-emerald-800 flex items-center gap-1">
-                  <span>🎓 দাখিলকৃত শিক্ষাগত যোগ্যতা (রোল, রেজি, জিপিএ)</span>
+                <div className="font-black text-slate-800 uppercase text-[10px] tracking-wider text-emerald-800 flex items-center gap-1.5">
+                  <GraduationCap className="w-3.5 h-3.5" />
+                  <span>দাখিলকৃত শিক্ষাগত যোগ্যতা (রোল, রেজি, জিপিএ)</span>
                 </div>
                 <div className="overflow-x-auto rounded-xl border border-slate-200">
                   <table className="w-full text-left text-xs">
@@ -6815,7 +6829,7 @@ function AdminContent() {
                   className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-xs flex items-center gap-1.5 cursor-pointer transition-colors"
                 >
                   <CheckCircle2 className="w-4 h-4" />
-                  <span>✓ ফরম সাবমিশন ও স্লিপ আপলোড ড্রয়ার খুলুন</span>
+                  <span>ফরম সাবমিশন ও স্লিপ আপলোড ড্রয়ার খুলুন</span>
                 </button>
               </div>
 
@@ -6886,9 +6900,9 @@ function AdminContent() {
                   handleApprovePayment(paymentProofApp.id);
                   setPaymentProofApp(null);
                 }}
-                className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-xs cursor-pointer"
+                className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-xs cursor-pointer inline-flex items-center gap-1.5"
               >
-                ✓ পেমেন্ট অনুমোদন করুন
+                <Check className="w-3.5 h-3.5" /> পেমেন্ট অনুমোদন করুন
               </button>
             </div>
           </div>
@@ -6912,14 +6926,14 @@ function AdminContent() {
                   className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
                 >
                   <Printer className="w-4 h-4" />
-                  <span>🖨️ প্রিন্ট করুন</span>
+                  <span>প্রিন্ট করুন</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setPrintableReceiptApp(null)}
-                  className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                  className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1"
                 >
-                  ✕ বন্ধ করুন
+                  <X className="w-3.5 h-3.5" /> বন্ধ করুন
                 </button>
               </div>
             </div>
@@ -7058,7 +7072,9 @@ function AdminContent() {
                   <div className="font-bold text-slate-900 mt-0.5">
                     {printableReceiptApp.paymentMethod} (TrxID: <span className="font-mono text-emerald-800">{printableReceiptApp.trxId || 'N/A'}</span>)
                   </div>
-                  <div className="text-[10px] text-emerald-700 font-bold mt-1">✓ পেমেন্ট অনুমোদিত ও লেজারে অন্তর্ভুক্ত</div>
+                  <div className="text-[10px] text-emerald-700 font-bold mt-1 flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3" /> পেমেন্ট অনুমোদিত ও লেজারে অন্তর্ভুক্ত
+                  </div>
                 </div>
 
                 <div className="text-center sm:text-right">

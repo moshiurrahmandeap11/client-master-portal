@@ -26,6 +26,13 @@ import {
   Info,
   History,
   Zap,
+  Globe as GlobeIcon,
+  Rss as RssIcon,
+  Sparkles as SparklesIcon,
+  PenTool as PenToolIcon,
+  Search as SearchIcon,
+  Check as CheckIcon,
+  X as XIcon,
 } from 'lucide-react';
 import { getAdminHeaders } from '@/lib/axios';
 import { JobSource, SourceClassification, CollectionMethod, SourceHealthStatus, SpiderRun, SpiderRunStatus } from '@/types';
@@ -37,12 +44,12 @@ const CLASSIFICATION_LABELS: Record<SourceClassification, { label: string; color
   custom_api: { label: 'কাস্টম API', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' }
 };
 
-const METHOD_LABELS: Record<CollectionMethod, { label: string; icon: string }> = {
-  html_scrape: { label: 'HTML স্ক্র্যাপিং', icon: '🌐' },
-  json_api: { label: 'JSON API', icon: '⚡' },
-  rss_feed: { label: 'RSS / XML ফিড', icon: '📡' },
-  gemini_ocr_pdf: { label: 'Gemini OCR (PDF)', icon: '🧠' },
-  manual_entry: { label: 'ম্যানুয়াল এন্ট্রি', icon: '✍️' }
+const METHOD_LABELS: Record<CollectionMethod, { label: string; icon: React.ReactNode }> = {
+  html_scrape: { label: 'HTML স্ক্র্যাপিং', icon: <GlobeIcon className="w-3.5 h-3.5" /> },
+  json_api: { label: 'JSON API', icon: <Zap className="w-3.5 h-3.5" /> },
+  rss_feed: { label: 'RSS / XML ফিড', icon: <RssIcon className="w-3.5 h-3.5" /> },
+  gemini_ocr_pdf: { label: 'Gemini OCR (PDF)', icon: <SparklesIcon className="w-3.5 h-3.5" /> },
+  manual_entry: { label: 'ম্যানুয়াল এন্ট্রি', icon: <PenToolIcon className="w-3.5 h-3.5" /> }
 };
 
 const HEALTH_CONFIG: Record<SourceHealthStatus, { label: string; bg: string; dot: string; text: string }> = {
@@ -501,7 +508,7 @@ export default function SourceRegistryManagement() {
               type="button"
               onClick={handleScrapeAll}
               disabled={isScrapingAll}
-              className="px-4 py-2.5 bg-gradient-to-r from-emerald-700 to-teal-800 hover:from-emerald-800 hover:to-teal-900 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-emerald-800/20 flex items-center gap-2 disabled:opacity-50"
+              className="px-4 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-emerald-800/20 flex items-center gap-2 disabled:opacity-50"
             >
               <RefreshCw className={`w-4 h-4 ${isScrapingAll ? 'animate-spin' : ''}`} />
               <span>{isScrapingAll ? 'সকল সোর্স স্ক্র্যাপ হচ্ছে...' : 'সকল সক্রিয় সোর্স স্ক্র্যাপ করুন'}</span>
@@ -794,15 +801,15 @@ export default function SourceRegistryManagement() {
                       <td className="py-3.5 px-4 whitespace-nowrap">
                         <div className="flex items-center gap-2 font-mono text-[11px]">
                           <span className="text-emerald-700" title="সংগৃহীত">
-                            ✓ {src.metrics?.collected ?? 0}
+                            <CheckIcon className="w-3 h-3 inline mr-0.5" />{src.metrics?.collected ?? 0}
                           </span>
                           <span className="text-slate-400">/</span>
                           <span className="text-slate-600" title="শনাক্তকৃত">
-                            🔍 {src.metrics?.discovered ?? 0}
+                            <SearchIcon className="w-3 h-3 inline mr-0.5" />{src.metrics?.discovered ?? 0}
                           </span>
                           {(src.metrics?.failed ?? 0) > 0 && (
                             <span className="text-rose-600 font-bold" title="ব্যর্থ">
-                              ✕ {src.metrics?.failed}
+                              <XIcon className="w-3 h-3 inline mr-0.5" />{src.metrics?.failed}
                             </span>
                           )}
                         </div>

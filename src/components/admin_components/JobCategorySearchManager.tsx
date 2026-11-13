@@ -23,7 +23,8 @@ import {
   ChevronRight,
   ShieldCheck,
   TrendingUp,
-  Filter
+  Filter,
+  X
 } from 'lucide-react';
 import { CategoryRecord } from '@/types/taxonomy.types';
 import { SearchAnalyticsSummary } from '@/types/search.types';
@@ -254,7 +255,7 @@ export default function JobCategorySearchManager() {
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="bg-gradient-to-r from-purple-950 via-slate-900 to-indigo-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-purple-800/40">
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xs border border-slate-800">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
@@ -790,7 +791,7 @@ export default function JobCategorySearchManager() {
                 onClick={() => setIsModalOpen(false)}
                 className="text-slate-400 hover:text-slate-700 font-bold cursor-pointer"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 

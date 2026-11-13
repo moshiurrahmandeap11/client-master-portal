@@ -329,7 +329,7 @@ export default function JobVerificationCenter({
               type="button"
               disabled={isVerifyingAll}
               onClick={handleVerifyAll}
-              className="px-4 py-2 bg-gradient-to-r from-indigo-700 to-purple-800 hover:from-indigo-800 hover:to-purple-900 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-2 disabled:opacity-50"
+              className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-2 disabled:opacity-50"
             >
               {isVerifyingAll ? (
                 <RefreshCw className="w-4 h-4 animate-spin" />
@@ -666,7 +666,7 @@ export default function JobVerificationCenter({
             {/* TAB CONTENT: 1. OVERVIEW & EXPLANATION */}
             {activeTabInModal === 'overview' && (
               <div className="space-y-4">
-                <div className="p-4 bg-gradient-to-br from-indigo-50 via-purple-50 to-blue-50 border border-indigo-200/80 rounded-2xl space-y-2">
+                <div className="p-4 bg-slate-50 border border-indigo-200/80 rounded-2xl space-y-2">
                   <div className="flex items-center gap-2 text-indigo-900 font-black text-xs">
                     <Sparkles className="w-4 h-4 text-indigo-600" />
                     <span>বাংলায় যাচাইকরণ বিশ্লেষণ ও পর্যবেক্ষণ:</span>

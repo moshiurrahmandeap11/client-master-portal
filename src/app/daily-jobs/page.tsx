@@ -99,7 +99,7 @@ export default function DailyJobsDirectoryPage() {
 
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Header Banner */}
-        <div className="bg-gradient-to-br from-slate-900 via-teal-950 to-emerald-950 text-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xl border border-emerald-900/40 relative overflow-hidden">
+        <div className="bg-slate-900 text-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xs border border-slate-800 relative overflow-hidden">
           <div className="relative z-10 max-w-3xl">
             <span className="inline-flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[13px] font-bold px-3 py-1 rounded-full shadow-xs mb-3">
               <Calendar className="w-3.5 h-3.5 text-amber-300" />

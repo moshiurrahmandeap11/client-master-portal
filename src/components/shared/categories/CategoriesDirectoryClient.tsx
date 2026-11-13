@@ -32,7 +32,8 @@ import {
   Search,
   Filter,
   CheckCircle2,
-  ChevronRight
+  ChevronRight,
+  X
 } from 'lucide-react';
 
 const ICON_MAP: Record<string, any> = {
@@ -138,8 +139,7 @@ export default function CategoriesDirectoryClient({
   return (
     <div className="space-y-8">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-slate-950 via-emerald-950 to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl border border-emerald-900/40 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xs border border-slate-800 relative overflow-hidden">
         <div className="max-w-4xl space-y-3 relative z-10">
           <div className="flex flex-wrap items-center gap-2">
             <span className="bg-emerald-500 text-slate-950 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
@@ -190,7 +190,7 @@ export default function CategoriesDirectoryClient({
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs p-1"
                 title="সার্চ মুছুন"
               >
-                ✕
+                <X className="w-3.5 h-3.5" />
               </button>
             )}
           </div>
@@ -326,7 +326,7 @@ export default function CategoriesDirectoryClient({
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-700 text-white flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                      <div className="w-12 h-12 rounded-2xl bg-emerald-700 text-white flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform">
                         <IconComponent className="w-6 h-6" />
                       </div>
                       <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200/60">

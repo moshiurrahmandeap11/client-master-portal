@@ -16,21 +16,34 @@ import {
   ArrowRight,
   RefreshCw,
   Sliders,
-  Check
+  Check,
+  BookOpen,
+  Train,
+  Laptop,
+  GraduationCap,
+  HeartPulse,
+  Megaphone
 } from 'lucide-react';
+import {
+  FaBuildingColumns,
+  FaCreditCard,
+  FaHandshake,
+  FaLandmarkFlag,
+  FaShieldHalved
+} from 'react-icons/fa6';
 import { storage } from '@/lib/store';
 
 const CATEGORIES = [
-  { id: 'বিসিএস ও সরকারি চাকরি', label: 'বিসিএস ও মন্ত্রণালয়', icon: '🏛️' },
-  { id: 'ব্যাংক ও আর্থিক প্রতিষ্ঠান', label: 'বাংলাদেশ ব্যাংক ও সরকারি ব্যাংক', icon: '🏦' },
-  { id: 'বেসরকারি ব্যাংক', label: 'বেসরকারি বাণিজ্যিক ব্যাংক', icon: '💳' },
-  { id: 'প্রাথমিক ও শিক্ষক নিয়োগ', label: 'প্রাথমিক ও শিক্ষক নিবন্ধন (NTRCA)', icon: '📚' },
-  { id: 'বাংলাদেশ রেলওয়ে', label: 'বাংলাদেশ রেলওয়ে নিয়োগ', icon: '🚆' },
-  { id: 'প্রতিরক্ষা ও পুলিশ', label: 'সেনা, নৌ, বিমান ও পুলিশ বাহিনী', icon: '🎖️' },
-  { id: 'ইঞ্জিনিয়ারিং ও আইটি', label: 'আইটি ও প্রকৌশল পদ', icon: '💻' },
-  { id: 'এনজিও ও উন্নয়ন সংস্থা', label: 'এনজিও (NGO) ও আন্তর্জাতিক সংস্থা', icon: '🤝' },
-  { id: 'স্বাস্থ্য ও নার্সিং', label: 'মেডিকেল অফিসার ও নার্সিং', icon: '🏥' },
-  { id: 'ফ্রেশারদের চাকরি', label: 'নতুনদের জন্য ফ্রেশার নিয়োগ', icon: '🎓' }
+  { id: 'বিসিএস ও সরকারি চাকরি', label: 'বিসিএস ও মন্ত্রণালয়', Icon: FaLandmarkFlag },
+  { id: 'ব্যাংক ও আর্থিক প্রতিষ্ঠান', label: 'বাংলাদেশ ব্যাংক ও সরকারি ব্যাংক', Icon: FaBuildingColumns },
+  { id: 'বেসরকারি ব্যাংক', label: 'বেসরকারি বাণিজ্যিক ব্যাংক', Icon: FaCreditCard },
+  { id: 'প্রাথমিক ও শিক্ষক নিয়োগ', label: 'প্রাথমিক ও শিক্ষক নিবন্ধন (NTRCA)', Icon: BookOpen },
+  { id: 'বাংলাদেশ রেলওয়ে', label: 'বাংলাদেশ রেলওয়ে নিয়োগ', Icon: Train },
+  { id: 'প্রতিরক্ষা ও পুলিশ', label: 'সেনা, নৌ, বিমান ও পুলিশ বাহিনী', Icon: FaShieldHalved },
+  { id: 'ইঞ্জিনিয়ারিং ও আইটি', label: 'আইটি ও প্রকৌশল পদ', Icon: Laptop },
+  { id: 'এনজিও ও উন্নয়ন সংস্থা', label: 'এনজিও (NGO) ও আন্তর্জাতিক সংস্থা', Icon: FaHandshake },
+  { id: 'স্বাস্থ্য ও নার্সিং', label: 'মেডিকেল অফিসার ও নার্সিং', Icon: HeartPulse },
+  { id: 'ফ্রেশারদের চাকরি', label: 'নতুনদের জন্য ফ্রেশার নিয়োগ', Icon: GraduationCap }
 ];
 
 const BD_DIVISIONS = [
@@ -150,7 +163,7 @@ export default function JobAlertsPage() {
       </div>
 
       {/* Hero Strip */}
-      <div className="bg-gradient-to-r from-slate-900 via-emerald-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xs border border-slate-800 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-3 max-w-xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 rounded-full text-xs font-bold">
             <Bell className="w-4 h-4 text-emerald-400 animate-pulse" />
@@ -256,7 +269,7 @@ export default function JobAlertsPage() {
                           }`}
                       >
                         <div className="flex items-center gap-2 min-w-0 truncate">
-                          <span>{c.icon}</span>
+                          <c.Icon className="w-4 h-4 text-emerald-700 shrink-0" />
                           <span className="truncate">{c.label}</span>
                         </div>
                         {isSelected && <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />}
@@ -424,8 +437,9 @@ export default function JobAlertsPage() {
                 </div>
 
                 <div className="text-xs text-slate-200 leading-relaxed font-sans space-y-1.5">
-                  <p className="font-bold text-white">
-                    📢 নতুন সার্কুলার অ্যালার্ট: {selectedCats[0] || 'সরকারি চাকরি'}
+                  <p className="font-bold text-white flex items-center gap-1.5">
+                    <Megaphone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <span>নতুন সার্কুলার অ্যালার্ট: {selectedCats[0] || 'সরকারি চাকরি'}</span>
                   </p>
                   <p className="text-slate-300">
                     প্রতিষ্ঠান: <strong>বাংলাদেশ ব্যাংক / সমন্বিত ব্যাংক</strong>

@@ -73,10 +73,10 @@ export default function JobLogo({
     );
   }
 
-  // Otherwise, render emoji (e.g. 🏛️, 🏦, 🎓) or short text symbol
+  // If logo is a symbol/emoji/fallback instead of an image URL, render a crisp Building2 badge
   return (
-    <span className={`${currentSize.emoji} ${className}`} aria-hidden="true">
-      {logo}
+    <span className={`${currentSize.badge} ${className}`} title={organization} aria-hidden="true">
+      <Building2 className={currentSize.icon} />
     </span>
   );
 }

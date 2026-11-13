@@ -135,7 +135,7 @@ export default function GeminiManagementCenter({ isOpen, onClose }: GeminiManage
         {/* TAB 1: HEALTH & PING */}
         {activeTab === 'health' && (
           <div className="space-y-4 text-xs">
-            <div className="p-4 bg-gradient-to-r from-purple-50 via-indigo-50 to-blue-50 border border-purple-200/80 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="p-4 bg-slate-50 border border-purple-200/80 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="space-y-1">
                 <span className="text-[10px] font-bold text-purple-700 uppercase tracking-wider block">সক্রিয় প্রাইমারি মডেল</span>
                 <div className="flex items-center gap-2">

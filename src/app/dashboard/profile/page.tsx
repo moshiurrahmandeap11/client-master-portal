@@ -21,7 +21,9 @@ import {
   MapPin,
   Phone,
   Mail,
-  Calendar
+  Calendar,
+  Check,
+  X
 } from 'lucide-react';
 import { storage } from '@/lib/store';
 import { fetchWithAuth } from '@/lib/axios';
@@ -859,7 +861,7 @@ export default function ProfilePage() {
                   {getAllDistrictsList().map(d => (
                     <option key={d.en} value={d.bn}>{d.bn} ({d.en}) — {d.division}</option>
                   ))}
-                  <option value="__custom__">➕ অন্যান্য (কাস্টম জেলা লিখুন)...</option>
+                  <option value="__custom__">অন্যান্য (কাস্টম জেলা লিখুন)...</option>
                 </select>
               )}
             </div>
@@ -985,7 +987,7 @@ export default function ProfilePage() {
                             {div} ({BD_DIVISIONS_MAP[div]?.bn || div})
                           </option>
                         ))}
-                        <option value="__custom__">➕ OTHER (TYPE CUSTOM DIVISION)...</option>
+                        <option value="__custom__">OTHER (TYPE CUSTOM DIVISION)...</option>
                       </select>
                     )}
                   </div>
@@ -1026,7 +1028,7 @@ export default function ProfilePage() {
                             {d.en} ({d.bn})
                           </option>
                         ))}
-                        <option value="__custom__">➕ OTHER (TYPE CUSTOM DISTRICT)...</option>
+                        <option value="__custom__">OTHER (TYPE CUSTOM DISTRICT)...</option>
                       </select>
                     )}
                   </div>
@@ -1068,7 +1070,7 @@ export default function ProfilePage() {
                         {getUpazilasForDistrict(presentDistrict).map((u) => (
                           <option key={u} value={u}>{u}</option>
                         ))}
-                        <option value="__custom__">➕ OTHER (TYPE CUSTOM)...</option>
+                        <option value="__custom__">OTHER (TYPE CUSTOM)...</option>
                       </select>
                     )}
                   </div>
@@ -1110,8 +1112,9 @@ export default function ProfilePage() {
                       onChange={(e) => setSameAsPresent(e.target.checked)}
                       className="w-4 h-4 text-emerald-700 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer accent-emerald-700"
                     />
-                    <span className="text-xs font-bold text-emerald-950 flex items-center gap-1">
-                      <span>✓ SAME AS PRESENT (বর্তমান ঠিকানার মতোই একই)</span>
+                    <span className="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
+                      <Check className="w-3.5 h-3.5 text-emerald-700" />
+                      <span>SAME AS PRESENT (বর্তমান ঠিকানার মতোই একই)</span>
                     </span>
                   </label>
                 </div>
@@ -1124,8 +1127,8 @@ export default function ProfilePage() {
                         স্থায়ী ঠিকানা হিসেবে বর্তমান ঠিকানা স্বয়ংক্রিয়ভাবে সংরক্ষিত হবে: <strong className="font-bold text-slate-900 font-mono">{presentVillageRoad || 'VILLAGE/ROAD'}, {presentThana || 'THANA'}, {presentDistrict}, {presentDivision}-{presentPostCode || 'CODE'}</strong>
                       </span>
                     </div>
-                    <span className="text-[11px] font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full shrink-0">
-                      ✓ AUTO-SYNCED
+                    <span className="text-[11px] font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full shrink-0 inline-flex items-center gap-1">
+                      <Check className="w-3 h-3" /> AUTO-SYNCED
                     </span>
                   </div>
                 ) : (
@@ -1190,7 +1193,7 @@ export default function ProfilePage() {
                               {div} ({BD_DIVISIONS_MAP[div]?.bn || div})
                             </option>
                           ))}
-                          <option value="__custom__">➕ OTHER (TYPE CUSTOM DIVISION)...</option>
+                          <option value="__custom__">OTHER (TYPE CUSTOM DIVISION)...</option>
                         </select>
                       )}
                     </div>
@@ -1231,7 +1234,7 @@ export default function ProfilePage() {
                               {d.en} ({d.bn})
                             </option>
                           ))}
-                          <option value="__custom__">➕ OTHER (TYPE CUSTOM DISTRICT)...</option>
+                          <option value="__custom__">OTHER (TYPE CUSTOM DISTRICT)...</option>
                         </select>
                       )}
                     </div>
@@ -1272,7 +1275,7 @@ export default function ProfilePage() {
                           {getUpazilasForDistrict(permanentDistrict).map((u) => (
                             <option key={u} value={u}>{u}</option>
                           ))}
-                          <option value="__custom__">➕ OTHER (TYPE CUSTOM)...</option>
+                          <option value="__custom__">OTHER (TYPE CUSTOM)...</option>
                         </select>
                       )}
                     </div>
@@ -1344,8 +1347,8 @@ export default function ProfilePage() {
                     </span>
                     <span className="text-xs font-bold text-slate-800">{edu.degree}</span>
                     {edu.verificationStatus === 'VERIFIED' && (
-                      <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1">
-                        ✓ যাচাইকৃত
+                      <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 inline-flex items-center gap-1">
+                        <Check className="w-3 h-3" /> যাচাইকৃত
                       </span>
                     )}
                     {edu.verificationStatus === 'NEEDS_CORRECTION' && (
@@ -1397,7 +1400,7 @@ export default function ProfilePage() {
               <div className="bg-white rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-xl border border-slate-200">
                 <div className="flex items-center justify-between border-b pb-3">
                   <h3 className="font-bold text-base text-slate-900">শিক্ষাগত রেকর্ড যুক্ত করুন</h3>
-                  <button onClick={() => setShowEduModal(false)} className="text-slate-400 hover:text-slate-600">✕</button>
+                  <button onClick={() => setShowEduModal(false)} className="text-slate-400 hover:text-slate-600 p-1"><X className="w-4 h-4" /></button>
                 </div>
 
                 <form onSubmit={handleAddEducation} className="space-y-3 text-xs">
@@ -1442,7 +1445,7 @@ export default function ProfilePage() {
                         <option value="স্নাতক (অনার্স)">স্নাতক (অনার্স) / সমমান - ৪ বছর মেয়াদী</option>
                         <option value="স্নাতকোত্তর (মাস্টার্স)">স্নাতকোত্তর (মাস্টার্স) / কামিল</option>
                         <option value="উচ্চতর গবেষণা (এমফিল / পিএইচডি)">উচ্চতর গবেষণা (এমফিল / পিএইচডি)</option>
-                        <option value="__custom__">➕ অন্যান্য / কাস্টম শিক্ষাগত পর্যায় লিখুন...</option>
+                        <option value="__custom__">অন্যান্য / কাস্টম শিক্ষাগত পর্যায় লিখুন...</option>
                       </select>
                     )}
                   </div>

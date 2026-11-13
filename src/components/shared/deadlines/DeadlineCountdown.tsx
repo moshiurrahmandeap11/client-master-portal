@@ -135,7 +135,7 @@ export default function DeadlineCountdown({
 
   // Full Rich Countdown Box for Job Detail Pages
   return (
-    <div className={`bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-5 border border-slate-700/80 shadow-md ${className}`}>
+    <div className={`bg-slate-900 text-white rounded-2xl p-5 border border-slate-800 shadow-xs ${className}`}>
       <div className="flex items-center justify-between gap-3 pb-3 border-b border-slate-700/60">
         <div className="flex items-center gap-2">
           <Clock className="w-5 h-5 text-emerald-400" />

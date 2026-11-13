@@ -337,7 +337,7 @@ export default function ExamCalendarPage() {
         <div className="p-4 bg-amber-50 border border-amber-300 rounded-2xl flex items-start gap-3 text-xs text-amber-900 shadow-xs">
           <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <strong className="font-bold text-sm text-amber-950 block">⚠️ সম্ভাব্য পরীক্ষা সংঘর্ষ সতর্কতা (Date Conflict Detected):</strong>
+            <strong className="font-bold text-sm text-amber-950 block">সম্ভাব্য পরীক্ষা সংঘর্ষ সতর্কতা (Date Conflict Detected):</strong>
             <p>আপনার আবেদনকৃত চাকরির একাধিক পরীক্ষার সম্ভাব্য সময়সূচি একই দিনে পড়ার সম্ভাবনা রয়েছে। কেন্দ্র ও সময়সূচি নিবিড়ভাবে পর্যবেক্ষণ করুন।</p>
           </div>
         </div>

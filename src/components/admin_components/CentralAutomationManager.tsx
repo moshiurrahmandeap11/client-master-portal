@@ -298,7 +298,7 @@ export default function CentralAutomationManager() {
                     <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                       rec.status === 'SUCCESS' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
                     }`}>
-                      {rec.status === 'SUCCESS' ? '✓ সফল' : 'ব্যর্থ'}
+                      {rec.status === 'SUCCESS' ? 'সফল' : 'ব্যর্থ'}
                     </span>
                   </td>
                   <td className="py-2.5 px-3 font-mono text-slate-500">{rec.durationMs ? `${rec.durationMs}ms` : '১১০ms'}</td>

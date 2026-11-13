@@ -20,7 +20,8 @@ import {
   AlignRight,
   Monitor,
   Tablet,
-  Smartphone
+  Smartphone,
+  X
 } from 'lucide-react';
 import { PageSection } from '@/types';
 
@@ -131,7 +132,7 @@ export default function BuilderRightInspector({
             className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 font-bold text-xs"
             title="বন্ধ করুন"
           >
-            ✕
+            <X className="w-4 h-4" />
           </button>
         </div>
       </div>
@@ -234,7 +235,7 @@ export default function BuilderRightInspector({
                 type="text"
                 value={content.badge || ''}
                 onChange={(e) => updateContent('badge', e.target.value)}
-                placeholder="যেমন: ⚡ নতুন সার্কুলার"
+                placeholder="যেমন: নতুন সার্কুলার"
                 className="w-full px-3 py-1.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-indigo-500"
               />
             </div>

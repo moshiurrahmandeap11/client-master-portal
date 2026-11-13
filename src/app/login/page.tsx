@@ -363,7 +363,7 @@ function LoginForm() {
       
       {/* Top Header & Logo */}
       <div className="text-center space-y-2">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-800 text-white flex items-center justify-center mx-auto shadow-md">
+        <div className="w-12 h-12 rounded-2xl bg-emerald-700 text-white flex items-center justify-center mx-auto shadow-xs">
           <Briefcase className="w-6 h-6" />
         </div>
         <h1 className="text-2xl font-black text-slate-900 tracking-tight">
@@ -527,7 +527,8 @@ function LoginForm() {
               onClick={handleQuickDemoLogin}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 rounded-full text-[11px] font-bold transition-all shadow-2xs"
             >
-              <span>⚡ ১-ক্লিক ডেমো অ্যাকাউন্ট দিয়ে সরাসরি টেস্ট করুন</span>
+              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+              <span>১-ক্লিক ডেমো অ্যাকাউন্ট দিয়ে সরাসরি টেস্ট করুন</span>
             </button>
           </div>
 

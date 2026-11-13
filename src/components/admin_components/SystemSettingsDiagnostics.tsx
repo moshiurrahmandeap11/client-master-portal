@@ -659,7 +659,7 @@ export default function SystemSettingsDiagnostics({
           </div>
 
           {/* Backup Action Card */}
-          <div className="bg-gradient-to-r from-emerald-900 to-slate-900 text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-1 text-center md:text-left">
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                 ১-ক্লিক ক্লাউড ও লোকাল ডাটা এক্সপোর্ট

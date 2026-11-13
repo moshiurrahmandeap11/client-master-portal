@@ -97,7 +97,7 @@ export default function PlatformGovernanceOverview({ onNavigate }: PlatformGover
     <div className="space-y-6 animate-fadeIn">
       
       {/* 1. Governance & Platform Health Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-teal-950 text-white rounded-2xl p-5 sm:p-6 shadow-md border border-slate-700/80">
+      <div className="bg-slate-900 text-white rounded-2xl p-5 sm:p-6 shadow-xs border border-slate-800">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="space-y-1.5">
             <div className="flex flex-wrap items-center gap-2.5">

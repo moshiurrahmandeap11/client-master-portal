@@ -180,12 +180,12 @@ export default function JobSearchSection({
                   className="w-full pl-10 pr-9 py-3 rounded-xl border border-slate-200 text-[15px] sm:text-[16px] font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-all bg-slate-50/50 hover:bg-white appearance-none cursor-pointer"
                 >
                   <option value="all">সব ধরনের চাকরি</option>
-                  <option value="govt">🏛️ সরকারি চাকরি</option>
-                  <option value="bank">💼 ব্যাংক চাকরি</option>
-                  <option value="teacher">🎒 শিক্ষক নিয়োগ</option>
-                  <option value="railway">🚆 রেলওয়ে চাকরি</option>
-                  <option value="ngo">🤝 এনজিও চাকরি</option>
-                  <option value="private">🏢 বেসরকারি চাকরি</option>
+                  <option value="govt">সরকারি চাকরি</option>
+                  <option value="bank">ব্যাংক চাকরি</option>
+                  <option value="teacher">শিক্ষক নিয়োগ</option>
+                  <option value="railway">রেলওয়ে চাকরি</option>
+                  <option value="ngo">এনজিও চাকরি</option>
+                  <option value="private">বেসরকারি চাকরি</option>
                 </select>
                 <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
               </div>
@@ -218,7 +218,7 @@ export default function JobSearchSection({
               <button
                 type="button"
                 onClick={onSearch}
-                className="w-full py-3 px-5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 active:scale-[0.98] text-white font-bold text-[16px] sm:text-[17px] shadow-md shadow-emerald-700/25 flex items-center justify-center gap-2 transition-all font-hind cursor-pointer"
+                className="w-full py-3 px-5 rounded-xl bg-emerald-700 hover:bg-emerald-800 active:scale-[0.98] text-white font-bold text-[16px] sm:text-[17px] shadow-sm flex items-center justify-center gap-2 transition-all font-hind cursor-pointer"
               >
                 <Search className="w-4 h-4" />
                 <span>চাকরি খুঁজুন</span>

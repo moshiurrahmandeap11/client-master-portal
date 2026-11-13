@@ -28,7 +28,8 @@ import {
   CheckCircle2,
   ChevronRight,
   LayoutTemplate,
-  Globe
+  Globe,
+  Calculator
 } from 'lucide-react';
 import { JobCircular, JobPosition } from '@/types';
 import { inferPositionGradeAndSalary } from '@/lib/pay-scale';
@@ -375,7 +376,7 @@ export default function UniversalJobWorkspace({
         setSeoKeywords(ext.seoKeywords);
       }
 
-      setAiSuccessMessage(`🎉 এআই সফলভাবে ${ext.positions?.length || 1}টি পদ, সম্পাদকীয় বিবরণ, শর্তাবলী, এসএমএস ও এসইও ডেটা পূরণ করেছে! প্রতিটি ট্যাব ও ডানপাশের লাইভ প্রিভিউ দেখুন।`);
+      setAiSuccessMessage(`এআই সফলভাবে ${ext.positions?.length || 1}টি পদ, সম্পাদকীয় বিবরণ, শর্তাবলী, এসএমএস ও এসইও ডেটা পূরণ করেছে! প্রতিটি ট্যাব ও ডানপাশের লাইভ প্রিভিউ দেখুন।`);
       setActiveTab('basic');
     } catch (err: any) {
       setFormError(`এআই অটো-ফিল ব্যর্থ: ${err.message}`);
@@ -561,7 +562,7 @@ export default function UniversalJobWorkspace({
         {/* 1. TOP HEADER BAR */}
         <div className="px-5 py-3.5 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-700 flex items-center justify-center text-white shadow-md shrink-0">
               <LayoutTemplate className="w-5 h-5" />
             </div>
             <div>
@@ -615,7 +616,7 @@ export default function UniversalJobWorkspace({
               type="button"
               onClick={() => handleSave(true)}
               disabled={isSubmitting}
-              className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-xl transition-all shadow-md flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
             >
               <Check className="w-4 h-4" />
               <span>{isSubmitting ? 'সেভ হচ্ছে...' : (isNew ? 'সরাসরি প্রকাশ' : 'আপডেট ও প্রকাশ')}</span>
@@ -635,13 +636,13 @@ export default function UniversalJobWorkspace({
         {/* 2. BLOCK NAVIGATION PILL BAR WITH LIVE DATA BADGES */}
         <div className="px-5 py-2 bg-slate-950/95 border-b border-slate-800 flex items-center gap-1.5 overflow-x-auto text-xs shrink-0 scrollbar-none">
           {[
-            { id: 'ai_auto', label: '⚡ AI অটো-ফিল', icon: Sparkles, color: 'text-amber-400', badge: null },
-            { id: 'basic', label: '📝 মৌলিক ও পদবি', icon: Building2, color: 'text-blue-400', badge: positions.length ? `${positions.length} পদবি` : null },
-            { id: 'content', label: '📰 সম্পাদকীয় বিবরণ', icon: FileText, color: 'text-emerald-400', badge: bengaliDescription ? 'রেডি' : null },
-            { id: 'requirements', label: '📋 শর্ত ও কাগজপত্র', icon: ShieldCheck, color: 'text-purple-400', badge: `${requirements.length + documentsRequired.length}` },
-            { id: 'application', label: '📱 আবেদন ও এসএমএস', icon: Smartphone, color: 'text-teal-400', badge: smsPrefix || null },
-            { id: 'faqs', label: '❓ এফএকিউ বিল্ডার', icon: HelpCircle, color: 'text-pink-400', badge: faqItems.length ? `${faqItems.length}` : null },
-            { id: 'seo', label: '🔍 গুগল এসইও', icon: Search, color: 'text-indigo-400', badge: seoTitle ? 'এসইও' : null },
+            { id: 'ai_auto', label: 'AI অটো-ফিল', icon: Sparkles, color: 'text-amber-400', badge: null },
+            { id: 'basic', label: 'মৌলিক ও পদবি', icon: Building2, color: 'text-blue-400', badge: positions.length ? `${positions.length} পদবি` : null },
+            { id: 'content', label: 'সম্পাদকীয় বিবরণ', icon: FileText, color: 'text-emerald-400', badge: bengaliDescription ? 'রেডি' : null },
+            { id: 'requirements', label: 'শর্ত ও কাগজপত্র', icon: ShieldCheck, color: 'text-purple-400', badge: `${requirements.length + documentsRequired.length}` },
+            { id: 'application', label: 'আবেদন ও এসএমএস', icon: Smartphone, color: 'text-teal-400', badge: smsPrefix || null },
+            { id: 'faqs', label: 'এফএকিউ বিল্ডার', icon: HelpCircle, color: 'text-pink-400', badge: faqItems.length ? `${faqItems.length}` : null },
+            { id: 'seo', label: 'গুগল এসইও', icon: Search, color: 'text-indigo-400', badge: seoTitle ? 'এসইও' : null },
           ].map(tab => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -693,7 +694,7 @@ export default function UniversalJobWorkspace({
             {/* TAB 1: AI AUTO-FILL BLOCK (DUAL MODE: URL OR RAW TEXT) */}
             {activeTab === 'ai_auto' && (
               <div className="space-y-5 animate-fadeIn">
-                <div className="p-5 bg-gradient-to-br from-amber-500/10 via-emerald-500/5 to-teal-500/10 rounded-3xl border border-amber-200/80 shadow-xs space-y-4">
+                <div className="p-5 bg-slate-50 rounded-3xl border border-amber-200/80 shadow-xs space-y-4">
                   <div className="flex items-start gap-3">
                     <div className="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-sm">
                       <Sparkles className="w-5 h-5" />
@@ -713,20 +714,22 @@ export default function UniversalJobWorkspace({
                     <button
                       type="button"
                       onClick={() => setAiInputMode('url')}
-                      className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all ${
                         aiInputMode === 'url' ? 'bg-amber-600 text-white shadow-xs' : 'text-amber-900 hover:text-amber-700'
                       }`}
                     >
-                      🌐 সার্কুলারের লিংক (URL / PDF)
+                      <Globe className="w-3.5 h-3.5" />
+                      <span>সার্কুলারের লিংক (URL / PDF)</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setAiInputMode('text')}
-                      className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all ${
                         aiInputMode === 'text' ? 'bg-amber-600 text-white shadow-xs' : 'text-amber-900 hover:text-amber-700'
                       }`}
                     >
-                      📝 সার্কুলারের টেক্সট পেস্ট করুন (Raw Notice)
+                      <FileText className="w-3.5 h-3.5" />
+                      <span>সার্কুলারের টেক্সট পেস্ট করুন (Raw Notice)</span>
                     </button>
                   </div>
 
@@ -747,10 +750,10 @@ export default function UniversalJobWorkspace({
                           type="button"
                           onClick={handleAiAutoFill}
                           disabled={isAiGenerating}
-                          className="px-5 py-2.5 bg-gradient-to-r from-amber-600 to-emerald-600 hover:from-amber-500 hover:to-emerald-500 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-md transition-all cursor-pointer disabled:opacity-50 shrink-0"
+                          className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-md transition-all cursor-pointer disabled:opacity-50 shrink-0"
                         >
                           <Sparkles className={`w-4 h-4 ${isAiGenerating ? 'animate-spin' : ''}`} />
-                          <span>{isAiGenerating ? 'বিশ্লেষণ হচ্ছে...' : '✨ সম্পূর্ণ পেজ বানান'}</span>
+                          <span>{isAiGenerating ? 'বিশ্লেষণ হচ্ছে...' : 'সম্পূর্ণ পেজ বানান'}</span>
                         </button>
                       </div>
                     </div>
@@ -770,10 +773,10 @@ export default function UniversalJobWorkspace({
                         type="button"
                         onClick={handleAiAutoFill}
                         disabled={isAiGenerating}
-                        className="w-full py-2.5 bg-gradient-to-r from-amber-600 to-emerald-600 hover:from-amber-500 hover:to-emerald-500 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer disabled:opacity-50"
+                        className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer disabled:opacity-50"
                       >
                         <Sparkles className={`w-4 h-4 ${isAiGenerating ? 'animate-spin' : ''}`} />
-                        <span>{isAiGenerating ? 'এআই দিয়ে বিশ্লেষণ ও পেজ তৈরি হচ্ছে...' : '✨ টেক্সট দিয়ে সম্পূর্ণ পেজ বানান'}</span>
+                        <span>{isAiGenerating ? 'এআই দিয়ে বিশ্লেষণ ও পেজ তৈরি হচ্ছে...' : 'টেক্সট দিয়ে সম্পূর্ণ পেজ বানান'}</span>
                       </button>
                     </div>
                   )}
@@ -1532,8 +1535,8 @@ export default function UniversalJobWorkspace({
                 {/* 4. Live Age Checker Simulation */}
                 <div className="bg-amber-50/70 border border-amber-200/90 rounded-3xl p-4 space-y-2 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-900 flex items-center gap-1">
-                      <span>🧮</span>
+                    <span className="font-bold text-slate-900 flex items-center gap-1.5">
+                      <Calculator className="w-3.5 h-3.5 text-amber-700" />
                       <span>বয়সসীমা ও কাট-অফ ডেট</span>
                     </span>
                     <span className="text-[10px] font-semibold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">

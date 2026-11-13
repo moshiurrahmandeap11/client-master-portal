@@ -16,7 +16,8 @@ import {
   PieChart,
   Filter,
   DollarSign,
-  Sparkles
+  Sparkles,
+  X
 } from 'lucide-react';
 import {
   OperationalExpenseRecord,
@@ -314,7 +315,7 @@ export default function PlatformOperationsHub() {
       {/* 3. TAB 1: 100% FREE ACCESS POLICY */}
       {activeSubTab === 'free_access' && (
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-emerald-950 via-slate-900 to-emerald-950 text-white p-6 sm:p-8 rounded-3xl border border-emerald-800/50 shadow-xl space-y-4">
+          <div className="bg-slate-900 text-white p-6 sm:p-8 rounded-3xl border border-emerald-800/50 shadow-xl space-y-4">
             <div className="flex items-center gap-2 text-emerald-400 font-black text-xs uppercase tracking-wider">
               <Sparkles className="w-4 h-4" />
               <span>স্থায়ী প্রোডাক্ট অঙ্গীকার ও ফ্রি এক্সেস সনদ</span>
@@ -756,7 +757,7 @@ export default function PlatformOperationsHub() {
                 onClick={() => setIsAddModalOpen(false)}
                 className="text-slate-400 hover:text-slate-600 text-lg font-bold cursor-pointer"
               >
-                ✕
+                <X className="w-5 h-5" />
               </button>
             </div>
 
@@ -920,7 +921,7 @@ export default function PlatformOperationsHub() {
                 onClick={() => setIsBudgetModalOpen(false)}
                 className="text-slate-400 hover:text-slate-600 text-lg font-bold cursor-pointer"
               >
-                ✕
+                <X className="w-5 h-5" />
               </button>
             </div>
 

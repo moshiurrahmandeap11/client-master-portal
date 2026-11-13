@@ -29,6 +29,7 @@ import { storage } from '@/lib/store';
 import { fetchWithAuth } from '@/lib/axios';
 import { CandidateDocument } from '@/types';
 import { useCandidateData } from '@/components/shared/CandidateDataProvider';
+import { UiIcon } from '@/components/shared/UiIcon';
 
 export default function DocumentVaultPage() {
   const candidateData = useCandidateData();
@@ -109,7 +110,7 @@ export default function DocumentVaultPage() {
       if (data.success && data.fileUrl) {
         await candidateData.refresh();
 
-        setDocUploadToast('✓ "' + customDocTitle.trim() + '" সফলভাবে ভল্টে সংরক্ষিত হয়েছে!');
+        setDocUploadToast('"' + customDocTitle.trim() + '" সফলভাবে ভল্টে সংরক্ষিত হয়েছে!');
         setTimeout(() => setDocUploadToast(null), 4000);
         setShowCustomDocModal(false);
         setCustomDocTitle('');
@@ -212,7 +213,7 @@ export default function DocumentVaultPage() {
           });
           if (res.ok) {
             await candidateData.refresh();
-            setDocUploadToast(`✓ ${docTitle} সফলভাবে মুছে ফেলা হয়েছে।`);
+            setDocUploadToast(`${docTitle} সফলভাবে মুছে ফেলা হয়েছে।`);
             setTimeout(() => setDocUploadToast(null), 4000);
           }
         } catch {
@@ -332,7 +333,7 @@ export default function DocumentVaultPage() {
       const data = await response.json();
       if (!response.ok || !data.success) throw new Error(data.error || 'ডকুমেন্ট সংরক্ষণ ব্যর্থ হয়েছে');
       await candidateData.refresh();
-      setDocUploadToast('✓ ' + (activeResizerTab === 'photo' ? 'ছবি' : 'স্বাক্ষর') + ' সার্ভার ভল্টে সংরক্ষিত হয়েছে; অ্যাডমিন যাচাইয়ের অপেক্ষায় রয়েছে।');
+      setDocUploadToast((activeResizerTab === 'photo' ? 'ছবি' : 'স্বাক্ষর') + ' সার্ভার ভল্টে সংরক্ষিত হয়েছে; অ্যাডমিন যাচাইয়ের অপেক্ষায় রয়েছে।');
       setTimeout(() => setDocUploadToast(null), 4000);
     } catch (error) {
       alert(error instanceof Error ? error.message : 'ডকুমেন্ট সংরক্ষণ ব্যর্থ হয়েছে');
@@ -365,7 +366,7 @@ export default function DocumentVaultPage() {
       title: 'প্রার্থীর ছবি (টেলিটক স্ট্যান্ডার্ড - ৩০০×৩০০)',
       desc: 'পাসপোর্ট সাইজ রঙিন ছবি, ১০০ KB এর কম',
       url: userProfile?.photoUrl,
-      icon: '📷',
+      icon: 'photo',
       isImagePreset: true
     },
     {
@@ -373,7 +374,7 @@ export default function DocumentVaultPage() {
       title: 'প্রার্থীর স্বাক্ষর (টেলিটক স্ট্যান্ডার্ড - ৩০০×৮০)',
       desc: 'স্বাক্ষরের ছবি, ৬০ KB এর কম',
       url: userProfile?.signatureUrl,
-      icon: '✍️',
+      icon: 'signature',
       isImagePreset: true
     },
     {
@@ -381,56 +382,56 @@ export default function DocumentVaultPage() {
       title: 'প্রার্থীর NID (সামনের অংশ)',
       desc: 'জাতীয় পরিচয়পত্রের সামনের ছবি বা স্ক্যান কপি',
       url: userProfile?.nidFrontUrl,
-      icon: '🪪'
+      icon: 'nid'
     },
     {
       type: 'nid_back',
       title: 'প্রার্থীর NID (পেছনের অংশ)',
       desc: 'জাতীয় পরিচয়পত্রের পেছনের ঠিকানা অংশের ছবি',
       url: userProfile?.nidBackUrl,
-      icon: '🪪'
+      icon: 'nid'
     },
     {
       type: 'father_nid',
       title: 'পিতার জাতীয় পরিচয়পত্র (Father NID)',
       desc: 'বাবার NID কার্ড বা স্মার্ট কার্ডের ছবি',
       url: userProfile?.fatherNidUrl || (userProfile?.fatherNid?.startsWith('http') || userProfile?.fatherNid?.startsWith('/api') ? userProfile?.fatherNid : null),
-      icon: '👨‍🦳'
+      icon: 'nid'
     },
     {
       type: 'mother_nid',
       title: 'মাতার জাতীয় পরিচয়পত্র (Mother NID)',
       desc: 'মায়ের NID কার্ড বা স্মার্ট কার্ডের ছবি',
       url: userProfile?.motherNidUrl || (userProfile?.motherNid?.startsWith('http') || userProfile?.motherNid?.startsWith('/api') ? userProfile?.motherNid : null),
-      icon: '👵'
+      icon: 'nid'
     },
     {
       type: 'nagorik_certificate',
       title: 'নাগরিক সনদপত্র (চেয়ারম্যান সার্টিফিকেট)',
       desc: 'ইউনিয়ন পরিষদ চেয়ারম্যান বা ওয়ার্ড কাউন্সিলর সনদ',
       url: userProfile?.nagorikCertificateUrl,
-      icon: '🏛️'
+      icon: 'govt'
     },
     {
       type: 'birth_certificate',
       title: 'অনলাইন জন্ম নিবন্ধন সনদ (ঐচ্ছিক)',
       desc: '১৭ ডিজিটের ডিজিটাল বার্থ সার্টিফিকেট',
       url: userProfile?.birthCertificateUrl,
-      icon: '📜'
+      icon: 'cv'
     },
     {
       type: 'character_certificate',
       title: 'চারিত্রিক সনদপত্র (Character Certificate)',
       desc: 'সর্বশেষ শিক্ষা প্রতিষ্ঠান বা ১ম শ্রেণির গেজেটেড অফিসার',
       url: userProfile?.characterCertificateUrl,
-      icon: '🎖️'
+      icon: 'certificate'
     },
     {
       type: 'quota_certificate',
       title: 'কোটা / বিশেষ সুবিধা সনদ (যদি থাকে)',
       desc: 'মুক্তিযোদ্ধা, ক্ষুদ্র নৃ-গোষ্ঠী বা প্রতিবন্ধী সনদ',
       url: userProfile?.quotaCertificateUrl,
-      icon: '🌟'
+      icon: 'sparkles'
     }
   ];
 
@@ -496,7 +497,9 @@ export default function DocumentVaultPage() {
                 <div>
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-xl">{item.icon}</span>
+                      <span className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+                        <UiIcon name={item.icon} className="w-4 h-4" />
+                      </span>
                       <div>
                         <h3 className="text-xs font-bold text-slate-900 line-clamp-1">{item.title}</h3>
                         <p className="text-[10px] text-slate-500 line-clamp-1">{item.desc}</p>
@@ -692,7 +695,7 @@ export default function DocumentVaultPage() {
 
                   <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between text-[11px] text-slate-600">
                     <span>সাইজ: <strong>{doc.fileSize || 'PDF/Image'}</strong></span>
-                    <span className="text-emerald-700 font-bold text-[10px]">✓ সংরক্ষিত</span>
+                    <span className="text-emerald-700 font-bold text-[10px]">সংরক্ষিত</span>
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -925,7 +928,7 @@ export default function DocumentVaultPage() {
                     <span>সাইজ: <strong>{doc.fileSize}</strong></span>
                     {doc.dimensions && <span>মাপ: {doc.dimensions}</span>}
                     <span className={`font-semibold ${doc.isVerified ? 'text-emerald-700' : 'text-amber-700'}`}>
-                      {doc.isVerified ? '✓ যাচাইকৃত' : doc.verificationStatus === 'REJECTED' ? 'বাতিল' : doc.verificationStatus === 'NEEDS_CORRECTION' ? 'সংশোধন' : 'অপেক্ষমাণ'}
+                      {doc.isVerified ? 'যাচাইকৃত' : doc.verificationStatus === 'REJECTED' ? 'বাতিল' : doc.verificationStatus === 'NEEDS_CORRECTION' ? 'সংশোধন' : 'অপেক্ষমাণ'}
                     </span>
                   </div>
 
@@ -1100,12 +1103,12 @@ export default function DocumentVaultPage() {
                   onChange={(e) => setCustomDocCategory(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-emerald-600 text-xs text-slate-900 font-medium bg-white"
                 >
-                  <option value="training">💻 কম্পিউটার ও প্রযুক্তিগত প্রশিক্ষণ (Training)</option>
-                  <option value="certificate">📜 শিক্ষাগত মূল বা সাময়িক সনদ (Academic Certificate)</option>
-                  <option value="experience">💼 কর্ম অভিজ্ঞতা ও প্রশংসাপত্র (Work Experience)</option>
-                  <option value="license">🚗 ড্রাইভিং বা পেশাদার লাইসেন্স (Driving License)</option>
-                  <option value="language">🌐 ভাষা দক্ষতা / IELTS স্কোরকার্ড (Language Test)</option>
-                  <option value="other">📁 অন্যান্য প্রয়োজনীয় সরকারি/বেসরকারি প্রমাণপত্র</option>
+                  <option value="training">কম্পিউটার ও প্রযুক্তিগত প্রশিক্ষণ (Training)</option>
+                  <option value="certificate">শিক্ষাগত মূল বা সাময়িক সনদ (Academic Certificate)</option>
+                  <option value="experience">কর্ম অভিজ্ঞতা ও প্রশংসাপত্র (Work Experience)</option>
+                  <option value="license">ড্রাইভিং বা পেশাদার লাইসেন্স (Driving License)</option>
+                  <option value="language">ভাষা দক্ষতা / IELTS স্কোরকার্ড (Language Test)</option>
+                  <option value="other">অন্যান্য প্রয়োজনীয় সরকারি/বেসরকারি প্রমাণপত্র</option>
                 </select>
               </div>
 
@@ -1142,7 +1145,7 @@ export default function DocumentVaultPage() {
                   disabled={isUploadingCustomDoc}
                   className="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 text-white text-xs font-bold rounded-xl transition-all shadow-sm cursor-pointer flex items-center gap-1.5"
                 >
-                  {isUploadingCustomDoc ? 'আপলোড হচ্ছে...' : '✓ ভল্টে সেভ করুন'}
+                  {isUploadingCustomDoc ? 'আপলোড হচ্ছে...' : 'ভল্টে সেভ করুন'}
                 </button>
               </div>
             </form>

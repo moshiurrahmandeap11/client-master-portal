@@ -13,7 +13,8 @@ import {
   Sparkles, 
   Check, 
   ChevronLeft,
-  AlertCircle
+  AlertCircle,
+  ArrowUpRight
 } from 'lucide-react';
 import { blogPostsData } from '@/data/preparationData';
 import { BlogPostItem } from '@/types/preparation.types';
@@ -170,9 +171,9 @@ export default function SingleBlogClient({ slug }: SingleBlogClientProps) {
 
             <Link
               href="/blog"
-              className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold transition-all ml-auto"
+              className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold transition-all ml-auto inline-flex items-center gap-1"
             >
-              সকল আর্টিকেল দেখুন ↗
+              সকল আর্টিকেল দেখুন <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
           </div>
         </div>

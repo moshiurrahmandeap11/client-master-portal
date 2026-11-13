@@ -50,8 +50,10 @@ import {
   Stethoscope,
   Wrench,
   HeartHandshake,
-  MessageSquare
+  MessageSquare,
+  X
 } from 'lucide-react';
+import { FaStar } from 'react-icons/fa6';
 import { JobCircular } from '@/types';
 
 const candidateReviews = [
@@ -61,8 +63,7 @@ const candidateReviews = [
     role: "সহকারী পরিচালক, বাংলাদেশ ব্যাংক",
     institution: "ঢাকা বিশ্ববিদ্যালয়",
     initials: "তা",
-    gradient: "from-emerald-500 to-teal-400",
-    textInitials: "text-slate-950",
+        textInitials: "text-slate-950",
     quote: "আগে সাইবার ক্যাফেতে ৩-৪ ঘণ্টা লাইনে দাঁড়িয়ে ছবি রিসাইজ করা নিয়ে ঝামেলায় পড়তাম। চাকরি সেবায় মাত্র একবার তথ্য সেভ করে রেখেছিলাম, ডেডলাইনের দিন রাতে ১ ক্লিকে রিকোয়েস্ট দিতেই ১৫ মিনিটের মাথায় টেলিটক পেমেন্ট সহ অফিশিয়াল অ্যাপ্লিকেন্ট কপি পেয়ে গেছি!"
   },
   {
@@ -71,8 +72,7 @@ const candidateReviews = [
     role: "সহকারী শিক্ষক, DPE নিয়োগ",
     institution: "চট্টগ্রাম",
     initials: "ফা",
-    gradient: "from-sky-500 to-blue-400",
-    textInitials: "text-white",
+        textInitials: "text-white",
     quote: "আমাদের গ্রামের বাড়ি রাঙ্গুনিয়ায় ভালো কম্পিউটার দোকান নেই। মোবাইলেই চাকরি সেবা থেকে প্রাথমিক শিক্ষক নিয়োগে আবেদন করেছি। টিম নিজে থেকেই ৩০০x৩০০ ছবি ও স্বাক্ষর নিখুঁতভাবে রিসাইজ করে সাবমিট করেছে। কোনো ভুল হয়নি।"
   },
   {
@@ -81,8 +81,7 @@ const candidateReviews = [
     role: "স্টেশন মাস্টার ও খালাসী আবেদন",
     institution: "রাজশাহী কলেজ",
     initials: "মা",
-    gradient: "from-amber-500 to-orange-400",
-    textInitials: "text-slate-950",
+        textInitials: "text-slate-950",
     quote: "একই সার্কুলারে একাধিক পদে আবেদনের ক্ষেত্রে ফি কীভাবে কাটবে তা নিয়ে সংশয়ে ছিলাম। এখানকার পদভেদে আলাদা ড্রয়ার সিস্টেম ও ক্লিয়ার ফি ব্রেকডাউন দেখে সাথে সাথে নিশ্চিন্তে বুকিং দিয়েছি। বিকাশ পেমেন্টের সাথে সাথেই এসএমএস পেয়েছি।"
   },
   {
@@ -91,8 +90,7 @@ const candidateReviews = [
     role: "অফিসার ক্যাশ, সোনালী ব্যাংক",
     institution: "সিলেট",
     initials: "সা",
-    gradient: "from-purple-500 to-pink-400",
-    textInitials: "text-white",
+        textInitials: "text-white",
     quote: "মহিলা চাকরিপ্রার্থীদের জন্য ঘরে বসে নিশ্চিন্তে আবেদন করতে পারা অনেক বড় স্বস্তি। তথ্যের সর্বোচ্চ নিরাপত্তা আর সঠিক সময়ে টেলিটকের ইউজার আইডি ও পাসওয়ার্ড ড্যাশবোর্ডে গুছিয়ে পাওয়ার সুবিধাটা অসাধারণ।"
   },
   {
@@ -101,8 +99,7 @@ const candidateReviews = [
     role: "উপ-পরিদর্শক (SI) ও সার্জেন্ট",
     institution: "খুলনা বিশ্ববিদ্যালয়",
     initials: "না",
-    gradient: "from-emerald-600 to-teal-500",
-    textInitials: "text-white",
+        textInitials: "text-white",
     quote: "পুলিশের বিশাল ফর্ম পূরণ করতে গিয়ে ক্যাফেওয়ালারা প্রায়ই বানানে ভুল করে। চাকরি সেবার টিম আমার এনআইডি ও সার্টিফিকেটের প্রতিটি অক্ষর মিলিয়ে নিখুঁতভাবে সাবমিট করেছে। অ্যাপ্লিকেন্ট কপি ড্যাশবোর্ডেই পেয়েছি।"
   },
   {
@@ -111,8 +108,7 @@ const candidateReviews = [
     role: "উপ-সহকারী কৃষি কর্মকর্তা (DAE)",
     institution: "বরিশাল বিএম কলেজ",
     initials: "নু",
-    gradient: "from-teal-500 to-cyan-400",
-    textInitials: "text-slate-950",
+        textInitials: "text-slate-950",
     quote: "ডকুমেন্ট ভল্টে ছবি ও স্বাক্ষর একবার আপলোড করার পর যেকোনো সার্কুলারে আবেদন করা এখন মাত্র কয়েক সেকেন্ডের ব্যাপার! সাইবার ক্যাফের বাড়তি ফি ও হয়রানি থেকে পুরোপুরি মুক্তি পেয়েছি।"
   },
   {
@@ -121,8 +117,7 @@ const candidateReviews = [
     role: "ফিল্ড অফিসার, NSI গোয়েন্দা",
     institution: "রংপুর কারমাইকেল কলেজ",
     initials: "আ",
-    gradient: "from-rose-500 to-red-600",
-    textInitials: "text-white",
+        textInitials: "text-white",
     quote: "এনএসআই সার্কুলারের শেষ দিন সার্ভার ডাউন ছিল, ক্যাফেতে গিয়েও আবেদন করতে পারছিলাম না। চাকরি সেবার ডেডিকেটেড হাই-স্পিড টিম শেষ মুহূর্তেও আমার আবেদন ও ফি পেমেন্ট ১০০% সফল করেছে!"
   },
   {
@@ -131,8 +126,7 @@ const candidateReviews = [
     role: "বৈজ্ঞানিক কর্মকর্তা, বারি (BARI)",
     institution: "বাংলাদেশ কৃষি বিশ্ববিদ্যালয়, ময়মনসিংহ",
     initials: "জা",
-    gradient: "from-indigo-500 to-blue-500",
-    textInitials: "text-white",
+        textInitials: "text-white",
     quote: "অফিসিয়াল সার্কুলার লিংক ও পদভিত্তিক গ্রেড/বেতনের স্বচ্ছ বিবরণ আমাকে সঠিক পদে আবেদন করতে সাহায্য করেছে। আবেদন শেষে দ্রুত অফিসিয়াল টেলিটক পিডিএফ কপি হাতে পেয়েছি।"
   },
   {
@@ -141,8 +135,7 @@ const candidateReviews = [
     role: "সহকারী রাজস্ব কর্মকর্তা (ARO), এনবিআর",
     institution: "কুমিল্লা ভিক্টোরিয়া কলেজ",
     initials: "মে",
-    gradient: "from-fuchsia-500 to-pink-500",
-    textInitials: "text-white",
+        textInitials: "text-white",
     quote: "কাস্টমস ও ভ্যাট এক্সাইজ সার্কুলারে দ্রুত ও নিরাপদে আবেদন করতে পেরেছি। পেমেন্ট গেটওয়ে খুবই ফাস্ট এবং কোনো অতিরিক্ত গোপন চার্জ ছিল না। সত্যি নির্ভরযোগ্য সেবা।"
   },
   {
@@ -151,8 +144,7 @@ const candidateReviews = [
     role: "পোস্টাল অপারেটর, ডাক অধিদপ্তর",
     institution: "বগুড়া আজিজুল হক কলেজ",
     initials: "ই",
-    gradient: "from-cyan-500 to-teal-500",
-    textInitials: "text-slate-950",
+        textInitials: "text-slate-950",
     quote: "ডাক বিভাগের আবেদনে ৩টি ভিন্ন পদের জন্য আলাদা ফি বুঝতে সমস্যা হচ্ছিল। চাকরি সেবার পদভিত্তিক ফি ড্রয়ার দেখে স্পষ্ট বুঝে আবেদন করেছি। গ্রাহক সেবা টিম সত্যিই প্রশংসনীয়।"
   },
   {
@@ -161,8 +153,7 @@ const candidateReviews = [
     role: "এক্সিকিউটিভ অফিসার, পূবালী ব্যাংক",
     institution: "নোয়াখালী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়",
     initials: "আফ",
-    gradient: "from-violet-500 to-purple-500",
-    textInitials: "text-white",
+        textInitials: "text-white",
     quote: "বেসরকারি ও রাষ্ট্রায়ত্ত ব্যাংকের চাকরির বিজ্ঞপ্তি সবার আগে পাওয়া এবং এক জায়গা থেকেই সরাসরি আবেদন কনফার্ম করার সুবিধা দারুণ। আমার সব বন্ধুদের এখন চাকরি সেবা রেকমেন্ড করি।"
   },
   {
@@ -171,8 +162,7 @@ const candidateReviews = [
     role: "৪৭তম বিসিএস (সাধারণ ক্যাডার)",
     institution: "জাহাঙ্গীরনগর বিশ্ববিদ্যালয়",
     initials: "শা",
-    gradient: "from-emerald-500 to-green-600",
-    textInitials: "text-white",
+        textInitials: "text-white",
     quote: "বিসিএসের বিশাল ক্যাডার পছন্দক্রম তালিকা পূরণ করা অনেক স্পর্শকাতর কাজ। চাকরি সেবার এক্সপার্টরা যত্ন নিয়ে আমার ক্যাডার চয়েস নির্ভুলভাবে এন্ট্রি করে দিয়েছেন। থ্যাঙ্ক ইউ চাকরি সেবা টিম!"
   },
   {
@@ -181,8 +171,7 @@ const candidateReviews = [
     role: "কম্পিউটার অপারেটর, তথ্য কমিশন",
     institution: "পাবনা এডওয়ার্ড কলেজ",
     initials: "মো",
-    gradient: "from-amber-600 to-yellow-500",
-    textInitials: "text-slate-950",
+        textInitials: "text-slate-950",
     quote: "আমার টাইপিং টেস্টের সার্টিফিকেট ও এনআইডি ফাইলগুলো ওরা খুব যত্ন সহকারে আপলোড করেছে। কোথাও ভুল থাকলে সাথে সাথে হোয়াটসঅ্যাপে ফোন দিয়ে ক্রসচেক করে নিশ্চিত করেছে।"
   },
   {
@@ -191,8 +180,7 @@ const candidateReviews = [
     role: "সিনিয়র স্টাফ নার্স, স্বাস্থ্য অধিদপ্তর",
     institution: "ঢাকা নার্সিং কলেজ",
     initials: "রো",
-    gradient: "from-rose-400 to-orange-400",
-    textInitials: "text-slate-950",
+        textInitials: "text-slate-950",
     quote: "ডিউটির কারণে সাইবার ক্যাফেতে যাওয়ার সময় পেতাম না। ডিউটি শেষে রাতে ঘুমানোর আগে মোবাইল থেকে ১ ক্লিকে নার্সিং পদে আবেদন বুকিং দিয়েছি, সকালে উঠে দেখি টেলিটক স্লিপ রেডি!"
   }
 ];
@@ -208,24 +196,13 @@ export default function HomePage() {
   const reviewsToDisplay = useMemo(() => {
     const items = reviewsCms?.content?.items;
     if (Array.isArray(items) && items.length > 0) {
-      const gradients = [
-        'from-emerald-500 to-teal-400',
-        'from-sky-500 to-blue-400',
-        'from-amber-500 to-orange-400',
-        'from-purple-500 to-pink-400',
-        'from-emerald-600 to-teal-500',
-        'from-teal-500 to-cyan-400',
-        'from-rose-500 to-red-600',
-        'from-indigo-500 to-blue-500'
-      ];
-      return items.map((item: any, idx: number) => ({
+            return items.map((item: any, idx: number) => ({
         id: item.id || idx + 1,
         name: item.name || item.title || 'বেনামী চাকরিপ্রার্থী',
         role: item.role || 'সহকারী কর্মকর্তা • সরকারি/ব্যাংক',
         institution: item.institution || item.desc?.slice(0, 30) || 'বাংলাদেশ',
         initials: (item.name || item.title || 'চ')[0] || 'চ',
-        gradient: item.gradient || gradients[idx % gradients.length],
-        textInitials: 'text-white',
+                textInitials: 'text-white',
         quote: item.quote || item.desc || item.title || 'চাকরি সেবা প্ল্যাটফর্মের মাধ্যমে দ্রুত আবেদন সম্পন্ন করতে পেরেছি।'
       }));
     }
@@ -529,7 +506,7 @@ export default function HomePage() {
             <div className="truncate text-slate-300 font-medium">
               {jobsList.length > 0 ? (
                 <span>
-                  🔥 {jobsList.slice(0, 3).map(j => `${j.organization || ''} - ${j.title || ''}`).join(' • ')}
+                  {jobsList.slice(0, 3).map(j => `${j.organization || ''} - ${j.title || ''}`).join(' • ')}
                 </span>
               ) : (
                 <span>অফিসিয়াল সরকারি ও ব্যাংক সার্কুলার পর্যবেক্ষণ চলছে। অনুমোদিত নতুন বিজ্ঞপ্তি এখানে স্বয়ংক্রিয়ভাবে প্রদর্শিত হবে।</span>
@@ -585,25 +562,25 @@ export default function HomePage() {
             onClick={() => handleSelectStatusFilter('new_today')}
             className={`group relative overflow-hidden p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border-2 transition-all duration-200 text-left flex flex-col justify-between cursor-pointer ${
               statusFilter === 'new_today'
-                ? 'bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 text-white shadow-xl shadow-emerald-700/30 border-emerald-500 scale-[1.02]'
-                : 'bg-white hover:bg-emerald-50/50 text-slate-800 border-emerald-200/90 hover:border-emerald-400 shadow-sm hover:shadow-md'
+                ? 'bg-emerald-700 text-white shadow-md border-emerald-700 scale-[1.02]'
+                : 'bg-white hover:bg-slate-50 text-slate-900 border-slate-200 hover:border-emerald-600 shadow-xs'
             }`}
           >
             <div className="flex items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
                 <span className={`text-[17px] sm:text-lg font-extrabold tracking-normal ${
-                  statusFilter === 'new_today' ? 'text-white' : 'text-emerald-950'
+                  statusFilter === 'new_today' ? 'text-white' : 'text-slate-900'
                 }`}>
                   আজ নতুন
                 </span>
                 <span className={`px-2 py-0.5 rounded-full text-[11px] font-black tracking-wider uppercase ${
-                  statusFilter === 'new_today' ? 'bg-white/20 text-emerald-100' : 'bg-emerald-100 text-emerald-800'
+                  statusFilter === 'new_today' ? 'bg-white/20 text-white' : 'bg-emerald-100 text-emerald-800'
                 }`}>
                   তাজা
                 </span>
               </div>
-              <span className={`w-9 h-9 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
-                statusFilter === 'new_today' ? 'bg-white/20 text-white' : 'bg-emerald-100/80 text-emerald-700 shadow-xs'
+              <span className={`w-9 h-9 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 ${
+                statusFilter === 'new_today' ? 'bg-white/20 text-white' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
               }`}>
                 <Sparkles className="w-5 h-5" />
               </span>
@@ -624,11 +601,11 @@ export default function HomePage() {
               </div>
               <div className={`mt-2.5 pt-2 border-t text-[12px] sm:text-[13px] font-medium flex items-center justify-between ${
                 statusFilter === 'new_today' 
-                  ? 'border-white/20 text-emerald-100' 
+                  ? 'border-white/20 text-white' 
                   : 'border-slate-100 text-slate-500 group-hover:text-emerald-700'
               }`}>
                 <span>{statusFilter === 'new_today' ? 'ফিল্টার সক্রিয়' : 'আজকের নতুন বিজ্ঞপ্তি'}</span>
-                <span className="font-bold">{statusFilter === 'new_today' ? '✕ বাতিল' : 'দেখুন →'}</span>
+                <span className="font-bold inline-flex items-center gap-1">{statusFilter === 'new_today' ? <><X className="w-3.5 h-3.5" /> বাতিল</> : 'দেখুন →'}</span>
               </div>
             </div>
           </button>
@@ -639,25 +616,25 @@ export default function HomePage() {
             onClick={() => handleSelectStatusFilter('ongoing')}
             className={`group relative overflow-hidden p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border-2 transition-all duration-200 text-left flex flex-col justify-between cursor-pointer ${
               statusFilter === 'ongoing'
-                ? 'bg-gradient-to-br from-sky-600 via-sky-700 to-blue-800 text-white shadow-xl shadow-sky-700/30 border-sky-500 scale-[1.02]'
-                : 'bg-white hover:bg-sky-50/50 text-slate-800 border-sky-200/90 hover:border-sky-400 shadow-sm hover:shadow-md'
+                ? 'bg-emerald-700 text-white shadow-md border-emerald-700 scale-[1.02]'
+                : 'bg-white hover:bg-slate-50 text-slate-900 border-slate-200 hover:border-emerald-600 shadow-xs'
             }`}
           >
             <div className="flex items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
                 <span className={`text-[17px] sm:text-lg font-extrabold tracking-normal ${
-                  statusFilter === 'ongoing' ? 'text-white' : 'text-sky-950'
+                  statusFilter === 'ongoing' ? 'text-white' : 'text-slate-900'
                 }`}>
                   আবেদন চলছে
                 </span>
                 <span className={`px-2 py-0.5 rounded-full text-[11px] font-black tracking-wider uppercase ${
-                  statusFilter === 'ongoing' ? 'bg-white/20 text-sky-100' : 'bg-sky-100 text-sky-800'
+                  statusFilter === 'ongoing' ? 'bg-white/20 text-white' : 'bg-emerald-100 text-emerald-800'
                 }`}>
                   সক্রিয়
                 </span>
               </div>
-              <span className={`w-9 h-9 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
-                statusFilter === 'ongoing' ? 'bg-white/20 text-white' : 'bg-sky-100/80 text-sky-700 shadow-xs'
+              <span className={`w-9 h-9 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 ${
+                statusFilter === 'ongoing' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700 border border-slate-200'
               }`}>
                 <Briefcase className="w-5 h-5" />
               </span>
@@ -671,18 +648,18 @@ export default function HomePage() {
                   {toBn(statusCounts.ongoing)}
                 </span>
                 <span className={`text-[15px] sm:text-[17px] font-bold ${
-                  statusFilter === 'ongoing' ? 'text-sky-100' : 'text-slate-600'
+                  statusFilter === 'ongoing' ? 'text-emerald-100' : 'text-slate-600'
                 }`}>
                   টি চাকরি
                 </span>
               </div>
               <div className={`mt-2.5 pt-2 border-t text-[12px] sm:text-[13px] font-medium flex items-center justify-between ${
                 statusFilter === 'ongoing' 
-                  ? 'border-white/20 text-sky-100' 
-                  : 'border-slate-100 text-slate-500 group-hover:text-sky-700'
+                  ? 'border-white/20 text-white' 
+                  : 'border-slate-100 text-slate-500 group-hover:text-emerald-700'
               }`}>
                 <span>{statusFilter === 'ongoing' ? 'ফিল্টার সক্রিয়' : 'চলমান সকল বিজ্ঞপ্তি'}</span>
-                <span className="font-bold">{statusFilter === 'ongoing' ? '✕ বাতিল' : 'দেখুন →'}</span>
+                <span className="font-bold inline-flex items-center gap-1">{statusFilter === 'ongoing' ? <><X className="w-3.5 h-3.5" /> বাতিল</> : 'দেখুন →'}</span>
               </div>
             </div>
           </button>
@@ -693,25 +670,25 @@ export default function HomePage() {
             onClick={() => handleSelectStatusFilter('ending_soon')}
             className={`group relative overflow-hidden p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border-2 transition-all duration-200 text-left flex flex-col justify-between cursor-pointer ${
               statusFilter === 'ending_soon'
-                ? 'bg-gradient-to-br from-amber-500 via-amber-600 to-orange-700 text-white shadow-xl shadow-amber-600/30 border-amber-400 scale-[1.02]'
-                : 'bg-white hover:bg-amber-50/50 text-slate-800 border-amber-200/90 hover:border-amber-400 shadow-sm hover:shadow-md'
+                ? 'bg-slate-900 text-white shadow-md border-slate-900 scale-[1.02]'
+                : 'bg-white hover:bg-slate-50 text-slate-900 border-slate-200 hover:border-slate-400 shadow-xs'
             }`}
           >
             <div className="flex items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
                 <span className={`text-[17px] sm:text-lg font-extrabold tracking-normal ${
-                  statusFilter === 'ending_soon' ? 'text-white' : 'text-amber-950'
+                  statusFilter === 'ending_soon' ? 'text-white' : 'text-slate-900'
                 }`}>
                   শেষ হতে চলেছে
                 </span>
                 <span className={`px-2 py-0.5 rounded-full text-[11px] font-black tracking-wider uppercase ${
-                  statusFilter === 'ending_soon' ? 'bg-white/20 text-amber-100' : 'bg-amber-100 text-amber-800'
+                  statusFilter === 'ending_soon' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-800 border border-slate-200'
                 }`}>
                   ৭ দিন
                 </span>
               </div>
-              <span className={`w-9 h-9 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
-                statusFilter === 'ending_soon' ? 'bg-white/20 text-white' : 'bg-amber-100/80 text-amber-700 shadow-xs'
+              <span className={`w-9 h-9 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 ${
+                statusFilter === 'ending_soon' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700 border border-slate-200'
               }`}>
                 <Clock className="w-5 h-5" />
               </span>
@@ -725,18 +702,18 @@ export default function HomePage() {
                   {toBn(statusCounts.endingSoon)}
                 </span>
                 <span className={`text-[15px] sm:text-[17px] font-bold ${
-                  statusFilter === 'ending_soon' ? 'text-amber-100' : 'text-slate-600'
+                  statusFilter === 'ending_soon' ? 'text-slate-200' : 'text-slate-600'
                 }`}>
                   টি চাকরি
                 </span>
               </div>
               <div className={`mt-2.5 pt-2 border-t text-[12px] sm:text-[13px] font-medium flex items-center justify-between ${
                 statusFilter === 'ending_soon' 
-                  ? 'border-white/20 text-amber-100' 
-                  : 'border-slate-100 text-slate-500 group-hover:text-amber-700'
+                  ? 'border-white/20 text-white' 
+                  : 'border-slate-100 text-slate-500 group-hover:text-slate-900'
               }`}>
                 <span>{statusFilter === 'ending_soon' ? 'ফিল্টার সক্রিয়' : 'শীঘ্রই সময় শেষ'}</span>
-                <span className="font-bold">{statusFilter === 'ending_soon' ? '✕ বাতিল' : 'দেখুন →'}</span>
+                <span className="font-bold inline-flex items-center gap-1">{statusFilter === 'ending_soon' ? <><X className="w-3.5 h-3.5" /> বাতিল</> : 'দেখুন →'}</span>
               </div>
             </div>
           </button>
@@ -747,26 +724,26 @@ export default function HomePage() {
             onClick={() => handleSelectStatusFilter('ending_today')}
             className={`group relative overflow-hidden p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border-2 transition-all duration-200 text-left flex flex-col justify-between cursor-pointer ${
               statusFilter === 'ending_today'
-                ? 'bg-gradient-to-br from-rose-600 via-rose-700 to-red-800 text-white shadow-xl shadow-rose-700/30 border-rose-500 scale-[1.02]'
-                : 'bg-white hover:bg-rose-50/50 text-slate-800 border-rose-200/90 hover:border-rose-400 shadow-sm hover:shadow-md'
+                ? 'bg-red-600 text-white shadow-md border-red-600 scale-[1.02]'
+                : 'bg-white hover:bg-red-50 text-slate-900 border-red-200 hover:border-red-400 shadow-xs'
             }`}
           >
             <div className="flex items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
                 <span className={`text-[17px] sm:text-lg font-extrabold tracking-normal flex items-center gap-1.5 ${
-                  statusFilter === 'ending_today' ? 'text-white' : 'text-rose-950'
+                  statusFilter === 'ending_today' ? 'text-white' : 'text-red-700'
                 }`}>
                   <span>আজ শেষ</span>
-                  <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+                  <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
                 </span>
                 <span className={`px-2 py-0.5 rounded-full text-[11px] font-black tracking-wider uppercase ${
-                  statusFilter === 'ending_today' ? 'bg-white/20 text-rose-100' : 'bg-rose-100 text-rose-800'
+                  statusFilter === 'ending_today' ? 'bg-white/20 text-white' : 'bg-red-100 text-red-800'
                 }`}>
                   জরুরি
                 </span>
               </div>
-              <span className={`w-9 h-9 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${
-                statusFilter === 'ending_today' ? 'bg-white/20 text-white' : 'bg-rose-100/80 text-rose-700 shadow-xs'
+              <span className={`w-9 h-9 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 ${
+                statusFilter === 'ending_today' ? 'bg-white/20 text-white' : 'bg-red-50 text-red-600 border border-red-200'
               }`}>
                 <Flame className="w-5 h-5" />
               </span>
@@ -780,18 +757,18 @@ export default function HomePage() {
                   {toBn(statusCounts.endingToday)}
                 </span>
                 <span className={`text-[15px] sm:text-[17px] font-bold ${
-                  statusFilter === 'ending_today' ? 'text-rose-100' : 'text-slate-600'
+                  statusFilter === 'ending_today' ? 'text-red-100' : 'text-slate-600'
                 }`}>
                   টি চাকরি
                 </span>
               </div>
               <div className={`mt-2.5 pt-2 border-t text-[12px] sm:text-[13px] font-medium flex items-center justify-between ${
                 statusFilter === 'ending_today' 
-                  ? 'border-white/20 text-rose-100' 
-                  : 'border-slate-100 text-slate-500 group-hover:text-rose-700'
+                  ? 'border-white/20 text-white' 
+                  : 'border-slate-100 text-slate-500 group-hover:text-red-600'
               }`}>
-                <span>{statusFilter === 'ending_today' ? 'ফিল্টার সক্রিয়' : 'আজকের মধ্যেই আবেদন'}</span>
-                <span className="font-bold">{statusFilter === 'ending_today' ? '✕ বাতিল' : 'দেখুন →'}</span>
+                <span>{statusFilter === 'ending_today' ? 'ফিল্টার সক্রিয়' : 'আজকেই শেষ দিন'}</span>
+                <span className="font-bold inline-flex items-center gap-1">{statusFilter === 'ending_today' ? <><X className="w-3.5 h-3.5" /> বাতিল</> : 'দেখুন →'}</span>
               </div>
             </div>
           </button>
@@ -803,15 +780,15 @@ export default function HomePage() {
       <div className="space-y-12 mt-8">
       {/* STEP 07: DYNAMIC JOB FEED DISCOVERY STRIP */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-gradient-to-r from-emerald-900/90 via-slate-900 to-teal-950 text-white rounded-2xl p-4 sm:p-5 shadow-lg border border-emerald-700/30 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="bg-slate-900 text-white rounded-2xl p-4 sm:p-5 shadow-xs border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-300 flex-shrink-0">
-              <Sparkles className="w-5 h-5 text-amber-300 animate-pulse" />
+            <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-emerald-400 flex-shrink-0">
+              <Sparkles className="w-5 h-5 text-emerald-400" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-black text-sm sm:text-base text-white">তাজা জব ফিড এক্সপ্লোরার</span>
-                <span className="bg-amber-400 text-slate-950 text-[11px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">নতুন</span>
+                <span className="bg-red-600 text-white text-[11px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">নতুন</span>
               </div>
               <p className="text-xs text-slate-300 mt-0.5">সময় ও তারিখ অনুযায়ী চাকরির সার্কুলার ফিল্টার করুন</p>
             </div>
@@ -820,39 +797,39 @@ export default function HomePage() {
           <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
             <Link
               href="/todays-jobs"
-              className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm hover:scale-105 active:scale-95"
+              className="px-3.5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs"
             >
-              <Clock className="w-3.5 h-3.5 text-amber-300" />
+              <Clock className="w-3.5 h-3.5 text-white" />
               <span>আজকের চাকরি</span>
             </Link>
 
             <Link
               href="/latest-jobs"
-              className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all border border-white/15 flex items-center gap-1.5 hover:scale-105 active:scale-95"
+              className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition-all border border-slate-700 flex items-center gap-1.5"
             >
-              <Layers className="w-3.5 h-3.5 text-emerald-300" />
+              <Layers className="w-3.5 h-3.5 text-slate-300" />
               <span>সর্বশেষ সব চাকরি</span>
             </Link>
 
             <Link
               href="/featured-jobs"
-              className="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 text-xs font-bold transition-all border border-amber-400/30 flex items-center gap-1.5 hover:scale-105 active:scale-95"
+              className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition-all border border-slate-700 flex items-center gap-1.5"
             >
-              <Award className="w-3.5 h-3.5 text-amber-300" />
+              <Award className="w-3.5 h-3.5 text-slate-300" />
               <span>বিশেষ সার্কুলার</span>
             </Link>
 
             <Link
               href="/closing-soon"
-              className="px-3.5 py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 text-xs font-bold transition-all border border-rose-400/30 flex items-center gap-1.5 hover:scale-105 active:scale-95"
+              className="px-3.5 py-2 rounded-xl bg-red-600/20 hover:bg-red-600/30 text-red-200 text-xs font-bold transition-all border border-red-500/40 flex items-center gap-1.5"
             >
-              <Flame className="w-3.5 h-3.5 text-rose-400" />
+              <Flame className="w-3.5 h-3.5 text-red-400" />
               <span>জরুরি ডেডলাইন</span>
             </Link>
 
             <Link
               href="/daily-jobs"
-              className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold transition-all border border-white/15 flex items-center gap-1.5 hover:scale-105 active:scale-95"
+              className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all border border-slate-700 flex items-center gap-1.5"
             >
               <Calendar className="w-3.5 h-3.5 text-slate-300" />
               <span>দৈনিক আর্কাইভ</span>
@@ -871,8 +848,8 @@ export default function HomePage() {
               <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
                 {jobsCms?.title || 'সকল চলমান চাকরির সার্কুলার'}
               </h2>
-              <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-[13px] sm:text-[14px] font-bold px-2.5 py-0.5 rounded-full whitespace-nowrap shadow-xs">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200 text-[13px] sm:text-[14px] font-bold px-2.5 py-0.5 rounded-full whitespace-nowrap shadow-xs">
+                <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
                 <span>{toBn(filteredJobs.length)}টি সক্রিয়</span>
               </span>
             </div>
@@ -887,29 +864,29 @@ export default function HomePage() {
               onClick={handleToggleUrgent}
               className={`w-full sm:w-auto px-4 py-2 sm:py-2.5 rounded-xl text-[15px] sm:text-[17px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                 onlyUrgent 
-                  ? 'bg-rose-600 text-white shadow-md shadow-rose-600/20' 
+                  ? 'bg-red-600 text-white shadow-xs' 
                   : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300'
               }`}
             >
-              <Flame className={`w-4 h-4 ${onlyUrgent ? 'text-white' : 'text-rose-600'}`} />
+              <Flame className={`w-4 h-4 ${onlyUrgent ? 'text-white' : 'text-red-600'}`} />
               <span>জরুরি ডেডলাইন (৩ দিনের মধ্যে শেষ)</span>
             </button>
           </div>
         </div>
 
         {/* 6. ELIGIBILITY & AGE MATCHER TOOL CARD */}
-        <div className="bg-gradient-to-r from-emerald-50/70 via-white to-teal-50/70 rounded-2xl border border-emerald-200/80 p-4 sm:p-5 shadow-xs transition-all">
+        <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-xs transition-all">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
-                <GraduationCap className="w-5 h-5" />
+              <div className="w-9 h-9 rounded-xl bg-emerald-700 text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+                <GraduationCap className="w-5 h-5 text-white" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="font-extrabold text-[15px] sm:text-[16px] text-slate-900">
                     বয়স ও শিক্ষাগত যোগ্যতা ম্যাচিং টুল
                   </h3>
-                  <span className="bg-emerald-100 text-emerald-800 text-[11px] font-black px-2 py-0.5 rounded-full uppercase">
+                  <span className="bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-black px-2 py-0.5 rounded-full uppercase">
                     ক্যালকুলেটর
                   </span>
                 </div>
@@ -930,7 +907,7 @@ export default function HomePage() {
                 }`}
               >
                 <Filter className="w-3.5 h-3.5" />
-                <span>{matcherActive ? '✓ ফিল্টার সক্রিয় (বন্ধ করুন)' : 'যোগ্যতা ফিল্টার চালু করুন'}</span>
+                <span>{matcherActive ? 'ফিল্টার সক্রিয় (বন্ধ করুন)' : 'যোগ্যতা ফিল্টার চালু করুন'}</span>
               </button>
             </div>
           </div>
@@ -1068,7 +1045,7 @@ export default function HomePage() {
                 >
                   {/* Top Badge */}
                   {job.featured && (
-                    <div className="absolute top-0 right-0 bg-gradient-to-l from-amber-500 to-amber-600 text-white text-[13px] font-bold px-3.5 py-1 rounded-bl-xl shadow-sm flex items-center gap-1">
+                    <div className="absolute top-0 right-0 bg-red-600 text-white text-[13px] font-bold px-3.5 py-1 rounded-bl-xl shadow-xs flex items-center gap-1">
                       <Sparkles className="w-3 h-3" />
                       <span>হট সার্কুলার</span>
                     </div>
@@ -1077,25 +1054,25 @@ export default function HomePage() {
                   <div className="space-y-4">
                     {/* Badges Bar */}
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="bg-emerald-50 text-emerald-800 text-[15px] font-bold px-2.5 py-1 rounded-md border border-emerald-200/60">
+                      <span className="bg-emerald-50 text-emerald-800 text-[15px] font-bold px-2.5 py-1 rounded-md border border-emerald-200">
                         {job.categoryLabel}
                       </span>
                       {job.positions && job.positions.length > 1 ? (
-                        <span className="bg-purple-50 text-purple-800 text-[14px] font-bold px-2.5 py-1 rounded-md border border-purple-200/70 flex items-center gap-1">
-                          <Layers className="w-3.5 h-3.5 text-purple-600" />
+                        <span className="bg-slate-100 text-slate-800 text-[14px] font-bold px-2.5 py-1 rounded-md border border-slate-200 flex items-center gap-1">
+                          <Layers className="w-3.5 h-3.5 text-slate-600" />
                           <span>{job.positions.length}টি ভিন্ন পদ ({job.grade})</span>
                         </span>
                       ) : (
-                        <span className="bg-slate-100 text-slate-700 text-[15px] font-semibold px-2.5 py-1 rounded-md">
+                        <span className="bg-slate-100 text-slate-800 text-[15px] font-semibold px-2.5 py-1 rounded-md border border-slate-200">
                           {job.grade}
                         </span>
                       )}
-                      <span className="bg-blue-50 text-blue-700 text-[15px] font-semibold px-2.5 py-1 rounded-md flex items-center gap-1">
-                        <Users className="w-3.5 h-3.5" />
+                      <span className="bg-slate-100 text-slate-800 text-[15px] font-semibold px-2.5 py-1 rounded-md border border-slate-200 flex items-center gap-1">
+                        <Users className="w-3.5 h-3.5 text-slate-600" />
                         {job.totalPosts} টি পদ
                       </span>
                       <span className={`text-xs font-bold px-2.5 py-1 rounded-md flex items-center gap-1 ml-auto ${
-                        isUrgent ? 'bg-rose-50 text-rose-700 border border-rose-200 animate-pulse' : 'bg-slate-100 text-slate-600'
+                        isUrgent ? 'bg-red-50 text-red-700 border border-red-200 animate-pulse' : 'bg-slate-100 text-slate-700 border border-slate-200'
                       }`}>
                         <Clock className="w-3.5 h-3.5" />
                         {job.daysRemaining} দিন বাকি
@@ -1116,7 +1093,7 @@ export default function HomePage() {
                     </div>
 
                     {/* Summary Card */}
-                    <div className="bg-slate-50 rounded-2xl p-3 border border-slate-100 space-y-2 text-[15px] text-slate-700">
+                    <div className="bg-slate-50 rounded-2xl p-3 border border-slate-200 space-y-2 text-[15px] text-slate-700">
                       <div className="flex items-start gap-2">
                         <GraduationCap className="w-3.5 h-3.5 text-slate-500 mt-0.5 flex-shrink-0" />
                         <div>
@@ -1131,9 +1108,9 @@ export default function HomePage() {
                           <span className="text-slate-600">{job.salary}</span>
                         </div>
                       </div>
-                      <div className="pt-2 border-t border-slate-200/60 text-[14px] flex items-center justify-between gap-1 flex-wrap">
+                      <div className="pt-2 border-t border-slate-200 text-[14px] flex items-center justify-between gap-1 flex-wrap">
                         <span className="text-slate-500 whitespace-nowrap">শেষ তারিখ: <strong className="text-slate-800 font-bold">{job.deadline}</strong></span>
-                        <span className="text-emerald-800 font-bold bg-emerald-50/90 px-2 py-0.5 rounded-md border border-emerald-200/60 whitespace-nowrap">
+                        <span className="text-emerald-800 font-bold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 whitespace-nowrap">
                           {job.feeRange ? (
                             <span>ফি: {job.feeRange} + ৳{job.serviceFee}</span>
                           ) : (
@@ -1145,21 +1122,21 @@ export default function HomePage() {
 
                     {/* Multi-Position Collapsible Drawer (Option 1) */}
                     {job.positions && job.positions.length > 1 && (
-                      <div className="rounded-2xl border border-indigo-100/90 bg-gradient-to-br from-indigo-50/40 via-white to-slate-50 overflow-hidden transition-all duration-300 shadow-sm">
+                      <div className="rounded-2xl border border-slate-200 bg-slate-50 overflow-hidden transition-all duration-300 shadow-xs">
                         <button
                           type="button"
                           onClick={() => togglePositions(job.id)}
-                          className="w-full px-3.5 py-2.5 text-left flex items-center justify-between hover:bg-indigo-50/70 transition-colors cursor-pointer group/toggle"
+                          className="w-full px-3.5 py-2.5 text-left flex items-center justify-between hover:bg-slate-100 transition-colors cursor-pointer group/toggle"
                         >
                           <div className="flex items-center gap-2">
-                            <span className="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center flex-shrink-0">
+                            <span className="w-6 h-6 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center justify-center flex-shrink-0">
                               <Layers className="w-3.5 h-3.5" />
                             </span>
-                            <span className="text-[15px] font-bold text-slate-800 group-hover/toggle:text-indigo-800 transition-colors">
-                              📋 পদসমূহের তালিকা ও গ্রেড ({job.positions.length}টি পদ)
+                            <span className="text-[15px] font-bold text-slate-800 group-hover/toggle:text-emerald-800 transition-colors">
+                              পদসমূহের তালিকা ও গ্রেড ({job.positions.length}টি পদ)
                             </span>
                           </div>
-                          <span className="flex items-center gap-1 text-[13px] font-bold text-indigo-700 bg-indigo-50/90 px-2 py-0.5 rounded-lg border border-indigo-200/60 flex-shrink-0">
+                          <span className="flex items-center gap-1 text-[13px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200 flex-shrink-0">
                             {expandedJobId === job.id ? (
                               <>
                                 <span>লুকান</span>
@@ -1175,7 +1152,7 @@ export default function HomePage() {
                         </button>
 
                         {expandedJobId === job.id && (
-                          <div className="px-3.5 pb-3 pt-1 border-t border-indigo-100/70 space-y-2 animate-in fade-in duration-200">
+                          <div className="px-3.5 pb-3 pt-1 border-t border-slate-200 space-y-2 animate-in fade-in duration-200">
                             <div className="space-y-2 divide-y divide-slate-100">
                               {job.positions.map((pos: any, pIdx: number) => (
                                 <div key={pIdx} className="pt-3 pb-1.5 first:pt-0 space-y-1.5">
@@ -1184,26 +1161,26 @@ export default function HomePage() {
                                     <span className="text-[15px] font-bold text-slate-900 leading-snug">
                                       {pIdx + 1}. {pos.title}
                                     </span>
-                                    <span className="bg-emerald-100 text-emerald-800 text-[13px] font-bold px-2.5 py-0.5 rounded-lg border border-emerald-200/60 whitespace-nowrap flex-shrink-0">
+                                    <span className="bg-emerald-100 text-emerald-800 text-[13px] font-bold px-2.5 py-0.5 rounded-lg border border-emerald-200 whitespace-nowrap flex-shrink-0">
                                       {pos.posts} টি পদ
                                     </span>
                                   </div>
 
                                   {/* Badges: Grade, Salary Scale & Specific Fee */}
                                   <div className="flex items-center gap-1.5 flex-wrap">
-                                    <span className="text-indigo-800 font-semibold bg-indigo-50/90 border border-indigo-100 px-2 py-0.5 rounded-md text-[13px]">
+                                    <span className="text-slate-800 font-semibold bg-white border border-slate-200 px-2 py-0.5 rounded-md text-[13px]">
                                       {pos.grade} • {pos.salary}
                                     </span>
                                     {pos.govtFee && (
-                                      <span className="text-emerald-800 font-bold bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 rounded-md text-[13px]">
+                                      <span className="text-emerald-800 font-bold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md text-[13px]">
                                         সরকারি ফি: ৳{pos.govtFee}
                                       </span>
                                     )}
                                   </div>
 
                                   {/* Full Educational Qualification (No truncation, 100% visible) */}
-                                  <div className="text-[13px] bg-slate-50/90 p-2 rounded-xl border border-slate-100/90 flex items-start gap-1.5">
-                                    <span className="font-bold text-slate-800 flex-shrink-0">🎓 যোগ্যতা:</span>
+                                  <div className="text-[13px] bg-white p-2 rounded-xl border border-slate-200 flex items-start gap-1.5">
+                                    <span className="font-bold text-slate-800 flex-shrink-0 inline-flex items-center gap-1"><GraduationCap className="w-3.5 h-3.5 text-emerald-700" /> যোগ্যতা:</span>
                                     <span className="text-slate-600 leading-relaxed font-medium">
                                       {pos.minEducation}
                                     </span>
@@ -1224,19 +1201,19 @@ export default function HomePage() {
                   <div className="grid grid-cols-2 gap-2 pt-4 border-t border-slate-100 mt-4">
                     <Link
                       href={`/jobs/${job.id}`}
-                      className="px-3 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 font-bold text-[17px] text-center transition-colors"
+                      className="px-3 py-2.5 rounded-xl border border-slate-300 text-slate-800 hover:bg-slate-50 font-bold text-[17px] text-center transition-colors"
                     >
                       সার্কুলার নোটিশ
                     </Link>
                     {isExpired ? (
-                      <div className="px-3 py-2.5 rounded-xl bg-slate-100 text-slate-400 font-bold text-[17px] text-center border border-slate-200 flex items-center justify-center gap-1.5 cursor-not-allowed select-none">
-                        <Clock className="w-3.5 h-3.5 text-slate-400" />
+                      <div className="px-3 py-2.5 rounded-xl bg-slate-100 text-slate-500 font-bold text-[17px] text-center border border-slate-200 flex items-center justify-center gap-1.5 cursor-not-allowed select-none">
+                        <Clock className="w-3.5 h-3.5 text-slate-500" />
                         <span>সময় শেষ</span>
                       </div>
                     ) : (
                       <Link
                         href={`/apply/${job.id}`}
-                        className="px-3 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white font-bold text-[17px] text-center shadow-md shadow-emerald-700/20 hover:from-emerald-700 hover:to-teal-800 transition-all flex items-center justify-center gap-1.5"
+                        className="px-3 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-[17px] text-center shadow-xs transition-all flex items-center justify-center gap-1.5"
                       >
                         <span>আবেদন করুন</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -1320,7 +1297,7 @@ export default function HomePage() {
                         }}
                         className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl font-bold text-[14px] sm:text-[16px] transition-all flex items-center justify-center flex-shrink-0 cursor-pointer ${
                           isCurrent
-                            ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-md shadow-emerald-700/25 scale-[1.03]'
+                            ? 'bg-emerald-700 text-white shadow-xs scale-[1.03]'
                             : 'bg-white text-slate-700 border border-slate-200/90 hover:bg-emerald-50/60 hover:text-emerald-800 hover:border-emerald-200 shadow-2xs'
                         }`}
                       >
@@ -1345,7 +1322,7 @@ export default function HomePage() {
                 className={`h-8 w-8 sm:h-10 sm:w-auto sm:px-3.5 rounded-xl font-bold text-[14px] sm:text-[16px] transition-all flex items-center justify-center gap-1.5 flex-shrink-0 cursor-pointer ${
                   currentPage === totalPages
                     ? 'bg-slate-100 text-slate-300 border border-slate-200/60 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white hover:from-emerald-700 hover:to-teal-800 shadow-md shadow-emerald-700/25'
+                    : 'bg-emerald-700 hover:bg-emerald-800 text-white shadow-xs'
                 }`}
               >
                 <span className="hidden sm:inline">পরবর্তী</span>
@@ -1442,7 +1419,7 @@ export default function HomePage() {
               backgroundImage: ctaBannerCms?.style?.backgroundColor ? 'none' : undefined,
               color: ctaBannerCms?.style?.textColor || undefined
             }}
-            className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white rounded-3xl p-6 sm:p-10 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6"
+            className="bg-emerald-800 text-white rounded-3xl p-6 sm:p-10 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6"
           >
             <div className="space-y-2 max-w-xl">
               <span className="bg-white/20 text-white text-[13px] font-black px-2.5 py-1 rounded uppercase tracking-wider">
@@ -1451,7 +1428,7 @@ export default function HomePage() {
               <h3 className={`${ctaBannerCms?.style?.titleFontSize === '3xl' ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'} font-black`}>
                 {ctaBannerCms?.title || 'বিসিএস ও ব্যাংক পরীক্ষার বিগত ১০ বছরের প্রশ্ন ও সমাধান (PDF)'}
               </h3>
-              <p className="text-[16px] text-amber-100 leading-relaxed">
+              <p className="text-[16px] text-emerald-100 leading-relaxed">
                 {ctaBannerCms?.subtitle || 'প্রিলিমিনারি ও লিখিত পরীক্ষার পূর্ণাঙ্গ প্রশ্নব্যাংক ব্যাখ্যাসহ ডাউনলোড করুন সম্পূর্ণ বিনামূল্যে।'}
               </p>
             </div>
@@ -1459,9 +1436,9 @@ export default function HomePage() {
             <div className="flex items-center gap-3">
               <Link
                 href={ctaBannerCms?.content?.buttonUrl || '/questions'}
-                className="px-6 py-3 bg-white hover:bg-slate-100 text-amber-950 font-black text-[17px] rounded-xl shadow-lg transition-all flex items-center gap-2"
+                className="px-6 py-3 bg-white hover:bg-slate-100 text-slate-900 font-black text-[17px] rounded-xl shadow-xs transition-all flex items-center gap-2"
               >
-                <Download className="w-4 h-4 text-amber-700" />
+                <Download className="w-4 h-4 text-emerald-700" />
                 <span>{ctaBannerCms?.content?.buttonLabel || 'ফ্রি প্রশ্নব্যাংক ডাউনলোড'}</span>
               </Link>
             </div>
@@ -1478,16 +1455,12 @@ export default function HomePage() {
               backgroundImage: reviewsCms?.style?.backgroundColor ? 'none' : undefined,
               color: reviewsCms?.style?.textColor || undefined
             }}
-            className="bg-gradient-to-b from-slate-900 to-[#02231b] rounded-3xl sm:rounded-[36px] p-6 sm:p-10 text-white border border-emerald-900/40 shadow-2xl relative overflow-hidden"
+            className="bg-slate-900 rounded-3xl sm:rounded-[36px] p-6 sm:p-10 text-white border border-slate-800 shadow-sm relative overflow-hidden"
           >
-            {/* Subtle Ambient Glows */}
-            <div className="absolute top-0 right-1/4 w-[400px] h-[250px] bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none" />
-            <div className="absolute bottom-0 left-1/4 w-[350px] h-[200px] bg-teal-500/10 blur-[100px] rounded-full pointer-events-none" />
-
             {/* Section Header */}
             <div className="text-center max-w-3xl mx-auto space-y-3 mb-8 relative z-10">
-              <div className="inline-flex items-center gap-2 bg-emerald-900/60 border border-emerald-500/30 text-emerald-300 px-4 py-1.5 rounded-full text-[13px] sm:text-[14px] font-bold tracking-wide shadow-sm">
-                <span className="flex text-amber-400">★★★★★</span>
+              <div className="inline-flex items-center gap-2 bg-slate-800 border border-slate-700 text-emerald-400 px-4 py-1.5 rounded-full text-[13px] sm:text-[14px] font-bold tracking-wide shadow-xs">
+                <span className="flex items-center gap-0.5 text-amber-400">{Array.from({ length: 5 }).map((_, i) => <FaStar key={i} className="w-3.5 h-3.5" />)}</span>
                 <span>{reviewsCms?.content?.badge || '৪.৯/৫ গড় রেটিং • ৩,৫০০+ ভেরিফাইড আবেদনকারী'}</span>
               </div>
               <h2 className={`${reviewsCms?.style?.titleFontSize === '5xl' ? 'text-3xl sm:text-5xl' : reviewsCms?.style?.titleFontSize === '3xl' ? 'text-xl sm:text-3xl' : 'text-2xl sm:text-4xl'} font-black text-white tracking-tight`}>
@@ -1500,20 +1473,16 @@ export default function HomePage() {
 
           {/* Infinite Auto-Scrolling Reviews Marquee (Pauses on Hover) */}
           <div className="relative z-10 overflow-hidden w-full py-2">
-            {/* Left and Right Gradient Fades */}
-            <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-r from-slate-900 to-transparent z-20" />
-            <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-l from-[#02231b] to-transparent z-20" />
-
             <div className="animate-marquee-scroll flex gap-4 sm:gap-5">
               {[...reviewsToDisplay, ...reviewsToDisplay].map((rev, index) => (
                 <div
                   key={`${rev.id}-${index}`}
-                  className="w-[285px] sm:w-[350px] bg-white/5 hover:bg-white/[0.09] backdrop-blur-md rounded-2xl sm:rounded-3xl p-5 border border-emerald-500/20 hover:border-emerald-500/50 transition-all flex flex-col justify-between space-y-3.5 flex-shrink-0 cursor-default select-none shadow-lg"
+                  className="w-[285px] sm:w-[350px] bg-slate-800/90 rounded-2xl sm:rounded-3xl p-5 border border-slate-700 transition-all flex flex-col justify-between space-y-3.5 flex-shrink-0 cursor-default select-none shadow-xs"
                 >
                   <div className="space-y-2.5">
                     <div className="flex items-center justify-between">
-                      <div className="flex text-amber-400 text-sm tracking-tighter">★★★★★</div>
-                      <span className="text-[12px] text-emerald-300 font-bold bg-emerald-950/80 border border-emerald-500/30 px-2 py-0.5 rounded-full flex items-center gap-1">
+                      <div className="flex items-center gap-0.5 text-amber-400 text-sm">{Array.from({ length: 5 }).map((_, i) => <FaStar key={i} className="w-3.5 h-3.5" />)}</div>
+                      <span className="text-[12px] text-emerald-400 font-bold bg-slate-900 border border-slate-700 px-2 py-0.5 rounded-full flex items-center gap-1">
                         <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                         <span>ভেরিফাইড</span>
                       </span>
@@ -1522,13 +1491,13 @@ export default function HomePage() {
                       “{rev.quote}”
                     </p>
                   </div>
-                  <div className="pt-3 border-t border-white/10 flex items-center gap-3">
-                    <div className={`w-9 h-9 rounded-full bg-gradient-to-tr ${rev.gradient} flex items-center justify-center ${rev.textInitials} font-black text-xs flex-shrink-0 shadow-sm`}>
+                  <div className="pt-3 border-t border-slate-700 flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full bg-emerald-700 flex items-center justify-center text-white font-black text-xs flex-shrink-0 shadow-xs">
                       {rev.initials}
                     </div>
                     <div className="overflow-hidden">
                       <div className="text-[14px] sm:text-[15px] font-bold text-white leading-tight truncate">{rev.name}</div>
-                      <div className="text-[12px] text-emerald-300 font-medium leading-tight truncate">{rev.role}</div>
+                      <div className="text-[12px] text-emerald-400 font-medium leading-tight truncate">{rev.role}</div>
                       <div className="text-[11px] text-slate-400 truncate">{rev.institution}</div>
                     </div>
                   </div>
@@ -1694,9 +1663,9 @@ export default function HomePage() {
                     className="w-full transition-transform duration-300 group-hover:scale-105"
                   />
                   {(sec.title || sec.content?.badge || sec.content?.buttonLabel) && (
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent flex flex-col justify-end p-6 sm:p-10 text-white space-y-3">
+                    <div className="absolute inset-0 bg-slate-950/60 flex flex-col justify-end p-6 sm:p-10 text-white space-y-3">
                       {sec.content?.badge && (
-                        <span className="inline-block px-3 py-1 bg-emerald-600 text-white rounded-full text-xs font-bold uppercase tracking-wider w-fit">
+                        <span className="inline-block px-3 py-1 bg-emerald-700 text-white rounded-full text-xs font-bold uppercase tracking-wider w-fit">
                           {sec.content.badge}
                         </span>
                       )}

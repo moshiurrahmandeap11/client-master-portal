@@ -39,7 +39,8 @@ import {
   Sparkles,
   ArrowUpRight,
   Printer,
-  LogIn
+  LogIn,
+  Lightbulb
 } from 'lucide-react';
 import { CandidateProfile, ApplicationRequest, CandidateDocument } from '@/types';
 import { BD_DIVISIONS_EN } from '@/constants';
@@ -183,7 +184,7 @@ export default function CandidateManagementHub({
   };
 
   const handleDeleteCandidate = async (candidate: any) => {
-    if (!confirm(`⚠️ সতর্কবার্তা: আপনি কি নিশ্চিত যে প্রার্থী "${candidate.name}" (${candidate.phone}) সম্পূর্ণ মুছে ফেলতে চান?\n\nএর সাথে তার সমস্ত আবেদন ও ডকুমেন্টস মুছে যাবে!`)) {
+    if (!confirm(`সতর্কবার্তা: আপনি কি নিশ্চিত যে প্রার্থী "${candidate.name}" (${candidate.phone}) সম্পূর্ণ মুছে ফেলতে চান?\n\nএর সাথে তার সমস্ত আবেদন ও ডকুমেন্টস মুছে যাবে!`)) {
       return;
     }
     try {
@@ -470,7 +471,7 @@ export default function CandidateManagementHub({
               });
               setIsCreateModalOpen(true);
             }}
-            className="px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer shrink-0"
+            className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all cursor-pointer shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>+ নতুন প্রার্থী তৈরি করুন</span>
@@ -710,8 +711,8 @@ export default function CandidateManagementHub({
                               <div className="font-bold text-slate-900 flex items-center gap-1.5">
                                 <span>{c.name}</span>
                                 {isVerified && (
-                                  <span className="text-emerald-700 text-[11px]" title="ভেরিফাইড চাকরিপ্রার্থী">
-                                    ✓
+                                  <span className="text-emerald-700 inline-flex items-center" title="ভেরিফাইড চাকরিপ্রার্থী">
+                                    <CheckCircle2 className="w-3.5 h-3.5" />
                                   </span>
                                 )}
                               </div>
@@ -765,8 +766,8 @@ export default function CandidateManagementHub({
                               স্থগিত
                             </span>
                           ) : isVerified ? (
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                              ✓ ভেরিফাইড
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 inline-flex items-center gap-1">
+                              <Check className="w-3 h-3" /> ভেরিফাইড
                             </span>
                           ) : (
                             <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">
@@ -923,8 +924,8 @@ export default function CandidateManagementHub({
                 <div className="flex items-center gap-2">
                   <h2 className="text-lg font-black text-slate-900">{currentCandidate.name}</h2>
                   <span className="text-xs text-slate-500 font-bold">({currentCandidate.nameBn || currentCandidate.name})</span>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                    ✓ ভেরিফাইড চাকরিপ্রার্থী
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 inline-flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3" /> ভেরিফাইড চাকরিপ্রার্থী
                   </span>
                 </div>
                 <div className="flex flex-wrap items-center gap-3 mt-1 text-xs text-slate-500 font-medium">
@@ -1053,8 +1054,8 @@ export default function CandidateManagementHub({
                   )}
                 </div>
                 <div className="text-xs font-bold text-slate-900">পাসপোর্ট ছবি</div>
-                <span className="text-[10px] text-emerald-700 font-bold block">
-                  {currentCandidate.photoUrl ? '✓ আপলোডকৃত' : 'প্রয়োজন'}
+                <span className="text-[10px] text-emerald-700 font-bold inline-flex items-center justify-center gap-0.5">
+                  {currentCandidate.photoUrl ? <><Check className="w-3 h-3" /> আপলোডকৃত</> : 'প্রয়োজন'}
                 </span>
               </div>
 
@@ -1068,8 +1069,8 @@ export default function CandidateManagementHub({
                   )}
                 </div>
                 <div className="text-xs font-bold text-slate-900">ডিজিটাল স্বাক্ষর</div>
-                <span className="text-[10px] text-emerald-700 font-bold block">
-                  {currentCandidate.signatureUrl ? '✓ আপলোডকৃত' : 'প্রয়োজন'}
+                <span className="text-[10px] text-emerald-700 font-bold inline-flex items-center justify-center gap-0.5">
+                  {currentCandidate.signatureUrl ? <><Check className="w-3 h-3" /> আপলোডকৃত</> : 'প্রয়োজন'}
                 </span>
               </div>
 
@@ -1083,8 +1084,8 @@ export default function CandidateManagementHub({
                   )}
                 </div>
                 <div className="text-xs font-bold text-slate-900">জাতীয় পরিচয়পত্র</div>
-                <span className="text-[10px] text-blue-700 font-bold block">
-                  {currentCandidate.nidFrontUrl ? '✓ সংরক্ষিত' : 'অপেক্ষমাণ'}
+                <span className="text-[10px] text-blue-700 font-bold inline-flex items-center justify-center gap-0.5">
+                  {currentCandidate.nidFrontUrl ? <><Check className="w-3 h-3" /> সংরক্ষিত</> : 'অপেক্ষমাণ'}
                 </span>
               </div>
 
@@ -1163,12 +1164,12 @@ export default function CandidateManagementHub({
                           ৳{app.totalPaid || (app.applicationFee + (app.serviceCharge || 80))}
                         </td>
                         <td className="py-2.5 px-3">
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold inline-flex items-center gap-1 ${
                             app.status === 'completed' ? 'bg-emerald-100 text-emerald-800' :
                             app.status === 'processing' ? 'bg-blue-100 text-blue-800' :
                             'bg-amber-100 text-amber-800'
                           }`}>
-                            {app.status === 'completed' ? '✓ সম্পন্ন' : app.status === 'processing' ? 'প্রসেসিং' : 'পেমেন্ট পেন্ডিং'}
+                            {app.status === 'completed' ? <><Check className="w-3 h-3" /> সম্পন্ন</> : app.status === 'processing' ? 'প্রসেসিং' : 'পেমেন্ট পেন্ডিং'}
                           </span>
                         </td>
                         <td className="py-2.5 px-3 text-right">
@@ -1287,10 +1288,10 @@ export default function CandidateManagementHub({
                       এনআইডি ও অ্যাকাডেমিক সার্টিফিকেট সঠিক থাকলে ব্লু ব্যাজ প্রদান করুন।
                     </p>
                   </div>
-                  <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                  <span className={`px-2.5 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1 ${
                     currentCandidate.isVerified ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700'
                   }`}>
-                    {currentCandidate.isVerified ? '✓ ভেরিফাইড' : 'আনভেরিফাইড'}
+                    {currentCandidate.isVerified ? <><Check className="w-3 h-3" /> ভেরিফাইড</> : 'আনভেরিফাইড'}
                   </span>
                 </div>
               </div>
@@ -1298,9 +1299,9 @@ export default function CandidateManagementHub({
               <button
                 type="button"
                 onClick={() => handleToggleVerification(currentCandidate)}
-                className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm"
+                className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5"
               >
-                {currentCandidate.isVerified ? 'ভেরিফাইড স্ট্যাটাস প্রত্যাহার করুন' : '✓ ভেরিফাইড চাকরিপ্রার্থী অনুমোদন দিন'}
+                {currentCandidate.isVerified ? 'ভেরিফাইড স্ট্যাটাস প্রত্যাহার করুন' : <><Check className="w-3.5 h-3.5" /> ভেরিফাইড চাকরিপ্রার্থী অনুমোদন দিন</>}
               </button>
             </div>
 
@@ -1674,8 +1675,9 @@ export default function CandidateManagementHub({
               </button>
             </div>
 
-            <p className="text-xs text-slate-600 bg-emerald-50 p-3 rounded-xl border border-emerald-200">
-              💡 <span className="font-bold text-emerald-900">টিপস:</span> টেলিটক সরকারি পোর্টালে ফর্ম পূরণের সময় নিচের যেকোনো বাটনে ক্লিক করলেই সেই মানটি ক্লিপবোর্ডে কপি হয়ে যাবে।
+            <p className="text-xs text-slate-600 bg-emerald-50 p-3 rounded-xl border border-emerald-200 flex items-start gap-2">
+              <Lightbulb className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+              <span><span className="font-bold text-emerald-900">টিপস:</span> টেলিটক সরকারি পোর্টালে ফর্ম পূরণের সময় নিচের যেকোনো বাটনে ক্লিক করলেই সেই মানটি ক্লিপবোর্ডে কপি হয়ে যাবে।</span>
             </p>
 
             <div className="space-y-4 text-xs">

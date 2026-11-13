@@ -27,8 +27,15 @@ import {
   FileCheck,
   CreditCard,
   Calendar,
-  Activity
+  Activity,
+  Mail,
+  GraduationCap,
+  KeyRound,
+  Ticket,
+  Settings,
+  Type
 } from 'lucide-react';
+import { FaLandmarkFlag } from 'react-icons/fa6';
 import { storage } from '@/lib/store';
 import { fetchWithAuth } from '@/lib/axios';
 import { ApplicationRequest } from '@/types';
@@ -206,7 +213,7 @@ export default function ApplicationsPage() {
         setSelectedApp(updatedApp);
         setApplications(prev => prev.map(a => a.id === updatedApp.id ? updatedApp : a));
         storage.updateAppStatus(updatedApp.id, 'pending_payment', 'প্রার্থী কর্তৃক TrxID সংশোধন বা পুনরায় জমা দেওয়া হয়েছে।');
-        setDisputeSuccessMessage('✓ TrxID সফলভাবে জমা দেওয়া হয়েছে! অ্যাডমিন টিম দ্রুত যাচাই করে অনুমোদন করবে।');
+        setDisputeSuccessMessage('TrxID সফলভাবে জমা দেওয়া হয়েছে! অ্যাডমিন টিম দ্রুত যাচাই করে অনুমোদন করবে।');
         setTimeout(() => {
           setIsDisputeModalOpen(false);
           setDisputeSuccessMessage(null);
@@ -566,13 +573,13 @@ export default function ApplicationsPage() {
                 {/* Submission Channel & User ID */}
                 <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100 space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500 font-bold text-[11px]">
-                      {selectedApp.submissionChannel === 'bank_erecruitment' ? '🏦 বাংলাদেশ ব্যাংক ট্র্যাকিং:' :
-                       selectedApp.submissionChannel === 'corporate_portal' ? '🏢 কর্পোরেট / Bdjobs আইডি:' :
-                       selectedApp.submissionChannel === 'hr_email' ? '✉️ এইচআর ইমেইল রেফারেন্স:' :
-                       selectedApp.submissionChannel === 'custom_portal' ? '🎓 বিশ্ববিদ্যালয় / পোর্টাল আইডি:' :
-                       selectedApp.submissionChannel === 'postal_offline' ? '📮 রেজিস্ট্রি ডাক ও চালান নম্বর:' :
-                       '🔤 টেলিটক ইউজার আইডি (User ID):'}
+                    <span className="text-slate-500 font-bold text-[11px] inline-flex items-center gap-1.5">
+                      {selectedApp.submissionChannel === 'bank_erecruitment' ? <><FaLandmarkFlag className="w-3.5 h-3.5 text-emerald-700" /> বাংলাদেশ ব্যাংক ট্র্যাকিং:</> :
+                       selectedApp.submissionChannel === 'corporate_portal' ? <><Building className="w-3.5 h-3.5 text-indigo-600" /> কর্পোরেট / Bdjobs আইডি:</> :
+                       selectedApp.submissionChannel === 'hr_email' ? <><Mail className="w-3.5 h-3.5 text-sky-600" /> এইচআর ইমেইল রেফারেন্স:</> :
+                       selectedApp.submissionChannel === 'custom_portal' ? <><GraduationCap className="w-3.5 h-3.5 text-purple-600" /> বিশ্ববিদ্যালয় / পোর্টাল আইডি:</> :
+                       selectedApp.submissionChannel === 'postal_offline' ? <><Send className="w-3.5 h-3.5 text-amber-600" /> রেজিস্ট্রি ডাক ও চালান নম্বর:</> :
+                       <><Type className="w-3.5 h-3.5 text-slate-600" /> টেলিটক ইউজার আইডি (User ID):</>}
                     </span>
                     <div className="flex items-center gap-1.5 font-mono font-bold text-slate-900 bg-white px-2 py-0.5 rounded border">
                       <span data-testid="teletalk-user-id">{selectedApp.teleTalkTrackingId || selectedApp.corporateTrackingId || selectedApp.id}</span>
@@ -583,9 +590,9 @@ export default function ApplicationsPage() {
                           setCopiedUid(true);
                           setTimeout(() => setCopiedUid(false), 2000);
                         }}
-                        className="text-[10px] text-emerald-700 hover:underline font-sans font-bold"
+                        className="text-[10px] text-emerald-700 hover:underline font-sans font-bold inline-flex items-center"
                       >
-                        {copiedUid ? '✓' : 'কপি'}
+                        {copiedUid ? <Check className="w-3 h-3" /> : 'কপি'}
                       </button>
                     </div>
                   </div>
@@ -593,8 +600,8 @@ export default function ApplicationsPage() {
                   {/* Password / PIN Box */}
                   {selectedApp.teleTalkPassword && (
                     <div className="flex items-center justify-between border-t border-slate-200/60 pt-1.5">
-                      <span className="text-slate-500 font-bold text-[11px]">
-                        🔑 টেলিটক পাসওয়ার্ড / পিন:
+                      <span className="text-slate-500 font-bold text-[11px] inline-flex items-center gap-1.5">
+                        <KeyRound className="w-3.5 h-3.5 text-amber-600" /> টেলিটক পাসওয়ার্ড / পিন:
                       </span>
                       <div className="flex items-center gap-1.5 font-mono font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                         <span data-testid="teletalk-password">{selectedApp.teleTalkPassword}</span>
@@ -605,9 +612,9 @@ export default function ApplicationsPage() {
                             setCopiedPass(true);
                             setTimeout(() => setCopiedPass(false), 2000);
                           }}
-                          className="text-[10px] text-emerald-700 hover:underline font-sans font-bold"
+                          className="text-[10px] text-emerald-700 hover:underline font-sans font-bold inline-flex items-center"
                         >
-                          {copiedPass ? '✓' : 'কপি'}
+                          {copiedPass ? <Check className="w-3 h-3" /> : 'কপি'}
                         </button>
                       </div>
                     </div>
@@ -616,7 +623,7 @@ export default function ApplicationsPage() {
 
                 <div className="flex justify-between py-1 border-b border-slate-100">
                   <span className="text-slate-400">আবেদন স্ট্যাটাস:</span>
-                  <span className={`font-bold ${
+                  <span className={`font-bold inline-flex items-center gap-1 ${
                     selectedApp.status === 'completed' || selectedApp.status === 'submitted'
                       ? 'text-emerald-700' 
                       : selectedApp.status === 'processing' 
@@ -624,10 +631,10 @@ export default function ApplicationsPage() {
                       : 'text-amber-700'
                   }`}>
                     {selectedApp.status === 'completed' || selectedApp.status === 'submitted' 
-                      ? '✓ আবেদন সম্পন্ন' 
+                      ? <><Check className="w-3.5 h-3.5" /> আবেদন সম্পন্ন</> 
                       : selectedApp.status === 'processing' 
-                      ? '⚙️ টিম পূরণ করছে' 
-                      : '⏳ পেন্ডিং'}
+                      ? <><Settings className="w-3.5 h-3.5 animate-spin" /> টিম পূরণ করছে</> 
+                      : <><Clock className="w-3.5 h-3.5" /> পেন্ডিং</>}
                   </span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-slate-100">
@@ -657,7 +664,7 @@ export default function ApplicationsPage() {
                 <div className="grid grid-cols-5 gap-1 text-center text-[10px]">
                   {/* Step 1: সাবমিট */}
                   <div className="space-y-1">
-                    <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto font-bold text-[10px]">✓</div>
+                    <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto font-bold text-[10px]"><Check className="w-3.5 h-3.5" /></div>
                     <span className="font-bold text-slate-900 block truncate">১. দাখিল</span>
                   </div>
                   {/* Step 2: ফি যাচাই */}
@@ -665,7 +672,7 @@ export default function ApplicationsPage() {
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto font-bold text-[10px] ${
                       (selectedApp.status === 'completed' || selectedApp.status === 'submitted' || selectedApp.status === 'processing') ? 'bg-emerald-600 text-white' : 'bg-amber-500 text-white animate-pulse'
                     }`}>
-                      {(selectedApp.status === 'completed' || selectedApp.status === 'submitted' || selectedApp.status === 'processing') ? '✓' : '২'}
+                      {(selectedApp.status === 'completed' || selectedApp.status === 'submitted' || selectedApp.status === 'processing') ? <Check className="w-3.5 h-3.5" /> : '২'}
                     </div>
                     <span className="font-bold text-slate-900 block truncate">২. ফি যাচাই</span>
                   </div>
@@ -674,7 +681,7 @@ export default function ApplicationsPage() {
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto font-bold text-[10px] ${
                       (selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? 'bg-emerald-600 text-white' : selectedApp.status === 'processing' ? 'bg-blue-600 text-white animate-pulse' : 'bg-slate-200 text-slate-400'
                     }`}>
-                      {(selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? '✓' : '৩'}
+                      {(selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? <Check className="w-3.5 h-3.5" /> : '৩'}
                     </div>
                     <span className="font-bold text-slate-900 block truncate">৩. ফরম পূরণ</span>
                   </div>
@@ -683,7 +690,7 @@ export default function ApplicationsPage() {
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto font-bold text-[10px] ${
                       (selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-400'
                     }`}>
-                      {(selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? '✓' : '৪'}
+                      {(selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? <Check className="w-3.5 h-3.5" /> : '৪'}
                     </div>
                     <span className="font-bold text-slate-900 block truncate">৪. স্লিপ রেডি</span>
                   </div>
@@ -692,7 +699,7 @@ export default function ApplicationsPage() {
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto font-bold text-[10px] ${
                       selectedApp.admitCardUrl ? 'bg-emerald-600 text-white' : (selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? 'bg-indigo-600 text-white animate-pulse' : 'bg-slate-200 text-slate-400'
                     }`}>
-                      {selectedApp.admitCardUrl ? '✓' : '৫'}
+                      {selectedApp.admitCardUrl ? <Check className="w-3.5 h-3.5" /> : '৫'}
                     </div>
                     <span className="font-bold text-slate-900 block truncate">৫. প্রবেশপত্র</span>
                   </div>
@@ -766,13 +773,14 @@ export default function ApplicationsPage() {
                       data-testid="admit-card-link-btn"
                       className="w-full py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border border-indigo-200 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer text-xs"
                     >
-                      <Calendar className="w-3.5 h-3.5 text-indigo-700" />
-                      <span>🎫 প্রবেশপত্র ও পরীক্ষার সিট প্ল্যান ট্র্যাক করুন</span>
+                      <Ticket className="w-3.5 h-3.5 text-indigo-700" />
+                      <span>প্রবেশপত্র ও পরীক্ষার সিট প্ল্যান ট্র্যাক করুন</span>
                     </Link>
                   </>
                 ) : (
-                  <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-center text-slate-500 font-bold text-[11px]">
-                    ⏳ আবেদন সম্পন্ন হওয়ামাত্রই অফিশিয়াল অ্যাপ্লিকেশন স্লিপ উন্মুক্ত হবে
+                  <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-center text-slate-500 font-bold text-[11px] flex items-center justify-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                    <span>আবেদন সম্পন্ন হওয়ামাত্রই অফিশিয়াল অ্যাপ্লিকেশন স্লিপ উন্মুক্ত হবে</span>
                   </div>
                 )}
 
@@ -784,7 +792,7 @@ export default function ApplicationsPage() {
                   className="w-full py-2 bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-2xs text-xs"
                 >
                   <Printer className="w-3.5 h-3.5 text-emerald-700" />
-                  <span>🖨️ অফিসিয়াল মানি রিসিট ও ভাউচার</span>
+                  <span>অফিসিয়াল মানি রিসিট ও ভাউচার</span>
                 </button>
 
                 {/* Dispute / TrxID Correction Button */}
@@ -800,7 +808,7 @@ export default function ApplicationsPage() {
                     className="w-full py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer text-xs"
                   >
                     <Edit3 className="w-3.5 h-3.5 text-amber-700" />
-                    <span>✏️ TrxID সংশোধন বা পুনরায় জমা দিন</span>
+                    <span>TrxID সংশোধন বা পুনরায় জমা দিন</span>
                   </button>
                 )}
               </div>
@@ -808,39 +816,39 @@ export default function ApplicationsPage() {
 
             {/* Teletalk SMS Generator / Submission Channel Box */}
             {selectedApp.submissionChannel === 'bank_erecruitment' ? (
-              <div className="bg-gradient-to-br from-slate-900 to-blue-950 text-white p-5 rounded-2xl shadow-sm space-y-3 text-xs">
+              <div className="bg-slate-900 text-white p-5 rounded-2xl shadow-xs border border-slate-800 space-y-3 text-xs">
                 <div className="flex items-center gap-2">
-                  <Building className="w-4 h-4 text-blue-400" />
-                  <h4 className="font-bold">🏦 বাংলাদেশ ব্যাংক ই-রিক্রুটমেন্ট ট্র্যাকিং</h4>
+                  <Building className="w-4 h-4 text-emerald-400" />
+                  <h4 className="font-bold">বাংলাদেশ ব্যাংক ই-রিক্রুটমেন্ট ট্র্যাকিং</h4>
                 </div>
                 <p className="text-[11px] text-slate-300 leading-relaxed">
                   বাংলাদেশ ব্যাংক ই-রিক্রুটমেন্টের মাধ্যমে আপনার সিভি ও আবেদন যাচাই করা হয়েছে। প্রবেশপত্র রিলিজের পর রোল নম্বর এখানেই হালনাগাদ হবে।
                 </p>
-                <div className="bg-slate-800/80 p-2.5 rounded-xl space-y-1">
+                <div className="bg-slate-800 p-2.5 rounded-xl space-y-1">
                   <span className="text-[10px] text-slate-400 block">ট্র্যাকিং নম্বর:</span>
-                  <div className="font-mono font-bold text-blue-300">
+                  <div className="font-mono font-bold text-emerald-400">
                     {selectedApp.teleTalkTrackingId || selectedApp.id}
                   </div>
                 </div>
               </div>
             ) : selectedApp.submissionChannel === 'corporate_portal' || selectedApp.submissionChannel === 'hr_email' ? (
-              <div className="bg-gradient-to-br from-slate-900 to-indigo-950 text-white p-5 rounded-2xl shadow-sm space-y-3 text-xs">
+              <div className="bg-slate-900 text-white p-5 rounded-2xl shadow-xs border border-slate-800 space-y-3 text-xs">
                 <div className="flex items-center gap-2">
-                  <Building className="w-4 h-4 text-indigo-400" />
-                  <h4 className="font-bold">🏢 কর্পোরেট / এইচআর আবেদন ট্র্যাকিং</h4>
+                  <Building className="w-4 h-4 text-emerald-400" />
+                  <h4 className="font-bold">কর্পোরেট / এইচআর আবেদন ট্র্যাকিং</h4>
                 </div>
                 <p className="text-[11px] text-slate-300 leading-relaxed">
                   আপনার সিভি ও আবেদন কোম্পানির সংশ্লিষ্ট এইচআর ডিপার্টমেন্ট বা পোর্টাল সিস্টেমে সফলভাবে জমা দেওয়া হয়েছে।
                 </p>
-                <div className="bg-slate-800/80 p-2.5 rounded-xl space-y-1">
+                <div className="bg-slate-800 p-2.5 rounded-xl space-y-1">
                   <span className="text-[10px] text-slate-400 block">অ্যাপ্লিকেশন রেফারেন্স:</span>
-                  <div className="font-mono font-bold text-indigo-300">
+                  <div className="font-mono font-bold text-emerald-400">
                     {selectedApp.corporateTrackingId || selectedApp.teleTalkTrackingId || selectedApp.id}
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="bg-gradient-to-br from-slate-900 to-emerald-950 text-white p-5 rounded-2xl shadow-sm space-y-3 text-xs">
+              <div className="bg-slate-900 text-white p-5 rounded-2xl shadow-xs border border-slate-800 space-y-3 text-xs">
                 <div className="flex items-center gap-2">
                   <MessageSquare className="w-4 h-4 text-emerald-400" />
                   <h4 className="font-bold">টেলিটক এসএমএস ফরম্যাট</h4>
@@ -913,9 +921,9 @@ export default function ApplicationsPage() {
                   type="button"
                   data-testid="close-slip-modal-btn"
                   onClick={() => setPreviewSlipApp(null)}
-                  className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                  className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1"
                 >
-                  ✕ বন্ধ করুন
+                  <X className="w-3.5 h-3.5" /> বন্ধ করুন
                 </button>
               </div>
             </div>
@@ -1092,15 +1100,15 @@ export default function ApplicationsPage() {
                   className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
                 >
                   <Printer className="w-4 h-4" />
-                  <span>🖨️ প্রিন্ট করুন</span>
+                  <span>প্রিন্ট করুন</span>
                 </button>
                 <button
                   type="button"
                   data-testid="close-receipt-modal-btn"
                   onClick={() => setReceiptApp(null)}
-                  className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                  className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition-colors cursor-pointer inline-flex items-center gap-1"
                 >
-                  ✕ বন্ধ করুন
+                  <X className="w-3.5 h-3.5" /> বন্ধ করুন
                 </button>
               </div>
             </div>
@@ -1239,7 +1247,9 @@ export default function ApplicationsPage() {
                   <div className="font-bold text-slate-900 mt-0.5">
                     {receiptApp.paymentMethod} (TrxID: <span className="font-mono text-emerald-800">{receiptApp.trxId || 'N/A'}</span>)
                   </div>
-                  <div className="text-[10px] text-emerald-700 font-bold mt-1">✓ পেমেন্ট অনুমোদিত ও লেজারে অন্তর্ভুক্ত</div>
+                  <div className="text-[10px] text-emerald-700 font-bold mt-1 flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3" /> পেমেন্ট অনুমোদিত ও লেজারে অন্তর্ভুক্ত
+                  </div>
                 </div>
 
                 <div className="text-center sm:text-right">

@@ -141,7 +141,7 @@ export default function WalletPublicPage() {
       </div>
 
       {/* Top Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-emerald-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xs border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-3 max-w-xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 rounded-full text-xs font-bold">
             <Wallet className="w-4 h-4 text-emerald-400" />
@@ -256,7 +256,7 @@ export default function WalletPublicPage() {
                   }`}
                 >
                   {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5 text-emerald-700" />}
-                  <span>{copied ? '✓ নম্বর কপি হয়েছে' : 'নম্বর কপি করুন'}</span>
+                  <span>{copied ? 'নম্বর কপি হয়েছে' : 'নম্বর কপি করুন'}</span>
                 </button>
               </div>
 

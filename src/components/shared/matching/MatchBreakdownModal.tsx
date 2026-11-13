@@ -99,7 +99,7 @@ export default function MatchBreakdownModal({
         {/* Scrollable Content */}
         <div className="p-4 sm:p-6 overflow-y-auto space-y-6 text-sm">
           {/* Top Score Banner */}
-          <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-transparent border border-emerald-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3.5">
               <div className="w-16 h-16 rounded-2xl bg-emerald-600 text-white flex flex-col items-center justify-center font-black shadow-md shadow-emerald-600/20">
                 <span className="text-2xl leading-none">{match.overallScore}%</span>

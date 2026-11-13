@@ -302,7 +302,9 @@ export default function SmartMatchingAdmin() {
                   ? 'bg-emerald-50 text-emerald-800 border-emerald-300' 
                   : 'bg-rose-50 text-rose-800 border-rose-300'
               }`}>
-                মোট: {totalWeight}% {totalWeight === 100 ? '✓' : '(১০০% হতে হবে)'}
+                <span className="inline-flex items-center gap-1">
+                  মোট: {totalWeight}% {totalWeight === 100 ? <Check className="w-3.5 h-3.5" /> : '(১০০% হতে হবে)'}
+                </span>
               </div>
             </div>
 

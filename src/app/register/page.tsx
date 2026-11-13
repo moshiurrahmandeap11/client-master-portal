@@ -133,7 +133,7 @@ function RegisterForm() {
         
         {/* Header */}
         <div className="space-y-2 text-center">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-800 text-white flex items-center justify-center mx-auto shadow-md">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-700 text-white flex items-center justify-center mx-auto shadow-xs">
             <UserCheck className="w-6 h-6" />
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
@@ -145,7 +145,7 @@ function RegisterForm() {
         </div>
 
         {/* Feature Highlights */}
-        <div className="p-3 bg-gradient-to-r from-emerald-50/80 to-teal-50/80 border border-emerald-200/90 rounded-2xl flex items-center justify-between text-[11px] font-bold text-emerald-900 shadow-2xs">
+        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center justify-between text-[11px] font-bold text-emerald-900 shadow-2xs">
           <div className="flex items-center gap-1.5">
             <Wallet className="w-3.5 h-3.5 text-emerald-700" />
             <span>শূন্য ব্যালেন্সের ওয়ালেট</span>
@@ -246,7 +246,7 @@ function RegisterForm() {
                   <span className={`text-[10px] font-mono font-bold ${
                     isPhoneValid ? 'text-emerald-700' : 'text-amber-600'
                   }`}>
-                    {isPhoneValid ? '✓ সঠিক' : `${cleanPhone.length}/১১`}
+                    {isPhoneValid ? 'সঠিক' : `${cleanPhone.length}/১১`}
                   </span>
                 )}
               </div>
@@ -326,7 +326,7 @@ function RegisterForm() {
                   <span className={`text-[10px] font-bold ${
                     isConfirmMatch ? 'text-emerald-700' : 'text-rose-600'
                   }`}>
-                    {isConfirmMatch ? '✓ মিল রয়েছে' : 'অমিল'}
+                    {isConfirmMatch ? 'মিল রয়েছে' : 'অমিল'}
                   </span>
                 )}
               </div>

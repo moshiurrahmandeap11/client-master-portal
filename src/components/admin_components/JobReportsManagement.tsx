@@ -17,7 +17,10 @@ import {
   Mail,
   ChevronRight,
   ShieldCheck,
-  Check
+  Check,
+  Search as SearchIcon,
+  Clock as ClockIcon,
+  X as XIcon
 } from 'lucide-react';
 import { JobReportItem } from '@/types';
 import { getAdminHeaders } from '@/lib/axios';
@@ -263,7 +266,15 @@ export default function JobReportsManagement() {
                           ? 'bg-slate-100 text-slate-600 border-slate-200'
                           : 'bg-rose-50 text-rose-800 border-rose-300'
                       }`}>
-                        {report.status === 'resolved' ? '✓ সমাধানকৃত' : report.status === 'investigating' ? '🔍 তদন্তাধীন' : report.status === 'dismissed' ? '✕ বাতিল' : '⏳ নতুন অভিযোগ'}
+                        {report.status === 'resolved' ? (
+                          <span className="inline-flex items-center gap-1"><Check className="w-3 h-3" /> সমাধানকৃত</span>
+                        ) : report.status === 'investigating' ? (
+                          <span className="inline-flex items-center gap-1"><SearchIcon className="w-3 h-3" /> তদন্তাধীন</span>
+                        ) : report.status === 'dismissed' ? (
+                          <span className="inline-flex items-center gap-1"><XIcon className="w-3 h-3" /> বাতিল</span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1"><ClockIcon className="w-3 h-3" /> নতুন অভিযোগ</span>
+                        )}
                       </span>
                     </td>
                     <td className="py-3.5 px-4 text-center">
@@ -298,7 +309,7 @@ export default function JobReportsManagement() {
                 onClick={() => setSelectedReport(null)}
                 className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg"
               >
-                ✕
+                <XIcon className="w-4 h-4" />
               </button>
             </div>
 
@@ -338,23 +349,23 @@ export default function JobReportsManagement() {
               <button
                 disabled={isUpdating}
                 onClick={() => handleUpdateStatus(selectedReport.id, 'investigating')}
-                className="flex-1 py-2 px-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold transition-all shadow-xs"
+                className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold transition-all shadow-xs"
               >
-                🔍 তদন্তাধীন চিহ্নিত করুন
+                <SearchIcon className="w-3.5 h-3.5" /> তদন্তাধীন চিহ্নিত করুন
               </button>
               <button
                 disabled={isUpdating}
                 onClick={() => handleUpdateStatus(selectedReport.id, 'resolved')}
-                className="flex-1 py-2 px-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all shadow-xs"
+                className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all shadow-xs"
               >
-                ✓ সমাধানকৃত চিহ্নিত করুন
+                <Check className="w-3.5 h-3.5" /> সমাধানকৃত চিহ্নিত করুন
               </button>
               <button
                 disabled={isUpdating}
                 onClick={() => handleUpdateStatus(selectedReport.id, 'dismissed')}
-                className="py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all"
+                className="inline-flex items-center justify-center gap-1 py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all"
               >
-                ✕ বাতিল
+                <XIcon className="w-3.5 h-3.5" /> বাতিল
               </button>
             </div>
           </div>

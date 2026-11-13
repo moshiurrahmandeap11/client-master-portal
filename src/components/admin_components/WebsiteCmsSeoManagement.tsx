@@ -34,6 +34,9 @@ import {
   ChevronDown,
   ChevronRight,
   X,
+  Palette,
+  Save,
+  Menu,
   AlertCircle,
   Upload,
   Image as ImageIcon
@@ -445,7 +448,7 @@ export default function WebsiteCmsSeoManagement({
 
       const data = await res.json();
       if (res.ok && data.success) {
-        setSeoSavedToast('🎉 হেডার লোগো, মেনু ও ফুটার সেটিংস সফলভাবে সংরক্ষিত হয়েছে! লাইভ সাইটে তাৎক্ষণিক কার্যকর।');
+        setSeoSavedToast('হেডার লোগো, মেনু ও ফুটার সেটিংস সফলভাবে সংরক্ষিত হয়েছে! লাইভ সাইটে তাৎক্ষণিক কার্যকর।');
         if (typeof window !== 'undefined') {
           window.dispatchEvent(new Event('cs_settings_changed'));
         }
@@ -583,7 +586,7 @@ export default function WebsiteCmsSeoManagement({
             }`}
           >
             <Layout className="w-3.5 h-3.5" />
-            <span>🎨 হেডার ও মেনু কাস্টমাইজার</span>
+            <span>হেডার ও মেনু কাস্টমাইজার</span>
           </button>
 
           <button
@@ -1201,7 +1204,7 @@ export default function WebsiteCmsSeoManagement({
                                       className="text-red-500 hover:text-red-700 text-xs font-bold px-1.5 py-0.5 rounded cursor-pointer"
                                       title="সাবমেনু মুছুন"
                                     >
-                                      ✕
+<X className="w-3.5 h-3.5" />
                                     </button>
                                   </div>
                                 </div>
@@ -1411,7 +1414,7 @@ export default function WebsiteCmsSeoManagement({
                                 }}
                                 className="text-red-500 hover:text-red-700 text-xs font-bold cursor-pointer"
                               >
-                                ✕
+<X className="w-3.5 h-3.5" />
                               </button>
                             </div>
                           </div>
@@ -1545,7 +1548,7 @@ export default function WebsiteCmsSeoManagement({
                     className="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-md transition-all flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
                   >
                     {isSaving ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-                    <span>💾 সকল হেডার ও ফুটার ডিজাইন পরিবর্তন সংরক্ষণ করুন</span>
+                    <span>সকল হেডার ও ফুটার ডিজাইন পরিবর্তন সংরক্ষণ করুন</span>
                   </button>
                 </div>
               </div>
@@ -1586,7 +1589,7 @@ export default function WebsiteCmsSeoManagement({
 
                 {/* Simulated Announcement */}
                 {announcementEnabled && (
-                  <div className="bg-gradient-to-r from-slate-950 via-emerald-950 to-slate-900 text-white text-[11px] p-2.5 rounded-xl border border-emerald-900/40 space-y-1">
+                  <div className="bg-slate-900 text-white text-[11px] p-2.5 rounded-xl border border-emerald-900/40 space-y-1">
                     <div className="flex items-center gap-1.5">
                       <span className="bg-red-600 text-white px-1.5 py-0.5 rounded text-[10px] font-black uppercase">
                         জরুরি
@@ -1693,7 +1696,11 @@ export default function WebsiteCmsSeoManagement({
                         onClick={() => setPreviewMobileMenuOpen(!previewMobileMenuOpen)}
                         className="p-1 text-slate-700 hover:bg-slate-200 rounded-lg cursor-pointer text-xs font-bold"
                       >
-                        {previewMobileMenuOpen ? '✕ বন্ধ' : '☰ মেনু'}
+                        {previewMobileMenuOpen ? (
+                          <span className="inline-flex items-center gap-1"><X className="w-3.5 h-3.5" /> বন্ধ</span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1"><Menu className="w-3.5 h-3.5" /> মেনু</span>
+                        )}
                       </button>
                     </div>
 
@@ -1753,10 +1760,10 @@ export default function WebsiteCmsSeoManagement({
                     type="button"
                     onClick={handleSaveAllSettings}
                     disabled={isSaving}
-                    className="w-full py-2.5 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white rounded-xl text-xs font-bold shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                    className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
                   >
                     {isSaving ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-                    <span>💾 সকল হেডার ও ফুটার ডিজাইন পরিবর্তন সংরক্ষণ করুন</span>
+                    <span>সকল হেডার ও ফুটার ডিজাইন পরিবর্তন সংরক্ষণ করুন</span>
                   </button>
                 </div>
               </div>

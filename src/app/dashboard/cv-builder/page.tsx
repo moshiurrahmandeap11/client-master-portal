@@ -128,24 +128,26 @@ export default function CvBuilderPage() {
             <button
               data-testid="template-btn-modern"
               onClick={() => setTemplate('modern')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all inline-flex items-center gap-1.5 ${
                 template === 'modern'
                   ? 'bg-white text-emerald-800 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              ✨ মডার্ন প্রফেশনাল
+              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+              <span>মডার্ন প্রফেশনাল</span>
             </button>
             <button
               data-testid="template-btn-classic"
               onClick={() => setTemplate('classic')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all inline-flex items-center gap-1.5 ${
                 template === 'classic'
                   ? 'bg-white text-emerald-800 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              🏛️ ক্লাসিক বিডি সরকারি
+              <Building2 className="w-3.5 h-3.5 text-emerald-600" />
+              <span>ক্লাসিক বিডি সরকারি</span>
             </button>
           </div>
 

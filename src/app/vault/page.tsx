@@ -18,8 +18,11 @@ import {
   ExternalLink,
   Award,
   Layers,
-  Clock
+  Clock,
+  Laptop,
+  Star
 } from 'lucide-react';
+import { FaCamera, FaIdCard, FaLandmarkFlag, FaPenNib } from 'react-icons/fa6';
 import { storage } from '@/lib/store';
 
 export default function VaultPublicPage() {
@@ -136,7 +139,7 @@ export default function VaultPublicPage() {
       </div>
 
       {/* Top Hero Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-emerald-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xs border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-3 max-w-xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 rounded-full text-xs font-bold">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
@@ -331,21 +334,23 @@ export default function VaultPublicPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {[
-            { title: 'প্রার্থীর ছবি (৩০০×৩০০)', desc: 'টেলিটক পাসপোর্ট সাইজ ছবি (<১০০ KB)', icon: '📷' },
-            { title: 'প্রার্থীর স্বাক্ষর (৩০০×৮০)', desc: 'স্বাক্ষরের নিখুঁত স্ক্যান (<৬০ KB)', icon: '✍️' },
-            { title: 'প্রার্থীর NID / স্মার্ট কার্ড', desc: 'সামনে ও পেছনের ডিজিটাল স্ক্যান', icon: '🪪' },
-            { title: 'পিতার জাতীয় পরিচয়পত্র', desc: 'টেলিটক ও পুলিশ ভেরিফিকেশনে আবশ্যক', icon: '👨‍🦳' },
-            { title: 'মাতার জাতীয় পরিচয়পত্র', desc: 'মন্ত্রণালয় ও সরকারি ব্যাংকে আবশ্যক', icon: '👵' },
-            { title: 'চেয়ারম্যান / নাগরিক সনদ', desc: 'ইউনিয়ন পরিষদ বা ওয়ার্ড কাউন্সিলর সনদ', icon: '🏛️' },
-            { title: 'অনলাইন জন্ম নিবন্ধন', desc: '১৬/১৭ ডিজিটের ডিজিটাল বার্থ সনদ', icon: '📜' },
-            { title: 'চারিত্রিক সনদপত্র', desc: '১ম শ্রেণির গেজেটেড অফিসার প্রত্যয়ন', icon: '🎖️' },
-            { title: 'কোটা / বিশেষ সুবিধা সনদ', desc: 'মুক্তিযোদ্ধা, ক্ষুদ্র নৃগোষ্ঠী বা প্রতিবন্ধী', icon: '🌟' },
-            { title: 'পেশাগত ও প্রশিক্ষণ সনদ', desc: 'কম্পিউটার, ড্রাইভিং লাইসেন্স বা ভাষা সনদ', icon: '💻' }
+            { title: 'প্রার্থীর ছবি (৩০০×৩০০)', desc: 'টেলিটক পাসপোর্ট সাইজ ছবি (<১০০ KB)', Icon: FaCamera },
+            { title: 'প্রার্থীর স্বাক্ষর (৩০০×৮০)', desc: 'স্বাক্ষরের নিখুঁত স্ক্যান (<৬০ KB)', Icon: FaPenNib },
+            { title: 'প্রার্থীর NID / স্মার্ট কার্ড', desc: 'সামনে ও পেছনের ডিজিটাল স্ক্যান', Icon: FaIdCard },
+            { title: 'পিতার জাতীয় পরিচয়পত্র', desc: 'টেলিটক ও পুলিশ ভেরিফিকেশনে আবশ্যক', Icon: User },
+            { title: 'মাতার জাতীয় পরিচয়পত্র', desc: 'মন্ত্রণালয় ও সরকারি ব্যাংকে আবশ্যক', Icon: User },
+            { title: 'চেয়ারম্যান / নাগরিক সনদ', desc: 'ইউনিয়ন পরিষদ বা ওয়ার্ড কাউন্সিলর সনদ', Icon: FaLandmarkFlag },
+            { title: 'অনলাইন জন্ম নিবন্ধন', desc: '১৬/১৭ ডিজিটের ডিজিটাল বার্থ সনদ', Icon: FileText },
+            { title: 'চারিত্রিক সনদপত্র', desc: '১ম শ্রেণির গেজেটেড অফিসার প্রত্যয়ন', Icon: Award },
+            { title: 'কোটা / বিশেষ সুবিধা সনদ', desc: 'মুক্তিযোদ্ধা, ক্ষুদ্র নৃগোষ্ঠী বা প্রতিবন্ধী', Icon: Star },
+            { title: 'পেশাগত ও প্রশিক্ষণ সনদ', desc: 'কম্পিউটার, ড্রাইভিং লাইসেন্স বা ভাষা সনদ', Icon: Laptop }
           ].map((item, idx) => (
             <div key={idx} className="p-4 bg-slate-50/70 border border-slate-200 rounded-2xl space-y-2 hover:border-emerald-300 transition-all flex flex-col justify-between">
               <div>
-                <div className="text-2xl">{item.icon}</div>
-                <h3 className="text-xs font-bold text-slate-900 mt-1">{item.title}</h3>
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                  <item.Icon className="w-5 h-5" />
+                </div>
+                <h3 className="text-xs font-bold text-slate-900 mt-2">{item.title}</h3>
                 <p className="text-[11px] text-slate-500 leading-relaxed mt-0.5">{item.desc}</p>
               </div>
             </div>

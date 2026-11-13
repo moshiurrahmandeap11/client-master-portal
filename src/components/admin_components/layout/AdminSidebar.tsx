@@ -160,8 +160,8 @@ export const ADMIN_NAV_ITEMS: NavMainItem[] = [
     badge: 'টিকেট',
     badgeColor: 'bg-rose-500 text-white',
     subItems: [
-      { id: 'job-reports', label: '🚨 ভুয়া সার্কুলার ও অভিযোগ সেল', badge: 'অভিযোগ' },
-      { id: 'support-tickets', label: '🎧 সাপোর্ট টিকেট ও হেল্পডেস্ক', badge: 'টিকেট' },
+      { id: 'job-reports', label: 'ভুয়া সার্কুলার ও অভিযোগ সেল', badge: 'অভিযোগ' },
+      { id: 'support-tickets', label: 'সাপোর্ট টিকেট ও হেল্পডেস্ক', badge: 'টিকেট' },
       { id: 'notifications', label: 'নোটিফিকেশন ও ব্রডকাস্ট' },
       { id: 'sms-status', label: 'এসএমএস গেটওয়ে ও ব্যালেন্স' },
       { id: 'templates-delivery', label: 'মেসেজ টেমপ্লেট ও ডেলিভারি লগ' }
@@ -278,7 +278,7 @@ export default function AdminSidebar({
         {/* Top Brand Logo Section */}
         <div className="flex items-center justify-between px-4 py-4 border-b border-slate-800/80 bg-[#070a12]">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-lg shadow-emerald-900/30 flex-shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-emerald-700 flex items-center justify-center text-white shadow-xs flex-shrink-0">
               <Briefcase className="w-5 h-5" />
             </div>
             {!isCollapsed && (
@@ -405,7 +405,7 @@ export default function AdminSidebar({
         <div className="p-3 border-t border-slate-800/80 bg-[#070a12]">
           <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900/60 border border-slate-800">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0 shadow">
+              <div className="w-10 h-10 rounded-full bg-emerald-700 flex items-center justify-center text-white text-sm font-bold flex-shrink-0 shadow-xs">
                 সি এস
               </div>
               {!isCollapsed && (

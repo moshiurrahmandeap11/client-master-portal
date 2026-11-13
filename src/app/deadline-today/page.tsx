@@ -110,7 +110,7 @@ export default function DeadlineTodayPage() {
         </div>
 
         {/* Header Banner */}
-        <div className="bg-gradient-to-br from-rose-950 via-slate-900 to-rose-900 text-white rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xl border border-rose-800/40 relative overflow-hidden">
+        <div className="bg-red-600 text-white rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xs border border-red-700 relative overflow-hidden">
           <div className="max-w-3xl space-y-3 relative z-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 border border-rose-400/40 text-rose-300 text-xs font-bold animate-pulse">
               <Clock className="w-4 h-4 text-rose-400" />

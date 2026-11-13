@@ -5,7 +5,7 @@ import {
   Send, Clock, CheckCircle2, AlertTriangle, AlertCircle, RefreshCw,
   Search, Filter, ExternalLink, Calendar, ArrowRight, ShieldCheck,
   Archive, EyeOff, RotateCcw, Link2, BarChart3, History, Trash2,
-  FileText, Globe, Layers, ArrowUpRight, Check
+  FileText, Globe, Layers, ArrowUpRight, Check, X as XIcon, Zap as ZapIcon
 } from 'lucide-react';
 import { JobCircular } from '@/types';
 import {
@@ -320,7 +320,7 @@ export default function JobPublishingCenter() {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl p-6 shadow-xl border border-indigo-900/50">
+      <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-xl border border-indigo-900/50">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1.5">
@@ -342,11 +342,14 @@ export default function JobPublishingCenter() {
             <button
               onClick={handleLiveAlljobsSync}
               disabled={isSyncingAlljobs || isLoading}
-              className="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md active:scale-95 disabled:opacity-50"
+              className="flex items-center gap-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md active:scale-95 disabled:opacity-50"
               title="টেলিটক অলজবস থেকে সরাসরি নতুন সার্কুলার সংগ্রহ করুন"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isSyncingAlljobs ? 'animate-spin' : ''}`} />
-              <span>{isSyncingAlljobs ? 'সিঙ্ক চলছে...' : '⚡ টেলিটক লাইভ সিঙ্ক'}</span>
+              <span className="inline-flex items-center gap-1.5">
+                {!isSyncingAlljobs && <ZapIcon className="w-3.5 h-3.5" />}
+                <span>{isSyncingAlljobs ? 'সিঙ্ক চলছে...' : 'টেলিটক লাইভ সিঙ্ক'}</span>
+              </span>
             </button>
             <button
               onClick={loadData}
@@ -396,7 +399,7 @@ export default function JobPublishingCenter() {
           message.type === 'success' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-rose-50 text-rose-800 border border-rose-200'
         }`}>
           <span>{message.text}</span>
-          <button onClick={() => setMessage(null)} className="text-slate-400 hover:text-slate-600">✕</button>
+          <button onClick={() => setMessage(null)} className="text-slate-400 hover:text-slate-600"><XIcon className="w-4 h-4" /></button>
         </div>
       )}
 
@@ -906,7 +909,7 @@ export default function JobPublishingCenter() {
                 onClick={() => setShowHistoryModal(false)}
                 className="text-slate-400 hover:text-slate-600 text-lg font-bold"
               >
-                ✕
+                <XIcon className="w-5 h-5" />
               </button>
             </div>
 

@@ -362,7 +362,7 @@ export default function UniversalUserWorkspace({
               type="button"
               onClick={handleImpersonate}
               disabled={isImpersonating}
-              className="px-3 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 rounded-xl text-xs font-black shadow-md transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              className="px-3 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-black shadow-md transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
               title="প্রার্থীর ড্যাশবোর্ডে সরাসরি লগইন করুন ও দেখুন"
             >
               <LogIn className="w-3.5 h-3.5" />
@@ -387,7 +387,7 @@ export default function UniversalUserWorkspace({
               type="button"
               onClick={() => handleSave()}
               disabled={isSaving}
-              className="px-5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-black shadow-lg shadow-emerald-950/30 transition-all flex items-center gap-1.5 disabled:opacity-50"
+              className="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-black shadow-lg shadow-emerald-950/30 transition-all flex items-center gap-1.5 disabled:opacity-50"
             >
               {isSaving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
               <span>{isSaving ? 'সংরক্ষণ হচ্ছে...' : 'সংরক্ষণ করুন'}</span>
@@ -499,7 +499,7 @@ export default function UniversalUserWorkspace({
                 </div>
                 <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full transition-all duration-500"
+                    className="h-full bg-emerald-600 rounded-full transition-all duration-500"
                     style={{ width: `${profileScore}%` }}
                   ></div>
                 </div>
@@ -568,7 +568,7 @@ export default function UniversalUserWorkspace({
               </div>
 
               {/* Quick Actions Bar */}
-              <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 rounded-3xl shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="bg-slate-900 text-white p-6 rounded-3xl shadow-md flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
                   <h4 className="text-sm font-black text-white">প্রোফাইল সংশোধন বা ডকুমেন্ট যাচাই করবেন?</h4>
                   <p className="text-xs text-slate-300 mt-0.5">
@@ -1552,7 +1552,7 @@ export default function UniversalUserWorkspace({
               {/* Balance Card & Manual Adjustment */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Balance Display */}
-                <div className="bg-gradient-to-br from-emerald-800 to-teal-900 text-white p-5 rounded-3xl shadow-sm space-y-2">
+                <div className="bg-slate-900 text-white p-5 rounded-3xl shadow-sm space-y-2">
                   <div className="flex items-center justify-between text-xs font-bold text-emerald-200">
                     <span>বর্তমান ওয়ালেট ব্যালেন্স</span>
                     <CreditCard className="w-4 h-4 text-emerald-300" />

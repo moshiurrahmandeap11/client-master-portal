@@ -70,10 +70,10 @@ export default function QuestionBankClient() {
       </div>
 
       {/* Hero Header Banner */}
-      <div className="bg-gradient-to-r from-slate-950 via-emerald-950 to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl border border-emerald-900/40 relative overflow-hidden">
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-sm border border-slate-800 relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="max-w-2xl space-y-3">
-            <span className="bg-emerald-500 text-slate-950 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider inline-flex items-center gap-1.5 shadow-sm">
+            <span className="bg-emerald-700 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider inline-flex items-center gap-1.5">
               <BookOpen className="w-3.5 h-3.5" />
               <span>বিগত ১০-২০ বছরের প্রশ্নব্যাংক</span>
             </span>
@@ -256,7 +256,7 @@ export default function QuestionBankClient() {
 
                 {/* Detailed Solution Box */}
                 {isExpanded && (
-                  <div className="p-4 sm:p-5 bg-gradient-to-br from-emerald-50/50 to-teal-50/40 rounded-2xl border border-emerald-200/90 text-xs space-y-2 animate-in fade-in duration-200">
+                  <div className="p-4 sm:p-5 bg-emerald-50 rounded-2xl border border-emerald-200 text-xs space-y-2 animate-in fade-in duration-200">
                     <span className="font-bold text-emerald-950 flex items-center gap-1.5">
                       <Sparkles className="w-4 h-4 text-emerald-700" />
                       <span>বিস্তারিত নির্ভুল সমাধান ও রেফারেন্স:</span>
@@ -317,8 +317,8 @@ export default function QuestionBankClient() {
               </div>
 
               <div className="flex items-center justify-between pt-2 border-t border-slate-200/60 text-xs">
-                <span className="text-[11px] text-slate-500 font-medium">
-                  📥 {toBn(qs.downloads.toLocaleString())} বার ডাউনলোড
+                <span className="text-[11px] text-slate-500 font-medium inline-flex items-center gap-1">
+                  <Download className="w-3 h-3 text-emerald-600" /> {toBn(qs.downloads.toLocaleString())} বার ডাউনলোড
                 </span>
                 <a
                   href={qs.pdfUrl}

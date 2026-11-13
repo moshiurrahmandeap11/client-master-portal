@@ -137,7 +137,7 @@ export default function CertificateVerificationQueue() {
       <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-5">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-700 flex items-center justify-center text-white shadow-md shadow-amber-200">
+            <div className="w-12 h-12 rounded-xl bg-emerald-700 flex items-center justify-center text-white shadow-xs">
               <Award className="w-6 h-6" />
             </div>
             <div>

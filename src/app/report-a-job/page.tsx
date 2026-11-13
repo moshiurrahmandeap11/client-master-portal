@@ -150,7 +150,7 @@ function ReportJobClient() {
       </div>
 
       {/* Hero Card */}
-      <div className="bg-gradient-to-br from-rose-900 via-slate-900 to-slate-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+      <div className="bg-red-600 text-white rounded-3xl p-6 sm:p-8 shadow-xs border border-red-700 relative overflow-hidden">
         <div className="relative z-10 space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-rose-500/20 text-rose-300 border border-rose-400/30 rounded-full text-xs font-bold">
             <ShieldAlert className="w-4 h-4 text-rose-400" />
@@ -445,7 +445,7 @@ function ReportJobClient() {
                     ? 'bg-slate-200 text-slate-700 border-slate-300'
                     : 'bg-rose-100 text-rose-800 border-rose-300'
                 }`}>
-                  {trackResult.status === 'resolved' ? '✓ সমাধানকৃত ও সংশোধিত' : trackResult.status === 'investigating' ? '🔍 তদন্ত ও যাচাই চলছে' : trackResult.status === 'dismissed' ? '✕ অভিযোগ বাতিল / ভুয়া নয়' : '⏳ নতুন অভিযোগ (পর্যালোচনার অপেক্ষায়)'}
+                  {trackResult.status === 'resolved' ? 'সমাধানকৃত ও সংশোধিত' : trackResult.status === 'investigating' ? 'তদন্ত ও যাচাই চলছে' : trackResult.status === 'dismissed' ? 'অভিযোগ বাতিল / ভুয়া নয়' : 'নতুন অভিযোগ (পর্যালোচনার অপেক্ষায়)'}
                 </span>
               </div>
 

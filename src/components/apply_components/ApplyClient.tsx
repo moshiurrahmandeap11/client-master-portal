@@ -37,7 +37,9 @@ import {
   Edit3,
   Download,
   HelpCircle,
-  Info
+  Info,
+  PenTool,
+  ArrowUpRight
 } from 'lucide-react';
 
 import { storage } from '@/lib/store';
@@ -191,13 +193,13 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
       const user = storage.getUser();
       user.photoUrl = resizedImage;
       storage.updateUser(user);
-      setResizerSuccessMsg('✓ ছবি সফলভাবে আপনার আবেদন ও প্রোফাইলে সেট করা হয়েছে!');
+      setResizerSuccessMsg('ছবি সফলভাবে আপনার আবেদন ও প্রোফাইলে সেট করা হয়েছে!');
     } else {
       setUserProfile((prev: any) => ({ ...prev, signatureUrl: resizedImage }));
       const user = storage.getUser();
       user.signatureUrl = resizedImage;
       storage.updateUser(user);
-      setResizerSuccessMsg('✓ ডিজিটাল স্বাক্ষর সফলভাবে আপনার আবেদন ও প্রোফাইলে সেট করা হয়েছে!');
+      setResizerSuccessMsg('ডিজিটাল স্বাক্ষর সফলভাবে আপনার আবেদন ও প্রোফাইলে সেট করা হয়েছে!');
     }
     setTimeout(() => {
       setIsResizerOpen(false);
@@ -552,7 +554,7 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
       </Link>
 
       {/* Header */}
-      <div className="bg-gradient-to-r from-emerald-800 to-teal-900 text-white p-6 sm:p-8 rounded-3xl shadow-lg relative overflow-hidden">
+      <div className="bg-emerald-800 text-white p-6 sm:p-8 rounded-3xl shadow-xs relative overflow-hidden">
         <div className="max-w-xl space-y-2 relative z-10">
           <span className="bg-emerald-500/20 text-emerald-300 text-xs font-bold px-3 py-1 rounded-full border border-emerald-400/30">
             নির্ভুল চাকরি আবেদন সার্ভিস
@@ -674,7 +676,7 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
             <Link
               href="/jobs"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-bold text-sm sm:text-base rounded-2xl shadow-lg shadow-emerald-700/25 transition-all hover:scale-[1.02]"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-sm sm:text-base rounded-2xl shadow-xs transition-all"
             >
               <Briefcase className="w-4 h-4" />
               <span>চলমান অন্যান্য চাকরি দেখুন</span>
@@ -766,19 +768,19 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[11px] leading-relaxed">
                   <div className="p-3 bg-white rounded-xl border border-slate-200/80 space-y-1">
-                    <span className="font-bold text-emerald-800 block">📷 ছবি (Photo) সংক্রান্ত নিয়ম:</span>
+                    <span className="font-bold text-emerald-800 flex items-center gap-1.5"><Camera className="w-3.5 h-3.5" /> ছবি (Photo) সংক্রান্ত নিয়ম:</span>
                     <p>সাইজ অবশ্যই ৩০০ × ৩০০ পিক্সেল হতে হবে। ফাইল সাইজ অনূর্ধ্ব ১০০ KB। রঙিন ছবি, স্পষ্ট মুখমণ্ডল ও সাদা ব্যাকগ্রাউন্ড বাঞ্ছনীয়। কোনো সানগ্লাস বা টুপি পরা যাবে না।</p>
                   </div>
                   <div className="p-3 bg-white rounded-xl border border-slate-200/80 space-y-1">
-                    <span className="font-bold text-emerald-800 block">✍️ স্বাক্ষর (Signature) সংক্রান্ত নিয়ম:</span>
+                    <span className="font-bold text-emerald-800 flex items-center gap-1.5"><PenTool className="w-3.5 h-3.5" /> স্বাক্ষর (Signature) সংক্রান্ত নিয়ম:</span>
                     <p>সাইজ অবশ্যই ৩০০ × ৮০ পিক্সেল হতে হবে। ফাইল সাইজ অনূর্ধ্ব ৬০ KB। সাদা কাগজের উপর কালো বলপেন কালিতে স্পষ্ট স্বাক্ষর করে স্ক্যান বা পরিষ্কার ছবি তুলে রিসাইজ করতে হবে।</p>
                   </div>
                   <div className="p-3 bg-white rounded-xl border border-slate-200/80 space-y-1">
-                    <span className="font-bold text-emerald-800 block">💳 ফি পরিশোধের সময়সীমা:</span>
+                    <span className="font-bold text-emerald-800 flex items-center gap-1.5"><CreditCard className="w-3.5 h-3.5" /> ফি পরিশোধের সময়সীমা:</span>
                     <p>টেলিটক পোর্টালে অনলাইন সাবমিটের পর প্রাপ্ত User ID দিয়ে পরবর্তী ৭২ ঘণ্টার মধ্যে যেকোনো টেলিটক প্রিপেইড সিম থেকে ২টি এসএমএস পাঠিয়ে ফি প্রদান সম্পন্ন করতে হয়।</p>
                   </div>
                   <div className="p-3 bg-white rounded-xl border border-slate-200/80 space-y-1">
-                    <span className="font-bold text-emerald-800 block">📄 অ্যাপ্লিক্যান্ট কপি (Applicant Copy):</span>
+                    <span className="font-bold text-emerald-800 flex items-center gap-1.5"><FileText className="w-3.5 h-3.5" /> অ্যাপ্লিক্যান্ট কপি (Applicant Copy):</span>
                     <p>ফি প্রদানের পর নিশ্চিতকরণ এসএমএস এবং পাসওয়ার্ড প্রাপ্তি সাপেক্ষে রঙিন অ্যাপ্লিক্যান্ট কপি ডাউনলোড করে অ্যাডমিট কার্ড আসা পর্যন্ত যত্নসহকারে সংরক্ষণ করতে হয়।</p>
                   </div>
                 </div>
@@ -1118,9 +1120,9 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
                 <a
                   href="/dashboard/vault"
                   target="_blank"
-                  className="text-[10px] font-bold text-emerald-700 hover:underline shrink-0"
+                  className="text-[10px] font-bold text-emerald-700 hover:underline shrink-0 inline-flex items-center gap-0.5"
                 >
-                  + ভল্টে নতুন ডকুমেন্ট যোগ করুন ↗
+                  + ভল্টে নতুন ডকুমেন্ট যোগ করুন <ArrowUpRight className="w-3 h-3" />
                 </a>
               </div>
 
@@ -1156,10 +1158,10 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
                         </div>
 
                         <div className="flex items-center gap-2 shrink-0">
-                          <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                          <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold inline-flex items-center gap-1 ${
                             isChecked ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-500'
                           }`}>
-                            {isChecked ? '✓ সংযুক্ত' : 'বাদ'}
+                            {isChecked ? <><Check className="w-3 h-3" /> সংযুক্ত</> : 'বাদ'}
                           </span>
                         </div>
                       </div>
@@ -1425,8 +1427,8 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
                     <label className="text-[11px] font-bold text-slate-700 block">
                       পেমেন্ট সাকসেস স্ক্রিনশট সংযুক্ত করুন (ঐচ্ছিক):
                     </label>
-                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
-                      ✓ ২ গুণ দ্রুত ভেরিফিকেশন নিশ্চয়তা
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" /> ২ গুণ দ্রুত ভেরিফিকেশন নিশ্চয়তা
                     </span>
                   </div>
                   <input
@@ -1457,7 +1459,7 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
             )}
 
             {/* Self Apply Direct Teletalk Assistant Box */}
-            <div className="bg-gradient-to-br from-slate-50 to-emerald-50/30 p-5 sm:p-6 rounded-3xl border border-slate-200 space-y-4">
+            <div className="bg-slate-50 p-5 sm:p-6 rounded-3xl border border-slate-200 space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="space-y-1">
                   <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full inline-block">
@@ -1513,7 +1515,7 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
               data-testid="submit-application-btn"
               disabled={isSubmitting}
               onClick={() => console.log('>>> [submitBtn onClick] button clicked, isSubmitting:', isSubmitting)}
-              className="w-full py-4 bg-gradient-to-r from-emerald-600 via-teal-700 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white font-black text-sm rounded-2xl shadow-lg shadow-emerald-900/20 flex items-center justify-center gap-2 transition-all disabled:opacity-50 hover:scale-[1.01]"
+              className="w-full py-4 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-sm rounded-2xl shadow-xs flex items-center justify-center gap-2 transition-all disabled:opacity-50"
             >
               {isSubmitting ? (
                 <>
@@ -1626,8 +1628,8 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
                     <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
                     <span>রিসাইজ সম্পন্ন প্রিভিউ:</span>
                   </span>
-                  <span className="text-[11px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full">
-                    ✓ সরকারি স্পেসিফিকেশন ১০০% সঠিক
+                  <span className="text-[11px] font-bold text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5" /> সরকারি স্পেসিফিকেশন ১০০% সঠিক
                   </span>
                 </div>
 

@@ -18,7 +18,8 @@ import {
   X,
   ShieldCheck,
   HelpCircle,
-  AlertTriangle
+  AlertTriangle,
+  ArrowUpRight
 } from 'lucide-react';
 import { ExamNoticeItem } from '@/types/exams.types';
 import { initialExamNotices } from '@/data/examsData';
@@ -68,7 +69,7 @@ export default function ExamNoticesClient() {
       </div>
 
       {/* Hero Header Banner */}
-      <div className="bg-gradient-to-r from-slate-950 via-emerald-950 to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl border border-emerald-900/40 relative overflow-hidden">
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xs border border-slate-800 relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="max-w-2xl space-y-3">
             <span className="bg-rose-600 text-white text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider inline-flex items-center gap-1.5 animate-pulse">
@@ -332,7 +333,7 @@ export default function ExamNoticesClient() {
                 href="/admit-cards"
                 className="text-xs font-bold text-emerald-700 hover:underline flex items-center gap-1"
               >
-                <span>প্রবেশপত্র ডাউনলোড পেজে যান ↗</span>
+                <span className="inline-flex items-center gap-1">প্রবেশপত্র ডাউনলোড পেজে যান <ArrowUpRight className="w-3.5 h-3.5" /></span>
               </Link>
               <button
                 type="button"

@@ -84,13 +84,13 @@ export default function ExamResultsClient({
     if (isPassed) {
       setCheckerResult({
         status: 'passed',
-        message: `🎉 অভিনন্দন! আপনার রোল নম্বরটি (${cleanRoll}) উত্তীর্ণদের মেধা তালিকায় রয়েছে!`,
+        message: `অভিনন্দন! আপনার রোল নম্বরটি (${cleanRoll}) উত্তীর্ণদের মেধা তালিকায় রয়েছে!`,
         details: exam.nextStepNotice || 'পরবর্তী ধাপের জন্য অফিসিয়াল নোটিশ লক্ষ্য রাখুন।'
       });
     } else {
       setCheckerResult({
         status: 'failed',
-        message: `⚠️ দুঃখিত! রোল নম্বরটি (${cleanRoll}) এই মেধা তালিকায় পাওয়া যায়নি।`,
+        message: `দুঃখিত! রোল নম্বরটি (${cleanRoll}) এই মেধা তালিকায় পাওয়া যায়নি।`,
         details: 'অনুগ্রহ করে রোল নম্বর সঠিকভাবে লিখেছেন কিনা তা নিশ্চিত করুন অথবা অফিসিয়াল পিডিএফ গেজেট ডাউনলোড করে চেক করুন।'
       });
     }
@@ -111,7 +111,7 @@ export default function ExamResultsClient({
       </div>
 
       {/* Hero Header Banner */}
-      <div className="bg-gradient-to-r from-slate-950 via-emerald-950 to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl border border-emerald-900/40 relative overflow-hidden">
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xs border border-slate-800 relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="max-w-2xl space-y-3">
             <span className="bg-emerald-500 text-slate-950 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider inline-flex items-center gap-1.5 shadow-sm">
@@ -202,7 +202,7 @@ export default function ExamResultsClient({
           <div className="sm:col-span-3 flex items-end">
             <button
               type="submit"
-              className="w-full py-2.5 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer hover:scale-[1.02]"
+              className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-black text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Search className="w-4 h-4" />
               <span>ফলাফল দেখুন</span>

@@ -325,7 +325,7 @@ export default function OrganizationManagementHub({ onRefreshData, activeTab }: 
           <button
             type="button"
             onClick={openCreateModal}
-            className="px-4 py-2 bg-gradient-to-r from-blue-700 to-indigo-800 hover:from-blue-800 hover:to-indigo-900 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
+            className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>নতুন প্রতিষ্ঠান যোগ করুন</span>
@@ -470,7 +470,7 @@ export default function OrganizationManagementHub({ onRefreshData, activeTab }: 
                           : 'bg-amber-100 text-amber-800 border border-amber-200'
                       }`}
                     >
-                      {comp.verified ? '✓ যাচাইকৃত' : 'অযাচাইকৃত'}
+                      {comp.verified ? <><Check className="w-3 h-3" /> যাচাইকৃত</> : 'অযাচাইকৃত'}
                     </button>
                   </td>
 

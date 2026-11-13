@@ -79,7 +79,7 @@ export default function HeroSection({ initialData }: { initialData?: HeroCmsData
       case '4xl': return 'text-3xl sm:text-4xl lg:text-5xl';
       case '5xl': return 'text-4xl sm:text-5xl lg:text-6xl';
       case '6xl': return 'text-5xl sm:text-6xl lg:text-7xl';
-      default: return 'text-5xl sm:text-6xl lg:text-7xl';
+      default: return 'text-4xl sm:text-5xl lg:text-6xl';
     }
   };
 

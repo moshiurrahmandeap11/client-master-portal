@@ -14,8 +14,10 @@ import {
   Sparkles,
   HelpCircle,
   Layers,
-  ChevronRight
+  ChevronRight,
+  FileText
 } from 'lucide-react';
+import { FaBuildingColumns, FaLandmarkFlag } from 'react-icons/fa6';
 import JobLogo from '@/components/shared/JobLogo';
 
 export interface OrgDirectoryItem {
@@ -108,7 +110,7 @@ export default function OrganizationsDirectoryClient({
       </div>
 
       {/* Hero Header Banner */}
-      <div className="bg-gradient-to-r from-slate-950 via-emerald-950 to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl border border-emerald-900/40 relative overflow-hidden">
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xs border border-slate-800 relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="max-w-2xl space-y-3">
             <span className="bg-emerald-500 text-slate-950 text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider inline-flex items-center gap-1.5 shadow-sm">
@@ -154,10 +156,10 @@ export default function OrganizationsDirectoryClient({
           
           <Link
             href="/organizations/bangladesh-bank"
-            className="p-5 bg-gradient-to-br from-white to-emerald-50/50 rounded-2xl border border-emerald-200/80 hover:border-emerald-500 hover:shadow-lg transition-all group cursor-pointer space-y-2"
+            className="p-5 bg-white rounded-2xl border border-slate-200 hover:border-emerald-500 hover:shadow-md transition-all group cursor-pointer space-y-2"
           >
-            <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
-              🏦
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold">
+              <FaBuildingColumns className="w-5 h-5" />
             </div>
             <h3 className="text-sm font-black text-slate-900 group-hover:text-emerald-700 transition-colors">
               বাংলাদেশ ব্যাংক ও BSCS
@@ -173,18 +175,18 @@ export default function OrganizationsDirectoryClient({
 
           <Link
             href="/organizations/bpsc"
-            className="p-5 bg-gradient-to-br from-white to-blue-50/50 rounded-2xl border border-blue-200/80 hover:border-blue-500 hover:shadow-lg transition-all group cursor-pointer space-y-2"
+            className="p-5 bg-white rounded-2xl border border-slate-200 hover:border-emerald-500 hover:shadow-md transition-all group cursor-pointer space-y-2"
           >
-            <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center font-bold">
-              🏛️
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold">
+              <FaLandmarkFlag className="w-5 h-5" />
             </div>
-            <h3 className="text-sm font-black text-slate-900 group-hover:text-blue-700 transition-colors">
+            <h3 className="text-sm font-black text-slate-900 group-hover:text-emerald-700 transition-colors">
               বিপিএসসি (BPSC)
             </h3>
             <p className="text-[11px] text-slate-500 line-clamp-2">
               বাংলাদেশ সরকারি কর্ম কমিশনের বিসিএস ও নন-ক্যাডার ১ম ও ২য় শ্রেণির নিয়োগ হাব।
             </p>
-            <span className="text-[11px] font-bold text-blue-700 flex items-center gap-1 pt-1">
+            <span className="text-[11px] font-bold text-emerald-700 flex items-center gap-1 pt-1">
               <span>সার্কুলার দেখুন</span>
               <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
             </span>
@@ -192,18 +194,18 @@ export default function OrganizationsDirectoryClient({
 
           <Link
             href="/organizations/government-ministries"
-            className="p-5 bg-gradient-to-br from-white to-amber-50/50 rounded-2xl border border-amber-200/80 hover:border-amber-500 hover:shadow-lg transition-all group cursor-pointer space-y-2"
+            className="p-5 bg-white rounded-2xl border border-slate-200 hover:border-emerald-500 hover:shadow-md transition-all group cursor-pointer space-y-2"
           >
-            <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold">
-              🏢
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold">
+              <Building2 className="w-5 h-5" />
             </div>
-            <h3 className="text-sm font-black text-slate-900 group-hover:text-amber-700 transition-colors">
+            <h3 className="text-sm font-black text-slate-900 group-hover:text-emerald-700 transition-colors">
               সকল মন্ত্রণালয়সমূহ
             </h3>
             <p className="text-[11px] text-slate-500 line-clamp-2">
               অর্থ, স্বরাষ্ট্র, জনপ্রশাসনসহ সচিবালয় ও মন্ত্রণালয়ের সকল শূন্যপদের ফিড।
             </p>
-            <span className="text-[11px] font-bold text-amber-700 flex items-center gap-1 pt-1">
+            <span className="text-[11px] font-bold text-emerald-700 flex items-center gap-1 pt-1">
               <span>সার্কুলার দেখুন</span>
               <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
             </span>
@@ -211,18 +213,18 @@ export default function OrganizationsDirectoryClient({
 
           <Link
             href="/organizations/government-directorates"
-            className="p-5 bg-gradient-to-br from-white to-purple-50/50 rounded-2xl border border-purple-200/80 hover:border-purple-500 hover:shadow-lg transition-all group cursor-pointer space-y-2"
+            className="p-5 bg-white rounded-2xl border border-slate-200 hover:border-emerald-500 hover:shadow-md transition-all group cursor-pointer space-y-2"
           >
-            <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center font-bold">
-              📑
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center font-bold">
+              <FileText className="w-5 h-5" />
             </div>
-            <h3 className="text-sm font-black text-slate-900 group-hover:text-purple-700 transition-colors">
+            <h3 className="text-sm font-black text-slate-900 group-hover:text-emerald-700 transition-colors">
               সকল অধিদপ্তরসমূহ
             </h3>
             <p className="text-[11px] text-slate-500 line-clamp-2">
               প্রাথমিক শিক্ষা, স্বাস্থ্য, কর অঞ্চল ও সমাজসেবা অধিদপ্তরের মাঠপর্যায়ের পদ।
             </p>
-            <span className="text-[11px] font-bold text-purple-700 flex items-center gap-1 pt-1">
+            <span className="text-[11px] font-bold text-emerald-700 flex items-center gap-1 pt-1">
               <span>সার্কুলার দেখুন</span>
               <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
             </span>

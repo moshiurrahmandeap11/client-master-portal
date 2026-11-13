@@ -17,7 +17,8 @@ import {
   ExternalLink, 
   CreditCard, 
   ArrowUpRight,
-  ShieldCheck
+  ShieldCheck,
+  Lightbulb
 } from 'lucide-react';
 import { ApplicationRequest, JobCircular, WalletTransaction } from '@/types';
 import { getAdminHeaders } from '@/lib/axios';
@@ -489,8 +490,9 @@ export default function FinancialTransactionsLedger({
                 );
               })()}
 
-              <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-800 font-medium">
-                💡 চাকরি সেবা প্রতি সফল সরকারি আবেদনে মাত্র ৳৮০ সার্ভিস ফি চার্জ করে, যা প্রার্থীর ছবি-স্বাক্ষর রিসাইজিং, নির্ভুল ডেটা পূরণ ও এসএমএস নোটিফিকেশন কভার করে।
+              <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-800 font-medium flex items-start gap-2">
+                <Lightbulb className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                <span>চাকরি সেবা প্রতি সফল সরকারি আবেদনে মাত্র ৳৮০ সার্ভিস ফি চার্জ করে, যা প্রার্থীর ছবি-স্বাক্ষর রিসাইজিং, নির্ভুল ডেটা পূরণ ও এসএমএস নোটিফিকেশন কভার করে।</span>
               </div>
             </div>
 

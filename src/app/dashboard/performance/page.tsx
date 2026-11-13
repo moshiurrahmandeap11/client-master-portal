@@ -197,7 +197,7 @@ export default function PerformanceAnalyticsPage() {
       </div>
 
       {/* Personalized AI Study Advice */}
-      <div className="p-6 bg-gradient-to-r from-teal-900 to-slate-900 text-white rounded-3xl space-y-3 shadow-md">
+      <div className="p-6 bg-slate-900 text-white rounded-3xl space-y-3 shadow-xs border border-slate-800">
         <div className="flex items-center gap-2 text-emerald-300">
           <Lightbulb className="w-5 h-5 text-amber-400" />
           <h3 className="font-black text-sm">এআই কাস্টমাইজড প্রস্তুতি পরামর্শ (Personalized Study Advice):</h3>

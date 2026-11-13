@@ -113,7 +113,7 @@ export default function PreparationPage() {
       {/* Overall Preparation Snapshot Banner */}
       <div 
         data-testid="overall-preparation-progress"
-        className="bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 text-white p-6 sm:p-8 rounded-3xl shadow-lg relative overflow-hidden"
+        className="bg-slate-900 text-white p-6 sm:p-8 rounded-3xl shadow-xs border border-slate-800 relative overflow-hidden"
       >
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-xl">

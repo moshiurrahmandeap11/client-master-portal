@@ -19,7 +19,8 @@ import {
   Send,
   Eye,
   Check,
-  X
+  X,
+  ArrowRight
 } from 'lucide-react';
 import { ADMIN_REQ_HEADERS } from '@/lib/axios';
 
@@ -313,7 +314,7 @@ export default function DeadlineAlertManager() {
 
                     <div className="text-xs text-slate-700 bg-white p-2.5 rounded-lg border border-slate-200/80 font-mono flex items-center gap-3">
                       <span className="text-rose-600 line-through">পূর্বের মান: {String(prop.oldValue)}</span>
-                      <span>➔</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                       <span className="text-emerald-700 font-bold">নতুন প্রস্তাবিত মান: {String(prop.newValue)}</span>
                     </div>
 
@@ -349,10 +350,10 @@ export default function DeadlineAlertManager() {
                         </button>
                       </>
                     ) : (
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1 ${
                         prop.status === 'APPROVED' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-700'
                       }`}>
-                        {prop.status === 'APPROVED' ? '✓ অনুমোদিত' : '✗ বাতিলকৃত'}
+                        {prop.status === 'APPROVED' ? <><Check className="w-3 h-3" /> অনুমোদিত</> : <><X className="w-3 h-3" /> বাতিলকৃত</>}
                       </span>
                     )}
                   </div>

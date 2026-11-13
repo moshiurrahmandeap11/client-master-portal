@@ -352,7 +352,7 @@ export default function JobContentStudio({ initialDraftId }: { initialDraftId?: 
         
         {/* Left: Draft Selector & Org Display */}
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-xs">
+          <div className="w-8 h-8 rounded-lg bg-emerald-700 flex items-center justify-center text-white shadow-xs">
             <PenTool className="w-4 h-4" />
           </div>
           <div>
@@ -420,7 +420,7 @@ export default function JobContentStudio({ initialDraftId }: { initialDraftId?: 
           <button
             onClick={() => handleGenerateContent('generate_all')}
             disabled={generating}
-            className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm disabled:opacity-50"
+            className="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm disabled:opacity-50"
           >
             <Sparkles className={`w-3.5 h-3.5 ${generating ? 'animate-spin' : ''}`} />
             <span>{generating ? 'তৈরি হচ্ছে...' : 'AI জেনারেট'}</span>
@@ -797,7 +797,7 @@ export default function JobContentStudio({ initialDraftId }: { initialDraftId?: 
             {activeTab === 'seo' && (
               <div className="space-y-4 text-xs">
                 {/* SEO Score Gauge Card */}
-                <div className="p-4 rounded-xl bg-gradient-to-br from-indigo-900 to-slate-900 text-white shadow-md">
+                <div className="p-4 rounded-xl bg-slate-900 text-white shadow-md">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-bold text-xs">এসইও অপটিমাইজেশন স্কোর</span>
                     <span className="text-xl font-black font-mono text-emerald-400">
@@ -806,7 +806,7 @@ export default function JobContentStudio({ initialDraftId }: { initialDraftId?: 
                   </div>
                   <div className="w-full bg-slate-700 h-2 rounded-full overflow-hidden mb-3">
                     <div
-                      className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-500"
+                      className="h-full bg-emerald-600 transition-all duration-500"
                       style={{ width: `${studioState?.seoAnalysis?.score || 50}%` }}
                     />
                   </div>
@@ -948,9 +948,17 @@ export default function JobContentStudio({ initialDraftId }: { initialDraftId?: 
                   )}
 
                   <div className="text-[11px] text-slate-600 mt-2">
-                    {studioState?.factValidation?.canProceedToApproval
-                      ? '✓ সকল পদসংখ্যা, বেতন ও শেষ তারিখ সার্কুলারের সাথে নিখুঁতভাবে মিলেছে।'
-                      : '⚠ প্রকাশনার পূর্বে সাংঘর্ষিক তথ্য সংশোধন করা আবশ্যক।'}
+                    {studioState?.factValidation?.canProceedToApproval ? (
+                      <span className="inline-flex items-start gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                        <span>সকল পদসংখ্যা, বেতন ও শেষ তারিখ সার্কুলারের সাথে নিখুঁতভাবে মিলেছে।</span>
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-start gap-1.5">
+                        <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+                        <span>প্রকাশনার পূর্বে সাংঘর্ষিক তথ্য সংশোধন করা আবশ্যক।</span>
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -971,8 +979,9 @@ export default function JobContentStudio({ initialDraftId }: { initialDraftId?: 
                       ))}
                     </div>
                   ) : (
-                    <p className="text-[11px] text-emerald-700 mt-1">
-                      ✓ কোনো ব্যাকরণগত ত্রুটি বা অপ্রয়োজনীয় ইংরেজি কিওয়ার্ড স্টাফিং নেই।
+                    <p className="text-[11px] text-emerald-700 mt-1 flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                      <span>কোনো ব্যাকরণগত ত্রুটি বা অপ্রয়োজনীয় ইংরেজি কিওয়ার্ড স্টাফিং নেই।</span>
                     </p>
                   )}
                 </div>
@@ -1166,7 +1175,7 @@ export default function JobContentStudio({ initialDraftId }: { initialDraftId?: 
       {showNewPostModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-lg w-full overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            <div className="px-6 py-4 bg-gradient-to-r from-indigo-700 to-violet-800 text-white flex items-center justify-between">
+            <div className="px-6 py-4 bg-emerald-800 text-white flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <PenTool className="w-5 h-5 text-indigo-300" />
                 <h3 className="font-black text-sm">নতুন সার্কুলার পোস্ট তৈরি (এলিমেন্টর স্টুডিও)</h3>

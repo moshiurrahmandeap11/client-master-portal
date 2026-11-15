@@ -131,11 +131,14 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
   const [isMounted, setIsMounted] = useState(false);
   const [auth, setAuth] = useState<AuthState>({ isLoggedIn: false, role: null, name: '' });
   const [walletBalance, setWalletBalance] = useState<number>(0);
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const [avatarError, setAvatarError] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [platformSettings, setPlatformSettings] = useState<any>(initialSettings || null);
   const navRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLAnchorElement>(null);
   const rightAreaRef = useRef<HTMLDivElement>(null);
+  const profileDropdownRef = useRef<HTMLDivElement>(null);
 
   // Dynamic visible count for nav menu items based on exact available space
   // Initial state matches SSR to guarantee 0 hydration mismatches; useEffect fine-tunes post-mount
@@ -149,17 +152,26 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
 
   // Sync auth and user state
   useEffect(() => {
-    console.log('[Navbar] useEffect mounting...');
     setIsMounted(true);
-    try {
-      setAuth(storage.getAuth());
-      setWalletBalance(storage.getUser()?.walletBalance || 0);
-    } catch (e) {
-      console.error('[Navbar] storage error:', e);
-    }
 
-    const handleAuthChange = () => setAuth(storage.getAuth());
-    const handleUserChange = () => setWalletBalance(storage.getUser()?.walletBalance || 0);
+    const syncUserData = () => {
+      try {
+        const a = storage.getAuth();
+        setAuth(a);
+        const u = storage.getUser();
+        setUserProfile(u);
+        setWalletBalance(u?.walletBalance || 0);
+        setAvatarError(false);
+      } catch (e) {
+        console.error('[Navbar] storage error:', e);
+      }
+    };
+
+    syncUserData();
+
+    const handleAuthChange = () => syncUserData();
+    const handleUserChange = () => syncUserData();
+    const handleDocsChange = () => syncUserData();
 
     const fetchSettings = () => {
       fetch('/api/platform/settings', { cache: 'no-store' })
@@ -191,6 +203,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
           setAuth(authState);
           if (d.role === 'candidate') {
             storage.updateUser(d.user);
+            setUserProfile(d.user);
             setWalletBalance(d.user.walletBalance ?? 0);
           }
         }
@@ -199,20 +212,27 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
 
     window.addEventListener('cs_auth_changed', handleAuthChange);
     window.addEventListener('cs_user_changed', handleUserChange);
+    window.addEventListener('cs_documents_changed', handleDocsChange);
+    window.addEventListener('cs_docs_changed', handleDocsChange);
 
     return () => {
       window.removeEventListener('cs_settings_changed', fetchSettings);
       window.removeEventListener('cs_auth_changed', handleAuthChange);
       window.removeEventListener('cs_user_changed', handleUserChange);
+      window.removeEventListener('cs_documents_changed', handleDocsChange);
+      window.removeEventListener('cs_docs_changed', handleDocsChange);
     };
-  }, []);
+  }, [initialSettings]);
 
   // Close desktop dropdown on outside click or escape
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (navRef.current && !navRef.current.contains(event.target as Node)) {
-        setActiveDropdown(null);
+      const target = event.target as Node;
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(target)) {
         setProfileDropdownOpen(false);
+      }
+      if (navRef.current && !navRef.current.contains(target)) {
+        setActiveDropdown(null);
       }
     };
 
@@ -342,67 +362,22 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
       if (resizeObserver) resizeObserver.disconnect();
       window.removeEventListener('resize', calculateVisibleItems);
     };
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener('resize', calculateVisibleItems);
-    };
   }, [navItems, auth.isLoggedIn, auth.role, isMounted, walletBalance, platformSettings]);
 
+  const userPhoto = (isMounted && !avatarError)
+    ? (userProfile?.photoUrl || userProfile?.avatarUrl || (typeof window !== 'undefined' ? storage.getUser()?.photoUrl : ''))
+    : '';
+  const initialLetter = auth.name ? auth.name.trim().charAt(0).toUpperCase() : 'U';
 
   return (
     <header className={`z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm w-full max-w-full ${platformSettings?.general?.stickyHeader !== false ? 'sticky top-0' : 'relative'}`} ref={navRef}>
       
-      {/* 1. TOP ANNOUNCEMENT TICKER (Dynamic from Admin CMS) */}
-      {(platformSettings?.general?.announcementEnabled !== false) && (
-        <div className="bg-slate-900 text-white text-[11px] sm:text-xs py-1.5 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
-          <div className="w-full flex items-center justify-between">
-            <div className="flex items-center gap-2 overflow-hidden">
-              <span className="bg-red-600 text-white px-2 py-0.5 rounded-full text-[12px] sm:text-[13px] font-black uppercase tracking-wider animate-pulse flex-shrink-0">
-                জরুরি নোটিশ
-              </span>
-              <Link 
-                href={platformSettings?.general?.announcementUrl || '/jobs'}
-                className="truncate text-slate-300 hover:text-emerald-300 transition-colors"
-              >
-                {platformSettings?.general?.announcementText || 'আজকে ৩টি নতুন সরকারি চাকরির আবেদন শুরু হয়েছে! শেষ সময় হওয়ার আগেই আবেদন বুকিং দিন।'}
-              </Link>
-            </div>
-
-            <div className="hidden sm:flex items-center gap-4 text-slate-300 flex-shrink-0 text-[14px]">
-              <a 
-                href={`https://wa.me/${platformSettings?.general?.whatsappNumber || '8801774366643'}`}
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="hover:text-emerald-400 flex items-center gap-1 font-semibold"
-              >
-                <MessageSquare className="w-3.5 h-3.5 text-emerald-400" />
-                <span>হোয়াটসঅ্যাপ: {platformSettings?.general?.supportPhone || '+৮৮০ ১৭৭৪-৩৬৬৬৪৩'}</span>
-              </a>
-              <span className="text-slate-600">|</span>
-              <span className="text-emerald-400 font-bold">সকাল ৯টা - রাত ১০টা</span>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* 2. MAIN HEADER NAVIGATION BAR */}
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-4 w-full">
           
-          {/* Logo (Preserved branding, logo icon and badges, with dynamic customizer support) */}
-          <Link ref={logoRef} href="/" className="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0">
-            {platformSettings?.general?.logoUrl && platformSettings.general.logoUrl !== '/icons/icon-192x192.png' ? (
-              <img 
-                src={platformSettings.general.logoUrl} 
-                alt={platformSettings.general.siteName || "চাকরি সেবা"} 
-                className="h-10 sm:h-11 w-auto max-w-[160px] object-contain group-hover:scale-105 transition-transform"
-              />
-            ) : (
-              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-emerald-700 flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform relative overflow-hidden">
-                <Briefcase className="w-5 h-5 text-white" />
-                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-red-600 rounded-full border-2 border-white"></div>
-              </div>
-            )}
+          {/* Logo (Clean text branding) */}
+          <Link ref={logoRef} href="/" className="flex items-center group flex-shrink-0">
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
@@ -416,14 +391,11 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                   BD
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 font-medium -mt-1 hidden min-[1800px]:block">
-                {platformSettings?.general?.siteDescription || 'নিউজ ও ১০০% নির্ভুল আবেদন পোর্টাল'}
-              </p>
             </div>
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 2xl:gap-1.5 font-bold text-slate-800 whitespace-nowrap min-w-0 flex-shrink">
+          <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 2xl:gap-1.5 font-normal text-slate-800 whitespace-nowrap min-w-0 flex-shrink">
             {navItems.slice(0, visibleCount).map((item) => {
               const hasDropdown = Boolean(item.dropdown && item.dropdown.length > 0);
               const isCurrentOpen = activeDropdown === item.id;
@@ -443,8 +415,8 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                     aria-haspopup={hasDropdown ? 'true' : undefined}
                     className={`px-1.5 xl:px-2 2xl:px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-[13px] xl:text-[14px] 2xl:text-[15px] whitespace-nowrap ${
                       isActive 
-                        ? 'text-emerald-700 bg-emerald-50 font-black' 
-                        : 'text-slate-800 hover:text-emerald-700 hover:bg-slate-50'
+                        ? 'text-emerald-700 bg-emerald-50 font-medium' 
+                        : 'text-slate-800 hover:text-emerald-700 hover:bg-slate-50 font-normal'
                     }`}
                   >
                     <span>{item.label}</span>
@@ -555,19 +527,6 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
           {/* Right Action Area: Customizable Guest Buttons & User Widgets */}
           <div ref={rightAreaRef} className="hidden sm:flex items-center gap-2 flex-shrink-0 ml-auto z-10">
             
-            {/* WhatsApp button */}
-            {platformSettings?.general?.guestButtons?.showWhatsApp !== false && (
-              <a
-                href={`https://wa.me/${platformSettings?.general?.whatsappNumber || '8801774366643'}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-2.5 2xl:px-3 py-1.5 2xl:py-2 rounded-xl border border-emerald-600/80 text-emerald-700 bg-white hover:bg-emerald-50 text-xs 2xl:text-sm font-bold transition-all flex items-center gap-1.5 shadow-2xs"
-              >
-                <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
-                <span>{platformSettings?.general?.guestButtons?.whatsAppText || platformSettings?.general?.whatsappButtonText || 'WhatsApp'}</span>
-              </a>
-            )}
-
             {!isMounted ? (
               <div className="w-28 h-9 rounded-xl bg-slate-100/60 animate-pulse border border-slate-200" />
             ) : !auth.isLoggedIn ? (
@@ -576,7 +535,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                 {platformSettings?.general?.guestButtons?.showTrackApplication !== false && (
                   <Link
                     href="/dashboard/application-check"
-                    className="hidden xl:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200 text-slate-700 bg-white hover:bg-slate-50 text-xs font-bold transition-all shadow-2xs"
+                    className="hidden xl:flex items-center gap-1.5 px-2.5 py-1.5 rounded-[7px] border border-slate-200 text-slate-700 bg-white hover:bg-slate-50 text-xs font-bold transition-all shadow-2xs"
                     title="আবেদনের ট্র্যাকিং ও স্ট্যাটাস যাচাই"
                   >
                     <FileText className="w-3.5 h-3.5 text-emerald-600" />
@@ -587,7 +546,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                 {platformSettings?.general?.guestButtons?.showLogin !== false && (
                   <Link
                     href="/login"
-                    className="px-3 py-1.5 2xl:py-2 rounded-xl border border-emerald-600/80 text-emerald-800 bg-emerald-50/50 hover:bg-emerald-100/60 text-xs 2xl:text-sm font-bold transition-all flex items-center gap-1.5"
+                    className="px-3 py-1.5 2xl:py-2 rounded-[7px] border border-emerald-600/80 text-emerald-800 bg-emerald-50/50 hover:bg-emerald-100/60 text-xs 2xl:text-sm font-bold transition-all flex items-center gap-1.5"
                   >
                     <LogIn className="w-3.5 h-3.5 text-emerald-700" />
                     <span>{platformSettings?.general?.guestButtons?.loginText || 'লগইন'}</span>
@@ -597,7 +556,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                 {platformSettings?.general?.guestButtons?.showRegister !== false && (
                   <Link
                     href="/register"
-                    className="px-3.5 py-1.5 2xl:py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs 2xl:text-sm font-black shadow-md shadow-emerald-800/20 transition-all flex items-center gap-1.5"
+                    className="px-3.5 py-1.5 2xl:py-2 rounded-[7px] bg-emerald-700 hover:bg-emerald-800 text-white text-xs 2xl:text-sm font-black shadow-md shadow-emerald-800/20 transition-all flex items-center gap-1.5"
                   >
                     <UserCheck className="w-3.5 h-3.5 text-white" />
                     <span>{platformSettings?.general?.guestButtons?.registerText || 'ফ্রি রেজিস্ট্রেশন'}</span>
@@ -605,36 +564,13 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                 )}
               </div>
             ) : (
-              /* LOGGED IN USER: Dashboard Direct Button + Wallet + Notification Bell + Profile Dropdown */
+              /* LOGGED IN USER: Notification Bell + Profile Dropdown */
               <div className="flex items-center gap-2">
-                {/* 1. Direct Dashboard CTA Button */}
-                {auth.role === 'candidate' && platformSettings?.general?.userWidgets?.showDashboardButton !== false && (
-                  <Link 
-                    href="/dashboard"
-                    className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black shadow-xs transition-all whitespace-nowrap"
-                  >
-                    <Briefcase className="w-3.5 h-3.5" />
-                    <span>{platformSettings?.general?.userWidgets?.dashboardButtonText || 'ড্যাশবোর্ড'}</span>
-                  </Link>
-                )}
-
-                {/* 2. Wallet Balance Widget */}
-                {auth.role === 'candidate' && platformSettings?.general?.userWidgets?.showWalletBalance !== false && (
-                  <Link 
-                    href="/dashboard/wallet"
-                    className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 px-2.5 py-1.5 rounded-xl text-xs font-bold hover:bg-emerald-100 transition-colors shadow-2xs"
-                    title="ওয়ালেট ব্যালেন্স"
-                  >
-                    <Wallet className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>৳{walletBalance}</span>
-                  </Link>
-                )}
-
-                {/* 3. Notification Bell Widget */}
+                {/* Notification Bell Widget */}
                 {auth.role === 'candidate' && platformSettings?.general?.userWidgets?.showNotificationBell !== false && (
                   <Link
                     href="/dashboard/notifications"
-                    className="relative p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 transition-all"
+                    className="relative p-2 rounded-[7px] border border-slate-200 hover:bg-slate-50 text-slate-700 transition-all"
                     title="নোটিফিকেশন"
                   >
                     <Bell className="w-4 h-4 text-slate-600" />
@@ -646,7 +582,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                 {auth.role === 'admin' && (
                   <Link 
                     href="/admin"
-                    className="flex items-center gap-1.5 bg-slate-900 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow"
+                    className="flex items-center gap-1.5 bg-slate-900 text-white px-3 py-1.5 rounded-[7px] text-xs font-bold shadow"
                   >
                     <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
                     <span>অ্যাডমিন</span>
@@ -655,23 +591,47 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
 
                 {/* 5. Profile Avatar & Dropdown */}
                 {platformSettings?.general?.userWidgets?.showAvatarDropdown !== false && (
-                  <div className="relative">
+                  <div className="relative" ref={profileDropdownRef}>
                     <button
+                      type="button"
                       onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                      className="flex items-center gap-2 p-1.5 pl-2.5 rounded-2xl border border-slate-200 hover:border-slate-300 bg-white transition-all text-left"
+                      className="flex items-center justify-center p-0 m-0 bg-transparent border-0 shadow-none outline-none focus:outline-none cursor-pointer hover:opacity-90 active:scale-95 transition-all rounded-full"
+                      aria-label="প্রোফাইল মেনু"
+                      aria-expanded={profileDropdownOpen}
                     >
-                      <div className="w-8 h-8 rounded-full bg-emerald-700 text-white flex items-center justify-center font-black text-xs">
-                        {auth.name ? auth.name.charAt(0) : 'U'}
-                      </div>
-                      <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                      {userPhoto ? (
+                        <img
+                          src={userPhoto}
+                          alt={auth.name || 'প্রোফাইল ছবি'}
+                          onError={() => setAvatarError(true)}
+                          className="w-8 h-8 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-xs">
+                          {initialLetter}
+                        </div>
+                      )}
                     </button>
 
                     {profileDropdownOpen && (
-                      <div className="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 text-xs space-y-1">
-                        <div className="px-4 py-2 border-b border-slate-100">
-                          <div className="font-bold text-slate-800">{auth.name || 'ইউজার'}</div>
-                          <div className="text-[10px] text-emerald-600 font-semibold">
-                            {auth.role === 'admin' ? 'Super Admin' : 'ভেরিফাইড প্রার্থী'}
+                      <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 z-50 text-xs space-y-1 animate-in fade-in slide-in-from-top-1 duration-150">
+                        <div className="px-4 py-2.5 border-b border-slate-100 flex items-center gap-2.5">
+                          {userPhoto ? (
+                            <img
+                              src={userPhoto}
+                              alt={auth.name || 'ইউজার'}
+                              className="w-9 h-9 rounded-full object-cover shrink-0"
+                            />
+                          ) : (
+                            <div className="w-9 h-9 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-xs shrink-0">
+                              {initialLetter}
+                            </div>
+                          )}
+                          <div className="min-w-0 flex-1">
+                            <div className="font-bold text-slate-800 truncate">{auth.name || 'ইউজার'}</div>
+                            <div className="text-[10px] text-emerald-600 font-medium">
+                              {auth.role === 'admin' ? 'Super Admin' : 'ভেরিফাইড প্রার্থী'}
+                            </div>
                           </div>
                         </div>
 
@@ -680,7 +640,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                             <Link
                               href="/dashboard/profile"
                               onClick={() => setProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-700 font-medium text-xs"
+                              className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors"
                             >
                               <UserCheck className="w-4 h-4 text-emerald-600" />
                               <span>আমার প্রোফাইল</span>
@@ -688,7 +648,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                             <Link
                               href="/dashboard/applications"
                               onClick={() => setProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-700 font-medium text-xs"
+                              className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors"
                             >
                               <FileText className="w-4 h-4 text-emerald-600" />
                               <span>আমার আবেদন ও ট্র্যাকিং</span>
@@ -696,7 +656,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                             <Link
                               href="/dashboard/vault"
                               onClick={() => setProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-700 font-medium text-xs"
+                              className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors"
                             >
                               <ShieldCheck className="w-4 h-4 text-emerald-600" />
                               <span>মাস্টার ডকুমেন্ট ভল্ট</span>
@@ -704,7 +664,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                             <Link
                               href="/dashboard/wallet"
                               onClick={() => setProfileDropdownOpen(false)}
-                              className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-700 font-medium text-xs"
+                              className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors"
                             >
                               <Wallet className="w-4 h-4 text-emerald-600" />
                               <span>ডিজিটাল ওয়ালেট</span>
@@ -714,7 +674,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                           <Link
                             href="/admin"
                             onClick={() => setProfileDropdownOpen(false)}
-                            className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-700 font-medium"
+                            className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-700 font-medium transition-colors"
                           >
                             <ShieldCheck className="w-4 h-4 text-emerald-600" />
                             <span>টিম ড্যাশবোর্ড</span>
@@ -724,8 +684,9 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                         <div className="border-t border-slate-100 my-1"></div>
 
                         <button
+                          type="button"
                           onClick={handleLogout}
-                          className="w-full text-left flex items-center gap-2 px-4 py-2 text-rose-600 hover:bg-rose-50 font-bold"
+                          className="w-full text-left flex items-center gap-2 px-4 py-2 text-rose-600 hover:bg-rose-50 font-medium transition-colors cursor-pointer"
                         >
                           <LogOut className="w-4 h-4" />
                           <span>লগআউট করুন</span>
@@ -746,14 +707,14 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
             ) : !auth.isLoggedIn ? (
               <Link 
                 href="/login"
-                className="bg-emerald-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold"
+                className="bg-emerald-700 text-white px-3 py-1.5 rounded-[7px] text-xs font-bold"
               >
                 লগইন
               </Link>
             ) : (
               <Link 
                 href="/dashboard"
-                className="bg-emerald-100 text-emerald-800 px-2.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1"
+                className="bg-emerald-100 text-emerald-800 px-2.5 py-1.5 rounded-[7px] text-xs font-bold flex items-center gap-1"
               >
                 <Wallet className="w-3.5 h-3.5" />
                 <span>৳{walletBalance}</span>
@@ -875,6 +836,18 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
               </div>
             ) : (
               <div className="space-y-2 pt-1">
+                <Link
+                  href="/dashboard/profile"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-medium text-sm flex items-center justify-center gap-2 border border-slate-200 transition-colors"
+                >
+                  {userPhoto ? (
+                    <img src={userPhoto} alt={auth.name || 'প্রোফাইল'} className="w-5 h-5 rounded-full object-cover" />
+                  ) : (
+                    <UserCheck className="w-4 h-4 text-emerald-700" />
+                  )}
+                  <span>আমার প্রোফাইল</span>
+                </Link>
                 <Link
                   href="/dashboard"
                   onClick={() => setMobileMenuOpen(false)}

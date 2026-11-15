@@ -409,7 +409,7 @@ export default function RecommendedJobsPage() {
           </div>
           <Link
             href="/dashboard/profile"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm"
           >
             প্রোফাইল পরিমার্জন করুন
           </Link>
@@ -566,7 +566,7 @@ export default function RecommendedJobsPage() {
                     <Link
                       data-testid="btn-apply-job"
                       href={`/jobs/${job.slug || job.id}`}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm"
                     >
                       <span>আবেদন ও বিস্তারিত</span>
                       <ArrowUpRight className="w-3.5 h-3.5" />

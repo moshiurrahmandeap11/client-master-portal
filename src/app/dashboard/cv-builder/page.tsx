@@ -105,7 +105,7 @@ export default function CvBuilderPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto pb-16" data-testid="cv-builder-page">
+    <div className="space-y-6 w-full pb-16" data-testid="cv-builder-page">
       {/* Top Header & Actions Toolbar (Hidden on Print) */}
       <div className="no-print bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">

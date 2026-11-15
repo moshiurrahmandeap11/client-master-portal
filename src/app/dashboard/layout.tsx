@@ -29,7 +29,8 @@ import {
   ShieldCheck,
   ShieldAlert,
   PhoneCall,
-  ArrowUpRight
+  ArrowUpRight,
+  Camera
 } from 'lucide-react';
 import { storage } from '@/lib/store';
 import axiosInstance from '@/lib/axios';
@@ -51,13 +52,13 @@ function getNavSections(unreadCount: number): { sectionTitle: string; items: Sid
       items: [
         { title: 'ওভারভিউ', href: '/dashboard', icon: LayoutDashboard },
         { title: 'ব্যক্তিগত প্রোফাইল', href: '/dashboard/profile', icon: User },
-        { title: 'স্মার্ট ডকুমেন্ট ভল্ট', href: '/dashboard/vault', icon: FileBox, badge: 'রিসাইজার', badgeColor: 'bg-emerald-100 text-emerald-800' }
+        { title: 'স্মার্ট ডকুমেন্ট ভল্ট', href: '/dashboard/vault', icon: FileBox }
       ]
     },
     {
       sectionTitle: 'চাকরি ও আবেদন',
       items: [
-        { title: 'সুপারিশকৃত চাকরি (Recommended)', href: '/dashboard/recommended-jobs', icon: Sparkles, badge: 'স্মার্ট ম্যাচ', badgeColor: 'bg-emerald-100 text-emerald-800' },
+        { title: 'সুপারিশকৃত চাকরি (Recommended)', href: '/dashboard/recommended-jobs', icon: Sparkles },
         { title: 'সংরক্ষিত সার্কুলার', href: '/dashboard/saved-jobs', icon: Bookmark },
         { title: 'আবেদন প্রস্তুতি ও যাচাই', href: '/dashboard/application-check', icon: CheckCircle2 },
         { title: 'আমার আবেদন ট্র্যাকিং', href: '/dashboard/applications', icon: FileText }
@@ -224,6 +225,26 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   };
 
+  const handleQuickPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('docType', 'photo');
+    formData.append('docTitle', 'প্রার্থীর ছবি');
+    try {
+      const res = await axiosInstance.post('/api/candidate/upload-document', formData);
+      if (res.data?.success && res.data?.fileUrl) {
+        const updated = { ...profile, photoUrl: res.data.fileUrl };
+        setProfile(updated);
+        storage.updateUser(updated);
+        window.dispatchEvent(new Event('cs_user_changed'));
+      }
+    } catch (err) {
+      console.warn('Quick photo upload warning:', err);
+    }
+  };
+
   if (!sessionChecked) {
     return (
       <div role="status" className="min-h-screen bg-slate-50 flex items-center justify-center p-8">
@@ -262,10 +283,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col" suppressHydrationWarning>
+    <div className="h-full max-h-full w-full flex flex-col overflow-hidden bg-slate-50" suppressHydrationWarning>
       {/* Sticky Admin Impersonation Banner */}
       {impersonatingName && (
-        <div className="bg-red-600 text-white px-4 py-2.5 text-xs font-black flex items-center justify-between shadow-xs sticky top-0 z-50 border-b border-red-700">
+        <div className="bg-red-600 text-white px-4 py-2 text-xs font-black flex items-center justify-between shadow-xs z-50 border-b border-red-700 flex-shrink-0">
           <div className="flex items-center gap-2">
             <span className="p-1 bg-black text-white rounded-md">
               <ShieldAlert className="w-3.5 h-3.5" />
@@ -285,60 +306,58 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       )}
 
       {/* Mobile Sticky Header Bar */}
-      <div className="lg:hidden bg-slate-900 text-white px-4 py-3 flex items-center justify-between border-b border-slate-800 sticky top-0 z-30">
-        <div className="flex items-center gap-2.5">
-          <button
-            onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-            className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white cursor-pointer"
-            aria-label="মেনু খুলুন"
-          >
-            {mobileSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
-          <div className="font-bold text-sm tracking-tight flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>প্রার্থী পোর্টাল</span>
-          </div>
-        </div>
+      <div className="lg:hidden bg-white/95 backdrop-blur-md text-slate-800 px-4 py-2.5 flex items-center justify-between border-b border-slate-200 z-30 shadow-xs flex-shrink-0">
+        <button
+          onClick={() => setMobileSidebarOpen(true)}
+          className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-[7px] text-xs font-bold border border-emerald-200 transition-all cursor-pointer"
+          aria-label="ড্যাশবোর্ড মেনু খুলুন"
+        >
+          <Menu className="w-4 h-4 text-emerald-700" />
+          <span>ড্যাশবোর্ড মেনু</span>
+        </button>
 
-        <div className="flex items-center gap-3 text-xs">
+        <div className="flex items-center gap-2.5 text-xs">
           {isMounted ? (
             <Link 
               href="/dashboard/wallet" 
-              className="bg-emerald-950 border border-emerald-700/60 text-emerald-300 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1 hover:border-emerald-500 transition-colors"
+              className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-2.5 py-1 rounded-[7px] font-bold flex items-center gap-1 hover:bg-emerald-100 transition-colors"
             >
-              <Wallet className="w-3.5 h-3.5 text-emerald-400" />
+              <Wallet className="w-3.5 h-3.5 text-emerald-700" />
               <span>৳{profile.walletBalance ?? 0}</span>
             </Link>
           ) : (
-            <div className="w-16 h-6 bg-slate-800 rounded animate-pulse" />
+            <div className="w-16 h-6 bg-slate-100 rounded animate-pulse" />
           )}
-          <Link href="/dashboard/profile" className="flex-shrink-0">
+          <Link href="/dashboard/profile" className="flex items-center gap-1.5 flex-shrink-0">
             <img 
               src={(isMounted ? profile.photoUrl : '') || '/images/avatar-placeholder.png'} 
               alt={profile.name || 'প্রোফাইল'} 
-              className="w-7 h-7 rounded-full border border-emerald-400 object-cover" 
+              className="w-7 h-7 rounded-full border border-emerald-500 object-cover" 
             />
+            <span className="font-bold text-slate-700 text-xs hidden sm:inline-block truncate max-w-[120px]">
+              {profile.nameBn || profile.name}
+            </span>
           </Link>
         </div>
       </div>
 
-      <div className="flex-1 flex max-w-[1600px] w-full mx-auto">
+      <div className="flex-1 flex w-full overflow-hidden min-h-0">
         {/* Mobile Backdrop */}
         {mobileSidebarOpen && (
           <div 
             onClick={() => setMobileSidebarOpen(false)} 
-            className="fixed inset-0 bg-slate-900/50 z-40 backdrop-blur-xs lg:hidden animate-in fade-in"
+            className="fixed inset-0 bg-slate-900/60 z-50 backdrop-blur-xs lg:hidden animate-in fade-in"
           />
         )}
 
         {/* Desktop Sidebar & Mobile Drawer Navigation */}
         <aside className={`
-          fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-slate-200/90 flex flex-col transition-transform duration-300 ease-in-out shadow-xl lg:shadow-none
-          lg:sticky lg:top-24 lg:z-20 lg:h-[calc(100vh-6rem)] lg:translate-x-0
+          fixed inset-y-0 left-0 z-50 w-72 sm:w-80 bg-white border-r border-slate-200/90 flex flex-col transition-transform duration-300 ease-in-out shadow-2xl lg:shadow-none
+          lg:static lg:w-64 xl:w-72 2xl:w-80 lg:min-w-[16rem] xl:min-w-[18rem] 2xl:min-w-[20rem] lg:h-full lg:max-h-full lg:overflow-hidden lg:flex-shrink-0
           ${mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}>
           {/* Sidebar Candidate Profile Snapshot Header */}
-          <div className="p-5 border-b border-slate-100 bg-white">
+          <div className="p-4 sm:p-5 border-b border-slate-100 bg-white flex-shrink-0">
             <div className="flex items-center justify-between mb-3 lg:hidden">
               <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">মেনু নেভিগেশন</span>
               <button onClick={() => setMobileSidebarOpen(false)} aria-label="মেনু বন্ধ করুন" className="p-1 text-slate-400 hover:text-slate-600">
@@ -347,13 +366,27 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="relative flex-shrink-0">
+              <div className="relative flex-shrink-0 group">
                 <img 
                   src={(isMounted ? profile.photoUrl : '') || '/images/avatar-placeholder.png'}
                   alt={isMounted ? profile.name : "প্রোফাইল ছবি"} 
-                  className="w-12 h-12 rounded-2xl object-cover border-2 border-emerald-500 shadow-sm"
+                  className="w-12 h-12 rounded-[10px] object-cover border-2 border-emerald-500 shadow-sm"
                 />
-                <span className="absolute -bottom-1 -right-1 bg-emerald-600 text-white p-0.5 rounded-full" title="ভেরিফাইড আইডি">
+                <label 
+                  htmlFor="sidebar-photo-upload" 
+                  className="absolute inset-0 bg-black/40 text-white rounded-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                  title="ছবি আপলোড / পরিবর্তন করুন"
+                >
+                  <Camera className="w-4 h-4 text-white" />
+                  <input
+                    id="sidebar-photo-upload"
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg,image/webp"
+                    className="hidden"
+                    onChange={handleQuickPhotoUpload}
+                  />
+                </label>
+                <span className="absolute -bottom-1 -right-1 bg-emerald-600 text-white p-0.5 rounded-full pointer-events-none" title="ভেরিফাইড আইডি">
                   <ShieldCheck className="w-3.5 h-3.5" />
                 </span>
               </div>
@@ -412,7 +445,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       key={idx}
                       href={item.href}
                       onClick={() => setMobileSidebarOpen(false)}
-                      className={`flex items-center justify-between px-3 py-2.5 rounded-xl transition-all ${
+                      className={`flex items-center justify-between px-3 py-2.5 rounded-[7px] transition-all ${
                         isActive 
                           ? 'bg-emerald-50 text-emerald-900 font-bold border border-emerald-200/80 shadow-sm' 
                           : 'text-slate-600 hover:text-emerald-700 hover:bg-slate-100/70'
@@ -423,7 +456,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <span>{item.title}</span>
                       </div>
                       {item.badge && (
-                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${item.badgeColor || 'bg-slate-100 text-slate-700'}`}>
+                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-[5px] ${item.badgeColor || 'bg-slate-100 text-slate-700'}`}>
                           {item.badge}
                         </span>
                       )}
@@ -440,7 +473,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               href="https://wa.me/8801700000000" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-1.5 py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-sm transition-colors"
+              className="flex items-center justify-center gap-1.5 py-2 px-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-[7px] text-xs font-bold shadow-sm transition-colors"
             >
               <PhoneCall className="w-3.5 h-3.5" />
               <span>সহায়তা ও আবেদন হেল্পলাইন</span>
@@ -448,7 +481,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
             <button
               onClick={handleLogout}
-              className="w-full flex items-center justify-center gap-1.5 py-1.5 text-xs text-rose-600 hover:bg-rose-50 rounded-lg transition-colors font-semibold cursor-pointer"
+              className="w-full flex items-center justify-center gap-1.5 py-1.5 text-xs text-rose-600 hover:bg-rose-50 rounded-[7px] transition-colors font-semibold cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>লগআউট করুন</span>
@@ -456,8 +489,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </aside>
 
-        {/* Main Workspace Content Area */}
-        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8">
+        {/* Main Workspace Content Area (Independently Scrollable!) */}
+        <main className="flex-1 h-full max-h-full overflow-y-auto min-w-0 p-3 sm:p-5 md:p-6 lg:p-8 xl:p-10 w-full custom-scrollbar">
           {children}
         </main>
       </div>

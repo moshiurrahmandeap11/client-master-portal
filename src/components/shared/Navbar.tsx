@@ -18,6 +18,7 @@ import {
   Bell
 } from 'lucide-react';
 import { storage, AuthState } from '@/lib/store';
+import { useAuthSession } from '@/hooks/useAuthSession';
 
 interface DropdownItem {
   label: string;
@@ -143,12 +144,33 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
   // Dynamic visible count for nav menu items based on exact available space
   // Initial state matches SSR to guarantee 0 hydration mismatches; useEffect fine-tunes post-mount
   const [visibleCount, setVisibleCount] = useState<number>(DEFAULT_NAV_ITEMS.length);
+  const { session } = useAuthSession();
 
   useEffect(() => {
     if (initialSettings) {
       setPlatformSettings(initialSettings);
     }
   }, [initialSettings]);
+
+  // Sync session from TanStack Query
+  useEffect(() => {
+    if (session && session.isLoggedIn && session.user) {
+      const authState = {
+        isLoggedIn: true,
+        role: session.role || 'candidate',
+        name: session.user.name,
+        phone: session.user.phone,
+        userId: session.user.id
+      };
+      storage.setAuth(authState);
+      setAuth(authState);
+      if (session.role === 'candidate') {
+        storage.updateUser(session.user);
+        setUserProfile(session.user);
+        setWalletBalance(session.user.walletBalance ?? 0);
+      }
+    }
+  }, [session]);
 
   // Sync auth and user state
   useEffect(() => {
@@ -187,28 +209,6 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
       fetchSettings();
     }
     window.addEventListener('cs_settings_changed', fetchSettings);
-
-    fetch('/api/auth/me', { cache: 'no-store' })
-      .then(r => r.ok ? r.json() : null)
-      .then(d => {
-        if (d && d.isLoggedIn && d.user) {
-          const authState = {
-            isLoggedIn: true,
-            role: d.role,
-            name: d.user.name,
-            phone: d.user.phone,
-            userId: d.user.id
-          };
-          storage.setAuth(authState);
-          setAuth(authState);
-          if (d.role === 'candidate') {
-            storage.updateUser(d.user);
-            setUserProfile(d.user);
-            setWalletBalance(d.user.walletBalance ?? 0);
-          }
-        }
-      })
-      .catch(() => {});
 
     window.addEventListener('cs_auth_changed', handleAuthChange);
     window.addEventListener('cs_user_changed', handleUserChange);
@@ -384,10 +384,10 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                   {platformSettings?.general?.siteName ? (
                     platformSettings.general.siteName
                   ) : (
-                    <>চাকরি<span className="text-emerald-700">সেবা</span></>
+                    <>চাকরিসেবা</>
                   )}
                 </span>
-                <span className="bg-emerald-100 text-emerald-800 text-[10px] font-black px-1.5 py-0.5 rounded">
+                <span className="bg-slate-100 text-slate-800 text-[10px] font-black px-1.5 py-0.5 rounded border border-slate-200">
                   BD
                 </span>
               </div>
@@ -413,10 +413,10 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                     onClick={() => setActiveDropdown(null)}
                     aria-expanded={hasDropdown ? isCurrentOpen : undefined}
                     aria-haspopup={hasDropdown ? 'true' : undefined}
-                    className={`px-1.5 xl:px-2 2xl:px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-[13px] xl:text-[14px] 2xl:text-[15px] whitespace-nowrap ${
+                    className={`px-1.5 xl:px-2 2xl:px-2.5 py-1.5 rounded-xl transition-all flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-slate-400/20 text-[13px] xl:text-[14px] 2xl:text-[15px] whitespace-nowrap ${
                       isActive 
-                        ? 'text-emerald-700 bg-emerald-50 font-medium' 
-                        : 'text-slate-800 hover:text-emerald-700 hover:bg-slate-50 font-normal'
+                        ? 'text-slate-950 bg-slate-100/90 font-medium' 
+                        : 'text-slate-800 hover:text-slate-950 hover:bg-slate-100/60 font-normal'
                     }`}
                   >
                     <span>{item.label}</span>
@@ -426,7 +426,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                         item.badgeColor === 'amber' ? 'bg-amber-100 text-amber-800' :
                         item.badgeColor === 'blue' ? 'bg-blue-100 text-blue-700' :
                         item.badgeColor === 'purple' ? 'bg-purple-100 text-purple-700' :
-                        'bg-emerald-100 text-emerald-800'
+                        'bg-slate-100 text-slate-800 border border-slate-200'
                       }`}>
                         {item.badge}
                       </span>
@@ -434,7 +434,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                     {hasDropdown && (
                       <ChevronDown 
                         className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
-                          isCurrentOpen ? 'rotate-180 text-emerald-700' : ''
+                          isCurrentOpen ? 'rotate-180 text-slate-900' : ''
                         }`} 
                       />
                     )}
@@ -449,7 +449,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                             key={idx}
                             href={subItem.href}
                             onClick={() => setActiveDropdown(null)}
-                            className="block px-4 py-2 text-[14px] text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 font-semibold transition-colors whitespace-nowrap"
+                            className="block px-4 py-2 text-[14px] text-slate-700 hover:bg-slate-100 hover:text-slate-950 font-semibold transition-colors whitespace-nowrap"
                           >
                             {subItem.label}
                           </Link>
@@ -474,14 +474,14 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                   onClick={() => setActiveDropdown(activeDropdown === 'more-nav-items' ? null : 'more-nav-items')}
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveDropdown(activeDropdown === 'more-nav-items' ? null : 'more-nav-items'); } }}
                   aria-expanded={activeDropdown === 'more-nav-items'}
-                  className={`cursor-pointer px-2 py-1.5 rounded-xl transition-all flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-[13px] xl:text-[14px] whitespace-nowrap font-bold ${
+                  className={`cursor-pointer px-2 py-1.5 rounded-xl transition-all flex items-center gap-1 focus:outline-none focus:ring-2 focus:ring-slate-400/20 text-[13px] xl:text-[14px] whitespace-nowrap font-bold ${
                     activeDropdown === 'more-nav-items'
-                      ? 'text-emerald-700 bg-emerald-50'
-                      : 'text-slate-700 hover:text-emerald-700 hover:bg-slate-50'
+                      ? 'text-slate-950 bg-slate-100/90'
+                      : 'text-slate-700 hover:text-slate-950 hover:bg-slate-100/60'
                   }`}
                 >
                   <span>আরও</span>
-                  <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${activeDropdown === 'more-nav-items' ? 'rotate-180 text-emerald-700' : ''}`} />
+                  <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${activeDropdown === 'more-nav-items' ? 'rotate-180 text-slate-900' : ''}`} />
                 </div>
 
                 {activeDropdown === 'more-nav-items' && (
@@ -492,23 +492,23 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                           <Link
                             href={item.href}
                             onClick={() => setActiveDropdown(null)}
-                            className="flex items-center justify-between px-3 py-1.5 rounded-lg text-[14px] font-bold text-slate-800 hover:bg-emerald-50 hover:text-emerald-700 transition-colors"
+                            className="flex items-center justify-between px-3 py-1.5 rounded-lg text-[14px] font-bold text-slate-800 hover:bg-slate-100 hover:text-slate-950 transition-colors"
                           >
                             <span>{item.label}</span>
                             {item.badge && (
-                              <span className="text-[10px] font-black px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                              <span className="text-[10px] font-black px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-800 border border-slate-200">
                                 {item.badge}
                               </span>
                             )}
                           </Link>
                           {item.dropdown && item.dropdown.length > 0 && (
-                            <div className="mt-1 pl-4 space-y-0.5 border-l-2 border-emerald-100 ml-3">
+                            <div className="mt-1 pl-4 space-y-0.5 border-l-2 border-slate-200 ml-3">
                               {item.dropdown.map((sub, sIdx) => (
                                 <Link
                                   key={sIdx}
                                   href={sub.href}
                                   onClick={() => setActiveDropdown(null)}
-                                  className="block py-1 text-xs text-slate-600 hover:text-emerald-700 transition-colors"
+                                  className="block py-1 text-xs text-slate-600 hover:text-slate-950 transition-colors"
                                 >
                                   {sub.label}
                                 </Link>
@@ -538,7 +538,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                     className="hidden xl:flex items-center gap-1.5 px-2.5 py-1.5 rounded-[7px] border border-slate-200 text-slate-700 bg-white hover:bg-slate-50 text-xs font-bold transition-all shadow-2xs"
                     title="আবেদনের ট্র্যাকিং ও স্ট্যাটাস যাচাই"
                   >
-                    <FileText className="w-3.5 h-3.5 text-emerald-600" />
+                    <FileText className="w-3.5 h-3.5 text-slate-600" />
                     <span>{platformSettings?.general?.guestButtons?.trackApplicationText || 'আবেদন ট্র্যাক'}</span>
                   </Link>
                 )}
@@ -546,9 +546,9 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                 {platformSettings?.general?.guestButtons?.showLogin !== false && (
                   <Link
                     href="/login"
-                    className="px-3 py-1.5 2xl:py-2 rounded-[7px] border border-emerald-600/80 text-emerald-800 bg-emerald-50/50 hover:bg-emerald-100/60 text-xs 2xl:text-sm font-bold transition-all flex items-center gap-1.5"
+                    className="px-3 py-1.5 2xl:py-2 rounded-[7px] border border-slate-300 text-slate-800 bg-white hover:bg-slate-50 text-xs 2xl:text-sm font-semibold transition-all flex items-center gap-1.5 shadow-xs"
                   >
-                    <LogIn className="w-3.5 h-3.5 text-emerald-700" />
+                    <LogIn className="w-3.5 h-3.5 text-slate-700" />
                     <span>{platformSettings?.general?.guestButtons?.loginText || 'লগইন'}</span>
                   </Link>
                 )}
@@ -556,7 +556,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                 {platformSettings?.general?.guestButtons?.showRegister !== false && (
                   <Link
                     href="/register"
-                    className="px-3.5 py-1.5 2xl:py-2 rounded-[7px] bg-emerald-700 hover:bg-emerald-800 text-white text-xs 2xl:text-sm font-black shadow-md shadow-emerald-800/20 transition-all flex items-center gap-1.5"
+                    className="px-3.5 py-1.5 2xl:py-2 rounded-[7px] bg-slate-900 hover:bg-slate-800 text-white text-xs 2xl:text-sm font-semibold shadow-xs transition-all flex items-center gap-1.5"
                   >
                     <UserCheck className="w-3.5 h-3.5 text-white" />
                     <span>{platformSettings?.general?.guestButtons?.registerText || 'ফ্রি রেজিস্ট্রেশন'}</span>
@@ -584,7 +584,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                     href="/admin"
                     className="flex items-center gap-1.5 bg-slate-900 text-white px-3 py-1.5 rounded-[7px] text-xs font-bold shadow"
                   >
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                    <ShieldCheck className="w-3.5 h-3.5 text-slate-300" />
                     <span>অ্যাডমিন</span>
                   </Link>
                 )}
@@ -604,10 +604,10 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                           src={userPhoto}
                           alt={auth.name || 'প্রোফাইল ছবি'}
                           onError={() => setAvatarError(true)}
-                          className="w-8 h-8 rounded-full object-cover"
+                          className="w-8 h-8 rounded-full object-cover border border-slate-200"
                         />
                       ) : (
-                        <div className="w-8 h-8 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-xs">
+                        <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
                           {initialLetter}
                         </div>
                       )}
@@ -620,16 +620,16 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                             <img
                               src={userPhoto}
                               alt={auth.name || 'ইউজার'}
-                              className="w-9 h-9 rounded-full object-cover shrink-0"
+                              className="w-9 h-9 rounded-full object-cover shrink-0 border border-slate-200"
                             />
                           ) : (
-                            <div className="w-9 h-9 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-xs shrink-0">
+                            <div className="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0">
                               {initialLetter}
                             </div>
                           )}
                           <div className="min-w-0 flex-1">
                             <div className="font-bold text-slate-800 truncate">{auth.name || 'ইউজার'}</div>
-                            <div className="text-[10px] text-emerald-600 font-medium">
+                            <div className="text-[10px] text-slate-500 font-medium">
                               {auth.role === 'admin' ? 'Super Admin' : 'ভেরিফাইড প্রার্থী'}
                             </div>
                           </div>
@@ -642,7 +642,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                               onClick={() => setProfileDropdownOpen(false)}
                               className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors"
                             >
-                              <UserCheck className="w-4 h-4 text-emerald-600" />
+                              <UserCheck className="w-4 h-4 text-slate-500" />
                               <span>আমার প্রোফাইল</span>
                             </Link>
                             <Link
@@ -650,7 +650,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                               onClick={() => setProfileDropdownOpen(false)}
                               className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors"
                             >
-                              <FileText className="w-4 h-4 text-emerald-600" />
+                              <FileText className="w-4 h-4 text-slate-500" />
                               <span>আমার আবেদন ও ট্র্যাকিং</span>
                             </Link>
                             <Link
@@ -658,7 +658,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                               onClick={() => setProfileDropdownOpen(false)}
                               className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors"
                             >
-                              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                              <ShieldCheck className="w-4 h-4 text-slate-500" />
                               <span>মাস্টার ডকুমেন্ট ভল্ট</span>
                             </Link>
                             <Link
@@ -666,7 +666,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                               onClick={() => setProfileDropdownOpen(false)}
                               className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors"
                             >
-                              <Wallet className="w-4 h-4 text-emerald-600" />
+                              <Wallet className="w-4 h-4 text-slate-500" />
                               <span>ডিজিটাল ওয়ালেট</span>
                             </Link>
                           </>
@@ -676,7 +676,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                             onClick={() => setProfileDropdownOpen(false)}
                             className="flex items-center gap-2 px-4 py-2 hover:bg-slate-50 text-slate-700 font-medium transition-colors"
                           >
-                            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                            <ShieldCheck className="w-4 h-4 text-slate-500" />
                             <span>টিম ড্যাশবোর্ড</span>
                           </Link>
                         )}
@@ -707,16 +707,16 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
             ) : !auth.isLoggedIn ? (
               <Link 
                 href="/login"
-                className="bg-emerald-700 text-white px-3 py-1.5 rounded-[7px] text-xs font-bold"
+                className="bg-slate-900 text-white px-3 py-1.5 rounded-[7px] text-xs font-semibold"
               >
                 লগইন
               </Link>
             ) : (
               <Link 
                 href="/dashboard"
-                className="bg-emerald-100 text-emerald-800 px-2.5 py-1.5 rounded-[7px] text-xs font-bold flex items-center gap-1"
+                className="bg-slate-100 text-slate-800 px-2.5 py-1.5 rounded-[7px] text-xs font-semibold flex items-center gap-1 border border-slate-200"
               >
-                <Wallet className="w-3.5 h-3.5" />
+                <Wallet className="w-3.5 h-3.5 text-slate-600" />
                 <span>৳{walletBalance}</span>
               </Link>
             )}
@@ -743,11 +743,11 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
 
               return (
                 <div key={item.id} className="border-b border-slate-100 pb-1">
-                                    <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between">
                     <Link
                       href={item.href}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="py-2.5 px-2 rounded-xl hover:bg-emerald-50 text-slate-900 font-bold flex-1 text-left transition-colors"
+                      className="py-2.5 px-2 rounded-xl hover:bg-slate-100 text-slate-900 font-semibold flex-1 text-left transition-colors"
                     >
                       {item.label}
                     </Link>
@@ -755,12 +755,12 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                       <button
                         type="button"
                         onClick={() => toggleMobileAccordion(item.id)}
-                        className="p-2.5 rounded-xl hover:bg-emerald-50 text-slate-600 transition-colors flex items-center justify-center cursor-pointer"
+                        className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-600 transition-colors flex items-center justify-center cursor-pointer"
                         aria-label={`${item.label} সাবমেনু ড্রপডাউন`}
                       >
                         <ChevronDown 
                           className={`w-4 h-4 transition-transform duration-200 text-slate-500 ${
-                            isExpanded ? 'rotate-180 text-emerald-700' : ''
+                            isExpanded ? 'rotate-180 text-slate-900' : ''
                           }`} 
                         />
                       </button>
@@ -775,7 +775,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                           key={idx}
                           href={subItem.href}
                           onClick={() => setMobileMenuOpen(false)}
-                          className="block py-2 px-3 text-[16px] text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 rounded-lg font-medium"
+                          className="block py-2 px-3 text-[16px] text-slate-700 hover:text-slate-950 hover:bg-slate-100 rounded-lg font-medium"
                         >
                           • {subItem.label}
                         </Link>
@@ -794,9 +794,9 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                 href={`https://wa.me/${platformSettings?.general?.whatsappNumber || '8801774366643'}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-2.5 border border-emerald-600 text-emerald-700 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-emerald-50 transition-colors"
+                className="w-full py-2.5 border border-slate-200 bg-slate-50 text-slate-800 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 hover:bg-slate-100 transition-colors"
               >
-                <MessageSquare className="w-4 h-4 text-emerald-600" />
+                <MessageSquare className="w-4 h-4 text-slate-600" />
                 <span>{platformSettings?.general?.guestButtons?.whatsAppText || 'WhatsApp হেল্পলাইন'}</span>
               </a>
             )}
@@ -807,9 +807,9 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                   <Link
                     href="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-2.5 border border-emerald-600 text-emerald-800 bg-emerald-50/50 rounded-xl font-bold text-sm flex items-center justify-center gap-2"
+                    className="w-full py-2.5 border border-slate-300 text-slate-800 bg-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
                   >
-                    <LogIn className="w-4 h-4 text-emerald-700" />
+                    <LogIn className="w-4 h-4 text-slate-700" />
                     <span>{platformSettings?.general?.guestButtons?.loginText || 'লগইন'}</span>
                   </Link>
                 )}
@@ -817,7 +817,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                   <Link
                     href="/register"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-2.5 bg-emerald-700 text-white rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-md shadow-emerald-800/20"
+                    className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2 shadow-xs"
                   >
                     <UserCheck className="w-4 h-4 text-white" />
                     <span>{platformSettings?.general?.guestButtons?.registerText || 'ফ্রি রেজিস্ট্রেশন'}</span>
@@ -827,9 +827,9 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                   <Link
                     href="/dashboard/application-check"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-2.5 bg-slate-50 border border-slate-200 text-slate-700 rounded-xl font-bold text-sm flex items-center justify-center gap-2"
+                    className="w-full py-2.5 bg-slate-50 border border-slate-200 text-slate-700 rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
                   >
-                    <FileText className="w-4 h-4 text-emerald-600" />
+                    <FileText className="w-4 h-4 text-slate-600" />
                     <span>{platformSettings?.general?.guestButtons?.trackApplicationText || 'আবেদন ট্র্যাক করুন'}</span>
                   </Link>
                 )}
@@ -844,14 +844,14 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                   {userPhoto ? (
                     <img src={userPhoto} alt={auth.name || 'প্রোফাইল'} className="w-5 h-5 rounded-full object-cover" />
                   ) : (
-                    <UserCheck className="w-4 h-4 text-emerald-700" />
+                    <UserCheck className="w-4 h-4 text-slate-700" />
                   )}
                   <span>আমার প্রোফাইল</span>
                 </Link>
                 <Link
                   href="/dashboard"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full py-2.5 bg-emerald-700 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2"
+                  className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
                 >
                   <Briefcase className="w-4 h-4" />
                   <span>আমার ড্যাশবোর্ড</span>
@@ -859,14 +859,14 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                 <Link
                   href="/dashboard/wallet"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full py-2 bg-emerald-50 text-emerald-800 rounded-xl font-bold text-sm flex items-center justify-center gap-2 border border-emerald-200"
+                  className="w-full py-2 bg-slate-100 text-slate-800 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 border border-slate-200"
                 >
-                  <Wallet className="w-4 h-4" />
+                  <Wallet className="w-4 h-4 text-slate-600" />
                   <span>ওয়ালেট ব্যালেন্স: ৳{walletBalance}</span>
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="w-full py-2 text-rose-600 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-rose-50 border border-rose-200"
+                  className="w-full py-2 text-rose-600 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 hover:bg-rose-50 border border-rose-200"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>লগআউট</span>

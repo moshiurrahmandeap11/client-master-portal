@@ -144,7 +144,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div data-testid="settings-page" className="space-y-6 max-w-4xl">
+    <div data-testid="settings-page" className="space-y-6 w-full">
       <div>
         <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
           <Settings className="w-6 h-6 text-emerald-700" />

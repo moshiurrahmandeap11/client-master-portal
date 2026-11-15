@@ -263,7 +263,7 @@ export default function ExamCalendarPage() {
 
           <Link
             href="/dashboard/admit-cards"
-            className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow-xs"
+            className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow-xs"
           >
             <Award className="w-4 h-4" />
             <span>প্রবেশপত্র ডাউনলোড হাব</span>
@@ -508,7 +508,7 @@ export default function ExamCalendarPage() {
                     {isExam && (
                       <Link
                         href="/dashboard/admit-cards"
-                        className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shadow-xs transition-colors flex items-center gap-1"
+                        className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-xs transition-colors flex items-center gap-1"
                       >
                         <Award className="w-3.5 h-3.5" />
                         <span>প্রবেশপত্র</span>

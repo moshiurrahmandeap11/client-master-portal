@@ -81,7 +81,7 @@ export default function PerformanceAnalyticsPage() {
 
         <Link
           href="/model-tests"
-          className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 self-start shadow-sm"
+          className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 self-start shadow-sm"
         >
           <Target className="w-4 h-4" />
           <span>নতুন মডেল টেস্ট দিন</span>

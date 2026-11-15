@@ -338,7 +338,7 @@ export default function ExamNoticesClient() {
               <button
                 type="button"
                 onClick={() => setIsSeatPlanModalOpen(false)}
-                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer"
               >
                 বন্ধ করুন
               </button>

@@ -129,17 +129,6 @@ export default function Footer({ initialSettings }: { initialSettings?: any } = 
           {/* Col 1: About & Trust & Socials */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              {settings?.general?.logoUrl && settings.general.logoUrl !== '/icons/icon-192x192.png' ? (
-                <img 
-                  src={settings.general.logoUrl} 
-                  alt={settings.general.siteName || "চাকরি সেবা"} 
-                  className="h-9 w-auto max-w-[140px] object-contain rounded"
-                />
-              ) : (
-                <div className="w-9 h-9 rounded-xl bg-emerald-700 flex items-center justify-center text-white font-bold shadow-sm">
-                  <Briefcase className="w-5 h-5 text-white" />
-                </div>
-              )}
               <span className="text-xl font-black text-white tracking-tight">
                 {settings?.general?.siteName || <>চাকরি<span className="text-emerald-400">সেবা</span></>}
               </span>

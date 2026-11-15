@@ -175,7 +175,7 @@ export default function SavedJobsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-            <Bookmark className="w-6 h-6 text-emerald-700" />
+            <Bookmark className="w-6 h-6 text-slate-800" />
             <span>সংরক্ষিত সার্কুলার ({savedJobs.length} টি)</span>
             {isSyncing && (
               <RefreshCw className="w-4 h-4 text-slate-400 animate-spin ml-2" />
@@ -189,8 +189,8 @@ export default function SavedJobsPage() {
 
       {/* Step 08 Deadline Urgency Filter Pills & Toast */}
       {reminderToast && (
-        <div data-testid="saved-jobs-toast" className="p-3 bg-emerald-50 border border-emerald-300 text-emerald-800 rounded-xl text-xs font-bold flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+        <div data-testid="saved-jobs-toast" className="p-3 bg-slate-100 border border-slate-200 text-slate-800 rounded-xl text-xs font-bold flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-slate-700" />
           <span>{reminderToast}</span>
         </div>
       )}
@@ -202,7 +202,7 @@ export default function SavedJobsPage() {
             onClick={() => setActiveUrgencyFilter('all')}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeUrgencyFilter === 'all'
-                ? 'bg-emerald-700 text-white shadow-xs'
+                ? 'bg-slate-900 text-white shadow-xs'
                 : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
             }`}
           >
@@ -235,7 +235,7 @@ export default function SavedJobsPage() {
             onClick={() => setActiveUrgencyFilter('active')}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeUrgencyFilter === 'active'
-                ? 'bg-emerald-700 text-white shadow-xs'
+                ? 'bg-slate-900 text-white shadow-xs'
                 : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
             }`}
           >
@@ -264,16 +264,16 @@ export default function SavedJobsPage() {
               <div
                 key={job.id}
                 data-testid="saved-job-card"
-                className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-emerald-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-slate-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
               >
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                    <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-800 border border-slate-200">
                       {job.categoryLabel}
                     </span>
                     <span className="text-xs text-slate-500 font-semibold">{job.grade}</span>
                   </div>
-                  <h3 className="font-bold text-base text-slate-900 hover:text-emerald-700 transition-colors">
+                  <h3 className="font-bold text-base text-slate-900 hover:text-slate-950 transition-colors">
                     <Link href={`/jobs/${job.id}`}>{job.title}</Link>
                   </h3>
                   <div className="text-xs text-slate-500 flex flex-wrap items-center gap-3">
@@ -309,7 +309,7 @@ export default function SavedJobsPage() {
                   <Link
                     data-testid="apply-now-btn"
                     href={`/jobs/${job.id}`}
-                    className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-sm transition-colors cursor-pointer"
+                    className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shadow-sm transition-colors cursor-pointer"
                   >
                     ১-ক্লিক আবেদন
                   </Link>
@@ -327,7 +327,7 @@ export default function SavedJobsPage() {
           </p>
           <Link
             href="/jobs"
-            className="inline-block px-4 py-2 bg-emerald-700 text-white rounded-xl text-xs font-bold mt-2 hover:bg-emerald-800 cursor-pointer"
+            className="inline-block px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold mt-2 hover:bg-slate-800 cursor-pointer"
           >
             সার্কুলার ব্রাউজ করুন
           </Link>

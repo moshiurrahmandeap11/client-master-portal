@@ -36,6 +36,7 @@ export default function ConditionalLayout({
 }) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith('/admin');
+  const isDashboard = pathname?.startsWith('/dashboard');
 
   const [settings, setSettings] = useState<any>(initialSettings || null);
   const [homeHero, setHomeHero] = useState<any>(initialHomeHero || null);
@@ -71,8 +72,10 @@ export default function ConditionalLayout({
     <PlatformContext.Provider value={{ settings, homeHero, homeSections, initialJobs: initialJobs || [] }}>
       <CandidateDataProvider>
         <Navbar initialSettings={settings} />
-        <main className="flex-grow">{children}</main>
-        <Footer initialSettings={settings} />
+        <main className={`flex-grow ${isDashboard ? 'h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)] overflow-hidden flex flex-col' : ''}`}>
+          {children}
+        </main>
+        {!isDashboard && <Footer initialSettings={settings} />}
       </CandidateDataProvider>
     </PlatformContext.Provider>
   );

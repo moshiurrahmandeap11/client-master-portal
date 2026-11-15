@@ -70,7 +70,7 @@ export default function CvBuilderPage() {
   if (loading && !profile) {
     return (
       <div className="p-16 text-center text-xs font-bold text-slate-500 bg-white rounded-3xl border border-slate-200 space-y-3">
-        <div className="w-10 h-10 border-3 border-emerald-700 border-t-transparent rounded-full animate-spin mx-auto"></div>
+        <div className="w-10 h-10 border-3 border-slate-300 border-t-transparent rounded-full animate-spin mx-auto"></div>
         <p className="text-sm font-bold text-slate-700">সিভি তথ্য স্বয়ংক্রিয়ভাবে প্রস্তুত হচ্ছে...</p>
         <p className="text-slate-400">ভল্ট এবং প্রোফাইল থেকে তথ্যাদি সিঙ্ক করা হচ্ছে</p>
       </div>
@@ -85,7 +85,7 @@ export default function CvBuilderPage() {
         <p className="text-xs text-slate-500">সিভি তৈরির পূর্বে অনুগ্রহ করে প্রোফাইল হালনাগাদ করুন।</p>
         <Link
           href="/dashboard/profile"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm"
         >
           <span>প্রোফাইল তৈরি করুন</span>
           <ArrowRight className="w-3.5 h-3.5" />
@@ -109,12 +109,12 @@ export default function CvBuilderPage() {
       {/* Top Header & Actions Toolbar (Hidden on Print) */}
       <div className="no-print bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-800 rounded-full text-xs font-bold border border-emerald-200">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-xs font-bold border border-slate-200">
+            <Sparkles className="w-3.5 h-3.5 text-slate-700" />
             <span>বাংলাদেশ স্ট্যান্ডার্ড স্মার্ট সিভি জেনারেটর</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
-            <FileText className="w-6 h-6 text-emerald-700" />
+            <FileText className="w-6 h-6 text-slate-800" />
             <span>স্মার্ট সিভি বিল্ডার (CV & Resume)</span>
           </h1>
           <p className="text-xs text-slate-500">
@@ -130,11 +130,11 @@ export default function CvBuilderPage() {
               onClick={() => setTemplate('modern')}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all inline-flex items-center gap-1.5 ${
                 template === 'modern'
-                  ? 'bg-white text-emerald-800 shadow-sm'
+                  ? 'bg-white text-slate-800 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+              <Sparkles className="w-3.5 h-3.5 text-slate-700" />
               <span>মডার্ন প্রফেশনাল</span>
             </button>
             <button
@@ -142,11 +142,11 @@ export default function CvBuilderPage() {
               onClick={() => setTemplate('classic')}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all inline-flex items-center gap-1.5 ${
                 template === 'classic'
-                  ? 'bg-white text-emerald-800 shadow-sm'
+                  ? 'bg-white text-slate-800 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <Building2 className="w-3.5 h-3.5 text-emerald-600" />
+              <Building2 className="w-3.5 h-3.5 text-slate-700" />
               <span>ক্লাসিক বিডি সরকারি</span>
             </button>
           </div>
@@ -157,14 +157,14 @@ export default function CvBuilderPage() {
             className="px-3.5 py-2 border border-slate-200 rounded-xl text-xs font-bold bg-white text-slate-700 hover:bg-slate-50 flex items-center gap-1.5 transition-colors shadow-xs"
             title="সিভির টেক্সট কপি করুন"
           >
-            {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-slate-500" />}
+            {copied ? <Check className="w-4 h-4 text-slate-700" /> : <Copy className="w-4 h-4 text-slate-500" />}
             <span>{copied ? 'কপি হয়েছে' : 'টেক্সট কপি'}</span>
           </button>
 
           <button
             data-testid="print-cv-btn"
             onClick={handlePrint}
-            className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all"
+            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all"
           >
             <Printer className="w-4 h-4" />
             <span>প্রিন্ট / PDF সংরক্ষণ</span>
@@ -180,9 +180,9 @@ export default function CvBuilderPage() {
         {template === 'modern' && (
           <div data-testid="cv-preview-modern" className="p-8 sm:p-12 space-y-8">
             {/* Modern Header Banner */}
-            <div className="flex flex-col sm:flex-row items-start justify-between gap-6 pb-6 border-b-2 border-emerald-600/20">
+            <div className="flex flex-col sm:flex-row items-start justify-between gap-6 pb-6 border-b-2 border-slate-300">
               <div className="space-y-2 flex-1">
-                <span className="px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 inline-block">
+                <span className="px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider bg-slate-100 text-slate-800 inline-block">
                   CURRICULUM VITAE
                 </span>
                 <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -193,28 +193,28 @@ export default function CvBuilderPage() {
                     {profile.nameBn}
                   </p>
                 )}
-                <p className="text-xs font-bold text-emerald-700 uppercase tracking-wider">
+                <p className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                   {profile.education?.[0]?.degree || 'প্রার্থী'} — {profile.district}, বাংলাদেশ
                 </p>
 
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600 pt-1">
                   <span className="flex items-center gap-1.5">
-                    <Phone className="w-3.5 h-3.5 text-emerald-600" />
+                    <Phone className="w-3.5 h-3.5 text-slate-700" />
                     <strong>{profile.phone}</strong>
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <Mail className="w-3.5 h-3.5 text-emerald-600" />
+                    <Mail className="w-3.5 h-3.5 text-slate-700" />
                     {profile.email}
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+                    <MapPin className="w-3.5 h-3.5 text-slate-700" />
                     {profile.district}, বাংলাদেশ
                   </span>
                 </div>
               </div>
 
               {photoUrl ? (
-                <div className="shrink-0 w-28 h-28 rounded-2xl overflow-hidden border-2 border-emerald-600/30 p-1 bg-white shadow-md">
+                <div className="shrink-0 w-28 h-28 rounded-2xl overflow-hidden border-2 border-slate-300 p-1 bg-white shadow-md">
                   <img src={photoUrl} alt={profile.name} className="w-full h-full object-cover rounded-xl" />
                 </div>
               ) : (
@@ -231,7 +231,7 @@ export default function CvBuilderPage() {
               <div className="space-y-6 md:border-r md:pr-6 border-slate-100 text-xs">
                 {/* Personal Information */}
                 <div className="space-y-2.5">
-                  <h3 className="font-black text-slate-900 uppercase tracking-wider border-b pb-1 text-[11px] flex items-center gap-1.5 text-emerald-800">
+                  <h3 className="font-black text-slate-900 uppercase tracking-wider border-b pb-1 text-[11px] flex items-center gap-1.5 text-slate-800">
                     <User className="w-3.5 h-3.5" />
                     <span>ব্যক্তিগত বিবরণ</span>
                   </h3>
@@ -269,7 +269,7 @@ export default function CvBuilderPage() {
 
                 {/* Skills & Competencies */}
                 <div className="space-y-2.5">
-                  <h3 className="font-black text-slate-900 uppercase tracking-wider border-b pb-1 text-[11px] flex items-center gap-1.5 text-emerald-800">
+                  <h3 className="font-black text-slate-900 uppercase tracking-wider border-b pb-1 text-[11px] flex items-center gap-1.5 text-slate-800">
                     <Award className="w-3.5 h-3.5" />
                     <span>দক্ষতা ও প্রযুক্তিগত জ্ঞান</span>
                   </h3>
@@ -287,13 +287,13 @@ export default function CvBuilderPage() {
 
                 {/* Languages */}
                 <div className="space-y-2.5">
-                  <h3 className="font-black text-slate-900 uppercase tracking-wider border-b pb-1 text-[11px] flex items-center gap-1.5 text-emerald-800">
+                  <h3 className="font-black text-slate-900 uppercase tracking-wider border-b pb-1 text-[11px] flex items-center gap-1.5 text-slate-800">
                     <span>ভাষাগত দক্ষতা</span>
                   </h3>
                   <ul className="space-y-1.5 text-slate-700">
                     <li className="flex justify-between items-center">
                       <span>বাংলা (Bangla)</span>
-                      <span className="font-bold text-emerald-700">মাতৃভাষা (সাবলীল)</span>
+                      <span className="font-bold text-slate-800">মাতৃভাষা (সাবলীল)</span>
                     </li>
                     <li className="flex justify-between items-center">
                       <span>ইংরেজি (English)</span>
@@ -307,8 +307,8 @@ export default function CvBuilderPage() {
               <div className="md:col-span-2 space-y-6">
                 {/* Career Objective */}
                 <div className="space-y-2">
-                  <h3 className="text-xs font-black uppercase tracking-wider text-emerald-800 border-b pb-1 flex items-center gap-1.5">
-                    <Briefcase className="w-4 h-4 text-emerald-700" />
+                  <h3 className="text-xs font-black uppercase tracking-wider text-slate-800 border-b pb-1 flex items-center gap-1.5">
+                    <Briefcase className="w-4 h-4 text-slate-800" />
                     <span>ক্যারিয়ার উদ্দেশ্য (Career Objective)</span>
                   </h3>
                   <p className="text-xs text-slate-700 leading-relaxed text-justify bg-slate-50/60 p-3.5 rounded-2xl border border-slate-100">
@@ -318,8 +318,8 @@ export default function CvBuilderPage() {
 
                 {/* Education Section */}
                 <div className="space-y-3">
-                  <h3 className="text-xs font-black uppercase tracking-wider text-emerald-800 border-b pb-1 flex items-center gap-1.5">
-                    <GraduationCap className="w-4 h-4 text-emerald-700" />
+                  <h3 className="text-xs font-black uppercase tracking-wider text-slate-800 border-b pb-1 flex items-center gap-1.5">
+                    <GraduationCap className="w-4 h-4 text-slate-800" />
                     <span>শিক্ষাগত যোগ্যতা (Educational Qualifications)</span>
                   </h3>
                   <div className="space-y-3">
@@ -328,7 +328,7 @@ export default function CvBuilderPage() {
                         <div key={idx} className="p-3.5 rounded-2xl border border-slate-100 bg-white shadow-2xs space-y-1">
                           <div className="flex items-start justify-between gap-2">
                             <span className="text-xs font-black text-slate-900">{edu.degree}</span>
-                            <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-slate-100 text-slate-800 border border-slate-200">
                               জিপিএ/সিজিপিএ: {edu.result}
                             </span>
                           </div>
@@ -350,8 +350,8 @@ export default function CvBuilderPage() {
 
                 {/* Experience Section (If present) */}
                 <div className="space-y-3">
-                  <h3 className="text-xs font-black uppercase tracking-wider text-emerald-800 border-b pb-1 flex items-center gap-1.5">
-                    <Briefcase className="w-4 h-4 text-emerald-700" />
+                  <h3 className="text-xs font-black uppercase tracking-wider text-slate-800 border-b pb-1 flex items-center gap-1.5">
+                    <Briefcase className="w-4 h-4 text-slate-800" />
                     <span>কর্মঅভিজ্ঞতা ও ইন্টার্নশিপ (Professional Experience)</span>
                   </h3>
                   {((profile.experiences && profile.experiences.length > 0) || ((profile as any).experience && (profile as any).experience.length > 0)) ? (
@@ -364,7 +364,7 @@ export default function CvBuilderPage() {
                               {exp.duration || (exp.startDate ? `${exp.startDate} - ${exp.endDate || 'বর্তমান'}` : '')}
                             </span>
                           </div>
-                          <p className="text-xs text-emerald-700 font-semibold">{exp.company || exp.organization}</p>
+                          <p className="text-xs text-slate-800 font-semibold">{exp.company || exp.organization}</p>
                           {exp.description && <p className="text-[11px] text-slate-600 leading-relaxed mt-1">{exp.description}</p>}
                         </div>
                       ))}

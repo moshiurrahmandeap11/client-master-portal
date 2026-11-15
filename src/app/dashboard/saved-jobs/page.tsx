@@ -309,7 +309,7 @@ export default function SavedJobsPage() {
                   <Link
                     data-testid="apply-now-btn"
                     href={`/jobs/${job.id}`}
-                    className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shadow-sm transition-colors cursor-pointer"
+                    className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-sm transition-colors cursor-pointer"
                   >
                     ১-ক্লিক আবেদন
                   </Link>
@@ -327,7 +327,7 @@ export default function SavedJobsPage() {
           </p>
           <Link
             href="/jobs"
-            className="inline-block px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold mt-2 hover:bg-slate-800 cursor-pointer"
+            className="inline-block px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold mt-2 hover:bg-slate-800 cursor-pointer"
           >
             সার্কুলার ব্রাউজ করুন
           </Link>

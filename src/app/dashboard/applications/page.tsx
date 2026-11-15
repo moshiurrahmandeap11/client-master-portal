@@ -292,7 +292,7 @@ export default function ApplicationsPage() {
   }, [selectedApp]);
 
   return (
-    <div className="space-y-6 max-w-5xl" data-testid="dashboard-applications-hub">
+    <div className="space-y-6 w-full" data-testid="dashboard-applications-hub">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">

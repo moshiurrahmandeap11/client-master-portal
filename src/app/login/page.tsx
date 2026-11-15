@@ -81,11 +81,11 @@ function CustomDistrictSelect({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full pl-8 pr-7 py-2.5 rounded-[4px] border border-slate-300 text-xs text-slate-800 font-normal focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none bg-white flex items-center justify-between text-left transition-all cursor-pointer shadow-2xs hover:border-slate-400"
+        className="w-full pl-8 pr-7 py-2.5 rounded-[4px] border border-slate-300 text-xs text-slate-800 font-normal focus:ring-1 focus:ring-slate-400/20 focus:border-slate-400 focus:outline-none bg-white flex items-center justify-between text-left transition-all cursor-pointer shadow-2xs hover:border-slate-400"
       >
         <MapPin className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
         <span className="truncate">{currentLabel || 'জেলা নির্বাচন করুন'}</span>
-        <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 pointer-events-none shrink-0 ${isOpen ? 'rotate-180 text-emerald-700' : ''}`} />
+        <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 pointer-events-none shrink-0 ${isOpen ? 'rotate-180 text-slate-800' : ''}`} />
       </button>
 
       {isOpen && (
@@ -97,7 +97,7 @@ function CustomDistrictSelect({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="জেলা খুঁজুন..."
-              className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-[4px] text-xs font-normal text-slate-900 focus:outline-none focus:ring-1 focus:ring-emerald-500 placeholder:text-slate-400"
+              className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-[4px] text-xs font-normal text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-400/20 placeholder:text-slate-400"
             />
           </div>
           <div className="overflow-y-auto max-h-48 divide-y divide-slate-100 custom-scrollbar">
@@ -124,12 +124,12 @@ function CustomDistrictSelect({
                         }}
                         className={`w-full px-3 py-1.5 text-left flex items-center justify-between text-xs font-normal transition-colors cursor-pointer ${
                           isSelected 
-                            ? 'bg-emerald-50 text-emerald-800 font-medium' 
+                            ? 'bg-slate-100 text-slate-900 font-medium' 
                             : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900'
                         }`}
                       >
                         <span>{d.bn} ({d.en})</span>
-                        {isSelected && <Check className="w-3.5 h-3.5 text-emerald-600" />}
+                        {isSelected && <Check className="w-3.5 h-3.5 text-slate-700" />}
                       </button>
                     );
                   })}
@@ -513,7 +513,7 @@ function LoginForm() {
           type="button"
           onClick={() => { setActiveTab('login'); setError(''); setSuccessMsg(''); }}
           className={`relative z-10 w-1/2 py-2 text-center rounded-[4px] transition-colors duration-200 text-xs font-normal cursor-pointer ${
-            activeTab === 'login' ? 'text-emerald-800 font-medium' : 'text-slate-600 hover:text-slate-900'
+            activeTab === 'login' ? 'text-slate-900 font-medium' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           লগইন
@@ -523,7 +523,7 @@ function LoginForm() {
           type="button"
           onClick={() => { setActiveTab('register'); setError(''); setSuccessMsg(''); }}
           className={`relative z-10 w-1/2 py-2 text-center rounded-[4px] transition-colors duration-200 text-xs font-normal cursor-pointer ${
-            activeTab === 'register' ? 'text-emerald-800 font-medium' : 'text-slate-600 hover:text-slate-900'
+            activeTab === 'register' ? 'text-slate-900 font-medium' : 'text-slate-600 hover:text-slate-900'
           }`}
         >
           নিবন্ধন
@@ -539,8 +539,8 @@ function LoginForm() {
       )}
 
       {successMsg && (
-        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-[4px] text-xs text-emerald-900 flex items-start gap-2 shadow-2xs animate-in fade-in">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+        <div className="p-3 bg-slate-100 border border-slate-200 rounded-[4px] text-xs text-slate-900 flex items-start gap-2 shadow-2xs animate-in fade-in">
+          <CheckCircle2 className="w-4 h-4 text-slate-700 shrink-0 mt-0.5" />
           <span className="font-normal leading-relaxed">{successMsg}</span>
         </div>
       )}
@@ -569,7 +569,7 @@ function LoginForm() {
                       value={loginIdentifier}
                       onChange={(e) => setLoginIdentifier(e.target.value)}
                       placeholder="যেমন: tanvir.jobseeker@gmail.com"
-                      className="w-full pl-10 pr-3.5 py-2.5 rounded-[4px] border border-slate-300 text-xs text-slate-900 font-normal focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none placeholder:text-slate-400"
+                      className="w-full pl-10 pr-3.5 py-2.5 rounded-[4px] border border-slate-300 text-xs text-slate-900 font-normal focus:ring-1 focus:ring-slate-400/20 focus:border-slate-400 focus:outline-none placeholder:text-slate-400"
                     />
                   </div>
                 </div>
@@ -587,7 +587,7 @@ function LoginForm() {
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
                       placeholder="••••••"
-                      className="w-full pl-10 pr-10 py-2.5 rounded-[4px] border border-slate-300 text-xs text-slate-900 font-normal focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
+                      className="w-full pl-10 pr-10 py-2.5 rounded-[4px] border border-slate-300 text-xs text-slate-900 font-normal focus:ring-1 focus:ring-slate-400/20 focus:border-slate-400 focus:outline-none"
                     />
                     <button
                       type="button"
@@ -606,7 +606,7 @@ function LoginForm() {
                       type="checkbox"
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
-                      className="w-4 h-4 rounded-[2px] border-slate-300 text-emerald-700 focus:ring-emerald-500 accent-emerald-700 cursor-pointer"
+                      className="w-4 h-4 rounded-[2px] border-slate-300 text-slate-800 focus:ring-slate-400/20 accent-slate-800 cursor-pointer"
                     />
                     <span>আমাকে মনে রাখুন</span>
                   </label>
@@ -620,7 +620,7 @@ function LoginForm() {
                       setForgotError('');
                       setForgotMessage('');
                     }}
-                    className="text-xs font-normal text-emerald-700 hover:text-emerald-900 hover:underline cursor-pointer"
+                    className="text-xs font-normal text-slate-800 hover:text-slate-900 hover:underline cursor-pointer"
                   >
                     পাসওয়ার্ড ভুলে গেছেন?
                   </button>
@@ -630,7 +630,7 @@ function LoginForm() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 disabled:bg-emerald-400 text-white font-medium text-xs rounded-[4px] shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-medium text-xs rounded-[4px] shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>{isSubmitting ? 'প্রবেশ করা হচ্ছে...' : 'লগইন করুন'}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -675,7 +675,7 @@ function LoginForm() {
                       value={regName}
                       onChange={(e) => setRegName(e.target.value)}
                       placeholder="যেমন: মোঃ তানভীর হাসান"
-                      className="w-full pl-10 pr-3.5 py-2.5 rounded-[4px] border border-slate-300 text-xs text-slate-900 font-normal focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
+                      className="w-full pl-10 pr-3.5 py-2.5 rounded-[4px] border border-slate-300 text-xs text-slate-900 font-normal focus:ring-1 focus:ring-slate-400/20 focus:border-slate-400 focus:outline-none"
                     />
                   </div>
                 </div>
@@ -692,7 +692,7 @@ function LoginForm() {
                       value={regEmail}
                       onChange={(e) => setRegEmail(e.target.value)}
                       placeholder="name@email.com"
-                      className="w-full pl-10 pr-3.5 py-2.5 rounded-[4px] border border-slate-300 text-xs text-slate-900 font-normal focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
+                      className="w-full pl-10 pr-3.5 py-2.5 rounded-[4px] border border-slate-300 text-xs text-slate-900 font-normal focus:ring-1 focus:ring-slate-400/20 focus:border-slate-400 focus:outline-none"
                     />
                   </div>
                 </div>
@@ -709,7 +709,7 @@ function LoginForm() {
                         value={regPhone}
                         onChange={(e) => setRegPhone(e.target.value)}
                         placeholder="017XXXXXXXX"
-                        className="w-full pl-8 pr-2.5 py-2.5 rounded-[4px] border border-slate-300 text-xs text-slate-900 font-normal focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
+                        className="w-full pl-8 pr-2.5 py-2.5 rounded-[4px] border border-slate-300 text-xs text-slate-900 font-normal focus:ring-1 focus:ring-slate-400/20 focus:border-slate-400 focus:outline-none"
                       />
                     </div>
                   </div>
@@ -738,7 +738,7 @@ function LoginForm() {
                         value={regPassword}
                         onChange={(e) => setRegPassword(e.target.value)}
                         placeholder="কমপক্ষে ৬ অক্ষর"
-                        className="w-full pl-10 pr-9 py-2.5 rounded-[4px] border border-slate-300 text-xs text-slate-900 font-normal focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
+                        className="w-full pl-10 pr-9 py-2.5 rounded-[4px] border border-slate-300 text-xs text-slate-900 font-normal focus:ring-1 focus:ring-slate-400/20 focus:border-slate-400 focus:outline-none"
                       />
                       <button
                         type="button"
@@ -762,7 +762,7 @@ function LoginForm() {
                         value={regConfirmPassword}
                         onChange={(e) => setRegConfirmPassword(e.target.value)}
                         placeholder="পুনরায় পাসওয়ার্ড"
-                        className="w-full pl-10 pr-9 py-2.5 rounded-[4px] border border-slate-300 text-xs text-slate-900 font-normal focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
+                        className="w-full pl-10 pr-9 py-2.5 rounded-[4px] border border-slate-300 text-xs text-slate-900 font-normal focus:ring-1 focus:ring-slate-400/20 focus:border-slate-400 focus:outline-none"
                       />
                       <button
                         type="button"
@@ -778,7 +778,7 @@ function LoginForm() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 disabled:bg-emerald-400 text-white font-medium text-xs rounded-[4px] shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-medium text-xs rounded-[4px] shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>{isSubmitting ? 'অ্যাকাউন্ট তৈরি হচ্ছে...' : 'ফ্রি অ্যাকাউন্ট তৈরি করুন'}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -857,7 +857,7 @@ function LoginForm() {
                 ২. ওটিপি যাচাই
               </div>
               <div className={`p-1.5 rounded-xl transition-all ${
-                forgotStep === 3 ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' : 'bg-slate-100 text-slate-400'
+                forgotStep === 3 ? 'bg-slate-100 text-slate-900 border border-slate-300' : 'bg-slate-100 text-slate-400'
               }`}>
                 ৩. নতুন পাসওয়ার্ড
               </div>
@@ -871,8 +871,8 @@ function LoginForm() {
             )}
 
             {forgotMessage && (
-              <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs flex items-center gap-2 font-semibold">
-                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
+              <div className="p-2.5 bg-slate-100 border border-slate-200 rounded-xl text-slate-900 text-xs flex items-center gap-2 font-semibold">
+                <CheckCircle2 className="w-4 h-4 shrink-0 text-slate-700" />
                 <span>{forgotMessage}</span>
               </div>
             )}
@@ -890,13 +890,13 @@ function LoginForm() {
                     value={forgotId}
                     onChange={(e) => setForgotId(e.target.value)}
                     placeholder="যেমন: user@email.com"
-                    className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs text-slate-900 font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                    className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-xs text-slate-900 font-medium focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
                   />
                 </div>
                 <button
                   type="submit"
                   disabled={isForgotLoading}
-                  className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 disabled:bg-emerald-400 text-white font-bold text-xs rounded-xl shadow-md transition-all"
+                  className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-bold text-xs rounded-xl shadow-md transition-all"
                 >
                   {isForgotLoading ? 'পাঠানো হচ্ছে...' : 'ওটিপি কোড পাঠান'}
                 </button>
@@ -929,7 +929,7 @@ function LoginForm() {
                     value={forgotOtp}
                     onChange={(e) => setForgotOtp(e.target.value.replace(/\D/g, ''))}
                     placeholder="••••••"
-                    className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-center text-sm font-black font-mono tracking-widest text-slate-900 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                    className="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-center text-sm font-black font-mono tracking-widest text-slate-900 focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
                   />
                 </div>
 
@@ -950,7 +950,7 @@ function LoginForm() {
                       type="button"
                       disabled={isForgotLoading}
                       onClick={() => handleForgotRequestOtp()}
-                      className="text-emerald-700 hover:text-emerald-800 font-bold flex items-center gap-1 hover:underline"
+                      className="text-slate-800 hover:text-slate-900 font-bold flex items-center gap-1 hover:underline"
                     >
                       <RotateCcw className="w-3 h-3" />
                       <span>পুনরায় পাঠান</span>
@@ -961,7 +961,7 @@ function LoginForm() {
                 <button
                   type="submit"
                   disabled={isForgotLoading}
-                  className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 disabled:bg-emerald-400 text-white font-bold text-xs rounded-xl shadow-md transition-all"
+                  className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-bold text-xs rounded-xl shadow-md transition-all"
                 >
                   {isForgotLoading ? 'যাচাই হচ্ছে...' : 'কোড যাচাই করুন'}
                 </button>
@@ -980,7 +980,7 @@ function LoginForm() {
                       value={forgotNewPass}
                       onChange={(e) => setForgotNewPass(e.target.value)}
                       placeholder="নতুন পাসওয়ার্ড"
-                      className="w-full pl-3 pr-9 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      className="w-full pl-3 pr-9 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 font-medium focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
                     />
                     <button
                       type="button"
@@ -1001,7 +1001,7 @@ function LoginForm() {
                       value={forgotConfirmPass}
                       onChange={(e) => setForgotConfirmPass(e.target.value)}
                       placeholder="পুনরায় পাসওয়ার্ড লিখুন"
-                      className="w-full pl-3 pr-9 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      className="w-full pl-3 pr-9 py-2 rounded-xl border border-slate-300 text-xs text-slate-900 font-medium focus:ring-2 focus:ring-slate-400/20 focus:outline-none"
                     />
                     <button
                       type="button"
@@ -1016,7 +1016,7 @@ function LoginForm() {
                 <button
                   type="submit"
                   disabled={isForgotLoading}
-                  className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 disabled:bg-emerald-400 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5"
+                  className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5"
                 >
                   <span>{isForgotLoading ? 'সংরক্ষণ হচ্ছে...' : 'পাসওয়ার্ড পরিবর্তন ও লগইন'}</span>
                   <ArrowRight className="w-3.5 h-3.5" />

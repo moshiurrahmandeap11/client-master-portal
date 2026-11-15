@@ -175,12 +175,12 @@ export default function ApplicationCheckPage() {
     <div className="space-y-6 w-full" data-testid="application-check-page">
       {/* Header */}
       <div>
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-800 rounded-full text-xs font-bold border border-emerald-200 mb-2">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-xs font-bold border border-slate-200 mb-2">
+          <ShieldCheck className="w-3.5 h-3.5 text-slate-700" />
           <span>আবেদনপূর্ব ভুল শনাক্তকরণ ইঞ্জিন</span>
         </div>
         <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-          <FileCheck2 className="w-6 h-6 text-emerald-700" />
+          <FileCheck2 className="w-6 h-6 text-slate-800" />
           <span>আবেদন প্রস্তুতি ও প্রি-ফ্লাইট ভ্যালিডেশন</span>
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 mt-1">
@@ -197,7 +197,7 @@ export default function ApplicationCheckPage() {
           data-testid="job-selector"
           value={selectedJobId}
           onChange={(e) => setSelectedJobId(e.target.value)}
-          className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-bold text-slate-800 outline-none focus:ring-2 focus:ring-emerald-600/30"
+          className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-bold text-slate-800 outline-none focus:ring-2 focus:ring-slate-400/20"
         >
           {jobs.map((job) => (
             <option key={job.id} value={job.id}>
@@ -211,7 +211,7 @@ export default function ApplicationCheckPage() {
       <div 
         data-testid="readiness-score-card"
         className={`p-6 rounded-3xl border shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
-          isReady ? 'bg-emerald-50/80 border-emerald-200' : 'bg-amber-50/80 border-amber-200'
+          isReady ? 'bg-slate-100 border-slate-200' : 'bg-amber-50/80 border-amber-200'
         }`}
       >
         <div className="space-y-1">
@@ -222,7 +222,7 @@ export default function ApplicationCheckPage() {
             <span data-testid="readiness-count" suppressHydrationWarning>
               {isMounted ? passedCount : checks.length} / {checks.length} টি শর্ত পূরণ হয়েছে
             </span>
-            {isReady && <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-600 text-white font-bold">১০০% প্রস্তুত</span>}
+            {isReady && <span className="text-xs px-2 py-0.5 rounded-full bg-slate-900 text-white font-bold">১০০% প্রস্তুত</span>}
           </div>
           <p className="text-xs text-slate-600">
             {isReady ? 'আপনার প্রোফাইল এই সার্কুলারে ১-ক্লিকে নির্ভুল আবেদনের জন্য সম্পূর্ণ প্রস্তুত।' : 'কিছু তথ্য বা ডকুমেন্টে সতর্কতা রয়েছে। সংশোধনের পরামর্শ অনুসরণ করুন।'}
@@ -233,7 +233,7 @@ export default function ApplicationCheckPage() {
           <Link
             data-testid="apply-direct-btn"
             href={`/apply/${selectedJob.id}`}
-            className="px-6 py-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-2xl text-xs font-bold shadow-md transition-colors flex items-center justify-center gap-2 flex-shrink-0"
+            className="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl text-xs font-bold shadow-md transition-colors flex items-center justify-center gap-2 flex-shrink-0"
           >
             <span>১-ক্লিকে আবেদন সাবমিট করুন</span>
             <ArrowRight className="w-4 h-4" />
@@ -252,7 +252,7 @@ export default function ApplicationCheckPage() {
             <div className="flex items-start gap-3">
               <div className="mt-0.5">
                 {item.passed ? (
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+                  <CheckCircle2 className="w-5 h-5 text-slate-700 flex-shrink-0" />
                 ) : (
                   <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0" />
                 )}
@@ -266,7 +266,7 @@ export default function ApplicationCheckPage() {
             {item.actionUrl && !item.passed && (
               <Link
                 href={item.actionUrl}
-                className="text-xs font-bold text-emerald-700 hover:underline flex-shrink-0 self-end sm:self-center"
+                className="text-xs font-bold text-slate-800 hover:underline flex-shrink-0 self-end sm:self-center"
               >
                 সংশোধন করুন →
               </Link>

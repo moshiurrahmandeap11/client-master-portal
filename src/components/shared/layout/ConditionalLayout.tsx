@@ -26,7 +26,7 @@ export default function ConditionalLayout({
   initialSettings,
   initialHomeHero,
   initialHomeSections,
-  initialJobs
+  initialJobs = []
 }: { 
   children: React.ReactNode;
   initialSettings?: any;

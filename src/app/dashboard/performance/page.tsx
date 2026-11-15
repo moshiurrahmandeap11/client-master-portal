@@ -67,8 +67,8 @@ export default function PerformanceAnalyticsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-800 rounded-full text-xs font-bold border border-emerald-200 mb-2">
-            <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-xs font-bold border border-slate-200 mb-2">
+            <TrendingUp className="w-3.5 h-3.5 text-slate-700" />
             <span>স্টেপ ১৩ — পারফরম্যান্স অ্যানালিটিক্স ও প্রগ্রেস রিপোর্ট</span>
           </div>
           <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
@@ -81,7 +81,7 @@ export default function PerformanceAnalyticsPage() {
 
         <Link
           href="/model-tests"
-          className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 self-start shadow-sm"
+          className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 self-start shadow-sm"
         >
           <Target className="w-4 h-4" />
           <span>নতুন মডেল টেস্ট দিন</span>
@@ -93,19 +93,19 @@ export default function PerformanceAnalyticsPage() {
         <div data-testid="kpi-total-tests" className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
           <span className="text-xs font-semibold text-slate-500 block mb-1">মোট মডেল টেস্ট সম্পন্ন</span>
           <div className="text-2xl font-black text-slate-900">১২ টি</div>
-          <p className="text-[11px] text-emerald-700 font-bold mt-1">বিগত ৩০ দিনে</p>
+          <p className="text-[11px] text-slate-800 font-bold mt-1">বিগত ৩০ দিনে</p>
         </div>
 
-        <div data-testid="kpi-avg-score" className="bg-white p-5 rounded-2xl border border-emerald-200 bg-emerald-50/20 shadow-xs">
-          <span className="text-xs font-semibold text-emerald-800 block mb-1">গড় স্কোর (Average Score)</span>
-          <div className="text-2xl font-black text-emerald-800">৭৫.৮%</div>
+        <div data-testid="kpi-avg-score" className="bg-white p-5 rounded-2xl border border-slate-200 bg-slate-100 shadow-xs">
+          <span className="text-xs font-semibold text-slate-800 block mb-1">গড় স্কোর (Average Score)</span>
+          <div className="text-2xl font-black text-slate-800">৭৫.৮%</div>
           <p className="text-[11px] text-slate-500 mt-1">কাট-অফের চেয়ে ১৫% এগিয়ে</p>
         </div>
 
         <div data-testid="kpi-accuracy" className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
           <span className="text-xs font-semibold text-slate-500 block mb-1">নির্ভুল উত্তরের হার (Accuracy)</span>
           <div className="text-2xl font-black text-slate-900">৮৩.৪%</div>
-          <p className="text-[11px] text-emerald-600 font-bold mt-1">ধারাবাহিক উন্নতি হচ্ছে</p>
+          <p className="text-[11px] text-slate-700 font-bold mt-1">ধারাবাহিক উন্নতি হচ্ছে</p>
         </div>
 
         <div data-testid="kpi-negative-marks" className="bg-white p-5 rounded-2xl border border-rose-200 bg-rose-50/20 shadow-xs">
@@ -160,35 +160,35 @@ export default function PerformanceAnalyticsPage() {
         <div data-testid="strong-areas-card" className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
           <div className="flex items-center justify-between pb-2 border-b">
             <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <CheckCircle2 className="w-4 h-4 text-slate-700" />
               <span>আপনার শক্তিমত্তা ও সবল ক্ষেত্রসমূহ (Strengths)</span>
             </h3>
-            <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+            <span className="text-[11px] font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
               উচ্চ নির্ভরযোগ্যতা
             </span>
           </div>
 
           <div className="space-y-3 text-xs">
-            <div className="p-3.5 bg-emerald-50/80 rounded-2xl border border-emerald-200 space-y-1">
-              <div className="flex items-center justify-between font-bold text-emerald-950">
+            <div className="p-3.5 bg-slate-100 rounded-2xl border border-slate-200 space-y-1">
+              <div className="flex items-center justify-between font-bold text-slate-900">
                 <span>বাংলা: চর্যাপদ, মধ্যযুগ ও মুক্তিযুদ্ধ সাহিত্য</span>
-                <span className="text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">সঠিকতা: ৯১%</span>
+                <span className="text-slate-800 bg-slate-100 px-2 py-0.5 rounded-md">সঠিকতা: ৯১%</span>
               </div>
               <p className="text-[11px] text-slate-600">এই সেকশনে আপনার প্রস্তুতি অত্যন্ত মজবুত ও আত্মবিশ্বাসী।</p>
             </div>
 
-            <div className="p-3.5 bg-emerald-50/80 rounded-2xl border border-emerald-200 space-y-1">
-              <div className="flex items-center justify-between font-bold text-emerald-950">
+            <div className="p-3.5 bg-slate-100 rounded-2xl border border-slate-200 space-y-1">
+              <div className="flex items-center justify-between font-bold text-slate-900">
                 <span>সাধারণ জ্ঞান: বাংলাদেশের সংবিধান ও জাতীয় বিষয়াবলী</span>
-                <span className="text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">সঠিকতা: ৮৮%</span>
+                <span className="text-slate-800 bg-slate-100 px-2 py-0.5 rounded-md">সঠিকতা: ৮৮%</span>
               </div>
               <p className="text-[11px] text-slate-600">মৌলিক অধিকার ও সংশোধনীর প্রশ্নে নির্ভুল উত্তর দিচ্ছেন।</p>
             </div>
 
-            <div className="p-3.5 bg-emerald-50/80 rounded-2xl border border-emerald-200 space-y-1">
-              <div className="flex items-center justify-between font-bold text-emerald-950">
+            <div className="p-3.5 bg-slate-100 rounded-2xl border border-slate-200 space-y-1">
+              <div className="flex items-center justify-between font-bold text-slate-900">
                 <span>মানসিক দক্ষতা: সম্পর্ক নির্ণয় ও সাদৃশ্য বিশ্লেষণ</span>
-                <span className="text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">সঠিকতা: ৮৫%</span>
+                <span className="text-slate-800 bg-slate-100 px-2 py-0.5 rounded-md">সঠিকতা: ৮৫%</span>
               </div>
               <p className="text-[11px] text-slate-600">খুব কম সময়ে সঠিক লজিক্যাল সিদ্ধান্ত নিচ্ছেন।</p>
             </div>
@@ -198,7 +198,7 @@ export default function PerformanceAnalyticsPage() {
 
       {/* Personalized AI Study Advice */}
       <div className="p-6 bg-slate-900 text-white rounded-3xl space-y-3 shadow-xs border border-slate-800">
-        <div className="flex items-center gap-2 text-emerald-300">
+        <div className="flex items-center gap-2 text-slate-400">
           <Lightbulb className="w-5 h-5 text-amber-400" />
           <h3 className="font-black text-sm">এআই কাস্টমাইজড প্রস্তুতি পরামর্শ (Personalized Study Advice):</h3>
         </div>
@@ -211,7 +211,7 @@ export default function PerformanceAnalyticsPage() {
       <div data-testid="test-history-table" className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
         <div className="flex items-center justify-between pb-2 border-b">
           <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-            <FileCheck className="w-4 h-4 text-emerald-700" />
+            <FileCheck className="w-4 h-4 text-slate-800" />
             <span>সাম্প্রতিক মডেল টেস্টসমূহের ফলাফল ও মূল্যায়ন হিস্টোরি</span>
           </h3>
           <span className="text-xs text-slate-500 font-semibold">৪টি টেস্ট প্রদর্শিত</span>
@@ -234,15 +234,15 @@ export default function PerformanceAnalyticsPage() {
                 <tr key={t.id} className="hover:bg-slate-50/70 transition-colors">
                   <td className="p-3 font-bold text-slate-900">{t.title}</td>
                   <td className="p-3 text-slate-500">{t.date}</td>
-                  <td className="p-3 text-center font-mono font-black text-emerald-800">{t.score} / {t.totalMarks}</td>
+                  <td className="p-3 text-center font-mono font-black text-slate-800">{t.score} / {t.totalMarks}</td>
                   <td className="p-3 text-center font-bold text-slate-700">{t.accuracy}</td>
                   <td className="p-3 text-center">
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-800 border border-slate-200">
                       {t.status}
                     </span>
                   </td>
                   <td className="p-3 text-right">
-                    <Link href="/model-tests" className="text-emerald-700 font-bold hover:underline inline-flex items-center gap-1">
+                    <Link href="/model-tests" className="text-slate-800 font-bold hover:underline inline-flex items-center gap-1">
                       <span>রিভিউ</span>
                       <ArrowRight className="w-3 h-3" />
                     </Link>

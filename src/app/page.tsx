@@ -1,6 +1,7 @@
 'use client';
 import { matchJobQuery, matchGradeComprehensive, parseSalaryRange, toBn, toEnDigits } from '@/lib/search-helper';
 import { fetchPublicJobs } from '@/services/jobs.service';
+import { useQuery } from '@tanstack/react-query';
 import { CentralDeadlineEngine } from '@/lib/deadlines/engine';
 
 import { usePlatformContext } from '@/components/shared/layout/ConditionalLayout';
@@ -209,16 +210,21 @@ export default function HomePage() {
     return candidateReviews;
   }, [reviewsCms]);
 
+  const { data: publicJobs = [] } = useQuery({
+    queryKey: ['publicJobs'],
+    queryFn: fetchPublicJobs,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
+  });
+
   const [searchQuery, setSearchQuery] = useState('');
   const [jobsList, setJobsList] = useState<any[]>(initialJobs && initialJobs.length > 0 ? initialJobs : []);
 
   useEffect(() => {
-    fetchPublicJobs().then(data => {
-      if (Array.isArray(data) && data.length > 0) {
-        setJobsList(data);
-      }
-    }).catch(() => {});
-  }, []);
+    if (publicJobs.length > 0) {
+      setJobsList(publicJobs);
+    }
+  }, [publicJobs]);
   const [selectedJobType, setSelectedJobType] = useState('all');
   const [selectedEducation, setSelectedEducation] = useState('all');
   const [selectedOrg, setSelectedOrg] = useState('all');

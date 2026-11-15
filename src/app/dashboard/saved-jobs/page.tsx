@@ -171,7 +171,7 @@ export default function SavedJobsPage() {
   };
 
   return (
-    <div data-testid="saved-jobs-page" className="space-y-6 max-w-5xl">
+    <div data-testid="saved-jobs-page" className="space-y-6 w-full">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">

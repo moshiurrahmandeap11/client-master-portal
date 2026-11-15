@@ -296,7 +296,7 @@ export default function ApplicationsPage() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-          <FileText className="w-6 h-6 text-emerald-700" />
+          <FileText className="w-6 h-6 text-slate-800" />
           <span>আমার আবেদন ও লাইভ স্ট্যাটাস ট্র্যাকিং</span>
         </h1>
         <p className="text-sm text-slate-600 mt-1">
@@ -310,7 +310,7 @@ export default function ApplicationsPage() {
           onClick={() => setStatusFilter('all')}
           className={`p-4 rounded-2xl border transition-all cursor-pointer ${
             statusFilter === 'all' 
-              ? 'bg-emerald-50 border-emerald-300 ring-2 ring-emerald-500/20 shadow-sm' 
+              ? 'bg-slate-100 border-slate-200 ring-2 ring-slate-900/10 shadow-sm' 
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-2xs'
           }`}
         >
@@ -342,16 +342,16 @@ export default function ApplicationsPage() {
           onClick={() => setStatusFilter('completed')}
           className={`p-4 rounded-2xl border transition-all cursor-pointer ${
             statusFilter === 'completed' 
-              ? 'bg-emerald-50 border-emerald-300 ring-2 ring-emerald-500/20 shadow-sm' 
+              ? 'bg-slate-100 border-slate-200 ring-2 ring-slate-900/10 shadow-sm' 
               : 'bg-white border-slate-200 hover:border-slate-300 shadow-2xs'
           }`}
         >
-          <div className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider flex items-center justify-between">
+          <div className="text-[11px] font-bold text-slate-800 uppercase tracking-wider flex items-center justify-between">
             <span>সম্পন্ন ও স্লিপ রেডি</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            <CheckCircle2 className="w-4 h-4 text-slate-700" />
           </div>
-          <div className="text-2xl font-black text-emerald-900 mt-1 font-mono">{stats.completed}</div>
-          <div className="text-[10px] text-emerald-600 mt-0.5">স্লিপ ডাউনলোড করুন</div>
+          <div className="text-2xl font-black text-slate-900 mt-1 font-mono">{stats.completed}</div>
+          <div className="text-[10px] text-slate-700 mt-0.5">স্লিপ ডাউনলোড করুন</div>
         </div>
 
         <div 
@@ -407,8 +407,8 @@ export default function ApplicationsPage() {
               onClick={() => setStatusFilter('completed')}
               className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
                 statusFilter === 'completed' 
-                  ? 'bg-emerald-600 text-white shadow-xs' 
-                  : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
+                  ? 'bg-slate-900 text-white shadow-xs' 
+                  : 'bg-slate-100 text-slate-800 hover:bg-slate-200/80'
               }`}
             >
               সম্পন্ন ({stats.completed})
@@ -450,7 +450,7 @@ export default function ApplicationsPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="আবেদন বা TrxID খুঁজুন..."
-              className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 placeholder-slate-400 outline-none focus:ring-2 focus:ring-emerald-600/30"
+              className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 placeholder-slate-400 outline-none focus:ring-2 focus:ring-slate-400/20"
             />
             {searchQuery && (
               <button 
@@ -482,7 +482,7 @@ export default function ApplicationsPage() {
                 onClick={() => setSelectedApp(app)}
                 className={`p-5 rounded-2xl border transition-all cursor-pointer space-y-3 ${
                   selectedApp?.id === app.id 
-                    ? 'bg-white border-emerald-500 shadow-md ring-2 ring-emerald-500/10' 
+                    ? 'bg-white border-slate-300 shadow-md ring-2 ring-slate-900/10' 
                     : 'bg-white border-slate-200 hover:border-slate-300 shadow-sm'
                 }`}
               >
@@ -490,7 +490,7 @@ export default function ApplicationsPage() {
                   <span className="font-bold font-mono text-xs text-slate-500">ট্র্যাকিং: {app.id}</span>
                   <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold flex items-center gap-1 ${
                     isCompleted
-                      ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                      ? 'bg-slate-100 text-slate-800 border border-slate-200'
                       : isProcessing
                       ? 'bg-blue-50 text-blue-800 border border-blue-200'
                       : isPendingPayment
@@ -499,7 +499,7 @@ export default function ApplicationsPage() {
                   }`}>
                     {isCompleted ? (
                       <>
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-slate-700" />
                         <span>আবেদন সম্পন্ন ও স্লিপ রেডি</span>
                       </>
                     ) : isProcessing ? (
@@ -541,13 +541,13 @@ export default function ApplicationsPage() {
               {searchQuery && (
                 <button 
                   onClick={() => setSearchQuery('')}
-                  className="mt-2 text-xs font-bold text-emerald-700 hover:underline"
+                  className="mt-2 text-xs font-bold text-slate-800 hover:underline"
                 >
                   সার্চ রিসেট করুন
                 </button>
               )}
               {!searchQuery && (
-                <Link href="/jobs" className="mt-3 inline-block px-4 py-2 bg-emerald-700 text-white rounded-xl text-xs font-bold">
+                <Link href="/jobs" className="mt-3 inline-block px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold">
                   চলতি সার্কুলার দেখুন
                 </Link>
               )}
@@ -561,7 +561,7 @@ export default function ApplicationsPage() {
             <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4 text-xs">
               <div className="flex items-center justify-between border-b pb-2">
                 <h3 className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-emerald-700" />
+                  <ShieldCheck className="w-4 h-4 text-slate-800" />
                   <span>ভেরিফাইড আবেদন ও ট্র্যাকিং</span>
                 </h3>
                 <span className="font-mono text-[11px] font-bold text-slate-400">
@@ -574,7 +574,7 @@ export default function ApplicationsPage() {
                 <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100 space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-slate-500 font-bold text-[11px] inline-flex items-center gap-1.5">
-                      {selectedApp.submissionChannel === 'bank_erecruitment' ? <><FaLandmarkFlag className="w-3.5 h-3.5 text-emerald-700" /> বাংলাদেশ ব্যাংক ট্র্যাকিং:</> :
+                      {selectedApp.submissionChannel === 'bank_erecruitment' ? <><FaLandmarkFlag className="w-3.5 h-3.5 text-slate-800" /> বাংলাদেশ ব্যাংক ট্র্যাকিং:</> :
                        selectedApp.submissionChannel === 'corporate_portal' ? <><Building className="w-3.5 h-3.5 text-indigo-600" /> কর্পোরেট / Bdjobs আইডি:</> :
                        selectedApp.submissionChannel === 'hr_email' ? <><Mail className="w-3.5 h-3.5 text-sky-600" /> এইচআর ইমেইল রেফারেন্স:</> :
                        selectedApp.submissionChannel === 'custom_portal' ? <><GraduationCap className="w-3.5 h-3.5 text-purple-600" /> বিশ্ববিদ্যালয় / পোর্টাল আইডি:</> :
@@ -590,7 +590,7 @@ export default function ApplicationsPage() {
                           setCopiedUid(true);
                           setTimeout(() => setCopiedUid(false), 2000);
                         }}
-                        className="text-[10px] text-emerald-700 hover:underline font-sans font-bold inline-flex items-center"
+                        className="text-[10px] text-slate-800 hover:underline font-sans font-bold inline-flex items-center"
                       >
                         {copiedUid ? <Check className="w-3 h-3" /> : 'কপি'}
                       </button>
@@ -603,7 +603,7 @@ export default function ApplicationsPage() {
                       <span className="text-slate-500 font-bold text-[11px] inline-flex items-center gap-1.5">
                         <KeyRound className="w-3.5 h-3.5 text-amber-600" /> টেলিটক পাসওয়ার্ড / পিন:
                       </span>
-                      <div className="flex items-center gap-1.5 font-mono font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      <div className="flex items-center gap-1.5 font-mono font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
                         <span data-testid="teletalk-password">{selectedApp.teleTalkPassword}</span>
                         <button
                           data-testid="copy-password-btn"
@@ -612,7 +612,7 @@ export default function ApplicationsPage() {
                             setCopiedPass(true);
                             setTimeout(() => setCopiedPass(false), 2000);
                           }}
-                          className="text-[10px] text-emerald-700 hover:underline font-sans font-bold inline-flex items-center"
+                          className="text-[10px] text-slate-800 hover:underline font-sans font-bold inline-flex items-center"
                         >
                           {copiedPass ? <Check className="w-3 h-3" /> : 'কপি'}
                         </button>
@@ -625,7 +625,7 @@ export default function ApplicationsPage() {
                   <span className="text-slate-400">আবেদন স্ট্যাটাস:</span>
                   <span className={`font-bold inline-flex items-center gap-1 ${
                     selectedApp.status === 'completed' || selectedApp.status === 'submitted'
-                      ? 'text-emerald-700' 
+                      ? 'text-slate-800' 
                       : selectedApp.status === 'processing' 
                       ? 'text-blue-700' 
                       : 'text-amber-700'
@@ -653,10 +653,10 @@ export default function ApplicationsPage() {
               <div data-testid="five-step-tracker" className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-2.5">
                 <div className="font-bold text-slate-800 text-[11px] flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
-                    <Activity className="w-3.5 h-3.5 text-emerald-700" />
+                    <Activity className="w-3.5 h-3.5 text-slate-800" />
                     <span>৫-ধাপের লাইভ অগ্রগতি ট্র্যাকার</span>
                   </div>
-                  <span className="text-[10px] font-mono text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full font-bold">
+                  <span className="text-[10px] font-mono text-slate-800 bg-slate-100 px-2 py-0.5 rounded-full font-bold">
                     {(selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? (selectedApp.admitCardUrl ? 'ধাপ ৫/৫' : 'ধাপ ৪/৫') : selectedApp.status === 'processing' ? 'ধাপ ৩/৫' : selectedApp.status === 'pending_payment' ? 'ধাপ ২/৫' : 'ধাপ ১/৫'}
                   </span>
                 </div>
@@ -664,13 +664,13 @@ export default function ApplicationsPage() {
                 <div className="grid grid-cols-5 gap-1 text-center text-[10px]">
                   {/* Step 1: সাবমিট */}
                   <div className="space-y-1">
-                    <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto font-bold text-[10px]"><Check className="w-3.5 h-3.5" /></div>
+                    <div className="w-6 h-6 rounded-full bg-slate-900 text-white flex items-center justify-center mx-auto font-bold text-[10px]"><Check className="w-3.5 h-3.5" /></div>
                     <span className="font-bold text-slate-900 block truncate">১. দাখিল</span>
                   </div>
                   {/* Step 2: ফি যাচাই */}
                   <div className="space-y-1">
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto font-bold text-[10px] ${
-                      (selectedApp.status === 'completed' || selectedApp.status === 'submitted' || selectedApp.status === 'processing') ? 'bg-emerald-600 text-white' : 'bg-amber-500 text-white animate-pulse'
+                      (selectedApp.status === 'completed' || selectedApp.status === 'submitted' || selectedApp.status === 'processing') ? 'bg-slate-900 text-white' : 'bg-amber-500 text-white animate-pulse'
                     }`}>
                       {(selectedApp.status === 'completed' || selectedApp.status === 'submitted' || selectedApp.status === 'processing') ? <Check className="w-3.5 h-3.5" /> : '২'}
                     </div>
@@ -679,7 +679,7 @@ export default function ApplicationsPage() {
                   {/* Step 3: ফরম পূরণ */}
                   <div className="space-y-1">
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto font-bold text-[10px] ${
-                      (selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? 'bg-emerald-600 text-white' : selectedApp.status === 'processing' ? 'bg-blue-600 text-white animate-pulse' : 'bg-slate-200 text-slate-400'
+                      (selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? 'bg-slate-900 text-white' : selectedApp.status === 'processing' ? 'bg-blue-600 text-white animate-pulse' : 'bg-slate-200 text-slate-400'
                     }`}>
                       {(selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? <Check className="w-3.5 h-3.5" /> : '৩'}
                     </div>
@@ -688,7 +688,7 @@ export default function ApplicationsPage() {
                   {/* Step 4: স্লিপ রেডি */}
                   <div className="space-y-1">
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto font-bold text-[10px] ${
-                      (selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-400'
+                      (selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? 'bg-slate-900 text-white' : 'bg-slate-200 text-slate-400'
                     }`}>
                       {(selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? <Check className="w-3.5 h-3.5" /> : '৪'}
                     </div>
@@ -697,7 +697,7 @@ export default function ApplicationsPage() {
                   {/* Step 5: প্রবেশপত্র */}
                   <div className="space-y-1">
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto font-bold text-[10px] ${
-                      selectedApp.admitCardUrl ? 'bg-emerald-600 text-white' : (selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? 'bg-indigo-600 text-white animate-pulse' : 'bg-slate-200 text-slate-400'
+                      selectedApp.admitCardUrl ? 'bg-slate-900 text-white' : (selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? 'bg-indigo-600 text-white animate-pulse' : 'bg-slate-200 text-slate-400'
                     }`}>
                       {selectedApp.admitCardUrl ? <Check className="w-3.5 h-3.5" /> : '৫'}
                     </div>
@@ -718,7 +718,7 @@ export default function ApplicationsPage() {
                     <div key={step.id} className="relative">
                       <div className={`absolute -left-[21px] top-0.5 w-3 h-3 rounded-full border-2 ${
                         step.isDone 
-                          ? 'bg-emerald-600 border-emerald-200' 
+                          ? 'bg-slate-900 border-slate-200' 
                           : step.isCurrent 
                           ? 'bg-blue-600 border-blue-200 animate-pulse' 
                           : 'bg-slate-200 border-white'
@@ -726,7 +726,7 @@ export default function ApplicationsPage() {
                       <div className="flex items-center justify-between">
                         <span className={`font-bold ${
                           step.isDone 
-                            ? 'text-emerald-900' 
+                            ? 'text-slate-900' 
                             : step.isCurrent 
                             ? 'text-blue-800' 
                             : 'text-slate-400'
@@ -751,7 +751,7 @@ export default function ApplicationsPage() {
                         href={selectedApp.applicantCopyPdfUrl || '/demo-applicant-copy.pdf'}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="py-2.5 px-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold flex items-center justify-center gap-1.5 shadow-xs transition-colors text-center text-xs"
+                        className="py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold flex items-center justify-center gap-1.5 shadow-xs transition-colors text-center text-xs"
                       >
                         <Download className="w-4 h-4" />
                         <span>স্লিপ ডাউনলোড</span>
@@ -760,9 +760,9 @@ export default function ApplicationsPage() {
                         type="button"
                         data-testid="preview-slip-modal-btn"
                         onClick={() => setPreviewSlipApp(selectedApp)}
-                        className="py-2.5 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer text-xs"
+                        className="py-2.5 px-3 bg-slate-100 hover:bg-slate-200/80 text-slate-900 border border-slate-200 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer text-xs"
                       >
-                        <Eye className="w-4 h-4 text-emerald-700" />
+                        <Eye className="w-4 h-4 text-slate-800" />
                         <span>ইন-অ্যাপ প্রিভিউ</span>
                       </button>
                     </div>
@@ -791,7 +791,7 @@ export default function ApplicationsPage() {
                   onClick={() => setReceiptApp(selectedApp)}
                   className="w-full py-2 bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 rounded-xl font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-2xs text-xs"
                 >
-                  <Printer className="w-3.5 h-3.5 text-emerald-700" />
+                  <Printer className="w-3.5 h-3.5 text-slate-800" />
                   <span>অফিসিয়াল মানি রিসিট ও ভাউচার</span>
                 </button>
 
@@ -818,7 +818,7 @@ export default function ApplicationsPage() {
             {selectedApp.submissionChannel === 'bank_erecruitment' ? (
               <div className="bg-slate-900 text-white p-5 rounded-2xl shadow-xs border border-slate-800 space-y-3 text-xs">
                 <div className="flex items-center gap-2">
-                  <Building className="w-4 h-4 text-emerald-400" />
+                  <Building className="w-4 h-4 text-slate-400" />
                   <h4 className="font-bold">বাংলাদেশ ব্যাংক ই-রিক্রুটমেন্ট ট্র্যাকিং</h4>
                 </div>
                 <p className="text-[11px] text-slate-300 leading-relaxed">
@@ -826,7 +826,7 @@ export default function ApplicationsPage() {
                 </p>
                 <div className="bg-slate-800 p-2.5 rounded-xl space-y-1">
                   <span className="text-[10px] text-slate-400 block">ট্র্যাকিং নম্বর:</span>
-                  <div className="font-mono font-bold text-emerald-400">
+                  <div className="font-mono font-bold text-slate-400">
                     {selectedApp.teleTalkTrackingId || selectedApp.id}
                   </div>
                 </div>
@@ -834,7 +834,7 @@ export default function ApplicationsPage() {
             ) : selectedApp.submissionChannel === 'corporate_portal' || selectedApp.submissionChannel === 'hr_email' ? (
               <div className="bg-slate-900 text-white p-5 rounded-2xl shadow-xs border border-slate-800 space-y-3 text-xs">
                 <div className="flex items-center gap-2">
-                  <Building className="w-4 h-4 text-emerald-400" />
+                  <Building className="w-4 h-4 text-slate-400" />
                   <h4 className="font-bold">কর্পোরেট / এইচআর আবেদন ট্র্যাকিং</h4>
                 </div>
                 <p className="text-[11px] text-slate-300 leading-relaxed">
@@ -842,7 +842,7 @@ export default function ApplicationsPage() {
                 </p>
                 <div className="bg-slate-800 p-2.5 rounded-xl space-y-1">
                   <span className="text-[10px] text-slate-400 block">অ্যাপ্লিকেশন রেফারেন্স:</span>
-                  <div className="font-mono font-bold text-emerald-400">
+                  <div className="font-mono font-bold text-slate-400">
                     {selectedApp.corporateTrackingId || selectedApp.teleTalkTrackingId || selectedApp.id}
                   </div>
                 </div>
@@ -850,7 +850,7 @@ export default function ApplicationsPage() {
             ) : (
               <div className="bg-slate-900 text-white p-5 rounded-2xl shadow-xs border border-slate-800 space-y-3 text-xs">
                 <div className="flex items-center gap-2">
-                  <MessageSquare className="w-4 h-4 text-emerald-400" />
+                  <MessageSquare className="w-4 h-4 text-slate-400" />
                   <h4 className="font-bold">টেলিটক এসএমএস ফরম্যাট</h4>
                 </div>
                 <p className="text-[11px] text-slate-300 leading-relaxed">
@@ -859,7 +859,7 @@ export default function ApplicationsPage() {
 
                 <div className="bg-slate-800/80 p-2.5 rounded-xl space-y-1">
                   <span className="text-[10px] text-slate-400 block">১ম SMS (ফি জানার জন্য):</span>
-                  <div className="flex items-center justify-between font-mono font-bold text-emerald-300">
+                  <div className="flex items-center justify-between font-mono font-bold text-slate-400">
                     <span>{currentPrefix} {selectedApp.teleTalkTrackingId || selectedApp.id}</span>
                     <button
                       type="button"
@@ -874,7 +874,7 @@ export default function ApplicationsPage() {
                 {selectedApp.teleTalkPassword && (
                   <div className="bg-slate-800/80 p-2.5 rounded-xl space-y-1">
                     <span className="text-[10px] text-slate-400 block">২য় SMS (ফি প্রদানের জন্য):</span>
-                    <div className="flex items-center justify-between font-mono font-bold text-emerald-300">
+                    <div className="flex items-center justify-between font-mono font-bold text-slate-400">
                       <span>{currentPrefix} YES {selectedApp.teleTalkPassword}</span>
                       <button
                         type="button"
@@ -902,7 +902,7 @@ export default function ApplicationsPage() {
           <div className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden flex flex-col my-8">
             <div className="p-4 bg-slate-900 text-white flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <FileCheck className="w-5 h-5 text-emerald-400" />
+                <FileCheck className="w-5 h-5 text-slate-400" />
                 <span className="font-bold text-sm">অফিশিয়াল অ্যাপ্লিকেশন কপি (Applicant's Copy)</span>
               </div>
               <div className="flex items-center gap-2">
@@ -911,7 +911,7 @@ export default function ApplicationsPage() {
                     href={previewSlipApp.applicantCopyPdfUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
+                    className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
                   >
                     <Download className="w-3.5 h-3.5" />
                     <span>পিডিএফ ডাউনলোড</span>
@@ -936,7 +936,7 @@ export default function ApplicationsPage() {
                     <p className="text-slate-500 font-medium">{previewSlipApp.organization} • {previewSlipApp.postName}</p>
                   </div>
                   <div className="text-right">
-                    <span className="px-2.5 py-1 bg-emerald-100 text-emerald-800 font-bold rounded-lg text-xs">
+                    <span className="px-2.5 py-1 bg-slate-100 text-slate-800 font-bold rounded-lg text-xs">
                       আবেদন গৃহীত ও নিশ্চিতকৃত
                     </span>
                   </div>
@@ -953,13 +953,13 @@ export default function ApplicationsPage() {
                   </div>
                   <div className="space-y-1">
                     <span className="text-slate-400 block text-[11px]">টেলিটক ইউজার আইডি (User ID):</span>
-                    <strong className="text-emerald-700 block font-mono font-black text-sm">
+                    <strong className="text-slate-800 block font-mono font-black text-sm">
                       {previewSlipApp.teleTalkTrackingId || previewSlipApp.id}
                     </strong>
                   </div>
                   <div className="space-y-1">
                     <span className="text-slate-400 block text-[11px]">পাসওয়ার্ড / পিন (Password):</span>
-                    <strong className="text-emerald-700 block font-mono font-bold">
+                    <strong className="text-slate-800 block font-mono font-bold">
                       {previewSlipApp.teleTalkPassword || 'N/A'}
                     </strong>
                   </div>
@@ -980,7 +980,7 @@ export default function ApplicationsPage() {
                     href={previewSlipApp.applicantCopyPdfUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
                     <span>পিডিএফ সরাসরি ব্রাউজারে খুলুন</span>
@@ -1030,7 +1030,7 @@ export default function ApplicationsPage() {
                   placeholder="যেমন: BKL7829X10"
                   value={disputeTrxId}
                   onChange={(e) => setDisputeTrxId(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 font-mono text-xs font-bold text-slate-900 uppercase focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 font-mono text-xs font-bold text-slate-900 uppercase focus:outline-none focus:ring-2 focus:ring-slate-400/20"
                 />
               </div>
 
@@ -1044,13 +1044,13 @@ export default function ApplicationsPage() {
                   placeholder="যেমন: 01700000000"
                   value={disputeSenderPhone}
                   onChange={(e) => setDisputeSenderPhone(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 font-mono text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 font-mono text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
                 />
               </div>
 
               {disputeSuccessMessage && (
-                <div data-testid="dispute-success-alert" className="p-3 bg-emerald-50 text-emerald-800 rounded-xl text-xs font-bold flex items-center gap-2 border border-emerald-200">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <div data-testid="dispute-success-alert" className="p-3 bg-slate-100 text-slate-800 rounded-xl text-xs font-bold flex items-center gap-2 border border-slate-200">
+                  <CheckCircle2 className="w-4 h-4 text-slate-700 shrink-0" />
                   <span>{disputeSuccessMessage}</span>
                 </div>
               )}
@@ -1067,7 +1067,7 @@ export default function ApplicationsPage() {
                   type="submit"
                   data-testid="submit-dispute-btn"
                   disabled={isSubmittingDispute}
-                  className="flex-1 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold shadow-xs cursor-pointer"
+                  className="flex-1 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-xs cursor-pointer"
                 >
                   {isSubmittingDispute ? 'আপডেট হচ্ছে...' : 'হালনাগাদ নিশ্চিত করুন'}
                 </button>
@@ -1089,7 +1089,7 @@ export default function ApplicationsPage() {
             {/* Top Toolbar (Non-printable) */}
             <div className="p-4 bg-slate-900 text-white flex items-center justify-between no-print">
               <div className="flex items-center gap-2">
-                <Printer className="w-5 h-5 text-emerald-400" />
+                <Printer className="w-5 h-5 text-slate-400" />
                 <span className="font-bold text-sm">অফিসিয়াল মানি রিসিট ও ভাউচার প্রিন্ট</span>
               </div>
               <div className="flex items-center gap-2">
@@ -1097,7 +1097,7 @@ export default function ApplicationsPage() {
                   type="button"
                   data-testid="print-voucher-btn"
                   onClick={() => window.print()}
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
+                  className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
                 >
                   <Printer className="w-4 h-4" />
                   <span>প্রিন্ট করুন</span>
@@ -1117,10 +1117,10 @@ export default function ApplicationsPage() {
             <div id="official-printable-receipt" className="p-8 sm:p-10 space-y-6 bg-white text-slate-900 font-sans">
               
               {/* Header with Official Logo & Contact */}
-              <div className="flex items-start justify-between border-b-2 border-emerald-800 pb-5">
+              <div className="flex items-start justify-between border-b-2 border-slate-400 pb-5">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-800 text-white flex items-center justify-center font-black text-lg">
+                    <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black text-lg">
                       চস
                     </div>
                     <div>
@@ -1134,7 +1134,7 @@ export default function ApplicationsPage() {
                 </div>
 
                 <div className="text-right">
-                  <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-900 text-xs font-black rounded-lg uppercase tracking-wider mb-1">
+                  <span className="inline-block px-3 py-1 bg-slate-100 text-slate-900 text-xs font-black rounded-lg uppercase tracking-wider mb-1">
                     মানি রিসিট / পেইড ভাউচার
                   </span>
                   <div className="text-xs font-mono font-bold text-slate-800">
@@ -1149,7 +1149,7 @@ export default function ApplicationsPage() {
               {/* Candidate & Job Two-Column Summary */}
               <div className="grid grid-cols-2 gap-6 text-xs bg-slate-50 p-4 rounded-2xl border border-slate-200">
                 <div className="space-y-1.5 border-r border-slate-200 pr-4">
-                  <div className="font-black text-slate-900 uppercase text-[10px] tracking-wider text-emerald-800 mb-1">
+                  <div className="font-black text-slate-900 uppercase text-[10px] tracking-wider text-slate-800 mb-1">
                     প্রার্থীর তথ্য (Candidate Information)
                   </div>
                   <div>
@@ -1166,14 +1166,14 @@ export default function ApplicationsPage() {
                   </div>
                   <div>
                     <span className="text-slate-500">ট্র্যাকিং / ইউজার আইডি:</span>{' '}
-                    <strong className="text-emerald-800 font-mono font-bold">
+                    <strong className="text-slate-800 font-mono font-bold">
                       {receiptApp.teleTalkTrackingId || receiptApp.corporateTrackingId || 'প্রসেসিং সম্পন্ন'}
                     </strong>
                   </div>
                 </div>
 
                 <div className="space-y-1.5 pl-2">
-                  <div className="font-black text-slate-900 uppercase text-[10px] tracking-wider text-emerald-800 mb-1">
+                  <div className="font-black text-slate-900 uppercase text-[10px] tracking-wider text-slate-800 mb-1">
                     আবেদন ও সার্কুলার বিবরণ (Job Details)
                   </div>
                   <div>
@@ -1224,7 +1224,7 @@ export default function ApplicationsPage() {
                       <td className="py-2 px-3 text-right font-mono font-bold">৳{receiptApp.serviceCharge ?? 80}</td>
                     </tr>
                     {Boolean(receiptApp.couponDiscount) && (
-                      <tr className="text-emerald-700 font-bold bg-emerald-50/50">
+                      <tr className="text-slate-800 font-bold bg-slate-100">
                         <td className="py-2 px-3">বিশেষ প্রমোশনাল ডিসকাউন্ট (Coupon / Offer)</td>
                         <td className="py-2 px-3">সরাসরি ছাড়</td>
                         <td className="py-2 px-3 text-right font-mono">-৳{receiptApp.couponDiscount}</td>
@@ -1234,7 +1234,7 @@ export default function ApplicationsPage() {
                   <tfoot className="bg-slate-100/80 font-black border-t-2 border-slate-300">
                     <tr>
                       <td colSpan={2} className="py-2.5 px-3 text-slate-900 text-right">সর্বমোট পরিশোধিত অর্থ (Net Amount Paid):</td>
-                      <td className="py-2.5 px-3 text-right text-emerald-800 text-sm font-mono font-black">৳{receiptApp.totalAmount}</td>
+                      <td className="py-2.5 px-3 text-right text-slate-800 text-sm font-mono font-black">৳{receiptApp.totalAmount}</td>
                     </tr>
                   </tfoot>
                 </table>
@@ -1245,9 +1245,9 @@ export default function ApplicationsPage() {
                 <div>
                   <div className="text-[11px] text-slate-500">পেমেন্ট মেথড ও লেনদেন ট্র্যাকিং:</div>
                   <div className="font-bold text-slate-900 mt-0.5">
-                    {receiptApp.paymentMethod} (TrxID: <span className="font-mono text-emerald-800">{receiptApp.trxId || 'N/A'}</span>)
+                    {receiptApp.paymentMethod} (TrxID: <span className="font-mono text-slate-800">{receiptApp.trxId || 'N/A'}</span>)
                   </div>
-                  <div className="text-[10px] text-emerald-700 font-bold mt-1 flex items-center gap-1">
+                  <div className="text-[10px] text-slate-800 font-bold mt-1 flex items-center gap-1">
                     <CheckCircle2 className="w-3 h-3" /> পেমেন্ট অনুমোদিত ও লেজারে অন্তর্ভুক্ত
                   </div>
                 </div>
@@ -1263,7 +1263,7 @@ export default function ApplicationsPage() {
               {/* Official Seal and Signatures */}
               <div className="flex items-end justify-between pt-8 border-t border-slate-200 text-xs">
                 <div className="space-y-1">
-                  <div className="w-24 h-10 border-2 border-dashed border-emerald-300 rounded-lg flex items-center justify-center text-[10px] font-bold text-emerald-700 bg-emerald-50/40">
+                  <div className="w-24 h-10 border-2 border-dashed border-slate-200 rounded-lg flex items-center justify-center text-[10px] font-bold text-slate-800 bg-slate-100">
                     [ডিজিটাল সিল]
                   </div>
                   <p className="text-[10px] text-slate-400">সিস্টেম জেনারেটেড ডিজিটাল ডকুমেন্ট</p>

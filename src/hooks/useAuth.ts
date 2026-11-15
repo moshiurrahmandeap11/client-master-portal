@@ -17,7 +17,20 @@ export function useAuth() {
 
   const refreshSession = useCallback(async () => {
     try {
-      const res = await fetch('/api/auth/me', { credentials: 'include' });
+      let res = await fetch('/api/auth/me', { credentials: 'include', cache: 'no-store' });
+
+      // If 401, attempt silent refresh before clearing auth state
+      if (!res.ok && res.status === 401) {
+        const refreshRes = await fetch('/api/auth/refresh-token', {
+          method: 'POST',
+          credentials: 'include',
+          cache: 'no-store',
+        });
+        if (refreshRes.ok) {
+          res = await fetch('/api/auth/me', { credentials: 'include', cache: 'no-store' });
+        }
+      }
+
       if (res.ok) {
         const data = await res.json();
         if (data?.isLoggedIn && data?.user) {

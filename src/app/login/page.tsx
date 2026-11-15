@@ -63,7 +63,7 @@ function LoginForm() {
   // Helper for safe deep-link redirecting
   const getRedirectTarget = () => {
     const target = searchParams.get('redirect');
-    return target && /^\/(?!\/)/.test(target) ? target : '/dashboard';
+    return target && /^\/(?!\/)/.test(target) ? target : '/dashboard/profile';
   };
 
   // Register Form States (Email Required, Phone Optional)

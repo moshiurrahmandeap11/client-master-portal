@@ -500,36 +500,7 @@ export default function HomePage() {
 
   return (
     <div className="pb-20">
-      
-      {/* 1. TOP BREAKING NEWS TICKER */}
-      <div className="bg-slate-900 border-b border-slate-800 text-slate-200 text-[15px] py-2 px-4 overflow-hidden">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2 overflow-hidden">
-            <span className="bg-red-600 text-white text-[13px] font-black px-2.5 py-0.5 rounded uppercase flex items-center gap-1 flex-shrink-0 animate-pulse">
-              <Flame className="w-3 h-3" />
-              ব্রেকিং বিজ্ঞপ্তি
-            </span>
-            <div className="truncate text-slate-300 font-medium">
-              {jobsList.length > 0 ? (
-                <span>
-                  {jobsList.slice(0, 3).map(j => `${j.organization || ''} - ${j.title || ''}`).join(' • ')}
-                </span>
-              ) : (
-                <span>অফিসিয়াল সরকারি ও ব্যাংক সার্কুলার পর্যবেক্ষণ চলছে। অনুমোদিত নতুন বিজ্ঞপ্তি এখানে স্বয়ংক্রিয়ভাবে প্রদর্শিত হবে।</span>
-              )}
-            </div>
-          </div>
-
-          <div className="hidden md:flex items-center gap-3 text-slate-400 text-[14px] flex-shrink-0">
-            <span className="flex items-center gap-1 text-emerald-400 font-bold">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-              অফিসিয়াল জব পোর্টাল সিঙ্ক সক্রিয়
-            </span>
-          </div>
-        </div>
-      </div>
-
-   {/* 2. CHAKRI SHEBA HERO SECTION */}
+      {/* 2. CHAKRI SHEBA HERO SECTION */}
       <HeroSection initialData={homeHero} />
 
       {/* MODERN JOB SEARCH SECTION */}
@@ -557,253 +528,144 @@ export default function HomePage() {
         />
       )}
 
-      {/* 3. LIVE JOB STATUS DASHBOARD METRICS (4 Interactive Filter Cards) */}
+      {/* 3. LIVE JOB STATUS DASHBOARD METRICS (4 Clean Cards) */}
       {(jobsCms?.content?.showStatusCards !== false) && (
-        <section className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 mt-4 sm:mt-6 lg:mt-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5">
-          
-          {/* 1. আজ নতুন */}
-          <button
-            type="button"
-            onClick={() => handleSelectStatusFilter('new_today')}
-            className={`group relative overflow-hidden p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border-2 transition-all duration-200 text-left flex flex-col justify-between cursor-pointer ${
-              statusFilter === 'new_today'
-                ? 'bg-emerald-700 text-white shadow-md border-emerald-700 scale-[1.02]'
-                : 'bg-white hover:bg-slate-50 text-slate-900 border-slate-200 hover:border-emerald-600 shadow-xs'
-            }`}
-          >
-            <div className="flex items-center justify-between gap-2 mb-3">
-              <div className="flex items-center gap-2">
-                <span className={`text-[17px] sm:text-lg font-extrabold tracking-normal ${
-                  statusFilter === 'new_today' ? 'text-white' : 'text-slate-900'
+        <section className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 mt-4 sm:mt-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
+            
+            {/* 1. আজ নতুন */}
+            <button
+              type="button"
+              onClick={() => handleSelectStatusFilter('new_today')}
+              className={`p-4 sm:p-5 rounded-2xl border transition-all text-left flex flex-col justify-between cursor-pointer ${
+                statusFilter === 'new_today'
+                  ? 'bg-emerald-700 text-white border-emerald-700 shadow-sm'
+                  : 'bg-white hover:bg-slate-50 text-slate-900 border-slate-200/90 shadow-2xs'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className={`text-xs sm:text-sm font-normal ${
+                  statusFilter === 'new_today' ? 'text-emerald-100' : 'text-slate-600'
                 }`}>
                   আজ নতুন
                 </span>
-                <span className={`px-2 py-0.5 rounded-full text-[11px] font-black tracking-wider uppercase ${
-                  statusFilter === 'new_today' ? 'bg-white/20 text-white' : 'bg-emerald-100 text-emerald-800'
+                <span className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                  statusFilter === 'new_today' ? 'bg-white/20 text-white' : 'bg-emerald-50 text-emerald-700'
                 }`}>
-                  তাজা
+                  <Sparkles className="w-4 h-4" />
                 </span>
               </div>
-              <span className={`w-9 h-9 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 ${
-                statusFilter === 'new_today' ? 'bg-white/20 text-white' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-              }`}>
-                <Sparkles className="w-5 h-5" />
-              </span>
-            </div>
+              <div className="text-xl sm:text-2xl font-normal">
+                {toBn(statusCounts.newToday)} টি চাকরি
+              </div>
+            </button>
 
-            <div>
-              <div className="flex items-baseline gap-1.5 sm:gap-2">
-                <span className={`status-metric-number text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight ${
-                  statusFilter === 'new_today' ? 'text-white' : 'text-slate-900'
-                }`}>
-                  {toBn(statusCounts.newToday)}
-                </span>
-                <span className={`text-[15px] sm:text-[17px] font-bold ${
-                  statusFilter === 'new_today' ? 'text-emerald-100' : 'text-slate-600'
-                }`}>
-                  টি চাকরির খবর
-                </span>
-              </div>
-              <div className={`mt-2.5 pt-2 border-t text-[12px] sm:text-[13px] font-medium flex items-center justify-between ${
-                statusFilter === 'new_today' 
-                  ? 'border-white/20 text-white' 
-                  : 'border-slate-100 text-slate-500 group-hover:text-emerald-700'
-              }`}>
-                <span>{statusFilter === 'new_today' ? 'ফিল্টার সক্রিয়' : 'আজকের নতুন বিজ্ঞপ্তি'}</span>
-                <span className="font-bold inline-flex items-center gap-1">{statusFilter === 'new_today' ? <><X className="w-3.5 h-3.5" /> বাতিল</> : 'দেখুন →'}</span>
-              </div>
-            </div>
-          </button>
-
-          {/* 2. আবেদন চলছে */}
-          <button
-            type="button"
-            onClick={() => handleSelectStatusFilter('ongoing')}
-            className={`group relative overflow-hidden p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border-2 transition-all duration-200 text-left flex flex-col justify-between cursor-pointer ${
-              statusFilter === 'ongoing'
-                ? 'bg-emerald-700 text-white shadow-md border-emerald-700 scale-[1.02]'
-                : 'bg-white hover:bg-slate-50 text-slate-900 border-slate-200 hover:border-emerald-600 shadow-xs'
-            }`}
-          >
-            <div className="flex items-center justify-between gap-2 mb-3">
-              <div className="flex items-center gap-2">
-                <span className={`text-[17px] sm:text-lg font-extrabold tracking-normal ${
-                  statusFilter === 'ongoing' ? 'text-white' : 'text-slate-900'
+            {/* 2. আবেদন চলছে */}
+            <button
+              type="button"
+              onClick={() => handleSelectStatusFilter('ongoing')}
+              className={`p-4 sm:p-5 rounded-2xl border transition-all text-left flex flex-col justify-between cursor-pointer ${
+                statusFilter === 'ongoing'
+                  ? 'bg-emerald-700 text-white border-emerald-700 shadow-sm'
+                  : 'bg-white hover:bg-slate-50 text-slate-900 border-slate-200/90 shadow-2xs'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className={`text-xs sm:text-sm font-normal ${
+                  statusFilter === 'ongoing' ? 'text-emerald-100' : 'text-slate-600'
                 }`}>
                   আবেদন চলছে
                 </span>
-                <span className={`px-2 py-0.5 rounded-full text-[11px] font-black tracking-wider uppercase ${
-                  statusFilter === 'ongoing' ? 'bg-white/20 text-white' : 'bg-emerald-100 text-emerald-800'
+                <span className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                  statusFilter === 'ongoing' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'
                 }`}>
-                  সক্রিয়
+                  <Briefcase className="w-4 h-4" />
                 </span>
               </div>
-              <span className={`w-9 h-9 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 ${
-                statusFilter === 'ongoing' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700 border border-slate-200'
-              }`}>
-                <Briefcase className="w-5 h-5" />
-              </span>
-            </div>
+              <div className="text-xl sm:text-2xl font-normal">
+                {toBn(statusCounts.ongoing)} টি চাকরি
+              </div>
+            </button>
 
-            <div>
-              <div className="flex items-baseline gap-1.5 sm:gap-2">
-                <span className={`status-metric-number text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight ${
-                  statusFilter === 'ongoing' ? 'text-white' : 'text-slate-900'
-                }`}>
-                  {toBn(statusCounts.ongoing)}
-                </span>
-                <span className={`text-[15px] sm:text-[17px] font-bold ${
-                  statusFilter === 'ongoing' ? 'text-emerald-100' : 'text-slate-600'
-                }`}>
-                  টি চাকরি
-                </span>
-              </div>
-              <div className={`mt-2.5 pt-2 border-t text-[12px] sm:text-[13px] font-medium flex items-center justify-between ${
-                statusFilter === 'ongoing' 
-                  ? 'border-white/20 text-white' 
-                  : 'border-slate-100 text-slate-500 group-hover:text-emerald-700'
-              }`}>
-                <span>{statusFilter === 'ongoing' ? 'ফিল্টার সক্রিয়' : 'চলমান সকল বিজ্ঞপ্তি'}</span>
-                <span className="font-bold inline-flex items-center gap-1">{statusFilter === 'ongoing' ? <><X className="w-3.5 h-3.5" /> বাতিল</> : 'দেখুন →'}</span>
-              </div>
-            </div>
-          </button>
-
-          {/* 3. শেষ হতে চলেছে */}
-          <button
-            type="button"
-            onClick={() => handleSelectStatusFilter('ending_soon')}
-            className={`group relative overflow-hidden p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border-2 transition-all duration-200 text-left flex flex-col justify-between cursor-pointer ${
-              statusFilter === 'ending_soon'
-                ? 'bg-slate-900 text-white shadow-md border-slate-900 scale-[1.02]'
-                : 'bg-white hover:bg-slate-50 text-slate-900 border-slate-200 hover:border-slate-400 shadow-xs'
-            }`}
-          >
-            <div className="flex items-center justify-between gap-2 mb-3">
-              <div className="flex items-center gap-2">
-                <span className={`text-[17px] sm:text-lg font-extrabold tracking-normal ${
-                  statusFilter === 'ending_soon' ? 'text-white' : 'text-slate-900'
+            {/* 3. শেষ হতে চলেছে */}
+            <button
+              type="button"
+              onClick={() => handleSelectStatusFilter('ending_soon')}
+              className={`p-4 sm:p-5 rounded-2xl border transition-all text-left flex flex-col justify-between cursor-pointer ${
+                statusFilter === 'ending_soon'
+                  ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                  : 'bg-white hover:bg-slate-50 text-slate-900 border-slate-200/90 shadow-2xs'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className={`text-xs sm:text-sm font-normal ${
+                  statusFilter === 'ending_soon' ? 'text-slate-300' : 'text-slate-600'
                 }`}>
                   শেষ হতে চলেছে
                 </span>
-                <span className={`px-2 py-0.5 rounded-full text-[11px] font-black tracking-wider uppercase ${
-                  statusFilter === 'ending_soon' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-800 border border-slate-200'
+                <span className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                  statusFilter === 'ending_soon' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'
                 }`}>
-                  ৭ দিন
+                  <Clock className="w-4 h-4" />
                 </span>
               </div>
-              <span className={`w-9 h-9 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 ${
-                statusFilter === 'ending_soon' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700 border border-slate-200'
-              }`}>
-                <Clock className="w-5 h-5" />
-              </span>
-            </div>
+              <div className="text-xl sm:text-2xl font-normal">
+                {toBn(statusCounts.endingSoon)} টি চাকরি
+              </div>
+            </button>
 
-            <div>
-              <div className="flex items-baseline gap-1.5 sm:gap-2">
-                <span className={`status-metric-number text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight ${
-                  statusFilter === 'ending_soon' ? 'text-white' : 'text-slate-900'
+            {/* 4. আজ শেষ */}
+            <button
+              type="button"
+              onClick={() => handleSelectStatusFilter('ending_today')}
+              className={`p-4 sm:p-5 rounded-2xl border transition-all text-left flex flex-col justify-between cursor-pointer ${
+                statusFilter === 'ending_today'
+                  ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                  : 'bg-white hover:bg-slate-50 text-slate-900 border-slate-200/90 shadow-2xs'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className={`text-xs sm:text-sm font-normal ${
+                  statusFilter === 'ending_today' ? 'text-slate-300' : 'text-slate-600'
                 }`}>
-                  {toBn(statusCounts.endingSoon)}
+                  আজ শেষ
                 </span>
-                <span className={`text-[15px] sm:text-[17px] font-bold ${
-                  statusFilter === 'ending_soon' ? 'text-slate-200' : 'text-slate-600'
+                <span className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                  statusFilter === 'ending_today' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-700'
                 }`}>
-                  টি চাকরি
+                  <Flame className="w-4 h-4" />
                 </span>
               </div>
-              <div className={`mt-2.5 pt-2 border-t text-[12px] sm:text-[13px] font-medium flex items-center justify-between ${
-                statusFilter === 'ending_soon' 
-                  ? 'border-white/20 text-white' 
-                  : 'border-slate-100 text-slate-500 group-hover:text-slate-900'
-              }`}>
-                <span>{statusFilter === 'ending_soon' ? 'ফিল্টার সক্রিয়' : 'শীঘ্রই সময় শেষ'}</span>
-                <span className="font-bold inline-flex items-center gap-1">{statusFilter === 'ending_soon' ? <><X className="w-3.5 h-3.5" /> বাতিল</> : 'দেখুন →'}</span>
+              <div className="text-xl sm:text-2xl font-normal">
+                {toBn(statusCounts.endingToday)} টি চাকরি
               </div>
-            </div>
-          </button>
+            </button>
 
-          {/* 4. আজ শেষ */}
-          <button
-            type="button"
-            onClick={() => handleSelectStatusFilter('ending_today')}
-            className={`group relative overflow-hidden p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl border-2 transition-all duration-200 text-left flex flex-col justify-between cursor-pointer ${
-              statusFilter === 'ending_today'
-                ? 'bg-red-600 text-white shadow-md border-red-600 scale-[1.02]'
-                : 'bg-white hover:bg-red-50 text-slate-900 border-red-200 hover:border-red-400 shadow-xs'
-            }`}
-          >
-            <div className="flex items-center justify-between gap-2 mb-3">
-              <div className="flex items-center gap-2">
-                <span className={`text-[17px] sm:text-lg font-extrabold tracking-normal flex items-center gap-1.5 ${
-                  statusFilter === 'ending_today' ? 'text-white' : 'text-red-700'
-                }`}>
-                  <span>আজ শেষ</span>
-                  <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
-                </span>
-                <span className={`px-2 py-0.5 rounded-full text-[11px] font-black tracking-wider uppercase ${
-                  statusFilter === 'ending_today' ? 'bg-white/20 text-white' : 'bg-red-100 text-red-800'
-                }`}>
-                  জরুরি
-                </span>
-              </div>
-              <span className={`w-9 h-9 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 ${
-                statusFilter === 'ending_today' ? 'bg-white/20 text-white' : 'bg-red-50 text-red-600 border border-red-200'
-              }`}>
-                <Flame className="w-5 h-5" />
-              </span>
-            </div>
-
-            <div>
-              <div className="flex items-baseline gap-1.5 sm:gap-2">
-                <span className={`status-metric-number text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight ${
-                  statusFilter === 'ending_today' ? 'text-white' : 'text-slate-900'
-                }`}>
-                  {toBn(statusCounts.endingToday)}
-                </span>
-                <span className={`text-[15px] sm:text-[17px] font-bold ${
-                  statusFilter === 'ending_today' ? 'text-red-100' : 'text-slate-600'
-                }`}>
-                  টি চাকরি
-                </span>
-              </div>
-              <div className={`mt-2.5 pt-2 border-t text-[12px] sm:text-[13px] font-medium flex items-center justify-between ${
-                statusFilter === 'ending_today' 
-                  ? 'border-white/20 text-white' 
-                  : 'border-slate-100 text-slate-500 group-hover:text-red-600'
-              }`}>
-                <span>{statusFilter === 'ending_today' ? 'ফিল্টার সক্রিয়' : 'আজকেই শেষ দিন'}</span>
-                <span className="font-bold inline-flex items-center gap-1">{statusFilter === 'ending_today' ? <><X className="w-3.5 h-3.5" /> বাতিল</> : 'দেখুন →'}</span>
-              </div>
-            </div>
-          </button>
-
-        </div>
-      </section>
+          </div>
+        </section>
       )}
 
       <div className="space-y-12 mt-8">
       {/* STEP 07: DYNAMIC JOB FEED DISCOVERY STRIP */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-slate-900 text-white rounded-2xl p-4 sm:p-5 shadow-xs border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-emerald-400 flex-shrink-0">
-              <Sparkles className="w-5 h-5 text-emerald-400" />
+            <div className="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-emerald-400 flex-shrink-0">
+              <Sparkles className="w-4 h-4 text-emerald-400" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-black text-sm sm:text-base text-white">তাজা জব ফিড এক্সপ্লোরার</span>
-                <span className="bg-red-600 text-white text-[11px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">নতুন</span>
+                <span className="font-normal text-sm sm:text-base text-white">তাজা জব ফিড এক্সপ্লোরার</span>
+                <span className="bg-emerald-900 text-emerald-200 text-[10px] font-normal px-2 py-0.5 rounded-full uppercase tracking-wider">নতুন</span>
               </div>
-              <p className="text-xs text-slate-300 mt-0.5">সময় ও তারিখ অনুযায়ী চাকরির সার্কুলার ফিল্টার করুন</p>
+              <p className="text-xs text-slate-400 mt-0.5 font-normal">সময় ও তারিখ অনুযায়ী চাকরির সার্কুলার ফিল্টার করুন</p>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
             <Link
               href="/todays-jobs"
-              className="px-3.5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs"
+              className="px-3 py-1.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-normal transition-all flex items-center gap-1.5 shadow-xs"
             >
               <Clock className="w-3.5 h-3.5 text-white" />
               <span>আজকের চাকরি</span>
@@ -811,7 +673,7 @@ export default function HomePage() {
 
             <Link
               href="/latest-jobs"
-              className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition-all border border-slate-700 flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-normal transition-all border border-slate-700 flex items-center gap-1.5"
             >
               <Layers className="w-3.5 h-3.5 text-slate-300" />
               <span>সর্বশেষ সব চাকরি</span>
@@ -819,7 +681,7 @@ export default function HomePage() {
 
             <Link
               href="/featured-jobs"
-              className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold transition-all border border-slate-700 flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-normal transition-all border border-slate-700 flex items-center gap-1.5"
             >
               <Award className="w-3.5 h-3.5 text-slate-300" />
               <span>বিশেষ সার্কুলার</span>
@@ -827,15 +689,15 @@ export default function HomePage() {
 
             <Link
               href="/closing-soon"
-              className="px-3.5 py-2 rounded-xl bg-red-600/20 hover:bg-red-600/30 text-red-200 text-xs font-bold transition-all border border-red-500/40 flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-normal transition-all border border-slate-700 flex items-center gap-1.5"
             >
-              <Flame className="w-3.5 h-3.5 text-red-400" />
+              <Clock className="w-3.5 h-3.5 text-emerald-400" />
               <span>জরুরি ডেডলাইন</span>
             </Link>
 
             <Link
               href="/daily-jobs"
-              className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all border border-slate-700 flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-normal transition-all border border-slate-700 flex items-center gap-1.5"
             >
               <Calendar className="w-3.5 h-3.5 text-slate-300" />
               <span>দৈনিক আর্কাইভ</span>
@@ -845,21 +707,21 @@ export default function HomePage() {
       </div>
 
       {/* 4. CIRCULARS SECTION */}
-      <section id="circulars-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24 space-y-6">
+      <section id="circulars-section" className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24 space-y-6">
         
         {/* Section Header - Beautiful Responsive Layout */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
           <div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              <h2 className="text-lg sm:text-xl font-normal text-slate-900 tracking-tight">
                 {jobsCms?.title || 'সকল চলমান চাকরির সার্কুলার'}
               </h2>
-              <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200 text-[13px] sm:text-[14px] font-bold px-2.5 py-0.5 rounded-full whitespace-nowrap shadow-xs">
+              <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-normal px-2.5 py-0.5 rounded-full whitespace-nowrap shadow-xs">
                 <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
                 <span>{toBn(filteredJobs.length)}টি সক্রিয়</span>
               </span>
             </div>
-            <p className="text-[14px] sm:text-[16px] text-slate-600 mt-1">
+            <p className="text-xs sm:text-sm text-slate-600 mt-1 font-normal">
               {jobsCms?.subtitle || 'যেকোনো বিজ্ঞপ্তিতে ১-ক্লিকেই আমাদের প্রফেশনাল টিম দিয়ে আবেদন সম্পন্ন করতে পারবেন।'}
             </p>
           </div>
@@ -868,13 +730,13 @@ export default function HomePage() {
           <div className="flex items-center gap-2 flex-shrink-0">
             <button
               onClick={handleToggleUrgent}
-              className={`w-full sm:w-auto px-4 py-2 sm:py-2.5 rounded-xl text-[15px] sm:text-[17px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+              className={`w-full sm:w-auto px-3.5 py-2 rounded-xl text-xs sm:text-sm font-normal transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                 onlyUrgent 
-                  ? 'bg-red-600 text-white shadow-xs' 
+                  ? 'bg-emerald-700 text-white shadow-xs' 
                   : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300'
               }`}
             >
-              <Flame className={`w-4 h-4 ${onlyUrgent ? 'text-white' : 'text-red-600'}`} />
+              <Flame className={`w-3.5 h-3.5 ${onlyUrgent ? 'text-white' : 'text-emerald-700'}`} />
               <span>জরুরি ডেডলাইন (৩ দিনের মধ্যে শেষ)</span>
             </button>
           </div>
@@ -983,9 +845,9 @@ export default function HomePage() {
               type="button"
               onClick={() => scrollCategory('left')}
               aria-label="পূর্ববর্তী ক্যাটাগরি"
-              className="absolute -left-1 sm:-left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white shadow-lg border border-slate-200 text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 flex items-center justify-center transition-all flex-shrink-0 cursor-pointer hover:scale-110 active:scale-95"
+              className="absolute -left-1 sm:-left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-white shadow-md border border-slate-200 text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 flex items-center justify-center transition-all flex-shrink-0 cursor-pointer"
             >
-              <ChevronLeft className="w-5 h-5 text-slate-700" />
+              <ChevronLeft className="w-4 h-4 text-slate-700" />
             </button>
           )}
 
@@ -1002,13 +864,13 @@ export default function HomePage() {
                 <button
                   key={cat.id}
                   onClick={(e) => handleCategoryClick(cat.id, e)}
-                  className={`px-4 py-2.5 rounded-xl text-[17px] font-bold whitespace-nowrap transition-all flex items-center gap-2 flex-shrink-0 cursor-pointer ${
+                  className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-normal whitespace-nowrap transition-all flex items-center gap-1.5 flex-shrink-0 cursor-pointer ${
                     isSelected
-                      ? 'bg-emerald-700 text-white shadow-md shadow-emerald-800/20'
+                      ? 'bg-emerald-700 text-white shadow-xs'
                       : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-emerald-800'
                   }`}
                 >
-                  <IconComp className={`w-4 h-4 flex-shrink-0 transition-colors ${
+                  <IconComp className={`w-3.5 h-3.5 flex-shrink-0 transition-colors ${
                     isSelected ? 'text-white' : 'text-emerald-700'
                   }`} />
                   <span>{cat.label} ({cat.count})</span>
@@ -1023,9 +885,9 @@ export default function HomePage() {
               type="button"
               onClick={() => scrollCategory('right')}
               aria-label="পরবর্তী ক্যাটাগরি"
-              className="absolute -right-1 sm:-right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white shadow-lg border border-slate-200 text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 flex items-center justify-center transition-all flex-shrink-0 cursor-pointer hover:scale-110 active:scale-95"
+              className="absolute -right-1 sm:-right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-white shadow-md border border-slate-200 text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 flex items-center justify-center transition-all flex-shrink-0 cursor-pointer"
             >
-              <ChevronRight className="w-5 h-5 text-slate-700" />
+              <ChevronRight className="w-4 h-4 text-slate-700" />
             </button>
           )}
         </div>
@@ -1051,7 +913,7 @@ export default function HomePage() {
                 >
                   {/* Top Badge */}
                   {job.featured && (
-                    <div className="absolute top-0 right-0 bg-red-600 text-white text-[13px] font-bold px-3.5 py-1 rounded-bl-xl shadow-xs flex items-center gap-1">
+                    <div className="absolute top-0 right-0 bg-emerald-700 text-white text-xs font-normal px-3 py-0.5 rounded-bl-xl shadow-xs flex items-center gap-1">
                       <Sparkles className="w-3 h-3" />
                       <span>হট সার্কুলার</span>
                     </div>
@@ -1060,25 +922,25 @@ export default function HomePage() {
                   <div className="space-y-4">
                     {/* Badges Bar */}
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="bg-emerald-50 text-emerald-800 text-[15px] font-bold px-2.5 py-1 rounded-md border border-emerald-200">
+                      <span className="bg-emerald-50 text-emerald-800 text-xs font-normal px-2.5 py-1 rounded-md border border-emerald-200">
                         {job.categoryLabel}
                       </span>
                       {job.positions && job.positions.length > 1 ? (
-                        <span className="bg-slate-100 text-slate-800 text-[14px] font-bold px-2.5 py-1 rounded-md border border-slate-200 flex items-center gap-1">
+                        <span className="bg-slate-100 text-slate-800 text-xs font-normal px-2.5 py-1 rounded-md border border-slate-200 flex items-center gap-1">
                           <Layers className="w-3.5 h-3.5 text-slate-600" />
                           <span>{job.positions.length}টি ভিন্ন পদ ({job.grade})</span>
                         </span>
                       ) : (
-                        <span className="bg-slate-100 text-slate-800 text-[15px] font-semibold px-2.5 py-1 rounded-md border border-slate-200">
+                        <span className="bg-slate-100 text-slate-800 text-xs font-normal px-2.5 py-1 rounded-md border border-slate-200">
                           {job.grade}
                         </span>
                       )}
-                      <span className="bg-slate-100 text-slate-800 text-[15px] font-semibold px-2.5 py-1 rounded-md border border-slate-200 flex items-center gap-1">
+                      <span className="bg-slate-100 text-slate-800 text-xs font-normal px-2.5 py-1 rounded-md border border-slate-200 flex items-center gap-1">
                         <Users className="w-3.5 h-3.5 text-slate-600" />
                         {job.totalPosts} টি পদ
                       </span>
-                      <span className={`text-xs font-bold px-2.5 py-1 rounded-md flex items-center gap-1 ml-auto ${
-                        isUrgent ? 'bg-red-50 text-red-700 border border-red-200 animate-pulse' : 'bg-slate-100 text-slate-700 border border-slate-200'
+                      <span className={`text-xs font-normal px-2.5 py-1 rounded-md flex items-center gap-1 ml-auto ${
+                        isUrgent ? 'bg-emerald-50 text-emerald-800 border border-emerald-300' : 'bg-slate-100 text-slate-700 border border-slate-200'
                       }`}>
                         <Clock className="w-3.5 h-3.5" />
                         {job.daysRemaining} দিন বাকি
@@ -1207,19 +1069,19 @@ export default function HomePage() {
                   <div className="grid grid-cols-2 gap-2 pt-4 border-t border-slate-100 mt-4">
                     <Link
                       href={`/jobs/${job.id}`}
-                      className="px-3 py-2.5 rounded-xl border border-slate-300 text-slate-800 hover:bg-slate-50 font-bold text-[17px] text-center transition-colors"
+                      className="px-3 py-2 rounded-xl border border-slate-300 text-slate-800 hover:bg-slate-50 font-normal text-xs sm:text-sm text-center transition-colors"
                     >
                       সার্কুলার নোটিশ
                     </Link>
                     {isExpired ? (
-                      <div className="px-3 py-2.5 rounded-xl bg-slate-100 text-slate-500 font-bold text-[17px] text-center border border-slate-200 flex items-center justify-center gap-1.5 cursor-not-allowed select-none">
+                      <div className="px-3 py-2 rounded-xl bg-slate-100 text-slate-500 font-normal text-xs sm:text-sm text-center border border-slate-200 flex items-center justify-center gap-1.5 cursor-not-allowed select-none">
                         <Clock className="w-3.5 h-3.5 text-slate-500" />
                         <span>সময় শেষ</span>
                       </div>
                     ) : (
                       <Link
                         href={`/apply/${job.id}`}
-                        className="px-3 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-[17px] text-center shadow-xs transition-all flex items-center justify-center gap-1.5"
+                        className="px-3 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-normal text-xs sm:text-sm text-center shadow-xs transition-all flex items-center justify-center gap-1.5"
                       >
                         <span>আবেদন করুন</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -1363,26 +1225,21 @@ export default function HomePage() {
             backgroundImage: howItWorksCms?.style?.backgroundColor ? 'none' : undefined,
             color: howItWorksCms?.style?.textColor || undefined
           }}
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 scroll-mt-24"
+          className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 scroll-mt-24"
         >
-          <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
-            <span className="text-[14px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full">
+          <div className="text-center max-w-2xl mx-auto mb-8 space-y-2">
+            <span className="text-xs font-normal uppercase tracking-wider text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full">
               {howItWorksCms?.content?.badge || 'সহজ ৩ ধাপের প্রক্রিয়া'}
             </span>
-            <h2 className={`${
-              howItWorksCms?.style?.titleFontSize === '5xl' ? 'text-3xl sm:text-5xl' :
-              howItWorksCms?.style?.titleFontSize === '4xl' ? 'text-2xl sm:text-4xl' :
-              howItWorksCms?.style?.titleFontSize === '2xl' ? 'text-lg sm:text-2xl' :
-              'text-2xl sm:text-3xl'
-            } font-black text-slate-900`}>
+            <h2 className="text-lg sm:text-2xl font-normal text-slate-900">
               {howItWorksCms?.title || 'কীভাবে ঘরে বসেই নির্ভুল চাকরি আবেদন করবেন?'}
             </h2>
-            <p className="text-[16px] text-slate-600">
+            <p className="text-xs sm:text-sm text-slate-600 font-normal">
               {howItWorksCms?.subtitle || 'সাইবার ক্যাফেতে ঘণ্টার পর ঘণ্টা বসে থাকার ঝামেলা শেষ! আপনার সুবিধার্থে আধুনিক স্মার্ট সিস্টেম:'}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {(howItWorksCms?.content?.items && howItWorksCms.content.items.length > 0 ? howItWorksCms.content.items : [
               {
                 step: 1,
@@ -1400,14 +1257,14 @@ export default function HomePage() {
                 desc: 'আমাদের অভিজ্ঞ এক্সপার্ট টিম অফিশিয়াল পোর্টালে নিখুঁতভাবে ফর্ম পূরণ করে সরকারি ফি দিয়ে আপনার ড্যাশবোর্ডে অ্যাপ্লিকেন্ট কপি পিডিএফ আপলোড করে দেবে এবং এসএমএস যাবে!'
               }
             ]).map((stepItem: any, sIdx: number) => (
-              <div key={sIdx} className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm relative overflow-hidden group hover:border-emerald-500 transition-all space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 font-black text-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div key={sIdx} className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/90 shadow-2xs relative overflow-hidden group hover:border-emerald-500 transition-all space-y-2.5">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 font-normal text-base flex items-center justify-center border border-emerald-200">
                   {stepItem.step || sIdx + 1}
                 </div>
-                <h3 className="text-lg font-bold text-slate-900">
+                <h3 className="text-sm sm:text-base font-normal text-slate-900">
                   {stepItem.title}
                 </h3>
-                <p className="text-[16px] text-slate-600 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
                   {stepItem.desc}
                 </p>
               </div>
@@ -1418,23 +1275,23 @@ export default function HomePage() {
 
       {/* 6. FREE PREVIOUS EXAM QUESTIONS TEASER BANNER */}
       {(ctaBannerCms?.isVisible !== false) && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8">
           <div 
             style={{
               backgroundColor: ctaBannerCms?.style?.backgroundColor || undefined,
               backgroundImage: ctaBannerCms?.style?.backgroundColor ? 'none' : undefined,
               color: ctaBannerCms?.style?.textColor || undefined
             }}
-            className="bg-emerald-800 text-white rounded-3xl p-6 sm:p-10 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6"
+            className="bg-emerald-800 text-white rounded-2xl p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6"
           >
-            <div className="space-y-2 max-w-xl">
-              <span className="bg-white/20 text-white text-[13px] font-black px-2.5 py-1 rounded uppercase tracking-wider">
+            <div className="space-y-1.5 max-w-xl">
+              <span className="bg-white/20 text-white text-xs font-normal px-2.5 py-0.5 rounded uppercase tracking-wider">
                 {ctaBannerCms?.content?.badge || 'ফ্রি ডাউনলোড হাব'}
               </span>
-              <h3 className={`${ctaBannerCms?.style?.titleFontSize === '3xl' ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'} font-black`}>
+              <h3 className="text-lg sm:text-xl font-normal text-white">
                 {ctaBannerCms?.title || 'বিসিএস ও ব্যাংক পরীক্ষার বিগত ১০ বছরের প্রশ্ন ও সমাধান (PDF)'}
               </h3>
-              <p className="text-[16px] text-emerald-100 leading-relaxed">
+              <p className="text-xs sm:text-sm text-emerald-100 leading-relaxed font-normal">
                 {ctaBannerCms?.subtitle || 'প্রিলিমিনারি ও লিখিত পরীক্ষার পূর্ণাঙ্গ প্রশ্নব্যাংক ব্যাখ্যাসহ ডাউনলোড করুন সম্পূর্ণ বিনামূল্যে।'}
               </p>
             </div>
@@ -1442,7 +1299,7 @@ export default function HomePage() {
             <div className="flex items-center gap-3">
               <Link
                 href={ctaBannerCms?.content?.buttonUrl || '/questions'}
-                className="px-6 py-3 bg-white hover:bg-slate-100 text-slate-900 font-black text-[17px] rounded-xl shadow-xs transition-all flex items-center gap-2"
+                className="px-5 py-2.5 bg-white hover:bg-slate-100 text-slate-900 font-normal text-xs sm:text-sm rounded-xl shadow-xs transition-all flex items-center gap-2"
               >
                 <Download className="w-4 h-4 text-emerald-700" />
                 <span>{ctaBannerCms?.content?.buttonLabel || 'ফ্রি প্রশ্নব্যাংক ডাউনলোড'}</span>
@@ -1454,25 +1311,25 @@ export default function HomePage() {
 
       {/* 7. CANDIDATE TESTIMONIALS & REVIEWS SECTION (Auto-Scrolling Marquee) */}
       {(reviewsCms?.isVisible !== false) && (
-        <section id="reviews-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 scroll-mt-24">
+        <section id="reviews-section" className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 scroll-mt-24">
           <div 
             style={{
               backgroundColor: reviewsCms?.style?.backgroundColor || undefined,
               backgroundImage: reviewsCms?.style?.backgroundColor ? 'none' : undefined,
               color: reviewsCms?.style?.textColor || undefined
             }}
-            className="bg-slate-900 rounded-3xl sm:rounded-[36px] p-6 sm:p-10 text-white border border-slate-800 shadow-sm relative overflow-hidden"
+            className="bg-slate-900 rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white border border-slate-800 shadow-sm relative overflow-hidden"
           >
             {/* Section Header */}
-            <div className="text-center max-w-3xl mx-auto space-y-3 mb-8 relative z-10">
-              <div className="inline-flex items-center gap-2 bg-slate-800 border border-slate-700 text-emerald-400 px-4 py-1.5 rounded-full text-[13px] sm:text-[14px] font-bold tracking-wide shadow-xs">
-                <span className="flex items-center gap-0.5 text-amber-400">{Array.from({ length: 5 }).map((_, i) => <FaStar key={i} className="w-3.5 h-3.5" />)}</span>
+            <div className="text-center max-w-3xl mx-auto space-y-2 mb-6 relative z-10">
+              <div className="inline-flex items-center gap-2 bg-slate-800 border border-slate-700 text-emerald-400 px-3.5 py-1 rounded-full text-xs font-normal tracking-wide shadow-xs">
+                <span className="flex items-center gap-0.5 text-emerald-400">{Array.from({ length: 5 }).map((_, i) => <FaStar key={i} className="w-3 h-3" />)}</span>
                 <span>{reviewsCms?.content?.badge || '৪.৯/৫ গড় রেটিং • ৩,৫০০+ ভেরিফাইড আবেদনকারী'}</span>
               </div>
-              <h2 className={`${reviewsCms?.style?.titleFontSize === '5xl' ? 'text-3xl sm:text-5xl' : reviewsCms?.style?.titleFontSize === '3xl' ? 'text-xl sm:text-3xl' : 'text-2xl sm:text-4xl'} font-black text-white tracking-tight`}>
+              <h2 className="text-xl sm:text-2xl font-normal text-white tracking-tight">
                 {reviewsCms?.title || 'সফল চাকরিপ্রার্থীদের বাস্তব অভিজ্ঞতা ও মতামত'}
               </h2>
-              <p className="text-[15px] sm:text-[17px] text-slate-300 leading-relaxed max-w-2xl mx-auto">
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl mx-auto font-normal">
                 {reviewsCms?.subtitle || 'সাইবার ক্যাফেতে ঘণ্টার পর ঘণ্টা লাইনে দাঁড়ানোর ভোগান্তি ছাড়াই কীভাবে শত শত চাকরিপ্রার্থী ঘরে বসেই শতভাগ নির্ভুল আবেদন সেবা পেয়েছেন:'}
               </p>
             </div>
@@ -1483,28 +1340,28 @@ export default function HomePage() {
               {[...reviewsToDisplay, ...reviewsToDisplay].map((rev, index) => (
                 <div
                   key={`${rev.id}-${index}`}
-                  className="w-[285px] sm:w-[350px] bg-slate-800/90 rounded-2xl sm:rounded-3xl p-5 border border-slate-700 transition-all flex flex-col justify-between space-y-3.5 flex-shrink-0 cursor-default select-none shadow-xs"
+                  className="w-[285px] sm:w-[340px] bg-slate-800/90 rounded-2xl p-4 sm:p-5 border border-slate-700 transition-all flex flex-col justify-between space-y-3 flex-shrink-0 cursor-default select-none shadow-xs"
                 >
-                  <div className="space-y-2.5">
+                  <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-0.5 text-amber-400 text-sm">{Array.from({ length: 5 }).map((_, i) => <FaStar key={i} className="w-3.5 h-3.5" />)}</div>
-                      <span className="text-[12px] text-emerald-400 font-bold bg-slate-900 border border-slate-700 px-2 py-0.5 rounded-full flex items-center gap-1">
+                      <div className="flex items-center gap-0.5 text-emerald-400 text-xs">{Array.from({ length: 5 }).map((_, i) => <FaStar key={i} className="w-3 h-3" />)}</div>
+                      <span className="text-[11px] text-emerald-400 font-normal bg-slate-900 border border-slate-700 px-2 py-0.5 rounded-full flex items-center gap-1">
                         <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                         <span>ভেরিফাইড</span>
                       </span>
                     </div>
-                    <p className="text-[14px] sm:text-[15px] text-slate-200 leading-relaxed italic line-clamp-4">
+                    <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-normal italic line-clamp-4">
                       “{rev.quote}”
                     </p>
                   </div>
-                  <div className="pt-3 border-t border-slate-700 flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-emerald-700 flex items-center justify-center text-white font-black text-xs flex-shrink-0 shadow-xs">
+                  <div className="pt-2.5 border-t border-slate-700 flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-emerald-700 flex items-center justify-center text-white font-normal text-xs flex-shrink-0 shadow-xs">
                       {rev.initials}
                     </div>
                     <div className="overflow-hidden">
-                      <div className="text-[14px] sm:text-[15px] font-bold text-white leading-tight truncate">{rev.name}</div>
-                      <div className="text-[12px] text-emerald-400 font-medium leading-tight truncate">{rev.role}</div>
-                      <div className="text-[11px] text-slate-400 truncate">{rev.institution}</div>
+                      <div className="text-xs sm:text-sm font-normal text-white leading-tight truncate">{rev.name}</div>
+                      <div className="text-[11px] text-emerald-400 font-normal leading-tight truncate">{rev.role}</div>
+                      <div className="text-[10px] text-slate-400 truncate">{rev.institution}</div>
                     </div>
                   </div>
                 </div>
@@ -1525,32 +1382,17 @@ export default function HomePage() {
             backgroundImage: faqCms?.style?.backgroundColor ? 'none' : undefined,
             color: faqCms?.style?.textColor || undefined
           }}
-          className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 scroll-mt-24"
+          className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 scroll-mt-24"
         >
-          <div className="text-center space-y-3 mb-10">
-            <div className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 px-3.5 py-1 rounded-full text-[13px] sm:text-[14px] font-bold">
-              <HelpCircle className="w-4 h-4 text-emerald-700" />
+          <div className="text-center space-y-2 mb-8">
+            <div className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200 px-3 py-0.5 rounded-full text-xs font-normal">
+              <HelpCircle className="w-3.5 h-3.5 text-emerald-700" />
               <span>{faqCms?.content?.badge || 'সাধারণ জিজ্ঞাসা • স্পষ্ট উত্তর'}</span>
             </div>
-            <h2 className={`${
-              faqCms?.style?.titleFontSize === '5xl' ? 'text-3xl sm:text-5xl' :
-              faqCms?.style?.titleFontSize === '6xl' ? 'text-4xl sm:text-6xl' :
-              faqCms?.style?.titleFontSize === '4xl' ? 'text-3xl sm:text-4xl lg:text-5xl' :
-              faqCms?.style?.titleFontSize === '2xl' ? 'text-xl sm:text-2xl' :
-              'text-2xl sm:text-3xl lg:text-4xl'
-            } ${
-              faqCms?.style?.fontWeight === 'black' ? 'font-black' :
-              faqCms?.style?.fontWeight === 'bold' ? 'font-bold' :
-              faqCms?.style?.fontWeight === 'semibold' ? 'font-semibold' : 'font-black'
-            } text-slate-900 tracking-tight`}>
+            <h2 className="text-xl sm:text-2xl font-normal text-slate-900 tracking-tight">
               {faqCms?.title || 'সচরাচর জিজ্ঞাসিত প্রশ্নাবলী (FAQ)'}
             </h2>
-            <p className={`${
-              faqCms?.style?.subtitleFontSize === 'xs' ? 'text-[12px] sm:text-[13px]' :
-              faqCms?.style?.subtitleFontSize === 'sm' ? 'text-[13px] sm:text-[14px]' :
-              faqCms?.style?.subtitleFontSize === 'lg' ? 'text-[16px] sm:text-[18px]' :
-              'text-[15px] sm:text-[16px]'
-            } text-slate-600 max-w-xl mx-auto leading-relaxed`}>
+            <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
               {faqCms?.subtitle || 'অনলাইন আবেদন ও চাকরি সেবা প্ল্যাটফর্ম সংক্রান্ত আপনার সকল প্রয়োজনীয় প্রশ্নের সহজ ও দ্রুত সমাধান:'}
             </p>
           </div>
@@ -1656,7 +1498,7 @@ export default function HomePage() {
         .map((sec: any, idx: number) => {
           if (sec.type === 'banner-image') {
             return (
-              <section key={sec.id || idx} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+              <section key={sec.id || idx} className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
                 <div className="relative overflow-hidden rounded-3xl border border-slate-200/90 shadow-lg group">
                   <img 
                     src={sec.content?.imageUrl || 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1200&auto=format&fit=crop&q=80'} 
@@ -1695,7 +1537,7 @@ export default function HomePage() {
 
           if (sec.type === 'features') {
             return (
-              <section key={sec.id || idx} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+              <section key={sec.id || idx} className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div className="text-center mb-8 space-y-2">
                   <h3 className="text-2xl sm:text-3xl font-black text-slate-900">{sec.title}</h3>
                   {sec.subtitle && <p className="text-sm sm:text-base text-slate-600">{sec.subtitle}</p>}

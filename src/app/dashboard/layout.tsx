@@ -279,7 +279,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="pt-2">
             <Link
               href={`/login?redirect=${encodeURIComponent(pathname)}`}
-              className="inline-flex items-center justify-center gap-2 w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold transition-all shadow-sm"
+              className="inline-flex items-center justify-center gap-2 w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-semibold transition-all shadow-sm"
             >
               <span>লগইন পেজে যান</span>
               <ChevronRight className="w-4 h-4" />
@@ -427,7 +427,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </div>
               <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
                 <div 
-                  className="bg-slate-800 h-1.5 rounded-full transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)]" 
+                  className="bg-emerald-600 h-1.5 rounded-full transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)]" 
                   style={{ width: `${isMounted ? completion : 0}%` }}
                 />
               </div>

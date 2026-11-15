@@ -102,7 +102,7 @@ export default function PreparationPage() {
           <Link
             data-testid="btn-start-model-test"
             href="/model-tests"
-            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm"
+            className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm"
           >
             <Target className="w-4 h-4" />
             <span>অনলাইন মডেল টেস্ট</span>
@@ -113,7 +113,7 @@ export default function PreparationPage() {
       {/* Overall Preparation Snapshot Banner */}
       <div 
         data-testid="overall-preparation-progress"
-        className="bg-slate-900 text-white p-6 sm:p-8 rounded-3xl shadow-xs border border-slate-800 relative overflow-hidden"
+        className="bg-gradient-to-r from-emerald-700 via-emerald-800 to-emerald-800 text-white p-6 sm:p-8 rounded-3xl shadow-xs border border-emerald-600 relative overflow-hidden"
       >
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-xl">
@@ -130,7 +130,7 @@ export default function PreparationPage() {
           </div>
 
           <div className="flex items-center gap-4 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 min-w-[260px]">
-            <div className="w-16 h-16 rounded-2xl bg-slate-900 text-white flex flex-col items-center justify-center font-black shadow-md">
+            <div className="w-16 h-16 rounded-2xl bg-emerald-950 text-white flex flex-col items-center justify-center font-normal shadow-md border border-emerald-600/30">
               <span className="text-2xl leading-none">{overallPercentage}%</span>
               <span className="text-[10px] uppercase font-bold text-slate-200">প্রস্তুত</span>
             </div>
@@ -182,7 +182,7 @@ export default function PreparationPage() {
                 <div className="space-y-1">
                   <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-slate-900 rounded-full transition-all duration-500" 
+                      className="h-full bg-emerald-600 rounded-full transition-all duration-500" 
                       style={{ width: `${s.progress}%` }} 
                     />
                   </div>
@@ -218,7 +218,7 @@ export default function PreparationPage() {
         </div>
         <Link 
           href="/model-tests" 
-          className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-xs transition-all shrink-0 text-center"
+          className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-xs transition-all shrink-0 text-center"
         >
           মডেল টেস্ট দিন →
         </Link>

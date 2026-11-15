@@ -27,6 +27,8 @@ import {
 } from 'lucide-react';
 import { storage } from '@/lib/store';
 import { fetchWithAuth } from '@/lib/axios';
+import { toast, showAlert, showConfirm, showSuccess, showError } from '@/lib/sweetalert';
+import { Button } from '@/components/ui/Button';
 import { CandidateProfile, EducationRecord, ExperienceRecord } from '@/types';
 import { emptyCandidateProfile as mockUserProfile } from '@/data/candidateDefaults';
 import { BD_DIVISIONS_EN, BD_DIVISIONS_MAP, getAllDistrictsList, getDivisionForDistrict, getDistrictsForDivision, getUpazilasForDistrict, normalizeToEnglishDistrict, normalizeToEnglishDivision } from '@/constants';
@@ -94,6 +96,7 @@ export default function ProfilePage() {
 
   // Education Modal / Form State
   const [showEduModal, setShowEduModal] = useState(false);
+  const [isSavingEdu, setIsSavingEdu] = useState(false);
   const [eduLevel, setEduLevel] = useState('স্নাতক (অনার্স)');
   const [eduDegree, setEduDegree] = useState('');
   const [eduBoard, setEduBoard] = useState('');
@@ -225,9 +228,17 @@ export default function ProfilePage() {
       .then(data => {
         const p = data?.profile || data?.user;
         if (p) {
-          setProfile(p);
-          populateAddressFromProfile(p);
-          storage.updateUser(p);
+          const normalized = {
+            ...mockUserProfile,
+            ...p,
+            education: Array.isArray(p.education) ? p.education : Array.isArray(p.educations) ? p.educations : [],
+            skills: Array.isArray(p.skills) ? p.skills : [],
+            experiences: Array.isArray(p.experiences) ? p.experiences : [],
+            documents: Array.isArray(p.documents) ? p.documents : [],
+          };
+          setProfile(normalized);
+          populateAddressFromProfile(normalized);
+          storage.updateUser(normalized);
           if (typeof window !== 'undefined') {
             window.dispatchEvent(new Event('cs_user_changed'));
           }
@@ -316,15 +327,20 @@ export default function ProfilePage() {
         body: JSON.stringify(profileToSave)
       });
       const data = await response.json();
-      if (!response.ok || !data.profile) throw new Error(data.error || 'প্রোফাইল সংরক্ষণ ব্যর্থ হয়েছে');
-      setProfile(data.profile);
-      storage.updateUser(data.profile);
+      if (!response.ok || !data.profile) throw new Error(data.message || data.error || 'প্রোফাইল সংরক্ষণ ব্যর্থ হয়েছে');
+      const mergedProfile = {
+        ...profileToSave,
+        ...data.profile,
+        education: data.profile.education || profileToSave.education || [],
+      };
+      setProfile(mergedProfile);
+      storage.updateUser(mergedProfile);
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new Event('cs_user_changed'));
       }
       return true;
     } catch (error) {
-      alert(error instanceof Error ? error.message : 'প্রোফাইল সংরক্ষণ ব্যর্থ হয়েছে');
+      showError(error instanceof Error ? error.message : 'প্রোফাইল সংরক্ষণ ব্যর্থ হয়েছে', 'সংরক্ষণ ব্যর্থ');
       return false;
     }
   };
@@ -367,36 +383,49 @@ export default function ProfilePage() {
 
     if (!await syncProfileToServer(updatedProfile)) return;
     setSavedSuccess(true);
+    toast.fire({
+      icon: 'success',
+      title: 'প্রোফাইল তথ্য সফলভাবে সংরক্ষণ করা হয়েছে!'
+    });
     setTimeout(() => setSavedSuccess(false), 3000);
   };
 
   const handleAddEducation = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!eduDegree || !eduResult) return;
-    const newEdu: EducationRecord = {
-      id: 'EDU-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6),
-      level: eduLevel,
-      degree: eduDegree,
-      boardOrUni: eduBoard || 'অন্যান্য',
-      roll: eduRoll || 'N/A',
-      reg: eduReg || 'N/A',
-      year: eduYear,
-      result: eduResult
-    };
-    const updated = {
-      ...profile,
-      education: [newEdu, ...profile.education]
-    };
-    if (!await syncProfileToServer(updated)) return;
-    setShowEduModal(false);
-    setEduDegree('');
-    setEduResult('');
+    setIsSavingEdu(true);
+    try {
+      const newEdu: EducationRecord = {
+        id: 'EDU-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6),
+        level: eduLevel,
+        degree: eduDegree,
+        boardOrUni: eduBoard || 'অন্যান্য',
+        roll: eduRoll || 'N/A',
+        reg: eduReg || 'N/A',
+        year: eduYear,
+        result: eduResult
+      };
+      const updated = {
+        ...profile,
+        education: [newEdu, ...(profile.education || [])]
+      };
+      if (!await syncProfileToServer(updated)) return;
+      toast.fire({ icon: 'success', title: 'শিক্ষাগত যোগ্যতা যুক্ত করা হয়েছে' });
+      setShowEduModal(false);
+      setEduDegree('');
+      setEduResult('');
+    } finally {
+      setIsSavingEdu(false);
+    }
   };
 
   const handleDeleteEducation = async (idx: number) => {
-    const updatedList = profile.education.filter((_, i) => i !== idx);
+    const confirmed = await showConfirm('আপনি কি সত্যিই এই শিক্ষাগত যোগ্যতা মুছে ফেলতে চান?');
+    if (!confirmed) return;
+    const updatedList = (profile.education || []).filter((_, i) => i !== idx);
     const updated = { ...profile, education: updatedList };
     if (!await syncProfileToServer(updated)) return;
+    toast.fire({ icon: 'success', title: 'শিক্ষাগত তথ্য সফলভাবে মোছা হয়েছে' });
   };
 
   const handleAddSkill = async (e: React.FormEvent) => {
@@ -418,6 +447,7 @@ export default function ProfilePage() {
         window.dispatchEvent(new Event('cs_user_changed'));
         setNewSkillName('');
         setSavedSuccess(true);
+        toast.fire({ icon: 'success', title: 'নতুন স্কিল যুক্ত করা হয়েছে' });
         setTimeout(() => setSavedSuccess(false), 3000);
       }
     } catch (err) {
@@ -428,6 +458,8 @@ export default function ProfilePage() {
   };
 
   const handleDeleteSkill = async (skillId: string) => {
+    const confirmed = await showConfirm('আপনি কি সত্যিই এই স্কিলটি মুছে ফেলতে চান?');
+    if (!confirmed) return;
     try {
       const response = await fetchWithAuth('/api/user/skills/' + encodeURIComponent(skillId), { method: 'DELETE' });
       if (!response.ok) throw new Error('Skill deletion failed');
@@ -437,6 +469,7 @@ export default function ProfilePage() {
       setProfile(updated);
       storage.updateUser(updated);
       window.dispatchEvent(new Event('cs_user_changed'));
+      toast.fire({ icon: 'success', title: 'স্কিল সফলভাবে মোছা হয়েছে' });
     } catch (err) {
       console.error('Failed to delete skill:', err);
     }
@@ -480,6 +513,7 @@ export default function ProfilePage() {
         setNewExpEndDate('');
         setNewExpResponsibilities('');
         setSavedSuccess(true);
+        toast.fire({ icon: 'success', title: 'কর্মঅভিজ্ঞতা যুক্ত করা হয়েছে' });
         setTimeout(() => setSavedSuccess(false), 3000);
       }
     } catch (err) {
@@ -490,6 +524,8 @@ export default function ProfilePage() {
   };
 
   const handleDeleteExperience = async (expId: string) => {
+    const confirmed = await showConfirm('আপনি কি সত্যিই এই কর্মঅভিজ্ঞতা মুছে ফেলতে চান?');
+    if (!confirmed) return;
     try {
       const response = await fetchWithAuth('/api/user/experience/' + encodeURIComponent(expId), { method: 'DELETE' });
       if (!response.ok) throw new Error('Experience deletion failed');
@@ -499,6 +535,7 @@ export default function ProfilePage() {
       setProfile(updated);
       storage.updateUser(updated);
       window.dispatchEvent(new Event('cs_user_changed'));
+      toast.fire({ icon: 'success', title: 'অভিজ্ঞতা সফলভাবে মোছা হয়েছে' });
     } catch (err) {
       console.error('Failed to delete experience:', err);
     }
@@ -537,7 +574,7 @@ export default function ProfilePage() {
 
   if (!isLoaded) {
     return (
-      <div className="space-y-6 max-w-5xl animate-pulse" suppressHydrationWarning>
+      <div className="space-y-6 w-full animate-pulse" suppressHydrationWarning>
         {/* Header Skeleton */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-2">
@@ -591,12 +628,12 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="space-y-6 max-w-5xl" suppressHydrationWarning>
+    <div className="space-y-6 w-full" suppressHydrationWarning>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-            <User className="w-6 h-6 text-emerald-700" />
+          <h1 className="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
+            <User className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-700 shrink-0" />
             <span>স্মার্ট ক্যান্ডিডেট প্রোফাইল</span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
@@ -605,18 +642,18 @@ export default function ProfilePage() {
         </div>
 
         {savedSuccess && (
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-800 rounded-xl text-xs font-bold border border-emerald-200 animate-bounce">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-800 rounded-[7px] text-xs font-bold border border-emerald-200 animate-bounce self-start sm:self-auto">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>তথ্য সফলভাবে সংরক্ষিত হয়েছে!</span>
           </div>
         )}
       </div>
 
       {/* Profile Section Tabs */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-2">
+      <div className="flex items-center gap-1.5 sm:gap-2 border-b border-slate-200 pb-2 overflow-x-auto no-scrollbar flex-nowrap sm:flex-wrap">
         <button
           onClick={() => setActiveTab('personal')}
-          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
+          className={`px-3.5 py-2 rounded-[7px] text-xs font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
             activeTab === 'personal'
               ? 'bg-emerald-700 text-white shadow-sm'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
@@ -626,17 +663,17 @@ export default function ProfilePage() {
         </button>
         <button
           onClick={() => setActiveTab('education')}
-          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
+          className={`px-3.5 py-2 rounded-[7px] text-xs font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
             activeTab === 'education'
               ? 'bg-emerald-700 text-white shadow-sm'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
-          শিক্ষাগত যোগ্যতা ({profile.education.length})
+          শিক্ষাগত যোগ্যতা ({(profile.education || []).length})
         </button>
         <button
           onClick={() => setActiveTab('skills')}
-          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
+          className={`px-3.5 py-2 rounded-[7px] text-xs font-bold transition-all flex items-center gap-1 whitespace-nowrap shrink-0 cursor-pointer ${
             activeTab === 'skills'
               ? 'bg-emerald-700 text-white shadow-sm'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
@@ -647,7 +684,7 @@ export default function ProfilePage() {
         </button>
         <button
           onClick={() => setActiveTab('experience')}
-          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
+          className={`px-3.5 py-2 rounded-[7px] text-xs font-bold transition-all flex items-center gap-1 whitespace-nowrap shrink-0 cursor-pointer ${
             activeTab === 'experience'
               ? 'bg-emerald-700 text-white shadow-sm'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
@@ -658,7 +695,7 @@ export default function ProfilePage() {
         </button>
         <button
           onClick={() => setActiveTab('preferences')}
-          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
+          className={`px-3.5 py-2 rounded-[7px] text-xs font-bold transition-all flex items-center gap-1 whitespace-nowrap shrink-0 cursor-pointer ${
             activeTab === 'preferences'
               ? 'bg-emerald-700 text-white shadow-sm'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
@@ -669,7 +706,7 @@ export default function ProfilePage() {
         </button>
         <button
           onClick={() => setActiveTab('quota')}
-          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
+          className={`px-3.5 py-2 rounded-[7px] text-xs font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
             activeTab === 'quota'
               ? 'bg-emerald-700 text-white shadow-sm'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
@@ -1307,13 +1344,14 @@ export default function ProfilePage() {
           </div>
 
           <div className="pt-4 border-t border-slate-100 flex items-center justify-end">
-            <button
+            <Button
               type="submit"
-              className="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm transition-colors"
+              variant="primary"
+              size="md"
+              leftIcon={<Save className="w-4 h-4" />}
             >
-              <Save className="w-4 h-4" />
-              <span>প্রোফাইল তথ্য সেভ করুন</span>
-            </button>
+              প্রোফাইল তথ্য সেভ করুন
+            </Button>
           </div>
         </form>
       )}
@@ -1325,17 +1363,18 @@ export default function ProfilePage() {
             <span className="text-xs text-slate-500 font-semibold">
               সর্বনিম্ন এসএসসি থেকে শুরু করে আপনার সর্বোচ্চ ডিগ্রি যুক্ত করুন:
             </span>
-            <button
+            <Button
               onClick={() => setShowEduModal(true)}
-              className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition-colors"
+              variant="primary"
+              size="sm"
+              leftIcon={<Plus className="w-4 h-4" />}
             >
-              <Plus className="w-4 h-4" />
-              <span>নতুন শিক্ষাগত যোগ্যতা যোগ করুন</span>
-            </button>
+              নতুন শিক্ষাগত যোগ্যতা যোগ করুন
+            </Button>
           </div>
 
           <div className="grid grid-cols-1 gap-3">
-            {profile.education.map((edu, idx) => (
+            {(profile.education || []).map((edu, idx) => (
               <div
                 key={idx}
                 className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4"
@@ -1519,19 +1558,24 @@ export default function ProfilePage() {
                   </div>
 
                   <div className="pt-3 border-t flex justify-end gap-2">
-                    <button
+                    <Button
                       type="button"
+                      variant="outline"
+                      size="sm"
                       onClick={() => setShowEduModal(false)}
-                      className="px-4 py-2 border rounded-xl text-slate-600 font-bold hover:bg-slate-50"
                     >
                       বাতিল
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       type="submit"
-                      className="px-5 py-2 bg-emerald-700 text-white rounded-xl font-bold hover:bg-emerald-800"
+                      variant="primary"
+                      size="sm"
+                      loading={isSavingEdu}
+                      loadingText="সংরক্ষণ হচ্ছে..."
+                      leftIcon={<Save className="w-4 h-4" />}
                     >
                       সংরক্ষণ করুন
-                    </button>
+                    </Button>
                   </div>
                 </form>
               </div>
@@ -1793,14 +1837,18 @@ export default function ProfilePage() {
                 ))}
               </div>
 
-              <button
+              <Button
                 type="submit"
-                disabled={isSavingSkill || !newSkillName.trim()}
-                className="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 disabled:bg-slate-300 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 ml-auto"
+                variant="primary"
+                size="sm"
+                disabled={!newSkillName.trim()}
+                loading={isSavingSkill}
+                loadingText="যোগ হচ্ছে..."
+                leftIcon={<Plus className="w-3.5 h-3.5" />}
+                className="ml-auto"
               >
-                <Plus className="w-3.5 h-3.5" />
-                <span>{isSavingSkill ? 'যোগ হচ্ছে...' : 'স্কিল যোগ করুন'}</span>
-              </button>
+                স্কিল যোগ করুন
+              </Button>
             </div>
           </form>
 
@@ -1934,14 +1982,17 @@ export default function ProfilePage() {
             </div>
 
             <div className="flex justify-end pt-1">
-              <button
+              <Button
                 type="submit"
-                disabled={isSavingExp || !newExpDesignation.trim() || !newExpOrg.trim()}
-                className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 disabled:bg-slate-300 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+                variant="primary"
+                size="sm"
+                disabled={!newExpDesignation.trim() || !newExpOrg.trim()}
+                loading={isSavingExp}
+                loadingText="সংরক্ষণ হচ্ছে..."
+                leftIcon={<Plus className="w-3.5 h-3.5" />}
               >
-                <Plus className="w-3.5 h-3.5" />
-                <span>{isSavingExp ? 'সংরক্ষণ হচ্ছে...' : 'অভিজ্ঞতা যোগ করুন'}</span>
-              </button>
+                অভিজ্ঞতা যোগ করুন
+              </Button>
             </div>
           </form>
 
@@ -2170,14 +2221,16 @@ export default function ProfilePage() {
           </div>
 
           <div className="flex justify-end pt-3 border-t border-slate-100">
-            <button
+            <Button
               type="submit"
-              disabled={isSavingPrefs}
-              className="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 disabled:bg-slate-300 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-2"
+              variant="primary"
+              size="md"
+              loading={isSavingPrefs}
+              loadingText="সংরক্ষণ হচ্ছে..."
+              leftIcon={<Save className="w-4 h-4" />}
             >
-              <Save className="w-4 h-4" />
-              <span>{isSavingPrefs ? 'সংরক্ষণ হচ্ছে...' : 'পছন্দসমূহ সংরক্ষণ করুন'}</span>
-            </button>
+              পছন্দসমূহ সংরক্ষণ করুন
+            </Button>
           </div>
         </form>
       )}

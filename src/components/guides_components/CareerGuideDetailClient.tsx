@@ -224,7 +224,7 @@ export default function CareerGuideDetailClient({ slug }: CareerGuideDetailClien
 
             <Link
               href="/career-guides"
-              className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold transition-all ml-auto inline-flex items-center gap-1"
+              className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold transition-all ml-auto inline-flex items-center gap-1"
             >
               সকল গাইড দেখুন <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>

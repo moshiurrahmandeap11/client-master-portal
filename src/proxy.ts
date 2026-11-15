@@ -3,12 +3,12 @@ import type { NextRequest } from 'next/server';
 
 /**
  * Enterprise Route Proxy & Session Gate for Chakri Sheba
- * Modeled after Avirosoft Client Proxy architecture.
- * 
+ * Strictly aligned with D:\avirosoft\aviro-auth-client architecture.
+ *
  * Transparently inspects httpOnly session cookies via /api/auth/me.
- * On 401 (expired 5m access token), silently hits /api/auth/refresh-token,
- * captures refreshed cookies, appends them to the outgoing browser response,
- * and maintains seamless access without user disruption or visible reload.
+ * On 401 (expired access token), silently hits /api/auth/refresh-token with cache: 'no-store',
+ * attaches refreshed cookies directly to a NextResponse instance, and forwards it to the browser
+ * maintaining continuous session persistence without logout.
  */
 
 const PROTECTED_ROUTES = [
@@ -29,34 +29,41 @@ async function fetchAuthStatus(request: NextRequest, backendUrl: string) {
     let response = await fetch(`${backendUrl}/api/auth/me`, {
       method: 'GET',
       headers: { Cookie: cookieHeader },
+      cache: 'no-store',
     });
 
-    // If /auth/me returns 401, attempt silent refresh
+    // If /auth/me returns 401, attempt silent refresh like aviro-auth-client
     if (!response.ok) {
       const refreshResponse = await fetch(`${backendUrl}/api/auth/refresh-token`, {
         method: 'POST',
         headers: { Cookie: cookieHeader },
+        cache: 'no-store',
       });
 
       if (refreshResponse.ok) {
-        // Refresh succeeded — capture fresh Set-Cookie headers to forward to browser
-        const cookiesToSet: string[] = [];
+        // Refresh succeeded — forward new cookies directly to browser response
+        const newResponse = NextResponse.next();
         const newCookies = (refreshResponse.headers as any).getSetCookie?.() || [];
 
-        if (newCookies.length > 0) {
-          cookiesToSet.push(...newCookies);
-        } else {
-          const setCookieHeader = refreshResponse.headers.get('set-cookie');
-          if (setCookieHeader) {
-            cookiesToSet.push(...setCookieHeader.split(/,(?=\s*[^;]+=)/).map(c => c.trim()));
-          }
+        newCookies.forEach((cookie: string) => {
+          newResponse.headers.append('Set-Cookie', cookie);
+        });
+
+        const setCookieHeader = refreshResponse.headers.get('set-cookie');
+        if (setCookieHeader && newCookies.length === 0) {
+          const cookies = setCookieHeader.split(',').map((c) => c.trim());
+          cookies.forEach((cookie) => {
+            newResponse.headers.append('Set-Cookie', cookie);
+          });
         }
 
         const data = await refreshResponse.json().catch(() => ({}));
+        const role = (data?.role || data?.data?.role || data?.user?.role || 'candidate').toLowerCase();
+
         return {
           authenticated: true as const,
-          role: data?.role || 'candidate',
-          cookiesToSet
+          refreshResponse: newResponse,
+          role,
         };
       }
 
@@ -64,9 +71,10 @@ async function fetchAuthStatus(request: NextRequest, backendUrl: string) {
     }
 
     const data = await response.json().catch(() => ({}));
-    return { 
-      authenticated: true as const, 
-      role: data?.role || 'candidate' 
+    const role = (data?.role || data?.data?.role || data?.user?.role || 'candidate').toLowerCase();
+    return {
+      authenticated: true as const,
+      role,
     };
   } catch (err) {
     console.error('[proxy] Auth check network error:', err);
@@ -76,32 +84,39 @@ async function fetchAuthStatus(request: NextRequest, backendUrl: string) {
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const backendUrl = process.env.INTERNAL_BACKEND_URL || 'http://localhost:6969';
+  const backendUrl = (process.env.INTERNAL_BACKEND_URL || 'http://localhost:6969').replace(/\/+$/, '');
 
   // 1. Skip static assets, APIs, and next internal files
   const staticFileExt = /\.(svg|png|jpg|jpeg|gif|webp|ico|css|js|woff|woff2|ttf|otf|eot)$/;
-  if (staticFileExt.test(pathname) || pathname.startsWith('/_next') || pathname.startsWith('/api') || pathname.startsWith('/uploads')) {
+  if (
+    staticFileExt.test(pathname) ||
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/uploads')
+  ) {
     return NextResponse.next();
   }
 
-  const isAuthRoute = AUTH_ROUTES.some(route => pathname.startsWith(route));
-  const isProtectedRoute = PROTECTED_ROUTES.some(route => pathname.startsWith(route));
+  const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
+  const isProtectedRoute = PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
 
-  // 2. Auth Routes (/login, /register): if already logged in as candidate, redirect to /dashboard
+  // 2. Auth routes (/login, /register): if already logged in → /dashboard (with refreshed cookies if any)
   if (isAuthRoute) {
     const authStatus = await fetchAuthStatus(request, backendUrl);
     if (authStatus.authenticated && authStatus.role !== 'admin') {
-      const targetUrl = new URL('/dashboard', request.url);
+      const targetUrl = new URL('/dashboard/profile', request.url);
       const redirect = NextResponse.redirect(targetUrl);
-      if ('cookiesToSet' in authStatus && authStatus.cookiesToSet?.length) {
-        authStatus.cookiesToSet.forEach(cookie => redirect.headers.append('Set-Cookie', cookie));
+      if ('refreshResponse' in authStatus && authStatus.refreshResponse) {
+        (authStatus.refreshResponse.headers as any).getSetCookie?.()?.forEach((cookie: string) => {
+          redirect.headers.append('Set-Cookie', cookie);
+        });
       }
       return redirect;
     }
     return NextResponse.next();
   }
 
-  // 3. Protected Candidate Routes (/dashboard, /applications, etc.)
+  // 3. Protected routes: if not logged in → login, else allow and pipe refreshResponse
   if (isProtectedRoute) {
     const authStatus = await fetchAuthStatus(request, backendUrl);
     if (!authStatus.authenticated) {
@@ -110,23 +125,20 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(loginUrl);
     }
 
-    const res = NextResponse.next();
-    if ('cookiesToSet' in authStatus && authStatus.cookiesToSet?.length) {
-      authStatus.cookiesToSet.forEach(cookie => res.headers.append('Set-Cookie', cookie));
+    if ('refreshResponse' in authStatus && authStatus.refreshResponse) {
+      return authStatus.refreshResponse;
     }
-    return res;
+
+    return NextResponse.next();
   }
 
-  // 4. Admin Portal (/admin)
-  // Let the request through; if user has verified admin cookie it automatically logs in,
-  // otherwise the secure PIN console is displayed.
+  // 4. Admin routes (/admin): allow access and forward refreshed cookies if refreshed
   if (pathname.startsWith('/admin')) {
     const authStatus = await fetchAuthStatus(request, backendUrl);
-    const res = NextResponse.next();
-    if ('cookiesToSet' in authStatus && authStatus.cookiesToSet?.length) {
-      authStatus.cookiesToSet.forEach(cookie => res.headers.append('Set-Cookie', cookie));
+    if ('refreshResponse' in authStatus && authStatus.refreshResponse) {
+      return authStatus.refreshResponse;
     }
-    return res;
+    return NextResponse.next();
   }
 
   return NextResponse.next();

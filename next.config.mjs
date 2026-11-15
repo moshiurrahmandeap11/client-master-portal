@@ -21,7 +21,7 @@ const nextConfig = {
     ],
   },
   async rewrites() {
-    const backendUrl = process.env.INTERNAL_BACKEND_URL || 'http://localhost:6969';
+    const backendUrl = (process.env.INTERNAL_BACKEND_URL || 'http://localhost:6969').replace(/\/+$/, '');
     return [
       {
         source: '/api/:path*',

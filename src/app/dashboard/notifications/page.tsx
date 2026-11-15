@@ -264,7 +264,7 @@ export default function NotificationsPage() {
                 {n.link && (
                   <Link
                     href={n.link}
-                    className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-1 cursor-pointer"
+                    className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-1 cursor-pointer"
                   >
                     <span>দেখুন</span>
                     <ChevronRight className="w-3.5 h-3.5" />
@@ -291,7 +291,7 @@ export default function NotificationsPage() {
           </p>
           <Link
             href="/jobs"
-            className="inline-block px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold mt-2 hover:bg-slate-800 cursor-pointer"
+            className="inline-block px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold mt-2 hover:bg-slate-800 cursor-pointer"
           >
             সার্কুলার ব্রাউজ করুন
           </Link>

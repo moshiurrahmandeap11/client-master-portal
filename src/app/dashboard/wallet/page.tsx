@@ -172,12 +172,12 @@ export default function WalletPage() {
     <div className="space-y-6 w-full">
       {/* Header */}
       <div>
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-800 rounded-full text-xs font-bold border border-emerald-200 mb-2">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-xs font-bold border border-slate-200 mb-2">
+          <ShieldCheck className="w-3.5 h-3.5 text-slate-700" />
           <span>১০০% সুরক্ষিত এন্টারপ্রাইজ লেজার</span>
         </div>
         <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-          <Wallet className="w-6 h-6 text-emerald-700" />
+          <Wallet className="w-6 h-6 text-slate-800" />
           <span>আমার ওয়ালেট ও ক্যাশ ম্যানেজমেন্ট</span>
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 mt-1">
@@ -189,9 +189,9 @@ export default function WalletPage() {
       <div className="bg-slate-900 text-white p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div className="space-y-1">
           <span className="text-xs font-semibold text-slate-300">বর্তমান ওয়ালেট ব্যালেন্স</span>
-          <div className="text-4xl font-black text-emerald-400">৳{profile.walletBalance || 0}</div>
+          <div className="text-4xl font-black text-slate-400">৳{profile.walletBalance || 0}</div>
           <div className="text-xs text-slate-400 pt-1 flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <ShieldCheck className="w-3.5 h-3.5 text-slate-400" />
             <span>যাচাইকৃত ব্যালেন্স দিয়ে আবেদন ফি তাৎক্ষণিক পরিশোধযোগ্য</span>
           </div>
         </div>
@@ -202,28 +202,28 @@ export default function WalletPage() {
         >
           <History className="w-4 h-4" />
           <span>লেনদেন হিস্ট্রি ও রিসিপ্ট দেখুন</span>
-          <ArrowRight className="w-3.5 h-3.5 text-emerald-400" />
+          <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
         </Link>
       </div>
 
       {/* 4 Feature Highlights */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="p-4 bg-white border border-slate-200 rounded-2xl shadow-xs space-y-1">
-          <div className="flex items-center gap-2 text-emerald-700 font-bold text-xs">
+          <div className="flex items-center gap-2 text-slate-800 font-bold text-xs">
             <Zap className="w-4 h-4" />
             <span>১-ক্লিকে ফি পরিশোধ</span>
           </div>
           <p className="text-[11px] text-slate-500">আবেদনের শেষ মুহূর্তে ওটিপি বা পিন ছাড়াই এক-ক্লিকে আবেদন ফি সাবমিট।</p>
         </div>
         <div className="p-4 bg-white border border-slate-200 rounded-2xl shadow-xs space-y-1">
-          <div className="flex items-center gap-2 text-emerald-700 font-bold text-xs">
+          <div className="flex items-center gap-2 text-slate-800 font-bold text-xs">
             <CreditCard className="w-4 h-4" />
             <span>০% গেটওয়ে চার্জ</span>
           </div>
           <p className="text-[11px] text-slate-500">কোনো অতিরিক্ত ব্যাংক বা গেটওয়ে ট্রানজেকশন ফি ছাড়া সম্পূর্ণ ফ্রি।</p>
         </div>
         <div className="p-4 bg-white border border-slate-200 rounded-2xl shadow-xs space-y-1">
-          <div className="flex items-center gap-2 text-emerald-700 font-bold text-xs">
+          <div className="flex items-center gap-2 text-slate-800 font-bold text-xs">
             <RotateCcw className="w-4 h-4" />
             <span>তাৎক্ষণিক রিফান্ড গ্যারান্টি</span>
           </div>
@@ -236,26 +236,26 @@ export default function WalletPage() {
         <div className="flex items-center justify-between border-b pb-4">
           <div>
             <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
-              <Plus className="w-5 h-5 text-emerald-700" />
+              <Plus className="w-5 h-5 text-slate-800" />
               <span>ব্যালেন্স রিচার্জ করুন (বিকাশ / নগদ)</span>
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">নিচের নম্বরে টাকা পাঠিয়ে TrxID প্রদান করলেই অ্যাডমিন যাচাই করে ব্যালেন্স যুক্ত করবেন।</p>
           </div>
-          <span className="text-xs font-bold px-3 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xl w-fit">
+          <span className="text-xs font-bold px-3 py-1 bg-slate-100 text-slate-800 border border-slate-200 rounded-xl w-fit">
             ৫-১০ মিনিটে অ্যাক্টিভেশন
           </span>
         </div>
         
         {/* Step-by-Step Payment Instructions Card */}
-        <div className="p-4 sm:p-5 bg-emerald-50/60 border border-emerald-200 rounded-2xl space-y-3">
+        <div className="p-4 sm:p-5 bg-slate-100 border border-slate-200 rounded-2xl space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <Smartphone className="w-5 h-5 text-emerald-700 shrink-0" />
+              <Smartphone className="w-5 h-5 text-slate-800 shrink-0" />
               <div>
                 <span className="text-xs font-bold text-slate-700 block">
                   অফিসিয়াল {method === 'bKash' ? 'বিকাশ' : 'নগদ'} পার্সোনাল নম্বর (Send Money):
                 </span>
-                <span className="text-base font-black text-emerald-900 font-mono tracking-wider">
+                <span className="text-base font-black text-slate-900 font-mono tracking-wider">
                   {displayOfficialNumber}
                 </span>
               </div>
@@ -266,38 +266,38 @@ export default function WalletPage() {
               onClick={handleCopyNumber}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 self-start sm:self-center cursor-pointer shadow-xs ${
                 copied 
-                  ? 'bg-emerald-700 text-white' 
-                  : 'bg-white hover:bg-slate-50 text-slate-800 border border-emerald-300'
+                  ? 'bg-slate-900 text-white' 
+                  : 'bg-white hover:bg-slate-50 text-slate-800 border border-slate-200'
               }`}
             >
-              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5 text-emerald-700" />}
+              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5 text-slate-800" />}
               <span>{copied ? 'নম্বর কপি হয়েছে' : 'নম্বর কপি করুন'}</span>
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 pt-2 border-t border-emerald-200/60 text-[11px] text-slate-600">
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-200 text-[11px] text-slate-600">
             <div className="bg-white/80 p-2 rounded-xl">
-              <strong className="text-emerald-800 block">১. অ্যাপ ওপেন:</strong>
+              <strong className="text-slate-800 block">১. অ্যাপ ওপেন:</strong>
               {method === 'bKash' ? 'বিকাশ' : 'নগদ'} অ্যাপে ঢুকে Send Money নির্বাচন করুন
             </div>
             <div className="bg-white/80 p-2 rounded-xl">
-              <strong className="text-emerald-800 block">২. নম্বর ইনপুট:</strong>
+              <strong className="text-slate-800 block">২. নম্বর ইনপুট:</strong>
               {displayOfficialNumber} নম্বরে সমপরিমাণ টাকা সেন্ড করুন
             </div>
             <div className="bg-white/80 p-2 rounded-xl">
-              <strong className="text-emerald-800 block">৩. TrxID কপি:</strong>
+              <strong className="text-slate-800 block">৩. TrxID কপি:</strong>
               কনফার্মেশন মেসেজ থেকে TrxID টি কপি করুন
             </div>
             <div className="bg-white/80 p-2 rounded-xl">
-              <strong className="text-emerald-800 block">৪. আবেদন সাবমিট:</strong>
+              <strong className="text-slate-800 block">৪. আবেদন সাবমিট:</strong>
               নিচের ফরমে TrxID লিখে সাবমিট করুন
             </div>
           </div>
         </div>
 
         {rechargeSuccess && (
-          <div className="p-3.5 bg-emerald-50 text-emerald-900 rounded-2xl text-xs font-bold border border-emerald-300 flex items-center gap-2 animate-fade-in">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          <div className="p-3.5 bg-slate-100 text-slate-900 rounded-2xl text-xs font-bold border border-slate-200 flex items-center gap-2 animate-fade-in">
+            <CheckCircle2 className="w-4 h-4 text-slate-700 shrink-0" />
             <span>রিচার্জ আবেদন জমা হয়েছে। অ্যাডমিন যাচাইয়ের পর ব্যালেন্স যুক্ত হবে। বর্তমান ব্যালেন্স: ৳{profile.walletBalance}</span>
           </div>
         )}
@@ -345,7 +345,7 @@ export default function WalletPage() {
                   type="button"
                   onClick={() => setAmount(val)}
                   className={`p-2.5 rounded-xl border font-bold transition-all cursor-pointer ${
-                    amount === val ? 'bg-emerald-50 border-emerald-500 text-emerald-800 font-black shadow-2xs' : 'bg-slate-50 hover:bg-slate-100 text-slate-700'
+                    amount === val ? 'bg-slate-100 border-slate-300 text-slate-800 font-black shadow-2xs' : 'bg-slate-50 hover:bg-slate-100 text-slate-700'
                   }`}
                 >
                   ৳{val}
@@ -356,7 +356,7 @@ export default function WalletPage() {
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-sm outline-none focus:border-emerald-600 focus:bg-white transition-all"
+              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-sm outline-none focus:border-slate-400 focus:bg-white transition-all"
               required
               min="50"
             />
@@ -375,14 +375,14 @@ export default function WalletPage() {
               required 
               minLength={4} 
               maxLength={100} 
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs font-bold uppercase outline-none focus:border-emerald-600 focus:bg-white transition-all" 
+              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-mono text-xs font-bold uppercase outline-none focus:border-slate-400 focus:bg-white transition-all" 
             />
           </div>
 
           <button
             type="submit"
             disabled={isRecharging}
-            className="w-full py-3 bg-emerald-700 hover:bg-emerald-800 active:scale-[0.99] disabled:opacity-50 text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3 bg-slate-900 hover:bg-slate-800 active:scale-[0.99] disabled:opacity-50 text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             {isRecharging ? (
               <>
@@ -401,10 +401,10 @@ export default function WalletPage() {
         <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
-              <History className="w-4 h-4 text-emerald-700" />
+              <History className="w-4 h-4 text-slate-800" />
               <span>সাম্প্রতিক ওয়ালেট লেনদেন ও স্ট্যাটাস ({transactions.length} টি)</span>
             </h2>
-            <Link href="/dashboard/transactions" className="text-xs font-bold text-emerald-700 hover:underline">
+            <Link href="/dashboard/transactions" className="text-xs font-bold text-slate-800 hover:underline">
               সম্পূর্ণ হিস্ট্রি ও রিসিপ্ট দেখুন →
             </Link>
           </div>
@@ -416,7 +416,7 @@ export default function WalletPage() {
                   <div className="text-[11px] text-slate-400">TrxID: {tx.trxId} • {tx.method} • {tx.date}</div>
                 </div>
                 <div className="text-right">
-                  <div className={`font-black text-sm ${tx.type === 'recharge' ? 'text-emerald-700' : 'text-slate-900'}`}>
+                  <div className={`font-black text-sm ${tx.type === 'recharge' ? 'text-slate-800' : 'text-slate-900'}`}>
                     {tx.type === 'recharge' ? '+' : '-'}৳{tx.amount}
                   </div>
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
@@ -424,7 +424,7 @@ export default function WalletPage() {
                       ? 'text-amber-800 bg-amber-50 border-amber-200'
                       : tx.status === 'failed'
                       ? 'text-rose-800 bg-rose-50 border-rose-200'
-                      : 'text-emerald-800 bg-emerald-50 border-emerald-200'
+                      : 'text-slate-800 bg-slate-100 border-slate-200'
                   }`}>
                     {tx.status === 'pending' ? 'যাচাইয়ের অপেক্ষায়' : tx.status === 'failed' ? 'বাতিল' : 'অনুমোদিত / সফল'}
                   </span>

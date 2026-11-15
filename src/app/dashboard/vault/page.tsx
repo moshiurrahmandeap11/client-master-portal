@@ -579,7 +579,7 @@ export default function DocumentVaultPage() {
                   <label className={`w-full py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-200 ease-[cubic-bezier(0.2,0,0,1)] shadow-xs ${
                     resolvedUrl
                       ? 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200'
-                      : 'bg-slate-900 hover:bg-slate-800 text-white'
+                      : 'bg-emerald-700 hover:bg-emerald-800 text-white'
                   }`}>
                     <Upload className="w-3.5 h-3.5" />
                     <span>
@@ -619,7 +619,7 @@ export default function DocumentVaultPage() {
           <button
             type="button"
             onClick={() => setShowCustomDocModal(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl transition-all shadow-xs cursor-pointer shrink-0"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold rounded-xl transition-all shadow-xs cursor-pointer shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>+ নতুন কাস্টম ডকুমেন্ট যোগ করুন</span>
@@ -715,7 +715,7 @@ export default function DocumentVaultPage() {
                         href={fileLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="py-2 px-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold text-center flex items-center justify-center gap-1.5 transition-colors shadow-xs"
+                        className="py-2 px-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-semibold text-center flex items-center justify-center gap-1.5 transition-colors shadow-xs"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                         <span>ডাউনলোড</span>
@@ -746,7 +746,7 @@ export default function DocumentVaultPage() {
               onClick={() => handleSelectPreset('photo')}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 ease-[cubic-bezier(0.2,0,0,1)] flex items-center gap-1.5 cursor-pointer ${
                 activeResizerTab === 'photo'
-                  ? 'bg-slate-900 text-white shadow-xs'
+                  ? 'bg-emerald-700 text-white shadow-xs'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200/80'
               }`}
             >
@@ -758,7 +758,7 @@ export default function DocumentVaultPage() {
               onClick={() => handleSelectPreset('signature')}
               className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 ease-[cubic-bezier(0.2,0,0,1)] flex items-center gap-1.5 cursor-pointer ${
                 activeResizerTab === 'signature'
-                  ? 'bg-slate-900 text-white shadow-xs'
+                  ? 'bg-emerald-700 text-white shadow-xs'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200/80'
               }`}
             >
@@ -855,7 +855,7 @@ export default function DocumentVaultPage() {
                     data-testid="resizer-save-btn"
                     onClick={handleSaveToVault}
                     disabled={uploadingDocType === activeResizerTab}
-                    className="flex-1 py-2.5 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+                    className="flex-1 py-2.5 bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
                   >
                     <CheckCircle2 className="w-4 h-4" />
                     <span>{uploadingDocType === activeResizerTab ? 'সেভ হচ্ছে...' : 'ভল্টে সেভ করুন'}</span>
@@ -1021,7 +1021,7 @@ export default function DocumentVaultPage() {
                   <a
                     href={previewModalDoc.url}
                     download
-                    className="inline-flex items-center gap-1 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold shadow-xs"
+                    className="inline-flex items-center gap-1 px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-semibold shadow-xs"
                   >
                     <Download className="w-4 h-4" />
                     <span>ডাউনলোড করে দেখুন</span>
@@ -1038,7 +1038,7 @@ export default function DocumentVaultPage() {
                 <a
                   href={previewModalDoc.url}
                   download
-                  className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl transition-colors inline-flex items-center gap-1.5 shadow-xs"
+                  className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold rounded-xl transition-colors inline-flex items-center gap-1.5 shadow-xs"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>ডাউনলোড</span>
@@ -1143,7 +1143,7 @@ export default function DocumentVaultPage() {
                 <button
                   type="submit"
                   disabled={isUploadingCustomDoc}
-                  className="px-5 py-2 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white text-xs font-semibold rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
+                  className="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 text-white text-xs font-semibold rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
                 >
                   {isUploadingCustomDoc ? 'আপলোড হচ্ছে...' : 'ভল্টে সেভ করুন'}
                 </button>

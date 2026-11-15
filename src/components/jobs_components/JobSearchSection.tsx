@@ -39,6 +39,87 @@ interface JobSearchSectionProps {
   activeFilterCount: number;
 }
 
+interface CustomSelectOption {
+  value: string;
+  label: string;
+}
+
+function CustomSelect({
+  id,
+  value,
+  onChange,
+  options,
+  placeholder,
+  icon: Icon,
+}: {
+  id?: string;
+  value: string;
+  onChange: (val: string) => void;
+  options: CustomSelectOption[];
+  placeholder?: string;
+  icon?: React.ComponentType<{ className?: string }>;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const currentOption = options.find((o) => o.value === value);
+  const displayLabel = currentOption ? currentOption.label : placeholder || 'নির্বাচন করুন';
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        id={id}
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full pl-9 pr-8 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-normal text-slate-800 bg-white hover:border-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-600 transition-all flex items-center justify-between text-left cursor-pointer shadow-2xs"
+      >
+        {Icon && (
+          <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-700 pointer-events-none" />
+        )}
+        <span className="truncate">{displayLabel}</span>
+        <ChevronDown
+          className={`w-3.5 h-3.5 text-slate-500 transition-transform duration-200 pointer-events-none shrink-0 ${
+            isOpen ? 'rotate-180 text-slate-900' : ''
+          }`}
+        />
+      </button>
+
+      {isOpen && (
+        <div className="absolute top-full left-0 right-0 mt-1 max-h-60 bg-white rounded-xl border border-slate-200 shadow-xl z-50 overflow-y-auto text-xs sm:text-sm py-1 animate-in fade-in duration-150">
+          {options.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => {
+                onChange(opt.value);
+                setIsOpen(false);
+              }}
+              className={`w-full px-3 py-2 text-left transition-colors flex items-center justify-between cursor-pointer ${
+                opt.value === value
+                  ? 'bg-emerald-50 text-emerald-800 font-normal'
+                  : 'text-slate-700 hover:bg-slate-50 hover:text-slate-950 font-normal'
+              }`}
+            >
+              <span className="truncate">{opt.label}</span>
+              {opt.value === value && <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0 ml-2" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function JobSearchSection({
   searchQuery,
   setSearchQuery,
@@ -136,21 +217,70 @@ export default function JobSearchSection({
                              searchQuery.trim() !== '' ||
                              (selectedDistrict && selectedDistrict !== 'all');
 
+  const jobTypeOptions: CustomSelectOption[] = [
+    { value: 'all', label: 'সব ধরনের চাকরি' },
+    { value: 'govt', label: 'সরকারি চাকরি' },
+    { value: 'bank', label: 'ব্যাংক চাকরি' },
+    { value: 'teacher', label: 'শিক্ষক নিয়োগ' },
+    { value: 'railway', label: 'রেলওয়ে চাকরি' },
+    { value: 'ngo', label: 'এনজিও চাকরি' },
+    { value: 'private', label: 'বেসরকারি চাকরি' },
+  ];
+
+  const educationOptions: CustomSelectOption[] = [
+    { value: 'all', label: 'সব যোগ্যতা' },
+    { value: 'hsc', label: 'এইচএসসি (HSC)' },
+    { value: 'graduate', label: 'স্নাতক (ডিগ্রি/অনার্স)' },
+    { value: 'postgraduate', label: 'মাস্টার্স (স্নাতকোত্তর)' },
+  ];
+
+  const orgOptions: CustomSelectOption[] = [
+    { value: 'all', label: 'সকল প্রতিষ্ঠান' },
+    { value: 'বাংলাদেশ ব্যাংক', label: 'বাংলাদেশ ব্যাংক' },
+    { value: 'বিসিএস', label: 'বিসিএস / পিএসসি' },
+    { value: 'রেলওয়ে', label: 'বাংলাদেশ রেলওয়ে' },
+    { value: 'পেট্রোবাংলা', label: 'পেট্রোবাংলা' },
+    { value: 'বিদ্যুৎ', label: 'বিদ্যুৎ উন্নয়ন বোর্ড' },
+    { value: 'শিক্ষা', label: 'শিক্ষা মন্ত্রণালয় / অধিদপ্তর' },
+    { value: 'পুলিশ', label: 'পুলিশ ও স্বরাষ্ট্র' },
+    { value: 'আশুগঞ্জ', label: 'আশুগঞ্জ পাওয়ার' },
+  ];
+
+  const gradeOptions: CustomSelectOption[] = [
+    { value: 'all', label: 'সকল গ্রেড' },
+    { value: '৯ম গ্রেড', label: '৯ম গ্রেড (১ম শ্রেণি)' },
+    { value: '১০ম গ্রেড', label: '১০ম গ্রেড (২য় শ্রেণি)' },
+    { value: '১১তম - ১৬তম', label: '১১তম - ১৬তম গ্রেড' },
+    { value: '১৭তম - ২০তম', label: '১৭তম - ২০তম গ্রেড' },
+  ];
+
+  const salaryOptions: CustomSelectOption[] = [
+    { value: 'all', label: 'সকল বেতন স্কেল' },
+    { value: 'under_25k', label: 'শুরুর মূল বেতন ২৫,০০০ এর নিচে' },
+    { value: '25k_50k', label: 'স্কেল ২৫,০০০ থেকে ৫০,০০০ টাকা' },
+    { value: 'above_35k', label: 'সর্বোচ্চ স্কেল ৩৫,০০০ টাকার বেশি' },
+  ];
+
+  const districtOptions: CustomSelectOption[] = districtsList.map(dist => ({
+    value: dist === 'সকল জেলা' ? 'all' : dist,
+    label: dist,
+  }));
+
   return (
-    <section className="bg-[#f4fbf7] border-b border-emerald-900/10 py-3.5 sm:py-6 lg:py-8 px-3.5 sm:px-6 lg:px-8 relative z-20">
-      <div className="max-w-7xl mx-auto">
-        <div className="bg-white rounded-2xl sm:rounded-3xl border border-emerald-100 shadow-xl shadow-slate-900/5 p-4 sm:p-6 lg:p-7 space-y-4">
+    <section className="bg-slate-50 border-b border-slate-200 py-3.5 sm:py-5 lg:py-6 px-4 sm:px-6 lg:px-8 relative z-20">
+      <div className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto">
+        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-4 sm:p-5 lg:p-6 space-y-4">
           
           {/* First Row: Search Inputs & Action Button */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
             
             {/* 1. Job title / Keyword input */}
             <div className="md:col-span-5">
-              <label htmlFor="search-keyword" className="block text-[15px] sm:text-[16px] font-bold text-slate-700 mb-1.5 font-hind">
+              <label htmlFor="search-keyword" className="block text-xs sm:text-sm font-normal text-slate-700 mb-1.5">
                 পদের নাম বা কীওয়ার্ড
               </label>
               <div className="relative">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                 <input
                   id="search-keyword"
                   type="text"
@@ -158,59 +288,40 @@ export default function JobSearchSection({
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="পদের নাম, প্রতিষ্ঠানের নাম বা কীওয়ার্ড লিখুন..."
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 text-[15px] sm:text-[16px] font-medium text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-all bg-slate-50/50 hover:bg-white"
+                  className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-normal text-slate-900 placeholder:text-slate-400 focus:ring-1 focus:ring-emerald-600 focus:border-emerald-600 focus:outline-none transition-all bg-white hover:border-slate-400"
                 />
               </div>
             </div>
 
-            {/* 2. Job Type dropdown */}
+            {/* 2. Job Type Custom Dropdown */}
             <div className="md:col-span-3">
-              <label htmlFor="job-type-select" className="block text-[15px] sm:text-[16px] font-bold text-slate-700 mb-1.5 font-hind">
+              <label className="block text-xs sm:text-sm font-normal text-slate-700 mb-1.5">
                 চাকরির ধরন
               </label>
-              <div className="relative">
-                <Briefcase className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-600 pointer-events-none" />
-                <select
-                  id="job-type-select"
-                  value={selectedJobType}
-                  onChange={(e) => {
-                    setSelectedJobType(e.target.value);
-                    if (onCategoryReset) onCategoryReset();
-                  }}
-                  className="w-full pl-10 pr-9 py-3 rounded-xl border border-slate-200 text-[15px] sm:text-[16px] font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-all bg-slate-50/50 hover:bg-white appearance-none cursor-pointer"
-                >
-                  <option value="all">সব ধরনের চাকরি</option>
-                  <option value="govt">সরকারি চাকরি</option>
-                  <option value="bank">ব্যাংক চাকরি</option>
-                  <option value="teacher">শিক্ষক নিয়োগ</option>
-                  <option value="railway">রেলওয়ে চাকরি</option>
-                  <option value="ngo">এনজিও চাকরি</option>
-                  <option value="private">বেসরকারি চাকরি</option>
-                </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-              </div>
+              <CustomSelect
+                id="job-type-select"
+                value={selectedJobType}
+                onChange={(val) => {
+                  setSelectedJobType(val);
+                  if (onCategoryReset) onCategoryReset();
+                }}
+                options={jobTypeOptions}
+                icon={Briefcase}
+              />
             </div>
 
-            {/* 3. Education Qualification dropdown */}
+            {/* 3. Education Qualification Custom Dropdown */}
             <div className="md:col-span-2">
-              <label htmlFor="education-select" className="block text-[15px] sm:text-[16px] font-bold text-slate-700 mb-1.5 font-hind">
+              <label className="block text-xs sm:text-sm font-normal text-slate-700 mb-1.5">
                 শিক্ষাগত যোগ্যতা
               </label>
-              <div className="relative">
-                <GraduationCap className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-teal-600 pointer-events-none" />
-                <select
-                  id="education-select"
-                  value={selectedEducation}
-                  onChange={(e) => setSelectedEducation(e.target.value)}
-                  className="w-full pl-10 pr-9 py-3 rounded-xl border border-slate-200 text-[15px] sm:text-[16px] font-semibold text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none transition-all bg-slate-50/50 hover:bg-white appearance-none cursor-pointer"
-                >
-                  <option value="all">সব যোগ্যতা</option>
-                  <option value="hsc">এইচএসসি (HSC)</option>
-                  <option value="graduate">স্নাতক (ডিগ্রি/অনার্স)</option>
-                  <option value="postgraduate">মাস্টার্স (স্নাতকোত্তর)</option>
-                </select>
-                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-              </div>
+              <CustomSelect
+                id="education-select"
+                value={selectedEducation}
+                onChange={setSelectedEducation}
+                options={educationOptions}
+                icon={GraduationCap}
+              />
             </div>
 
             {/* 4. Primary Search Button */}
@@ -218,7 +329,7 @@ export default function JobSearchSection({
               <button
                 type="button"
                 onClick={onSearch}
-                className="w-full py-3 px-5 rounded-xl bg-emerald-700 hover:bg-emerald-800 active:scale-[0.98] text-white font-bold text-[16px] sm:text-[17px] shadow-sm flex items-center justify-center gap-2 transition-all font-hind cursor-pointer"
+                className="w-full py-2.5 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 active:scale-[0.98] text-white font-normal text-xs sm:text-sm shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer"
               >
                 <Search className="w-4 h-4" />
                 <span>চাকরি খুঁজুন</span>
@@ -233,16 +344,16 @@ export default function JobSearchSection({
               <button
                 type="button"
                 onClick={() => setShowAdvanced(!showAdvanced)}
-                className={`px-3.5 py-1.5 rounded-xl text-[14px] font-bold transition-all flex items-center gap-1.5 cursor-pointer border ${
+                className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-normal transition-all flex items-center gap-1.5 cursor-pointer border ${
                   showAdvanced || activeFilterCount > 0
                     ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+                    : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                 }`}
               >
-                <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-600" />
+                <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-700" />
                 <span>উন্নত ফিল্টার</span>
                 {activeFilterCount > 0 && (
-                  <span className="w-5 h-5 rounded-full bg-emerald-600 text-white text-[11px] font-black flex items-center justify-center">
+                  <span className="w-4 h-4 rounded-full bg-emerald-700 text-white text-[10px] font-normal flex items-center justify-center">
                     {activeFilterCount}
                   </span>
                 )}
@@ -253,110 +364,79 @@ export default function JobSearchSection({
                 <button
                   type="button"
                   onClick={onReset}
-                  className="px-3 py-1.5 rounded-xl text-[13px] font-semibold text-rose-600 hover:bg-rose-50 border border-rose-200 transition-all flex items-center gap-1 cursor-pointer"
+                  className="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-normal text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 transition-all flex items-center gap-1 cursor-pointer"
                 >
-                  <RotateCcw className="w-3.5 h-3.5" />
+                  <RotateCcw className="w-3 h-3" />
                   <span>রিসেট করুন</span>
                 </button>
               )}
             </div>
-
-            <span className="text-[12px] sm:text-[13px] text-slate-400 font-medium">
-              প্রতিষ্ঠান, গ্রেড, বেতন ও জেলা ভিত্তিক সুনির্দিষ্ট অনুসন্ধান
-            </span>
           </div>
 
           {/* Collapsible Advanced Filters Drawer */}
           {showAdvanced && (
-            <div className="bg-slate-50/90 rounded-2xl p-4 border border-slate-200/90 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 animate-in fade-in duration-200">
+            <div className="bg-slate-50/80 rounded-2xl p-4 border border-slate-200 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 animate-in fade-in duration-200">
               
               {/* 1. Organization Dropdown */}
               <div>
-                <label className="block text-[13px] font-bold text-slate-700 mb-1 flex items-center gap-1">
-                  <Building2 className="w-3.5 h-3.5 text-emerald-600" />
+                <label className="block text-xs font-normal text-slate-700 mb-1 flex items-center gap-1">
+                  <Building2 className="w-3.5 h-3.5 text-emerald-700" />
                   <span>প্রতিষ্ঠান / সংস্থা</span>
                 </label>
-                <select
+                <CustomSelect
                   value={selectedOrg}
-                  onChange={(e) => setSelectedOrg(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-200 text-[14px] font-semibold text-slate-800 bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
-                >
-                  <option value="all">সকল প্রতিষ্ঠান</option>
-                  <option value="বাংলাদেশ ব্যাংক">বাংলাদেশ ব্যাংক</option>
-                  <option value="বিসিএস">বিসিএস / পিএসসি</option>
-                  <option value="রেলওয়ে">বাংলাদেশ রেলওয়ে</option>
-                  <option value="পেট্রোবাংলা">পেট্রোবাংলা</option>
-                  <option value="বিদ্যুৎ">বিদ্যুৎ উন্নয়ন বোর্ড</option>
-                  <option value="শিক্ষা">শিক্ষা মন্ত্রণালয় / অধিদপ্তর</option>
-                  <option value="পুলিশ">পুলিশ ও স্বরাষ্ট্র</option>
-                  <option value="আশুগঞ্জ">আশুগঞ্জ পাওয়ার</option>
-                </select>
+                  onChange={setSelectedOrg}
+                  options={orgOptions}
+                />
               </div>
 
               {/* 2. Grade Dropdown */}
               <div>
-                <label className="block text-[13px] font-bold text-slate-700 mb-1 flex items-center gap-1">
-                  <Award className="w-3.5 h-3.5 text-emerald-600" />
+                <label className="block text-xs font-normal text-slate-700 mb-1 flex items-center gap-1">
+                  <Award className="w-3.5 h-3.5 text-emerald-700" />
                   <span>জাতীয় বেতন স্কেল গ্রেড</span>
                 </label>
-                <select
+                <CustomSelect
                   value={selectedGrade}
-                  onChange={(e) => setSelectedGrade(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-200 text-[14px] font-semibold text-slate-800 bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
-                >
-                  <option value="all">সকল গ্রেড</option>
-                  <option value="৯ম গ্রেড">৯ম গ্রেড (১ম শ্রেণি)</option>
-                  <option value="১০ম গ্রেড">১০ম গ্রেড (২য় শ্রেণি)</option>
-                  <option value="১১তম - ১৬তম">১১তম - ১৬তম গ্রেড</option>
-                  <option value="১৭তম - ২০তম">১৭তম - ২০তম গ্রেড</option>
-                </select>
+                  onChange={setSelectedGrade}
+                  options={gradeOptions}
+                />
               </div>
 
               {/* 3. Salary Range Dropdown */}
               <div>
-                <label className="block text-[13px] font-bold text-slate-700 mb-1 flex items-center gap-1">
-                  <Banknote className="w-3.5 h-3.5 text-emerald-600" />
+                <label className="block text-xs font-normal text-slate-700 mb-1 flex items-center gap-1">
+                  <Banknote className="w-3.5 h-3.5 text-emerald-700" />
                   <span>বেতন স্কেল পরিসীমা</span>
                 </label>
-                <select
+                <CustomSelect
                   value={selectedSalary}
-                  onChange={(e) => setSelectedSalary(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-200 text-[14px] font-semibold text-slate-800 bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
-                >
-                  <option value="all">সকল বেতন স্কেল</option>
-                  <option value="under_25k">শুরুর মূল বেতন ২৫,০০০ এর নিচে</option>
-                  <option value="25k_50k">স্কেল ২৫,০০০ থেকে ৫০,০০০ টাকা</option>
-                  <option value="above_35k">সর্বোচ্চ স্কেল ৩৫,০০০ টাকার বেশি</option>
-                </select>
+                  onChange={setSelectedSalary}
+                  options={salaryOptions}
+                />
               </div>
 
               {/* 4. District Dropdown */}
               <div>
-                <label className="block text-[13px] font-bold text-slate-700 mb-1 flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+                <label className="block text-xs font-normal text-slate-700 mb-1 flex items-center gap-1">
+                  <MapPin className="w-3.5 h-3.5 text-emerald-700" />
                   <span>জেলা ভিত্তিক যোগ্যতা</span>
                 </label>
-                <select
+                <CustomSelect
                   value={selectedDistrict}
-                  onChange={(e) => setSelectedDistrict?.(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-200 text-[14px] font-semibold text-slate-800 bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
-                >
-                  {districtsList.map((dist) => (
-                    <option key={dist} value={dist === 'সকল জেলা' ? 'all' : dist}>
-                      {dist}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(val) => setSelectedDistrict?.(val)}
+                  options={districtOptions}
+                />
               </div>
 
             </div>
           )}
 
-          {/* Third Row: Popular Searches (Single Line, Never Wraps, With Arrows) */}
+          {/* Third Row: Popular Searches */}
           <div className="pt-3 border-t border-slate-100 flex items-center gap-3">
             
-            <div className="inline-flex items-center gap-1.5 text-[15px] sm:text-[16px] font-bold text-slate-700 flex-shrink-0 font-hind">
-              <Flame className="w-4 h-4 text-amber-500 fill-amber-500" />
+            <div className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-normal text-slate-700 flex-shrink-0">
+              <Flame className="w-3.5 h-3.5 text-emerald-700" />
               <span className="hidden sm:inline">জনপ্রিয় অনুসন্ধান:</span>
               <span className="sm:hidden">জনপ্রিয়:</span>
             </div>
@@ -368,9 +448,9 @@ export default function JobSearchSection({
                   type="button"
                   onClick={() => scrollChips('left')}
                   aria-label="পূর্ববর্তী চিপস দেখুন"
-                  className="absolute left-0 z-10 w-7 h-7 rounded-full bg-white/95 shadow-md border border-slate-200 text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 flex items-center justify-center transition-all flex-shrink-0 cursor-pointer"
+                  className="absolute left-0 z-10 w-6 h-6 rounded-full bg-white/95 shadow-xs border border-slate-200 text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 flex items-center justify-center transition-all flex-shrink-0 cursor-pointer"
                 >
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeft className="w-3.5 h-3.5" />
                 </button>
               )}
 
@@ -388,10 +468,10 @@ export default function JobSearchSection({
                       key={idx}
                       type="button"
                       onClick={() => handleChipClick(chip)}
-                      className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-[14px] sm:text-[15px] font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                      className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-normal transition-all cursor-pointer whitespace-nowrap ${
                         isActive
-                          ? 'bg-emerald-600 text-white font-bold shadow-sm'
-                          : 'bg-slate-100 text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 hover:border-emerald-300 border border-slate-200/80'
+                          ? 'bg-emerald-700 text-white'
+                          : 'bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900 border border-slate-200/80'
                       }`}
                     >
                       {chip.label}
@@ -405,9 +485,9 @@ export default function JobSearchSection({
                   type="button"
                   onClick={() => scrollChips('right')}
                   aria-label="পরবর্তী চিপস দেখুন"
-                  className="absolute right-0 z-10 w-7 h-7 rounded-full bg-white/95 shadow-md border border-slate-200 text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 flex items-center justify-center transition-all flex-shrink-0 cursor-pointer"
+                  className="absolute right-0 z-10 w-6 h-6 rounded-full bg-white/95 shadow-xs border border-slate-200 text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 flex items-center justify-center transition-all flex-shrink-0 cursor-pointer"
                 >
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-3.5 h-3.5" />
                 </button>
               )}
             </div>

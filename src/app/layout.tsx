@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import ConditionalLayout from '@/components/shared/layout/ConditionalLayout';
+import SweetAlertInitializer from '@/components/shared/SweetAlertInitializer';
 import { serverDB } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
@@ -85,6 +86,7 @@ export default function RootLayout({
         className="font-solaiman min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-emerald-600 selection:text-white overflow-x-hidden max-w-full"
         suppressHydrationWarning
       >
+        <SweetAlertInitializer />
         <ConditionalLayout 
           initialSettings={settings} 
           initialHomeHero={initialHomeHero}

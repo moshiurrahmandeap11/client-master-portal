@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { storage } from '@/lib/store';
 import { fetchWithAuth } from '@/lib/axios';
+import { useCandidateData } from '@/components/shared/CandidateDataProvider';
 import { toast, showAlert, showConfirm, showSuccess, showError } from '@/lib/sweetalert';
 import { Button } from '@/components/ui/Button';
 import { CandidateProfile, EducationRecord, ExperienceRecord } from '@/types';
@@ -34,6 +35,7 @@ import { emptyCandidateProfile as mockUserProfile } from '@/data/candidateDefaul
 import { BD_DIVISIONS_EN, BD_DIVISIONS_MAP, getAllDistrictsList, getDivisionForDistrict, getDistrictsForDivision, getUpazilasForDistrict, normalizeToEnglishDistrict, normalizeToEnglishDivision } from '@/constants';
 
 export default function ProfilePage() {
+  const { profile: candidateProfile, refresh: refreshCandidateData } = useCandidateData();
   const [profile, setProfile] = useState<CandidateProfile>(mockUserProfile);
   const [activeTab, setActiveTab] = useState<'personal' | 'education' | 'skills' | 'experience' | 'preferences' | 'quota'>('personal');
 
@@ -223,32 +225,25 @@ export default function ProfilePage() {
     }
     populateAddressFromProfile(local);
     setIsLoaded(true);
-    fetch('/api/profile', { cache: 'no-store' })
-      .then(res => res.ok ? res.json() : null)
-      .then(data => {
-        const p = data?.profile || data?.user;
-        if (p) {
-          const normalized = {
-            ...mockUserProfile,
-            ...p,
-            education: Array.isArray(p.education) ? p.education : Array.isArray(p.educations) ? p.educations : [],
-            skills: Array.isArray(p.skills) ? p.skills : [],
-            experiences: Array.isArray(p.experiences) ? p.experiences : [],
-            documents: Array.isArray(p.documents) ? p.documents : [],
-          };
-          setProfile(normalized);
-          populateAddressFromProfile(normalized);
-          storage.updateUser(normalized);
-          if (typeof window !== 'undefined') {
-            window.dispatchEvent(new Event('cs_user_changed'));
-          }
-        }
-      })
-      .catch(() => {})
-      .finally(() => {
-        setIsLoaded(true);
-      });
   }, []);
+
+  // Synchronize profile data from TanStack Query candidate context (zero duplicate requests!)
+  useEffect(() => {
+    if (candidateProfile) {
+      const normalized = {
+        ...mockUserProfile,
+        ...candidateProfile,
+        education: Array.isArray(candidateProfile.education) ? candidateProfile.education : Array.isArray((candidateProfile as any).educations) ? (candidateProfile as any).educations : [],
+        skills: Array.isArray(candidateProfile.skills) ? candidateProfile.skills : [],
+        experiences: Array.isArray(candidateProfile.experiences) ? candidateProfile.experiences : [],
+        documents: Array.isArray(candidateProfile.documents) ? candidateProfile.documents : [],
+      };
+      setProfile(normalized);
+      populateAddressFromProfile(normalized);
+      storage.updateUser(normalized);
+      setIsLoaded(true);
+    }
+  }, [candidateProfile]);
 
   // Auto-sync permanent address whenever present address changes and sameAsPresent is checked
   useEffect(() => {
@@ -317,6 +312,7 @@ export default function ProfilePage() {
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new Event('cs_user_changed'));
       }
+      refreshCandidateData().catch(() => {});
 
       const response = await fetchWithAuth('/api/profile', {
         method: 'PUT',
@@ -338,6 +334,7 @@ export default function ProfilePage() {
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new Event('cs_user_changed'));
       }
+      refreshCandidateData().catch(() => {});
       return true;
     } catch (error) {
       showError(error instanceof Error ? error.message : 'প্রোফাইল সংরক্ষণ ব্যর্থ হয়েছে', 'সংরক্ষণ ব্যর্থ');
@@ -577,31 +574,25 @@ export default function ProfilePage() {
       <div className="space-y-6 w-full animate-pulse" suppressHydrationWarning>
         {/* Header Skeleton */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-2">
-            <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-              <User className="w-6 h-6 text-emerald-700" />
-              <span>স্মার্ট ক্যান্ডিডেট প্রোফাইল</span>
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              এখানে একবার আপনার সঠিক তথ্য সংরক্ষণ করুন। যেকোনো সরকারি বা ব্যাংক চাকরিতে আবেদনের সময় ডেটা স্বয়ংক্রিয়ভাবে ফিল হবে।
-            </p>
-          </div>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+            স্মার্ট ক্যান্ডিডেট প্রোফাইল
+          </h1>
         </div>
 
         {/* Profile Section Tabs Skeleton */}
-        <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-2">
-          <div className="h-9 w-40 bg-emerald-100/70 rounded-xl"></div>
-          <div className="h-9 w-36 bg-slate-100 rounded-xl"></div>
-          <div className="h-9 w-36 bg-slate-100 rounded-xl"></div>
+        <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-100 rounded-xl">
+          <div className="h-8 w-28 bg-slate-200 rounded-lg"></div>
+          <div className="h-8 w-32 bg-slate-200 rounded-lg"></div>
+          <div className="h-8 w-28 bg-slate-200 rounded-lg"></div>
         </div>
 
         {/* Form Grid Skeleton */}
-        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+        <div className="bg-white/80 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-xs space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {[...Array(8)].map((_, i) => (
               <div key={i} className="space-y-2">
                 <div className="h-4 w-32 bg-slate-200 rounded"></div>
-                <div className="h-10 w-full bg-slate-100 rounded-xl"></div>
+                <div className="h-10 w-full bg-slate-100 rounded-lg"></div>
               </div>
             ))}
           </div>
@@ -613,112 +604,70 @@ export default function ProfilePage() {
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="space-y-2">
                   <div className="h-4 w-36 bg-slate-200 rounded"></div>
-                  <div className="h-10 w-full bg-slate-100 rounded-xl"></div>
+                  <div className="h-10 w-full bg-slate-100 rounded-lg"></div>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="pt-4 border-t border-slate-100 flex items-center justify-end">
-            <div className="h-11 w-44 bg-slate-200 rounded-xl"></div>
+            <div className="h-10 w-44 bg-slate-200 rounded-lg"></div>
           </div>
         </div>
       </div>
     );
   }
 
+  const PROFILE_TABS = [
+    { id: 'personal', label: 'ব্যক্তিগত তথ্য' },
+    { id: 'education', label: `শিক্ষাগত যোগ্যতা (${(profile.education || []).length})` },
+    { id: 'skills', label: `দক্ষতা ও স্কিলস (${(profile.skills || []).length})` },
+    { id: 'experience', label: `অভিজ্ঞতা (${(profile.experiences || []).length})` },
+    { id: 'preferences', label: 'ক্যারিয়ার পছন্দ' },
+    { id: 'quota', label: 'কোটা সুবিধা' },
+  ] as const;
+
   return (
     <div className="space-y-6 w-full" suppressHydrationWarning>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 flex items-center gap-2">
-            <User className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-700 shrink-0" />
-            <span>স্মার্ট ক্যান্ডিডেট প্রোফাইল</span>
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
+            স্মার্ট ক্যান্ডিডেট প্রোফাইল
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            এখানে একবার আপনার সঠিক তথ্য সংরক্ষণ করুন। যেকোনো সরকারি বা ব্যাংক চাকরিতে আবেদনের সময় ডেটা স্বয়ংক্রিয়ভাবে ফিল হবে।
-          </p>
         </div>
 
         {savedSuccess && (
-          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-800 rounded-[7px] text-xs font-bold border border-emerald-200 animate-bounce self-start sm:self-auto">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-semibold shadow-xs animate-in fade-in self-start sm:self-auto">
             <span>তথ্য সফলভাবে সংরক্ষিত হয়েছে!</span>
           </div>
         )}
       </div>
 
-      {/* Profile Section Tabs */}
-      <div className="flex items-center gap-1.5 sm:gap-2 border-b border-slate-200 pb-2 overflow-x-auto no-scrollbar flex-nowrap sm:flex-wrap">
-        <button
-          onClick={() => setActiveTab('personal')}
-          className={`px-3.5 py-2 rounded-[7px] text-xs font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
-            activeTab === 'personal'
-              ? 'bg-emerald-700 text-white shadow-sm'
-              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-          }`}
-        >
-          ব্যক্তিগত তথ্য
-        </button>
-        <button
-          onClick={() => setActiveTab('education')}
-          className={`px-3.5 py-2 rounded-[7px] text-xs font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
-            activeTab === 'education'
-              ? 'bg-emerald-700 text-white shadow-sm'
-              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-          }`}
-        >
-          শিক্ষাগত যোগ্যতা ({(profile.education || []).length})
-        </button>
-        <button
-          onClick={() => setActiveTab('skills')}
-          className={`px-3.5 py-2 rounded-[7px] text-xs font-bold transition-all flex items-center gap-1 whitespace-nowrap shrink-0 cursor-pointer ${
-            activeTab === 'skills'
-              ? 'bg-emerald-700 text-white shadow-sm'
-              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-          }`}
-        >
-          <Zap className="w-3.5 h-3.5" />
-          <span>দক্ষতা ও স্কিলস ({(profile.skills || []).length})</span>
-        </button>
-        <button
-          onClick={() => setActiveTab('experience')}
-          className={`px-3.5 py-2 rounded-[7px] text-xs font-bold transition-all flex items-center gap-1 whitespace-nowrap shrink-0 cursor-pointer ${
-            activeTab === 'experience'
-              ? 'bg-emerald-700 text-white shadow-sm'
-              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-          }`}
-        >
-          <Briefcase className="w-3.5 h-3.5" />
-          <span>অভিজ্ঞতা ({(profile.experiences || []).length})</span>
-        </button>
-        <button
-          onClick={() => setActiveTab('preferences')}
-          className={`px-3.5 py-2 rounded-[7px] text-xs font-bold transition-all flex items-center gap-1 whitespace-nowrap shrink-0 cursor-pointer ${
-            activeTab === 'preferences'
-              ? 'bg-emerald-700 text-white shadow-sm'
-              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-          }`}
-        >
-          <Sliders className="w-3.5 h-3.5" />
-          <span>ক্যারিয়ার পছন্দ</span>
-        </button>
-        <button
-          onClick={() => setActiveTab('quota')}
-          className={`px-3.5 py-2 rounded-[7px] text-xs font-bold transition-all whitespace-nowrap shrink-0 cursor-pointer ${
-            activeTab === 'quota'
-              ? 'bg-emerald-700 text-white shadow-sm'
-              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-          }`}
-        >
-          কোটা সুবিধা
-        </button>
+      {/* Profile Section Tabs (Liquid Glass Capsule with Smooth Sliding Transition) */}
+      <div className="p-1.5 bg-slate-100/90 backdrop-blur-md rounded-xl border border-slate-200/80 inline-flex items-center gap-1 overflow-x-auto no-scrollbar max-w-full">
+        {PROFILE_TABS.map((tab) => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`px-3.5 py-1.5 rounded-lg text-xs transition-all duration-300 ease-[cubic-bezier(0.2,0,0,1)] whitespace-nowrap cursor-pointer ${
+                isActive
+                  ? 'bg-white text-slate-950 font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.06)] border border-slate-200/80 ring-1 ring-slate-900/[0.03]'
+                  : 'text-slate-600 hover:text-slate-950 hover:bg-white/50 font-medium'
+              }`}
+            >
+              {tab.label}
+            </button>
+          );
+        })}
       </div>
 
       {/* Tab 1: Personal Information */}
       {activeTab === 'personal' && (
-        <form onSubmit={handleSaveProfile} className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6" suppressHydrationWarning>
+        <form onSubmit={handleSaveProfile} className="bg-white/90 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-xs space-y-6" suppressHydrationWarning>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
             <div className="space-y-1.5">
               <label className="font-bold text-slate-700">পূর্ণ নাম (ইংরেজি ক্যাপিটাল লেটার)</label>
@@ -726,7 +675,7 @@ export default function ProfilePage() {
                 type="text"
                 value={profile.name}
                 onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                 required
               />
             </div>
@@ -737,7 +686,7 @@ export default function ProfilePage() {
                 type="text"
                 value={profile.nameBn}
                 onChange={(e) => setProfile({ ...profile, nameBn: e.target.value })}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                 required
               />
             </div>
@@ -749,7 +698,7 @@ export default function ProfilePage() {
                 value={profile.fatherName}
                 onChange={(e) => setProfile({ ...profile, fatherName: e.target.value.toUpperCase() })}
                 placeholder="MD. ABDUR RAHMAN"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                 required
               />
             </div>
@@ -761,7 +710,7 @@ export default function ProfilePage() {
                 value={profile.fatherNameBn || ''}
                 onChange={(e) => setProfile({ ...profile, fatherNameBn: e.target.value })}
                 placeholder="মোঃ আব্দুর রহমান"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
               />
             </div>
 
@@ -772,7 +721,7 @@ export default function ProfilePage() {
                 value={profile.motherName}
                 onChange={(e) => setProfile({ ...profile, motherName: e.target.value.toUpperCase() })}
                 placeholder="FATEMA BEGUM"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                 required
               />
             </div>
@@ -784,7 +733,7 @@ export default function ProfilePage() {
                 value={profile.motherNameBn || ''}
                 onChange={(e) => setProfile({ ...profile, motherNameBn: e.target.value })}
                 placeholder="মোসাঃ ফাতেমা বেগম"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
               />
             </div>
 
@@ -792,7 +741,7 @@ export default function ProfilePage() {
               <div className="flex items-center justify-between">
                 <label className="font-bold text-slate-700">জন্ম তারিখ (YYYY-MM-DD)</label>
                 {profile.dob && (
-                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                  <span className="text-[10px] font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200/80">
                     বয়স: {calculateAge(profile.dob)}
                   </span>
                 )}
@@ -801,7 +750,7 @@ export default function ProfilePage() {
                 type="date"
                 value={profile.dob}
                 onChange={(e) => setProfile({ ...profile, dob: e.target.value })}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                 required
               />
             </div>
@@ -813,7 +762,7 @@ export default function ProfilePage() {
                 value={profile.nid}
                 onChange={(e) => setProfile({ ...profile, nid: e.target.value })}
                 placeholder="10, 13 বা 17 ডিজিটের NID নম্বর"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none font-mono"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none font-mono"
                 required
               />
             </div>
@@ -825,7 +774,7 @@ export default function ProfilePage() {
                 value={profile.fatherNid && !profile.fatherNid.startsWith('/') && !profile.fatherNid.startsWith('http') ? profile.fatherNid : ''}
                 onChange={(e) => setProfile({ ...profile, fatherNid: e.target.value })}
                 placeholder="১০, ১৩ বা ১৭ ডিজিটের NID নম্বর"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none font-mono"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none font-mono"
               />
             </div>
 
@@ -836,7 +785,7 @@ export default function ProfilePage() {
                 value={profile.motherNid && !profile.motherNid.startsWith('/') && !profile.motherNid.startsWith('http') ? profile.motherNid : ''}
                 onChange={(e) => setProfile({ ...profile, motherNid: e.target.value })}
                 placeholder="১০, ১৩ বা ১৭ ডিজিটের NID নম্বর"
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none font-mono"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none font-mono"
               />
             </div>
 
@@ -846,7 +795,7 @@ export default function ProfilePage() {
                 type="tel"
                 value={profile.phone}
                 onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                 required
               />
             </div>
@@ -857,7 +806,7 @@ export default function ProfilePage() {
                 type="email"
                 value={profile.email}
                 onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                 required
               />
             </div>
@@ -868,7 +817,7 @@ export default function ProfilePage() {
                 <button
                   type="button"
                   onClick={() => setHomeDistrictCustomMode(!homeDistrictCustomMode)}
-                  className="text-[11px] text-emerald-700 hover:underline font-bold cursor-pointer"
+                  className="text-[11px] text-slate-600 hover:text-slate-900 hover:underline font-bold cursor-pointer"
                 >
                   {homeDistrictCustomMode ? '৬৪ জেলার তালিকা থেকে বাছুন' : 'অন্যান্য / কাস্টম জেলা লিখুন'}
                 </button>
@@ -879,7 +828,7 @@ export default function ProfilePage() {
                   value={profile.district}
                   onChange={(e) => setProfile({ ...profile, district: e.target.value })}
                   placeholder="যেমন: ঢাকা, বগুড়া, নোয়াখালী..."
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-xs focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-xs focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                   required
                 />
               ) : (
@@ -893,7 +842,7 @@ export default function ProfilePage() {
                       setProfile({ ...profile, district: e.target.value });
                     }
                   }}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-xs focus:ring-2 focus:ring-emerald-600/30 outline-none cursor-pointer"
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-xs focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none cursor-pointer"
                 >
                   {getAllDistrictsList().map(d => (
                     <option key={d.en} value={d.bn}>{d.bn} ({d.en}) — {d.division}</option>
@@ -908,7 +857,7 @@ export default function ProfilePage() {
               <select
                 value={profile.gender}
                 onChange={(e) => setProfile({ ...profile, gender: e.target.value as any })}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
               >
                 <option value="male">পুরুষ (Male)</option>
                 <option value="female">নারী (Female)</option>
@@ -920,7 +869,7 @@ export default function ProfilePage() {
               <select
                 value={profile.maritalStatus || 'single'}
                 onChange={(e) => setProfile({ ...profile, maritalStatus: e.target.value as any })}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
               >
                 <option value="single">অবিবাহিত (Single)</option>
                 <option value="married">বিবাহিত (Married)</option>
@@ -933,7 +882,7 @@ export default function ProfilePage() {
               <select
                 value={(profile as any).religion || 'ইসলাম'}
                 onChange={(e) => setProfile({ ...profile, religion: e.target.value } as any)}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
               >
                 <option value="ইসলাম">ইসলাম (Islam)</option>
                 <option value="হিন্দু">হিন্দু (Hinduism)</option>
@@ -949,7 +898,7 @@ export default function ProfilePage() {
                 type="text"
                 value={profile.nationality || 'বাংলাদেশি (Bangladeshi)'}
                 onChange={(e) => setProfile({ ...profile, nationality: e.target.value })}
-                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
               />
             </div>
 
@@ -971,7 +920,7 @@ export default function ProfilePage() {
                       value={presentCareOf}
                       onChange={(e) => setPresentCareOf(e.target.value.toUpperCase())}
                       placeholder="e.g. MD. RAFIQUL ISLAM"
-                      className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs text-slate-900 uppercase font-mono"
+                      className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs text-slate-900 uppercase font-mono"
                     />
                   </div>
 
@@ -982,7 +931,7 @@ export default function ProfilePage() {
                       value={presentVillageRoad}
                       onChange={(e) => setPresentVillageRoad(e.target.value.toUpperCase())}
                       placeholder="e.g. HOUSE 12, ROAD 5, MIRPUR-10"
-                      className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs text-slate-900 uppercase font-mono"
+                      className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs text-slate-900 uppercase font-mono"
                       required
                     />
                   </div>
@@ -994,7 +943,7 @@ export default function ProfilePage() {
                       <button
                         type="button"
                         onClick={() => setPresentCustomDivisionMode(!presentCustomDivisionMode)}
-                        className="text-[10px] text-emerald-700 hover:underline font-bold cursor-pointer"
+                        className="text-[10px] text-slate-600 hover:text-slate-900 hover:underline font-bold cursor-pointer"
                       >
                         {presentCustomDivisionMode ? 'তালিকা থেকে বাছুন' : 'কাস্টম বিভাগ'}
                       </button>
@@ -1005,7 +954,7 @@ export default function ProfilePage() {
                         value={presentDivision}
                         onChange={(e) => setPresentDivision(e.target.value.toUpperCase())}
                         placeholder="e.g. DHAKA"
-                        className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-mono uppercase text-xs text-slate-900 font-bold focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-mono uppercase text-xs text-slate-900 font-bold focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                       />
                     ) : (
                       <select
@@ -1017,7 +966,7 @@ export default function ProfilePage() {
                             handlePresentDivisionChange(e.target.value);
                           }
                         }}
-                        className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs text-slate-900 cursor-pointer font-bold"
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs text-slate-900 cursor-pointer font-bold"
                       >
                         {BD_DIVISIONS_EN.map((div) => (
                           <option key={div} value={div}>
@@ -1035,7 +984,7 @@ export default function ProfilePage() {
                       <button
                         type="button"
                         onClick={() => setPresentCustomDistrictMode(!presentCustomDistrictMode)}
-                        className="text-[10px] text-emerald-700 hover:underline font-bold cursor-pointer"
+                        className="text-[10px] text-slate-600 hover:text-slate-900 hover:underline font-bold cursor-pointer"
                       >
                         {presentCustomDistrictMode ? 'তালিকা থেকে বাছুন' : 'কাস্টম জেলা'}
                       </button>
@@ -1046,7 +995,7 @@ export default function ProfilePage() {
                         value={presentDistrict}
                         onChange={(e) => setPresentDistrict(e.target.value.toUpperCase())}
                         placeholder="e.g. DHAKA"
-                        className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-mono uppercase text-xs text-slate-900 font-bold focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-mono uppercase text-xs text-slate-900 font-bold focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                       />
                     ) : (
                       <select
@@ -1058,7 +1007,7 @@ export default function ProfilePage() {
                             handlePresentDistrictChange(e.target.value);
                           }
                         }}
-                        className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs text-slate-900 cursor-pointer font-bold"
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs text-slate-900 cursor-pointer font-bold"
                       >
                         {getDistrictsForDivision(presentDivision).map((d) => (
                           <option key={d.en} value={d.en}>
@@ -1077,7 +1026,7 @@ export default function ProfilePage() {
                       <button
                         type="button"
                         onClick={() => setPresentCustomThanaMode(!presentCustomThanaMode)}
-                        className="text-[10px] text-emerald-700 hover:underline font-bold cursor-pointer"
+                        className="text-[10px] text-slate-600 hover:text-slate-900 hover:underline font-bold cursor-pointer"
                       >
                         {presentCustomThanaMode ? 'তালিকা থেকে বাছুন' : 'অন্যান্য / কাস্টম লিখুন'}
                       </button>
@@ -1089,7 +1038,7 @@ export default function ProfilePage() {
                         value={presentThana}
                         onChange={(e) => setPresentThana(e.target.value.toUpperCase())}
                         placeholder="e.g. MIRPUR"
-                        className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs text-slate-900 uppercase font-mono"
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs text-slate-900 uppercase font-mono"
                         required
                       />
                     ) : (
@@ -1102,7 +1051,7 @@ export default function ProfilePage() {
                             setPresentThana(e.target.value);
                           }
                         }}
-                        className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs text-slate-900 cursor-pointer font-bold"
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs text-slate-900 cursor-pointer font-bold"
                       >
                         {getUpazilasForDistrict(presentDistrict).map((u) => (
                           <option key={u} value={u}>{u}</option>
@@ -1120,14 +1069,14 @@ export default function ProfilePage() {
                         value={presentPostOffice}
                         onChange={(e) => setPresentPostOffice(e.target.value.toUpperCase())}
                         placeholder="e.g. MIRPUR"
-                        className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs text-slate-900 uppercase font-mono"
+                        className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs text-slate-900 uppercase font-mono"
                       />
                       <input
                         type="text"
                         value={presentPostCode}
                         onChange={(e) => setPresentPostCode(e.target.value)}
                         placeholder="e.g. 1216"
-                        className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs text-slate-900 font-mono"
+                        className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs text-slate-900 font-mono"
                       />
                     </div>
                   </div>
@@ -1142,30 +1091,29 @@ export default function ProfilePage() {
                   </div>
 
                   {/* 1-Click Same as Present Checkbox */}
-                  <label className="inline-flex items-center gap-2 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-xl cursor-pointer transition-colors select-none">
+                  <label className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/90 rounded-lg cursor-pointer transition-colors select-none">
                     <input
                       type="checkbox"
                       checked={sameAsPresent}
                       onChange={(e) => setSameAsPresent(e.target.checked)}
-                      className="w-4 h-4 text-emerald-700 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer accent-emerald-700"
+                      className="w-3.5 h-3.5 text-slate-800 rounded border-slate-300 focus:ring-slate-400 cursor-pointer accent-slate-800"
                     />
-                    <span className="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
-                      <Check className="w-3.5 h-3.5 text-emerald-700" />
-                      <span>SAME AS PRESENT (বর্তমান ঠিকানার মতোই একই)</span>
+                    <span className="text-xs font-semibold text-slate-800 flex items-center gap-1.5">
+                      <span>বর্তমান ঠিকানার মতোই একই (Same as Present)</span>
                     </span>
                   </label>
                 </div>
 
                 {sameAsPresent ? (
-                  <div className="p-3.5 bg-white border border-dashed border-emerald-300 rounded-xl text-xs text-emerald-950 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-2xs">
+                  <div className="p-3 bg-slate-50/80 border border-slate-200/80 rounded-lg text-xs text-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-2xs">
                     <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
                       <span className="font-medium">
-                        স্থায়ী ঠিকানা হিসেবে বর্তমান ঠিকানা স্বয়ংক্রিয়ভাবে সংরক্ষিত হবে: <strong className="font-bold text-slate-900 font-mono">{presentVillageRoad || 'VILLAGE/ROAD'}, {presentThana || 'THANA'}, {presentDistrict}, {presentDivision}-{presentPostCode || 'CODE'}</strong>
+                        স্থায়ী ঠিকানা হিসেবে বর্তমান ঠিকানা স্বয়ংক্রিয়ভাবে সংরক্ষিত হবে: <strong className="font-semibold text-slate-900 font-mono">{presentVillageRoad || 'VILLAGE/ROAD'}, {presentThana || 'THANA'}, {presentDistrict}, {presentDivision}-{presentPostCode || 'CODE'}</strong>
                       </span>
                     </div>
-                    <span className="text-[11px] font-bold bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full shrink-0 inline-flex items-center gap-1">
-                      <Check className="w-3 h-3" /> AUTO-SYNCED
+                    <span className="text-[10px] font-semibold bg-slate-200/80 text-slate-700 px-2.5 py-0.5 rounded-md shrink-0">
+                      AUTO-SYNCED
                     </span>
                   </div>
                 ) : (
@@ -1178,7 +1126,7 @@ export default function ProfilePage() {
                         value={permanentCareOf}
                         onChange={(e) => setPermanentCareOf(e.target.value.toUpperCase())}
                         placeholder="e.g. MD. RAFIQUL ISLAM"
-                        className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs text-slate-900 uppercase font-mono"
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs text-slate-900 uppercase font-mono"
                       />
                     </div>
 
@@ -1189,7 +1137,7 @@ export default function ProfilePage() {
                         value={permanentVillageRoad}
                         onChange={(e) => setPermanentVillageRoad(e.target.value.toUpperCase())}
                         placeholder="e.g. PERMANENT VILLAGE / ROAD"
-                        className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs text-slate-900 uppercase font-mono"
+                        className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs text-slate-900 uppercase font-mono"
                       />
                     </div>
 
@@ -1200,7 +1148,7 @@ export default function ProfilePage() {
                         <button
                           type="button"
                           onClick={() => setPermanentCustomDivisionMode(!permanentCustomDivisionMode)}
-                          className="text-[10px] text-emerald-700 hover:underline font-bold cursor-pointer"
+                          className="text-[10px] text-slate-600 hover:text-slate-900 hover:underline font-bold cursor-pointer"
                         >
                           {permanentCustomDivisionMode ? 'তালিকা থেকে বাছুন' : 'কাস্টম বিভাগ'}
                         </button>
@@ -1211,7 +1159,7 @@ export default function ProfilePage() {
                           value={permanentDivision}
                           onChange={(e) => setPermanentDivision(e.target.value.toUpperCase())}
                           placeholder="e.g. DHAKA"
-                          className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-mono uppercase text-xs text-slate-900 font-bold focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                          className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-mono uppercase text-xs text-slate-900 font-bold focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                         />
                       ) : (
                         <select
@@ -1223,7 +1171,7 @@ export default function ProfilePage() {
                               handlePermanentDivisionChange(e.target.value);
                             }
                           }}
-                          className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs text-slate-900 cursor-pointer font-bold"
+                          className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs text-slate-900 cursor-pointer font-bold"
                         >
                           {BD_DIVISIONS_EN.map((div) => (
                             <option key={div} value={div}>
@@ -1241,7 +1189,7 @@ export default function ProfilePage() {
                         <button
                           type="button"
                           onClick={() => setPermanentCustomDistrictMode(!permanentCustomDistrictMode)}
-                          className="text-[10px] text-emerald-700 hover:underline font-bold cursor-pointer"
+                          className="text-[10px] text-slate-600 hover:text-slate-900 hover:underline font-bold cursor-pointer"
                         >
                           {permanentCustomDistrictMode ? 'তালিকা থেকে বাছুন' : 'কাস্টম জেলা'}
                         </button>
@@ -1252,7 +1200,7 @@ export default function ProfilePage() {
                           value={permanentDistrict}
                           onChange={(e) => setPermanentDistrict(e.target.value.toUpperCase())}
                           placeholder="e.g. DHAKA"
-                          className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-mono uppercase text-xs text-slate-900 font-bold focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                          className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-mono uppercase text-xs text-slate-900 font-bold focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                         />
                       ) : (
                         <select
@@ -1264,7 +1212,7 @@ export default function ProfilePage() {
                               handlePermanentDistrictChange(e.target.value);
                             }
                           }}
-                          className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs text-slate-900 cursor-pointer font-bold"
+                          className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs text-slate-900 cursor-pointer font-bold"
                         >
                           {getDistrictsForDivision(permanentDivision).map((d) => (
                             <option key={d.en} value={d.en}>
@@ -1283,7 +1231,7 @@ export default function ProfilePage() {
                         <button
                           type="button"
                           onClick={() => setPermanentCustomThanaMode(!permanentCustomThanaMode)}
-                          className="text-[10px] text-emerald-700 hover:underline font-bold cursor-pointer"
+                          className="text-[10px] text-slate-600 hover:text-slate-900 hover:underline font-bold cursor-pointer"
                         >
                           {permanentCustomThanaMode ? 'তালিকা থেকে বাছুন' : 'অন্যান্য / কাস্টম লিখুন'}
                         </button>
@@ -1295,7 +1243,7 @@ export default function ProfilePage() {
                           value={permanentThana}
                           onChange={(e) => setPermanentThana(e.target.value.toUpperCase())}
                           placeholder="e.g. MIRPUR"
-                          className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs text-slate-900 uppercase font-mono"
+                          className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs text-slate-900 uppercase font-mono"
                         />
                       ) : (
                         <select
@@ -1307,7 +1255,7 @@ export default function ProfilePage() {
                               setPermanentThana(e.target.value);
                             }
                           }}
-                          className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs text-slate-900 cursor-pointer font-bold"
+                          className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs text-slate-900 cursor-pointer font-bold"
                         >
                           {getUpazilasForDistrict(permanentDistrict).map((u) => (
                             <option key={u} value={u}>{u}</option>
@@ -1325,14 +1273,14 @@ export default function ProfilePage() {
                           value={permanentPostOffice}
                           onChange={(e) => setPermanentPostOffice(e.target.value.toUpperCase())}
                           placeholder="e.g. MIRPUR"
-                          className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs text-slate-900 uppercase font-mono"
+                          className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs text-slate-900 uppercase font-mono"
                         />
                         <input
                           type="text"
                           value={permanentPostCode}
                           onChange={(e) => setPermanentPostCode(e.target.value)}
                           placeholder="e.g. 1216"
-                          className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs text-slate-900 font-mono"
+                          className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs text-slate-900 font-mono"
                         />
                       </div>
                     </div>
@@ -1381,12 +1329,12 @@ export default function ProfilePage() {
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                    <span className="px-2.5 py-0.5 rounded-md text-xs font-semibold bg-slate-100 text-slate-800 border border-slate-200/80">
                       {edu.level}
                     </span>
-                    <span className="text-xs font-bold text-slate-800">{edu.degree}</span>
+                    <span className="text-xs font-semibold text-slate-800">{edu.degree}</span>
                     {edu.verificationStatus === 'VERIFIED' && (
-                      <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 inline-flex items-center gap-1">
+                      <span className="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-900 text-white border border-slate-900 inline-flex items-center gap-1">
                         <Check className="w-3 h-3" /> যাচাইকৃত
                       </span>
                     )}
@@ -1418,7 +1366,7 @@ export default function ProfilePage() {
                     <span>•</span>
                     <span>পাস: {edu.year}</span>
                     <span>•</span>
-                    <span className="text-emerald-700 font-bold">ফলাফল: {edu.result}</span>
+                    <span className="text-slate-800 font-semibold">ফলাফল: {edu.result}</span>
                   </div>
                 </div>
 
@@ -1449,7 +1397,7 @@ export default function ProfilePage() {
                       <button
                         type="button"
                         onClick={() => setEduCustomLevelMode(!eduCustomLevelMode)}
-                        className="text-[10px] text-emerald-700 hover:underline font-bold cursor-pointer"
+                        className="text-[10px] text-slate-600 hover:text-slate-900 hover:underline font-bold cursor-pointer"
                       >
                         {eduCustomLevelMode ? 'তালিকা থেকে বাছুন' : 'কাস্টম পর্যায় লিখুন'}
                       </button>
@@ -1605,7 +1553,7 @@ export default function ProfilePage() {
                   const u = { ...profile, quota: 'none' as any, quotaDetails: '' };
                   syncProfileToServer(u);
                 }}
-                className="text-emerald-700"
+                className="accent-slate-800 text-slate-800"
               />
               <div>
                 <strong className="text-slate-800 block">সাধারণ প্রার্থী (কোনো কোটা প্রযোজ্য নয়)</strong>
@@ -1613,7 +1561,7 @@ export default function ProfilePage() {
               </div>
             </label>
 
-            <label className="flex items-center gap-3 p-3.5 border rounded-2xl cursor-pointer hover:bg-slate-50 transition-colors">
+            <label className="flex items-center gap-3 p-3.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
               <input
                 type="radio"
                 name="quota"
@@ -1623,7 +1571,7 @@ export default function ProfilePage() {
                   const u = { ...profile, quota: 'freedom_fighter' as any };
                   syncProfileToServer(u);
                 }}
-                className="text-emerald-700"
+                className="accent-slate-800 text-slate-800"
               />
               <div>
                 <strong className="text-slate-800 block">বীর মুক্তিযোদ্ধা / শহীদ মুক্তিযোদ্ধার সন্তান কোটা</strong>
@@ -1631,7 +1579,7 @@ export default function ProfilePage() {
               </div>
             </label>
 
-            <label className="flex items-center gap-3 p-3.5 border rounded-2xl cursor-pointer hover:bg-slate-50 transition-colors">
+            <label className="flex items-center gap-3 p-3.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
               <input
                 type="radio"
                 name="quota"
@@ -1641,7 +1589,7 @@ export default function ProfilePage() {
                   const u = { ...profile, quota: 'disabled' as any };
                   syncProfileToServer(u);
                 }}
-                className="text-emerald-700"
+                className="accent-slate-800 text-slate-800"
               />
               <div>
                 <strong className="text-slate-800 block">শারীরিক প্রতিবন্ধী প্রার্থী কোটা</strong>
@@ -1649,7 +1597,7 @@ export default function ProfilePage() {
               </div>
             </label>
 
-            <label className="flex items-center gap-3 p-3.5 border rounded-2xl cursor-pointer hover:bg-slate-50 transition-colors">
+            <label className="flex items-center gap-3 p-3.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
               <input
                 type="radio"
                 name="quota"
@@ -1659,7 +1607,7 @@ export default function ProfilePage() {
                   const u = { ...profile, quota: 'tribal' as any };
                   syncProfileToServer(u);
                 }}
-                className="text-emerald-700"
+                className="accent-slate-800 text-slate-800"
               />
               <div>
                 <strong className="text-slate-800 block">ক্ষুদ্র নৃ-গোষ্ঠী / আদিবাসী কোটা</strong>
@@ -1667,7 +1615,7 @@ export default function ProfilePage() {
               </div>
             </label>
 
-            <label className="flex items-center gap-3 p-3.5 border rounded-2xl cursor-pointer hover:bg-slate-50 transition-colors">
+            <label className="flex items-center gap-3 p-3.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
               <input
                 type="radio"
                 name="quota"
@@ -1677,7 +1625,7 @@ export default function ProfilePage() {
                   const u = { ...profile, quota: 'ansar' as any };
                   syncProfileToServer(u);
                 }}
-                className="text-emerald-700"
+                className="accent-slate-800 text-slate-800"
               />
               <div>
                 <strong className="text-slate-800 block">আনসার ও গ্রাম প্রতিরক্ষা বাহিনী (Ansar & VDP) কোটা</strong>
@@ -1685,7 +1633,7 @@ export default function ProfilePage() {
               </div>
             </label>
 
-            <label className="flex items-center gap-3 p-3.5 border rounded-2xl cursor-pointer hover:bg-slate-50 transition-colors">
+            <label className="flex items-center gap-3 p-3.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
               <input
                 type="radio"
                 name="quota"
@@ -1695,7 +1643,7 @@ export default function ProfilePage() {
                   const u = { ...profile, quota: 'orphan' as any };
                   syncProfileToServer(u);
                 }}
-                className="text-emerald-700"
+                className="accent-slate-800 text-slate-800"
               />
               <div>
                 <strong className="text-slate-800 block">এতিম ও সমাজসেবা অধিদপ্তর নিবন্ধিত নিবাসী কোটা</strong>
@@ -1703,7 +1651,7 @@ export default function ProfilePage() {
               </div>
             </label>
 
-            <label className="flex items-center gap-3 p-3.5 border rounded-2xl cursor-pointer hover:bg-slate-50 transition-colors">
+            <label className="flex items-center gap-3 p-3.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
               <input
                 type="radio"
                 name="quota"
@@ -1713,7 +1661,7 @@ export default function ProfilePage() {
                   const u = { ...profile, quota: 'ward' as any };
                   syncProfileToServer(u);
                 }}
-                className="text-emerald-700"
+                className="accent-slate-800 text-slate-800"
               />
               <div>
                 <strong className="text-slate-800 block">পোষ্য / বিভাগীয় প্রার্থী কোটা (Departmental / Ward Quota)</strong>
@@ -1721,7 +1669,7 @@ export default function ProfilePage() {
               </div>
             </label>
 
-            <label className="flex items-center gap-3 p-3.5 border rounded-2xl cursor-pointer hover:bg-slate-50 transition-colors">
+            <label className="flex items-center gap-3 p-3.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors">
               <input
                 type="radio"
                 name="quota"
@@ -1731,7 +1679,7 @@ export default function ProfilePage() {
                   const u = { ...profile, quota: 'custom' as any };
                   syncProfileToServer(u);
                 }}
-                className="text-emerald-700"
+                className="accent-slate-800 text-slate-800"
               />
               <div className="flex-1">
                 <strong className="text-slate-800 block">অন্যান্য / কাস্টম কোটা (Custom Quota)</strong>
@@ -1748,7 +1696,7 @@ export default function ProfilePage() {
                         syncProfileToServer(u);
                       }}
                       placeholder="কাস্টম কোটার নাম লিখুন (যেমন: ক্রীড়াবিদ কোটা, রেলওয়ে পোষ্য কোটা...)"
-                      className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl font-bold text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg font-semibold text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400"
                     />
                   </div>
                 )}
@@ -1757,19 +1705,18 @@ export default function ProfilePage() {
           </div>
 
           {profile.quota && profile.quota !== 'none' && (
-            <div className="p-4 bg-emerald-50/90 rounded-2xl border border-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs mt-4">
+            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs mt-4">
               <div className="flex items-start gap-2.5">
-                <ShieldCheck className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-emerald-950 block font-bold">কোটা প্রমাণক সনদ সংযুক্তির নিয়মাবলী</strong>
-                  <span className="text-emerald-800">
+                  <strong className="text-slate-900 block font-semibold">কোটা প্রমাণক সনদ সংযুক্তির নিয়মাবলী</strong>
+                  <span className="text-slate-600">
                     নির্বাচিত কোটার সুবিধা পাওয়ার জন্য স্মার্ট ডকুমেন্ট ভল্টে কোটা প্রমাণক বা প্রত্যয়নপত্র আপলোড থাকা বাধ্যতামূলক।
                   </span>
                 </div>
               </div>
               <Link
                 href="/dashboard/vault"
-                className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold transition-all shadow-sm shrink-0 flex items-center justify-center gap-1.5"
+                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-semibold transition-all shadow-xs shrink-0 flex items-center justify-center gap-1.5"
               >
                 <span>ডকুমেন্ট ভল্টে সনদ আপলোড করুন</span>
               </Link>
@@ -1782,9 +1729,8 @@ export default function ProfilePage() {
       {activeTab === 'skills' && (
         <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
           <div className="space-y-1">
-            <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-              <Zap className="w-5 h-5 text-emerald-700" />
-              <span>প্রফেশনাল ও টেকনিক্যাল স্কিলস (Skills & Competencies)</span>
+            <h3 className="font-bold text-slate-900 text-base">
+              প্রফেশনাল ও টেকনিক্যাল স্কিলস (Skills & Competencies)
             </h3>
             <p className="text-xs text-slate-500">
               স্মার্ট জব ম্যাচিংয়ে নির্ভুল রিকমেন্ডেশন পেতে আপনার অর্জিত দক্ষতা ও দক্ষতা স্তর নির্বাচন করুন।
@@ -1802,7 +1748,7 @@ export default function ProfilePage() {
                   placeholder="যেমন: এমএস এক্সেল, পাইথন, জাভাস্ক্রিপ্ট, অ্যাকাউন্টিং..."
                   value={newSkillName}
                   onChange={(e) => setNewSkillName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                   required
                 />
               </div>
@@ -1830,7 +1776,7 @@ export default function ProfilePage() {
                     key={s}
                     type="button"
                     onClick={() => setNewSkillName(s)}
-                    className="px-2 py-0.5 bg-white border border-slate-200 hover:border-emerald-300 rounded-lg text-slate-700 font-semibold"
+                    className="px-2 py-0.5 bg-white border border-slate-200 hover:border-slate-400 rounded-lg text-slate-700 font-semibold"
                   >
                     + {s}
                   </button>
@@ -1869,7 +1815,7 @@ export default function ProfilePage() {
                   let profBadge = 'bg-slate-100 text-slate-700';
                   let profLabel = 'মাঝারি';
                   if (sProf === 'EXPERT') { profBadge = 'bg-purple-50 text-purple-700 border-purple-200'; profLabel = 'বিশেষজ্ঞ'; }
-                  else if (sProf === 'ADVANCED') { profBadge = 'bg-emerald-50 text-emerald-700 border-emerald-200'; profLabel = 'উন্নত'; }
+                  else if (sProf === 'ADVANCED') { profBadge = 'bg-slate-100 text-slate-800 border-slate-200'; profLabel = 'উন্নত'; }
                   else if (sProf === 'BEGINNER') { profBadge = 'bg-amber-50 text-amber-700 border-amber-200'; profLabel = 'প্রাথমিক'; }
 
                   return (
@@ -1900,9 +1846,8 @@ export default function ProfilePage() {
       {activeTab === 'experience' && (
         <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
           <div className="space-y-1">
-            <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-              <Briefcase className="w-5 h-5 text-emerald-700" />
-              <span>কাজের অভিজ্ঞতা (Employment & Work Experience)</span>
+            <h3 className="font-bold text-slate-900 text-base">
+              কাজের অভিজ্ঞতা (Employment & Work Experience)
             </h3>
             <p className="text-xs text-slate-500">
               আপনার পূর্ববর্তী বা বর্তমান চাকরির তথ্য যোগ করুন। ফ্রেশার প্রার্থীদের ক্ষেত্রে এটি পূরণ করা বাধ্যতামূলক নয়।
@@ -1920,7 +1865,7 @@ export default function ProfilePage() {
                   placeholder="যেমন: সহকারী কর্মকর্তা, সফটওয়্যার ডেভেলপার..."
                   value={newExpDesignation}
                   onChange={(e) => setNewExpDesignation(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                   required
                 />
               </div>
@@ -1932,7 +1877,7 @@ export default function ProfilePage() {
                   placeholder="যেমন: রূপালী ব্যাংক লিমিটেড, গ্রামীণফোন..."
                   value={newExpOrg}
                   onChange={(e) => setNewExpOrg(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                   required
                 />
               </div>
@@ -1943,19 +1888,19 @@ export default function ProfilePage() {
                   type="date"
                   value={newExpStartDate}
                   onChange={(e) => setNewExpStartDate(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                 />
               </div>
 
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
                   <label className="font-semibold text-slate-700">শেষের তারিখ (End Date)</label>
-                  <label className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 cursor-pointer">
+                  <label className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-800 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={newExpIsCurrent}
                       onChange={(e) => setNewExpIsCurrent(e.target.checked)}
-                      className="accent-emerald-600 rounded"
+                      className="accent-slate-800 rounded"
                     />
                     <span>বর্তমানে কর্মরত</span>
                   </label>
@@ -1965,7 +1910,7 @@ export default function ProfilePage() {
                   disabled={newExpIsCurrent}
                   value={newExpEndDate}
                   onChange={(e) => setNewExpEndDate(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-white disabled:bg-slate-100 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                  className="w-full px-3.5 py-2.5 bg-white disabled:bg-slate-100 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                 />
               </div>
 
@@ -1976,7 +1921,7 @@ export default function ProfilePage() {
                   placeholder="আপনার প্রধান কাজ বা দায়িত্ব সংক্ষেপে লিখুন..."
                   value={newExpResponsibilities}
                   onChange={(e) => setNewExpResponsibilities(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                  className="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                 />
               </div>
             </div>
@@ -2012,7 +1957,7 @@ export default function ProfilePage() {
                       <div className="text-xs font-semibold text-slate-600 flex items-center gap-2">
                         <span>{exp.organization}</span>
                         <span>•</span>
-                        <span className="text-emerald-700 font-bold">
+                        <span className="text-slate-800 font-semibold">
                           {exp.startDate || 'N/A'} হতে {exp.isCurrent ? 'বর্তমান পর্যন্ত' : (exp.endDate || 'N/A')}
                         </span>
                       </div>
@@ -2037,11 +1982,10 @@ export default function ProfilePage() {
 
       {/* Tab: Career Preferences */}
       {activeTab === 'preferences' && (
-        <form onSubmit={handleSavePreferences} className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+        <form onSubmit={handleSavePreferences} className="bg-white/90 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-slate-200/80 shadow-xs space-y-6">
           <div className="space-y-1">
-            <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-              <Sliders className="w-5 h-5 text-emerald-700" />
-              <span>ক্যারিয়ার ও কর্মসংস্থান অগ্রাধিকার (Career Preferences)</span>
+            <h3 className="font-bold text-slate-900 text-base">
+              ক্যারিয়ার ও কর্মসংস্থান অগ্রাধিকার (Career Preferences)
             </h3>
             <p className="text-xs text-slate-500">
               আপনার পছন্দের ক্যাটাগরি, প্রতিষ্ঠানের ধরন এবং প্রত্যাশিত বেতন নির্ধারণ করুন যাতে স্মার্ট ম্যাচিং ইঞ্জিন প্রাসঙ্গিক চাকরিগুলোকে তালিকার শীর্ষে প্রদর্শন করতে পারে।
@@ -2068,7 +2012,7 @@ export default function ProfilePage() {
                     <label
                       key={cat.id}
                       className={`p-3 rounded-xl border cursor-pointer font-bold transition-all flex items-center gap-2 ${
-                        isChecked ? 'bg-emerald-50 border-emerald-400 text-emerald-900' : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+                        isChecked ? 'bg-white border-slate-400 text-slate-950 shadow-xs ring-1 ring-slate-900/5' : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
                       }`}
                     >
                       <input
@@ -2078,7 +2022,7 @@ export default function ProfilePage() {
                           if (e.target.checked) setPrefCategories([...prefCategories, cat.id]);
                           else setPrefCategories(prefCategories.filter(c => c !== cat.id));
                         }}
-                        className="accent-emerald-600 rounded"
+                        className="accent-slate-800 rounded"
                       />
                       <span>{cat.label}</span>
                     </label>
@@ -2104,7 +2048,7 @@ export default function ProfilePage() {
                     <label
                       key={org.id}
                       className={`p-3 rounded-xl border cursor-pointer font-bold transition-all flex items-center gap-2 ${
-                        isChecked ? 'bg-emerald-50 border-emerald-400 text-emerald-900' : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+                        isChecked ? 'bg-white border-slate-400 text-slate-950 shadow-xs ring-1 ring-slate-900/5' : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
                       }`}
                     >
                       <input
@@ -2114,7 +2058,7 @@ export default function ProfilePage() {
                           if (e.target.checked) setPrefOrgTypes([...prefOrgTypes, org.id]);
                           else setPrefOrgTypes(prefOrgTypes.filter(o => o !== org.id));
                         }}
-                        className="accent-emerald-600 rounded"
+                        className="accent-slate-800 rounded"
                       />
                       <span>{org.label}</span>
                     </label>
@@ -2133,7 +2077,7 @@ export default function ProfilePage() {
                   placeholder="যেমন: সরকারি বা স্বায়ত্তশাসিত প্রতিষ্ঠানে আইসিটি বা সাধারণ প্রশাসনিক পদে দায়িত্বশীল ভূমিকা পালন করা..."
                   value={profile.careerObjective || ''}
                   onChange={(e) => setProfile({ ...profile, careerObjective: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs"
                 />
               </div>
 
@@ -2144,7 +2088,7 @@ export default function ProfilePage() {
                   placeholder="আপনার পূর্ববর্তী কাজের অভিজ্ঞতা বা সামগ্রিক দক্ষতার সংক্ষিপ্ত বিবরণ..."
                   value={profile.professionalSummary || ''}
                   onChange={(e) => setProfile({ ...profile, professionalSummary: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs"
                 />
               </div>
 
@@ -2155,7 +2099,7 @@ export default function ProfilePage() {
                   placeholder="যেমন: কম্পিউটার অপারেটর / ডাটা এন্ট্রি অ্যাসিস্ট্যান্ট"
                   value={profile.currentPosition || ''}
                   onChange={(e) => setProfile({ ...profile, currentPosition: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs"
                 />
               </div>
 
@@ -2166,7 +2110,7 @@ export default function ProfilePage() {
                   placeholder="যেমন: বাংলাদেশ কম্পিউটার কাউন্সিল / ফ্রিল্যান্সার"
                   value={profile.currentOrganization || ''}
                   onChange={(e) => setProfile({ ...profile, currentOrganization: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-600/30 outline-none text-xs"
+                  className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none text-xs"
                 />
               </div>
             </div>
@@ -2181,7 +2125,7 @@ export default function ProfilePage() {
                       <label
                         key={div}
                         className={`p-2.5 rounded-xl border cursor-pointer font-bold transition-all flex items-center gap-2 text-[11px] ${
-                          isChecked ? 'bg-emerald-50 border-emerald-400 text-emerald-900' : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+                          isChecked ? 'bg-white border-slate-400 text-slate-950 shadow-xs ring-1 ring-slate-900/5' : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
                         }`}
                       >
                         <input
@@ -2191,7 +2135,7 @@ export default function ProfilePage() {
                             if (e.target.checked) setPrefDivisions([...prefDivisions, div]);
                             else setPrefDivisions(prefDivisions.filter(d => d !== div));
                           }}
-                          className="accent-emerald-600 rounded"
+                          className="accent-slate-800 rounded"
                         />
                         <span>{BD_DIVISIONS_MAP[div]?.bn || div}</span>
                       </label>
@@ -2208,12 +2152,12 @@ export default function ProfilePage() {
                     placeholder="যেমন: ২৫০০০"
                     value={prefSalaryMin}
                     onChange={(e) => setPrefSalaryMin(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold focus:ring-2 focus:ring-emerald-600/30 outline-none"
+                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                   />
                   <p className="text-[11px] text-slate-400">সরকারি চাকরির ক্ষেত্রে স্কেল অনুযায়ী স্বয়ংক্রিয়ভাবে গণনা হবে।</p>
                 </div>
 
-                <div className="p-4 bg-emerald-50/70 rounded-2xl border border-emerald-200 text-[11px] text-emerald-900 leading-relaxed">
+                <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/80 text-[11px] text-slate-700 leading-relaxed">
                   <strong>টিপস:</strong> আপনি যে ক্যাটাগরি ও বিভাগগুলো নির্বাচন করবেন, সেই ফিল্ডের নতুন সার্কুলার প্রকাশিত হওয়ামাত্রই আপনার ড্যাশবোর্ডে অগ্রাধিকার ভিত্তিতে নোটিফিকেশন পৌঁছাবে।
                 </div>
               </div>

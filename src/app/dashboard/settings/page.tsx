@@ -268,7 +268,7 @@ export default function SettingsPage() {
             type="submit"
             data-testid="change-password-submit-btn"
             disabled={isChangingPassword}
-            className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 active:scale-[0.99] disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-2 shadow-2xs cursor-pointer"
+            className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 active:scale-[0.99] disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-2 shadow-2xs cursor-pointer"
           >
             {isChangingPassword ? (
               <>

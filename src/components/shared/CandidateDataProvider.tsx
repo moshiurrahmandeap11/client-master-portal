@@ -1,7 +1,7 @@
 'use client';
 
-import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import React, { createContext, useCallback, useContext, useEffect, useMemo } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { CandidateDocument, CandidateProfile } from '@/types';
 import { storage } from '@/lib/store';
 import { fetchWithAuth } from '@/lib/axios';
@@ -13,73 +13,121 @@ interface CandidateData {
   refresh: () => Promise<void>;
 }
 
-const Context = createContext<CandidateData>({ profile: null, documents: [], loading: true, refresh: async () => {} });
+const Context = createContext<CandidateData>({
+  profile: null,
+  documents: [],
+  loading: true,
+  refresh: async () => {},
+});
 
 export function CandidateDataProvider({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const [profile, setProfile] = useState<CandidateProfile | null>(null);
-  const [documents, setDocuments] = useState<CandidateDocument[]>([]);
-  const [loading, setLoading] = useState(true);
-  const generation = useRef(0);
+  const queryClient = useQueryClient();
 
-  const refresh = useCallback(async () => {
-    const current = ++generation.current;
-    try {
-      const response = await fetchWithAuth('/api/profile', { cache: 'no-store' });
-      if (!response.ok) throw new Error('Failed to load profile');
-      const data = await response.json();
-      if (current !== generation.current) return;
-      if (!data.profile) {
-        setProfile(null);
-        setDocuments([]);
-        return;
+  // Primary Candidate Profile Query (Cached in TanStack Query)
+  const profileQuery = useQuery({
+    queryKey: ['candidate', 'profile'],
+    queryFn: async (): Promise<CandidateProfile | null> => {
+      const res = await fetchWithAuth('/api/profile');
+      if (res.status === 401) {
+        return null;
       }
-      const docsResponse = await fetchWithAuth('/api/documents', { cache: 'no-store' });
-      if (!docsResponse.ok) throw new Error('Failed to load documents');
-      const docs = await docsResponse.json();
-      if (current !== generation.current) return;
-      storage.setAuth({ isLoggedIn: true, role: 'candidate', userId: data.profile.id, name: data.profile.name, phone: data.profile.phone || '', email: data.profile.email || '' });
-      storage.updateUser(data.profile);
-      storage.replaceDocuments(docs.documents || []);
-      setProfile(data.profile);
-      setDocuments(docs.documents || []);
-    } catch {
-      if (current === generation.current) {
-        // Fallback to cached profile instead of wiping to empty!
-        const auth = storage.getAuth();
-        if (auth.isLoggedIn && auth.role === 'candidate') {
-          setProfile(storage.getUser());
-          setDocuments(storage.getDocuments());
-        }
+      if (!res.ok) {
+        throw new Error('Failed to load candidate profile');
       }
-    } finally {
-      if (current === generation.current) setLoading(false);
+      const data = await res.json();
+      return (data.profile || data.user || null) as CandidateProfile | null;
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes fresh in memory
+    gcTime: 15 * 60 * 1000,
+    retry: 1,
+  });
+
+  // Candidate Documents Query
+  const documentsQuery = useQuery({
+    queryKey: ['candidate', 'documents'],
+    queryFn: async (): Promise<CandidateDocument[]> => {
+      // First check if profile already brought documents to prevent extra query
+      if (profileQuery.data && Array.isArray((profileQuery.data as any).documents) && (profileQuery.data as any).documents.length > 0) {
+        return (profileQuery.data as any).documents;
+      }
+      const res = await fetchWithAuth('/api/documents');
+      if (res.status === 401) {
+        return [];
+      }
+      if (!res.ok) {
+        return [];
+      }
+      const data = await res.json();
+      return Array.isArray(data.documents) ? data.documents : [];
+    },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
+    retry: 1,
+  });
+
+  // Sync to local storage for fast hydration & offline readiness
+  useEffect(() => {
+    if (profileQuery.data) {
+      const p = profileQuery.data;
+      storage.setAuth({
+        isLoggedIn: true,
+        role: 'candidate',
+        userId: p.id,
+        name: p.name,
+        phone: p.phone || '',
+        email: p.email || '',
+      });
+      storage.updateUser(p);
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('cs_user_changed'));
+      }
     }
-  }, []);
+  }, [profileQuery.data]);
 
   useEffect(() => {
-    refresh();
-    const fromCache = () => {
-      const auth = storage.getAuth();
-      setProfile(auth.isLoggedIn && auth.role === 'candidate' ? storage.getUser() : null);
-      setDocuments(auth.isLoggedIn ? storage.getDocuments() : []);
-    };
-    window.addEventListener('focus', refresh);
-    window.addEventListener('cs_user_changed', fromCache);
-    window.addEventListener('cs_docs_changed', fromCache);
-    window.addEventListener('cs_auth_changed', fromCache);
-    return () => {
-      generation.current++;
-      window.removeEventListener('focus', refresh);
-      window.removeEventListener('cs_user_changed', fromCache);
-      window.removeEventListener('cs_docs_changed', fromCache);
-      window.removeEventListener('cs_auth_changed', fromCache);
-    };
-  }, [pathname, refresh]);
+    if (documentsQuery.data && documentsQuery.data.length > 0) {
+      storage.replaceDocuments(documentsQuery.data);
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('cs_docs_changed'));
+      }
+    }
+  }, [documentsQuery.data]);
 
-  return <Context.Provider value={{ profile, documents, loading, refresh }}>{children}</Context.Provider>;
+  // Synchronous initial fallback from storage while query settles
+  const cachedAuth = typeof window !== 'undefined' ? storage.getAuth() : { isLoggedIn: false };
+  const cachedUser = cachedAuth.isLoggedIn && (cachedAuth as any).role === 'candidate' ? storage.getUser() : null;
+  const cachedDocs = cachedAuth.isLoggedIn ? storage.getDocuments() : [];
+
+  const profile = profileQuery.data ?? (profileQuery.isLoading ? cachedUser : null);
+  const documents = (documentsQuery.data && documentsQuery.data.length > 0) 
+    ? documentsQuery.data 
+    : (Array.isArray((profileQuery.data as any)?.documents) && (profileQuery.data as any)?.documents.length > 0)
+      ? (profileQuery.data as any).documents
+      : (documentsQuery.isLoading ? cachedDocs : []);
+
+  const loading = profileQuery.isLoading && !cachedUser;
+
+  const refresh = useCallback(async () => {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ['candidate'] }),
+      queryClient.invalidateQueries({ queryKey: ['auth', 'me'] }),
+    ]);
+    await Promise.all([
+      profileQuery.refetch(),
+      documentsQuery.refetch(),
+    ]);
+  }, [queryClient, profileQuery, documentsQuery]);
+
+  const value = useMemo(
+    () => ({ profile, documents, loading, refresh }),
+    [profile, documents, loading, refresh]
+  );
+
+  return <Context.Provider value={value}>{children}</Context.Provider>;
 }
 
 export function useCandidateData() {
   return useContext(Context);
 }
+
+export default CandidateDataProvider;

@@ -439,12 +439,12 @@ export default function DocumentVaultPage() {
     <div className="space-y-8 w-full">
       {/* Header */}
       <div>
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-800 rounded-full text-xs font-bold border border-emerald-200 mb-2">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-100/90 text-slate-800 rounded-full text-xs font-semibold border border-slate-200/80 mb-2">
+          <ShieldCheck className="w-3.5 h-3.5 text-slate-700" />
           <span>১০০% এনক্রিপ্টেড ব্যক্তিগত ভল্ট (AES-256)</span>
         </div>
         <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-          <FileBox className="w-6 h-6 text-emerald-700" />
+          <FileBox className="w-6 h-6 text-slate-800" />
           <span>স্মার্ট ডকুমেন্ট ভল্ট ও ইমেজ রিসাইজার</span>
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 mt-1">
@@ -454,25 +454,25 @@ export default function DocumentVaultPage() {
 
       {/* Toast Alert */}
       {docUploadToast && (
-        <div className="flex items-center gap-2 p-3 bg-emerald-50 border border-emerald-300 text-emerald-800 rounded-2xl text-xs font-bold animate-bounce shadow-sm">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+        <div className="flex items-center gap-2 p-3 bg-slate-900 text-white rounded-2xl text-xs font-semibold animate-bounce shadow-md">
+          <CheckCircle2 className="w-4 h-4 text-white flex-shrink-0" />
           <span>{docUploadToast}</span>
         </div>
       )}
 
       {/* 1. Official Identity & Verification Documents Vault (10 Standard Slots) */}
-      <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4">
+      <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-sm space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
           <div>
-            <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-emerald-700" />
+            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5 text-slate-800" />
               <span>মূল জাতীয় পরিচয়পত্র ও প্রমাণপত্র ভল্ট (১০টি অফিসিয়াল স্লট)</span>
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">
               প্রার্থীর NID, ছবি, স্বাক্ষর, পিতা-মাতার আইডি কার্ড, চেয়ারম্যান সার্টিফিকেট ও অন্যান্য ডকুমেন্টস আপলোড করুন। অ্যাডমিন প্যানেলে এগুলো সরাসরি ভেরিফাই করা হবে।
             </p>
           </div>
-          <span className="text-xs font-bold px-3 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-xl w-fit">
+          <span className="text-xs font-semibold px-3 py-1 bg-slate-100/90 text-slate-700 border border-slate-200/80 rounded-xl w-fit">
             এনক্রিপ্টেড ও সুরক্ষিত
           </span>
         </div>
@@ -488,34 +488,34 @@ export default function DocumentVaultPage() {
             return (
               <div
                 key={item.type}
-                className={`p-4 rounded-2xl border transition-all flex flex-col justify-between space-y-3 ${
+                className={`p-4 rounded-2xl border transition-all duration-200 ease-[cubic-bezier(0.2,0,0,1)] flex flex-col justify-between space-y-3 ${
                   resolvedUrl
-                    ? 'bg-emerald-50/40 border-emerald-300 shadow-sm'
-                    : 'bg-slate-50/70 border-slate-200 hover:border-slate-300'
+                    ? 'bg-slate-50/80 border-slate-300 shadow-xs ring-1 ring-slate-900/[0.03]'
+                    : 'bg-white/80 border-slate-200/80 hover:border-slate-300 hover:shadow-xs'
                 }`}
               >
                 <div>
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+                      <span className="w-8 h-8 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center shrink-0 border border-slate-200/60">
                         <UiIcon name={item.icon} className="w-4 h-4" />
                       </span>
                       <div>
-                        <h3 className="text-xs font-bold text-slate-900 line-clamp-1">{item.title}</h3>
+                        <h3 className="text-xs font-semibold text-slate-900 line-clamp-1">{item.title}</h3>
                         <p className="text-[10px] text-slate-500 line-clamp-1">{item.desc}</p>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-1">
                       {resolvedUrl ? (
-                        <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                        <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full ${
                           isVerified
-                            ? 'text-emerald-800 bg-emerald-200 border border-emerald-300'
+                            ? 'text-slate-800 bg-slate-200 border border-slate-300'
                             : isRejected
                             ? 'text-rose-700 bg-rose-100 border border-rose-200'
                             : isCorrection
                             ? 'text-amber-700 bg-amber-100 border border-amber-200'
-                            : 'text-emerald-700 bg-emerald-100'
+                            : 'text-slate-700 bg-slate-100 border border-slate-200'
                         }`}>
                           <CheckCircle2 className="w-3 h-3" />
                           <span>
@@ -523,7 +523,7 @@ export default function DocumentVaultPage() {
                           </span>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center text-[10px] font-medium text-slate-400 bg-white px-2 py-0.5 rounded-full border">
+                        <span className="inline-flex items-center text-[10px] font-medium text-slate-400 bg-white px-2 py-0.5 rounded-full border border-slate-200">
                           বাকি
                         </span>
                       )}
@@ -542,11 +542,11 @@ export default function DocumentVaultPage() {
                   </div>
 
                   {resolvedUrl && (
-                    <div className="mt-3 p-2 bg-white rounded-xl border border-emerald-200 flex items-center justify-between">
+                    <div className="mt-3 p-2 bg-white rounded-xl border border-slate-200 flex items-center justify-between">
                       <button
                         type="button"
                         onClick={() => setPreviewModalDoc({ title: item.title, url: resolvedUrl, mimeType: matchedDoc?.mimeType })}
-                        className="text-[11px] font-bold text-emerald-700 hover:underline flex items-center gap-1 cursor-pointer truncate"
+                        className="text-[11px] font-semibold text-slate-800 hover:text-slate-950 hover:underline flex items-center gap-1 cursor-pointer truncate"
                       >
                         <Eye className="w-3.5 h-3.5 shrink-0" />
                         <span>প্রিভিউ দেখুন</span>
@@ -555,7 +555,7 @@ export default function DocumentVaultPage() {
                         href={resolvedUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[10px] text-slate-500 hover:text-emerald-800 flex items-center gap-0.5"
+                        className="text-[10px] text-slate-500 hover:text-slate-800 flex items-center gap-0.5"
                       >
                         <span>ডাউনলোড</span>
                         <ExternalLink className="w-2.5 h-2.5" />
@@ -569,17 +569,17 @@ export default function DocumentVaultPage() {
                     <button
                       type="button"
                       onClick={() => scrollToResizer(item.type as 'photo' | 'signature')}
-                      className="w-full py-1.5 px-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-[11px] font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                      className="w-full py-1.5 px-2 bg-slate-100 hover:bg-slate-200/80 text-slate-700 rounded-xl text-[11px] font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer border border-slate-200/60"
                     >
-                      <Sliders className="w-3 h-3 text-emerald-700" />
+                      <Sliders className="w-3 h-3 text-slate-700" />
                       <span>টেলিটক রিসাইজারে মাপ ঠিক করুন</span>
                     </button>
                   )}
 
-                  <label className={`w-full py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-colors shadow-sm ${
+                  <label className={`w-full py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-200 ease-[cubic-bezier(0.2,0,0,1)] shadow-xs ${
                     resolvedUrl
                       ? 'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200'
-                      : 'bg-emerald-700 hover:bg-emerald-800 text-white'
+                      : 'bg-slate-900 hover:bg-slate-800 text-white'
                   }`}>
                     <Upload className="w-3.5 h-3.5" />
                     <span>
@@ -608,8 +608,8 @@ export default function DocumentVaultPage() {
       <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4">
           <div>
-            <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
-              <FolderPlus className="w-5 h-5 text-emerald-700" />
+            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+              <FolderPlus className="w-5 h-5 text-slate-800" />
               <span>কাস্টম ও পেশাগত প্রমাণপত্র ভল্ট (Custom & Professional Documents)</span>
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">
@@ -619,7 +619,7 @@ export default function DocumentVaultPage() {
           <button
             type="button"
             onClick={() => setShowCustomDocModal(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-xl transition-all shadow-sm cursor-pointer shrink-0"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl transition-all shadow-xs cursor-pointer shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>+ নতুন কাস্টম ডকুমেন্ট যোগ করুন</span>
@@ -628,7 +628,7 @@ export default function DocumentVaultPage() {
 
         {customDocumentsList.length === 0 ? (
           <div className="text-center py-10 bg-slate-50/70 border-2 border-dashed border-slate-200 rounded-3xl p-6 space-y-3">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center mx-auto">
+            <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center mx-auto border border-slate-200/60">
               <Award className="w-6 h-6" />
             </div>
             <div className="space-y-1">
@@ -640,9 +640,9 @@ export default function DocumentVaultPage() {
             <button
               type="button"
               onClick={() => setShowCustomDocModal(true)}
-              className="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 text-xs font-bold rounded-xl shadow-xs transition-colors cursor-pointer inline-flex items-center gap-1.5"
+              className="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 text-xs font-semibold rounded-xl shadow-xs transition-colors cursor-pointer inline-flex items-center gap-1.5"
             >
-              <Plus className="w-3.5 h-3.5 text-emerald-700" />
+              <Plus className="w-3.5 h-3.5 text-slate-700" />
               <span>প্রথম কাস্টম ডকুমেন্ট যোগ করুন</span>
             </button>
           </div>
@@ -654,11 +654,11 @@ export default function DocumentVaultPage() {
                 <div
                   key={doc.id}
                   data-testid="custom-doc-card"
-                  className="p-4 rounded-2xl border border-slate-200 bg-white hover:border-emerald-300 transition-all shadow-xs flex flex-col justify-between space-y-3"
+                  className="p-4 rounded-2xl border border-slate-200 bg-white hover:border-slate-300 transition-all duration-200 ease-[cubic-bezier(0.2,0,0,1)] shadow-xs flex flex-col justify-between space-y-3"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center shrink-0 border border-slate-200/60">
                         {doc.category === 'training' ? (
                           <Award className="w-5 h-5" />
                         ) : doc.category === 'experience' ? (
@@ -670,11 +670,11 @@ export default function DocumentVaultPage() {
                         )}
                       </div>
                       <div className="min-w-0">
-                        <h4 className="font-bold text-xs text-slate-900 truncate" title={doc.title}>
+                        <h4 className="font-semibold text-xs text-slate-900 truncate" title={doc.title}>
                           {doc.title}
                         </h4>
                         <div className="flex items-center gap-1.5 mt-0.5">
-                          <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-medium">
+                          <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-medium border border-slate-200/60">
                             {doc.category === 'training' ? 'প্রশিক্ষণ' : doc.category === 'experience' ? 'অভিজ্ঞতা' : doc.category === 'license' ? 'লাইসেন্স' : doc.category === 'language' ? 'ভাষা' : 'সার্টিফিকেট'}
                           </span>
                           <span className="text-[10px] text-slate-400">{doc.uploadDate}</span>
@@ -695,7 +695,7 @@ export default function DocumentVaultPage() {
 
                   <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between text-[11px] text-slate-600">
                     <span>সাইজ: <strong>{doc.fileSize || 'PDF/Image'}</strong></span>
-                    <span className="text-emerald-700 font-bold text-[10px]">সংরক্ষিত</span>
+                    <span className="text-slate-700 font-semibold text-[10px]">সংরক্ষিত</span>
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -703,9 +703,9 @@ export default function DocumentVaultPage() {
                       <button
                         type="button"
                         onClick={() => setPreviewModalDoc({ title: doc.title, url: fileLink, mimeType: doc.mimeType })}
-                        className="flex-1 py-2 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold text-center flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                        className="flex-1 py-2 px-3 bg-slate-100 hover:bg-slate-200/80 text-slate-800 rounded-xl text-xs font-semibold text-center flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-slate-200/60"
                       >
-                        <Eye className="w-3.5 h-3.5" />
+                        <Eye className="w-3.5 h-3.5 text-slate-600" />
                         <span>প্রিভিউ</span>
                       </button>
                     )}
@@ -715,7 +715,7 @@ export default function DocumentVaultPage() {
                         href={fileLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="py-2 px-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold text-center flex items-center justify-center gap-1.5 transition-colors shadow-xs"
+                        className="py-2 px-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold text-center flex items-center justify-center gap-1.5 transition-colors shadow-xs"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                         <span>ডাউনলোড</span>
@@ -730,11 +730,11 @@ export default function DocumentVaultPage() {
       </div>
 
       {/* 3. Client-side Interactive Canvas Image Resizer (Teletalk Engine) */}
-      <div ref={resizerSectionRef} className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-4">
+      <div ref={resizerSectionRef} className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-sm space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
           <div>
             <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <Camera className="w-4 h-4 text-emerald-700" />
+              <Camera className="w-4 h-4 text-slate-800" />
               <span>টেলিটক অফিসিয়াল ফটো ও সিগনেচার রিসাইজার</span>
             </h2>
             <p className="text-xs text-slate-500">কোনো সাইবার ক্যাফেতে যাওয়ার প্রয়োজন নেই, ঘরে বসেই নিখুঁত মাপ তৈরি করুন।</p>
@@ -744,10 +744,10 @@ export default function DocumentVaultPage() {
             <button
               type="button"
               onClick={() => handleSelectPreset('photo')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 ease-[cubic-bezier(0.2,0,0,1)] flex items-center gap-1.5 cursor-pointer ${
                 activeResizerTab === 'photo'
-                  ? 'bg-emerald-700 text-white shadow-sm'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200/80'
               }`}
             >
               <Camera className="w-3.5 h-3.5" />
@@ -756,10 +756,10 @@ export default function DocumentVaultPage() {
             <button
               type="button"
               onClick={() => handleSelectPreset('signature')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-200 ease-[cubic-bezier(0.2,0,0,1)] flex items-center gap-1.5 cursor-pointer ${
                 activeResizerTab === 'signature'
-                  ? 'bg-emerald-700 text-white shadow-sm'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200/80'
               }`}
             >
               <PenTool className="w-3.5 h-3.5" />
@@ -781,9 +781,9 @@ export default function DocumentVaultPage() {
             />
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-slate-300 hover:border-emerald-500 rounded-3xl p-8 text-center cursor-pointer transition-colors bg-slate-50 hover:bg-emerald-50/20 space-y-3"
+              className="border-2 border-dashed border-slate-300 hover:border-slate-400 rounded-3xl p-8 text-center cursor-pointer transition-colors bg-slate-50 hover:bg-slate-100/50 space-y-3"
             >
-              <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-slate-200 flex items-center justify-center mx-auto text-emerald-700">
+              <div className="w-12 h-12 rounded-2xl bg-white shadow-xs border border-slate-200 flex items-center justify-center mx-auto text-slate-700">
                 <Upload className="w-6 h-6" />
               </div>
               <div className="space-y-1">
@@ -800,7 +800,7 @@ export default function DocumentVaultPage() {
             </div>
 
             {selectedFile && (
-              <div className="text-xs text-slate-500 flex items-center justify-between bg-slate-50 p-3 rounded-xl border">
+              <div className="text-xs text-slate-500 flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-200">
                 <span>মূল ফাইল: <strong>{selectedFile.name}</strong></span>
                 <span>সাইজ: {Math.round(selectedFile.size / 1024)} KB</span>
               </div>
@@ -810,7 +810,7 @@ export default function DocumentVaultPage() {
           {/* Processed Output & Preview */}
           <div className="bg-slate-50 rounded-3xl p-6 border border-slate-200 space-y-4">
             <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+              <Sparkles className="w-3.5 h-3.5 text-slate-600" />
               <span>লাইভ প্রসেসড প্রিভিউ</span>
             </h3>
 
@@ -829,13 +829,13 @@ export default function DocumentVaultPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="bg-white p-2.5 rounded-xl border">
+                  <div className="bg-white p-2.5 rounded-xl border border-slate-200">
                     <span className="text-slate-400 block text-[10px]">আউটপুট রেজোলিউশন</span>
-                    <strong className="text-emerald-700 font-bold">{targetWidth} × {targetHeight} pixels</strong>
+                    <strong className="text-slate-900 font-bold">{targetWidth} × {targetHeight} pixels</strong>
                   </div>
-                  <div className="bg-white p-2.5 rounded-xl border">
+                  <div className="bg-white p-2.5 rounded-xl border border-slate-200">
                     <span className="text-slate-400 block text-[10px]">আউটপুট ফাইল সাইজ</span>
-                    <strong className={`${(resizedFileSizeKb || 0) <= maxAllowedKb ? 'text-emerald-700' : 'text-rose-600'} font-bold`}>
+                    <strong className={`${(resizedFileSizeKb || 0) <= maxAllowedKb ? 'text-slate-900' : 'text-rose-600'} font-bold`}>
                       {resizedFileSizeKb} KB ({resizedFileSizeKb! <= maxAllowedKb ? 'বৈধ' : 'বড়'})
                     </strong>
                   </div>
@@ -845,9 +845,9 @@ export default function DocumentVaultPage() {
                   <button
                     type="button"
                     onClick={handleDownload}
-                    className="flex-1 py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-colors cursor-pointer"
+                    className="flex-1 py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
                   >
-                    <Download className="w-4 h-4 text-emerald-700" />
+                    <Download className="w-4 h-4 text-slate-700" />
                     <span>ডাউনলোড করুন</span>
                   </button>
                   <button
@@ -855,7 +855,7 @@ export default function DocumentVaultPage() {
                     data-testid="resizer-save-btn"
                     onClick={handleSaveToVault}
                     disabled={uploadingDocType === activeResizerTab}
-                    className="flex-1 py-2.5 bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-colors cursor-pointer"
+                    className="flex-1 py-2.5 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
                   >
                     <CheckCircle2 className="w-4 h-4" />
                     <span>{uploadingDocType === activeResizerTab ? 'সেভ হচ্ছে...' : 'ভল্টে সেভ করুন'}</span>
@@ -876,7 +876,7 @@ export default function DocumentVaultPage() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-            <FileText className="w-5 h-5 text-emerald-700" />
+            <FileText className="w-5 h-5 text-slate-800" />
             <span>সংরক্ষিত ডকুমেন্টস ({documents.length} টি)</span>
           </h2>
           <span className="text-xs text-slate-500">শুধুমাত্র আপনি এই ফাইলগুলো দেখতে পারেন</span>
@@ -888,12 +888,12 @@ export default function DocumentVaultPage() {
             return (
               <div
                 key={doc.id}
-                className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm hover:border-emerald-300 transition-all space-y-3 flex flex-col justify-between"
+                className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs hover:border-slate-300 transition-all duration-200 ease-[cubic-bezier(0.2,0,0,1)] space-y-3 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center flex-shrink-0">
+                      <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center flex-shrink-0 border border-slate-200/60">
                         {doc.type === 'photo' ? (
                           <Camera className="w-5 h-5" />
                         ) : doc.type === 'signature' ? (
@@ -907,7 +907,7 @@ export default function DocumentVaultPage() {
                         )}
                       </div>
                       <div className="min-w-0">
-                        <h4 className="font-bold text-xs text-slate-900 truncate" title={doc.title}>
+                        <h4 className="font-semibold text-xs text-slate-900 truncate" title={doc.title}>
                           {doc.title}
                         </h4>
                         <span className="text-[11px] text-slate-400">{doc.uploadDate}</span>
@@ -927,13 +927,13 @@ export default function DocumentVaultPage() {
                   <div className="mt-3 p-2.5 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between text-[11px] text-slate-600">
                     <span>সাইজ: <strong>{doc.fileSize}</strong></span>
                     {doc.dimensions && <span>মাপ: {doc.dimensions}</span>}
-                    <span className={`font-semibold ${doc.isVerified ? 'text-emerald-700' : 'text-amber-700'}`}>
+                    <span className={`font-semibold ${doc.isVerified ? 'text-slate-800' : 'text-amber-700'}`}>
                       {doc.isVerified ? 'যাচাইকৃত' : doc.verificationStatus === 'REJECTED' ? 'বাতিল' : doc.verificationStatus === 'NEEDS_CORRECTION' ? 'সংশোধন' : 'অপেক্ষমাণ'}
                     </span>
                   </div>
 
                   {fileLink && (doc.mimeType?.startsWith('image/') || /\.(png|jpe?g|webp)$/i.test(doc.fileName || fileLink)) && (
-                    <div className="mt-3 h-20 bg-slate-50 rounded-xl flex items-center justify-center overflow-hidden border">
+                    <div className="mt-3 h-20 bg-slate-50 rounded-xl flex items-center justify-center overflow-hidden border border-slate-200">
                       <img src={fileLink} alt="" className="max-h-full object-contain" />
                     </div>
                   )}
@@ -944,18 +944,18 @@ export default function DocumentVaultPage() {
                     <button
                       type="button"
                       onClick={() => setPreviewModalDoc({ title: doc.title, url: fileLink, mimeType: doc.mimeType })}
-                      className="flex-1 py-1.5 px-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                      className="flex-1 py-1.5 px-2 bg-slate-100 hover:bg-slate-200/80 text-slate-700 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer border border-slate-200/60"
                     >
-                      <Eye className="w-3.5 h-3.5 text-emerald-700" />
+                      <Eye className="w-3.5 h-3.5 text-slate-600" />
                       <span>প্রিভিউ</span>
                     </button>
                     <a
                       href={fileLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 py-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 transition-colors"
+                      className="flex-1 py-1.5 px-2 bg-slate-100 hover:bg-slate-200/80 text-slate-800 rounded-xl text-xs font-semibold flex items-center justify-center gap-1 transition-colors border border-slate-200/60"
                     >
-                      <Download className="w-3.5 h-3.5" />
+                      <Download className="w-3.5 h-3.5 text-slate-600" />
                       <span>ডাউনলোড</span>
                     </a>
                   </div>
@@ -970,13 +970,13 @@ export default function DocumentVaultPage() {
       {previewModalDoc && (
         <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
           <div className="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 animate-scaleUp space-y-4">
-            <div className="flex items-center justify-between border-b pb-3">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2 min-w-0">
-                <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center shrink-0 border border-slate-200/60">
                   <Eye className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
-                  <h3 className="font-black text-sm text-slate-900 truncate">{previewModalDoc.title}</h3>
+                  <h3 className="font-bold text-sm text-slate-900 truncate">{previewModalDoc.title}</h3>
                   <p className="text-[11px] text-slate-500">সুরক্ষিত ক্লাউড ভল্ট ফাইল প্রিভিউ</p>
                 </div>
               </div>
@@ -986,7 +986,7 @@ export default function DocumentVaultPage() {
                   href={previewModalDoc.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-1.5 text-slate-500 hover:text-emerald-700 rounded-lg transition-colors"
+                  className="p-1.5 text-slate-500 hover:text-slate-800 rounded-lg transition-colors"
                   title="নতুন ট্যাবে খুলুন"
                 >
                   <ExternalLink className="w-4 h-4" />
@@ -1021,7 +1021,7 @@ export default function DocumentVaultPage() {
                   <a
                     href={previewModalDoc.url}
                     download
-                    className="inline-flex items-center gap-1 px-4 py-2 bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-sm"
+                    className="inline-flex items-center gap-1 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold shadow-xs"
                   >
                     <Download className="w-4 h-4" />
                     <span>ডাউনলোড করে দেখুন</span>
@@ -1038,7 +1038,7 @@ export default function DocumentVaultPage() {
                 <a
                   href={previewModalDoc.url}
                   download
-                  className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-xl transition-colors inline-flex items-center gap-1.5 shadow-sm"
+                  className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl transition-colors inline-flex items-center gap-1.5 shadow-xs"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>ডাউনলোড</span>
@@ -1046,7 +1046,7 @@ export default function DocumentVaultPage() {
                 <button
                   type="button"
                   onClick={() => setPreviewModalDoc(null)}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-colors cursor-pointer"
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-colors cursor-pointer border border-slate-200/60"
                 >
                   বন্ধ করুন
                 </button>
@@ -1060,13 +1060,13 @@ export default function DocumentVaultPage() {
       {showCustomDocModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-scaleUp space-y-5">
-            <div className="flex items-center justify-between border-b pb-3.5">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3.5">
               <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center border border-slate-200/60">
                   <FolderPlus className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-black text-sm text-slate-900">নতুন কাস্টম ডকুমেন্ট আপলোড</h3>
+                  <h3 className="font-bold text-sm text-slate-900">নতুন কাস্টম ডকুমেন্ট আপলোড</h3>
                   <p className="text-[11px] text-slate-500">আপনার পছন্দের শিরোনাম দিয়ে যেকোনো সার্টিফিকেট ভল্টে যুক্ত করুন</p>
                 </div>
               </div>
@@ -1081,7 +1081,7 @@ export default function DocumentVaultPage() {
 
             <form onSubmit={handleUploadCustomDoc} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1">
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
                   ডকুমেন্টের নাম বা শিরোনাম <span className="text-rose-600">*</span>
                 </label>
                 <input
@@ -1090,18 +1090,18 @@ export default function DocumentVaultPage() {
                   value={customDocTitle}
                   onChange={(e) => setCustomDocTitle(e.target.value)}
                   placeholder="যেমন: কম্পিউটার প্রশিক্ষণ সনদ (৬ মাস), ড্রাইভিং লাইসেন্স, ইত্যাদি"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-emerald-600 text-xs text-slate-900 font-medium"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-slate-500 focus:ring-2 focus:ring-slate-400/20 text-xs text-slate-900 font-medium"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1">
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
                   ডকুমেন্টের ক্যাটাগরি / ধরন
                 </label>
                 <select
                   value={customDocCategory}
                   onChange={(e) => setCustomDocCategory(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-emerald-600 text-xs text-slate-900 font-medium bg-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-slate-500 focus:ring-2 focus:ring-slate-400/20 text-xs text-slate-900 font-medium bg-white"
                 >
                   <option value="training">কম্পিউটার ও প্রযুক্তিগত প্রশিক্ষণ (Training)</option>
                   <option value="certificate">শিক্ষাগত মূল বা সাময়িক সনদ (Academic Certificate)</option>
@@ -1113,7 +1113,7 @@ export default function DocumentVaultPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1">
+                <label className="block text-xs font-semibold text-slate-800 mb-1">
                   ফাইল নির্বাচন করুন (PDF, JPG, PNG - সর্বোচ্চ 10MB) <span className="text-rose-600">*</span>
                 </label>
                 <input
@@ -1122,28 +1122,28 @@ export default function DocumentVaultPage() {
                   required
                   accept="application/pdf,image/png,image/jpeg,image/jpg,image/webp"
                   onChange={(e) => setCustomDocFile(e.target.files?.[0] || null)}
-                  className="w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-emerald-800 hover:file:bg-emerald-100 cursor-pointer"
+                  className="w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-800 hover:file:bg-slate-200 cursor-pointer"
                 />
                 {customDocFile && (
-                  <p className="text-[11px] text-emerald-700 font-medium mt-1">
+                  <p className="text-[11px] text-slate-700 font-medium mt-1">
                     নির্বাচিত: {customDocFile.name} ({Math.round(customDocFile.size / 1024)} KB)
                   </p>
                 )}
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setShowCustomDocModal(false)}
                   disabled={isUploadingCustomDoc}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-colors cursor-pointer"
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-colors cursor-pointer border border-slate-200/60"
                 >
                   বাতিল
                 </button>
                 <button
                   type="submit"
                   disabled={isUploadingCustomDoc}
-                  className="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 disabled:opacity-50 text-white text-xs font-bold rounded-xl transition-all shadow-sm cursor-pointer flex items-center gap-1.5"
+                  className="px-5 py-2 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white text-xs font-semibold rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-1.5"
                 >
                   {isUploadingCustomDoc ? 'আপলোড হচ্ছে...' : 'ভল্টে সেভ করুন'}
                 </button>

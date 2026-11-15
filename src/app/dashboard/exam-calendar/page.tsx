@@ -222,8 +222,8 @@ export default function ExamCalendarPage() {
       {/* Page Header & View Toggles */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-800 rounded-full text-xs font-bold border border-emerald-200 mb-2">
-            <Calendar className="w-3.5 h-3.5 text-emerald-600" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-xs font-bold border border-slate-200 mb-2">
+            <Calendar className="w-3.5 h-3.5 text-slate-700" />
             <span>স্টেপ ১০ — ব্যক্তিগত পরীক্ষার দিনপঞ্জি ও ডেডলাইন</span>
           </div>
           <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
@@ -263,7 +263,7 @@ export default function ExamCalendarPage() {
 
           <Link
             href="/dashboard/admit-cards"
-            className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow-xs"
+            className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow-xs"
           >
             <Award className="w-4 h-4" />
             <span>প্রবেশপত্র ডাউনলোড হাব</span>
@@ -277,9 +277,9 @@ export default function ExamCalendarPage() {
           <p className="text-xs font-semibold text-slate-500">মোট শিডিউলড ইভেন্ট</p>
           <p className="text-xl sm:text-2xl font-black text-slate-900 mt-1">{events.length} টি</p>
         </div>
-        <div className="bg-emerald-50/60 p-4 rounded-2xl border border-emerald-200 shadow-xs">
-          <p className="text-xs font-semibold text-emerald-800">আসন্ন পরীক্ষা (Exam)</p>
-          <p className="text-xl sm:text-2xl font-black text-emerald-800 mt-1">{events.filter(e => e.type === 'exam').length} টি</p>
+        <div className="bg-slate-100 p-4 rounded-2xl border border-slate-200 shadow-xs">
+          <p className="text-xs font-semibold text-slate-800">আসন্ন পরীক্ষা (Exam)</p>
+          <p className="text-xl sm:text-2xl font-black text-slate-800 mt-1">{events.filter(e => e.type === 'exam').length} টি</p>
         </div>
         <div className="bg-rose-50/60 p-4 rounded-2xl border border-rose-200 shadow-xs">
           <p className="text-xs font-semibold text-rose-800">জরুরি ডেডলাইন (Deadlines)</p>
@@ -305,7 +305,7 @@ export default function ExamCalendarPage() {
             type="button"
             onClick={() => { setActiveTab('exam'); setSelectedCalendarDate(null); }}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-              activeTab === 'exam' ? 'bg-emerald-700 text-white shadow-2xs' : 'text-slate-600 hover:bg-slate-100'
+              activeTab === 'exam' ? 'bg-slate-900 text-white shadow-2xs' : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
             পরীক্ষা ({events.filter(e => e.type === 'exam').length})
@@ -353,7 +353,7 @@ export default function ExamCalendarPage() {
               {banglaMonths[currentMonth]} {currentYear}
             </h3>
             <div className="flex items-center gap-4 text-xs font-semibold">
-              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-emerald-600"></span> পরীক্ষা (Exam)</span>
+              <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-slate-900"></span> পরীক্ষা (Exam)</span>
               <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span> ডেডলাইন (Deadline)</span>
             </div>
           </div>
@@ -381,20 +381,20 @@ export default function ExamCalendarPage() {
                   onClick={() => setSelectedCalendarDate(item.dateKey || null)}
                   className={`p-2 min-h-[70px] rounded-xl border transition-all text-left flex flex-col justify-between ${
                     isSelected
-                      ? 'border-emerald-600 bg-emerald-50/70 shadow-xs'
+                      ? 'border-slate-300 bg-slate-100 shadow-xs'
                       : hasEvents
-                      ? 'border-slate-300 bg-white hover:border-emerald-300'
+                      ? 'border-slate-300 bg-white hover:border-slate-300'
                       : 'border-slate-100 bg-white/60 hover:bg-slate-50'
                   }`}
                 >
-                  <span className={`text-xs font-bold leading-none ${isSelected ? 'text-emerald-800' : 'text-slate-800'}`}>
+                  <span className={`text-xs font-bold leading-none ${isSelected ? 'text-slate-800' : 'text-slate-800'}`}>
                     {item.dayNumber}
                   </span>
 
                   {hasEvents && (
                     <div className="flex flex-wrap gap-1 mt-1">
                       {hasExam && (
-                        <span className="w-full text-[9px] font-bold px-1 py-0.5 rounded bg-emerald-100 text-emerald-800 truncate" title="পরীক্ষা">
+                        <span className="w-full text-[9px] font-bold px-1 py-0.5 rounded bg-slate-100 text-slate-800 truncate" title="পরীক্ষা">
                           পরীক্ষা
                         </span>
                       )}
@@ -430,7 +430,7 @@ export default function ExamCalendarPage() {
             {selectedCalendarDate && (
               <button
                 onClick={() => setSelectedCalendarDate(null)}
-                className="text-xs font-bold text-emerald-700 underline"
+                className="text-xs font-bold text-slate-800 underline"
               >
                 সব ইভেন্ট দেখুন
               </button>
@@ -448,12 +448,12 @@ export default function ExamCalendarPage() {
                 <div
                   key={ev.id}
                   data-testid="calendar-event-card"
-                  className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:border-emerald-300 hover:shadow-xs group"
+                  className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:border-slate-300 hover:shadow-xs group"
                 >
                   <div className="flex items-start gap-4">
                     {/* Date Block */}
                     <div className={`p-3 rounded-2xl border text-center min-w-[80px] shrink-0 shadow-2xs ${
-                      isExam ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-rose-50 border-rose-200 text-rose-800'
+                      isExam ? 'bg-slate-100 border-slate-200 text-slate-800' : 'bg-rose-50 border-rose-200 text-rose-800'
                     }`}>
                       <span className="block text-[11px] font-bold opacity-80">{ev.dayBn}</span>
                       <span className="block text-2xl font-black leading-tight">{dateNumber}</span>
@@ -465,7 +465,7 @@ export default function ExamCalendarPage() {
                       <div className="flex flex-wrap items-center gap-2">
                         <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black ${
                           isExam 
-                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' 
+                            ? 'bg-slate-100 text-slate-800 border border-slate-200' 
                             : 'bg-rose-100 text-rose-800 border border-rose-200'
                         }`}>
                           {isExam ? 'পরীক্ষার সম্ভাব্য শিডিউল' : 'আবেদনের শেষ তারিখ'}
@@ -473,7 +473,7 @@ export default function ExamCalendarPage() {
                         <span className="text-xs font-bold text-slate-700">{ev.organization}</span>
                       </div>
 
-                      <h3 className="font-black text-sm sm:text-base text-slate-900 leading-snug group-hover:text-emerald-700 transition-colors">
+                      <h3 className="font-black text-sm sm:text-base text-slate-900 leading-snug group-hover:text-slate-950 transition-colors">
                         {ev.title}
                       </h3>
 
@@ -483,7 +483,7 @@ export default function ExamCalendarPage() {
 
                       <div className="text-xs text-slate-500 flex flex-wrap items-center gap-3 pt-1">
                         <span className="flex items-center gap-1 text-slate-700 font-medium">
-                          <Clock className="w-3.5 h-3.5 text-emerald-700" />
+                          <Clock className="w-3.5 h-3.5 text-slate-800" />
                           <span>{ev.time}</span>
                         </span>
                         <span>•</span>
@@ -508,7 +508,7 @@ export default function ExamCalendarPage() {
                     {isExam && (
                       <Link
                         href="/dashboard/admit-cards"
-                        className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-xs transition-colors flex items-center gap-1"
+                        className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shadow-xs transition-colors flex items-center gap-1"
                       >
                         <Award className="w-3.5 h-3.5" />
                         <span>প্রবেশপত্র</span>

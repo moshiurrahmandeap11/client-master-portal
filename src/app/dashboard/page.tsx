@@ -169,37 +169,37 @@ export default function DashboardOverview() {
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-800 border border-slate-700 rounded-full text-xs font-bold text-emerald-400">
-                <Sparkles className="w-3.5 h-3.5" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-800 border border-slate-700 rounded-full text-xs font-semibold text-slate-200">
+                <Sparkles className="w-3.5 h-3.5 text-slate-400" />
                 <span>স্মার্ট ক্যান্ডিডেট স্পেস</span>
               </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-800 border border-slate-700 rounded-full text-xs font-bold text-white">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-800 border border-slate-700 rounded-full text-xs font-semibold text-slate-300">
+                <ShieldCheck className="w-3.5 h-3.5 text-slate-400" />
                 <span>১০০% ফ্রি প্ল্যাটফর্ম</span>
               </div>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight" suppressHydrationWarning>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight" suppressHydrationWarning>
               {isMounted ? `স্বাগতম, ${profile.nameBn || profile.name}!` : 'স্বাগতম!'}
             </h1>
             <p className="text-slate-300 text-xs sm:text-sm max-w-xl leading-relaxed">
-              আপনার যোগ্যতা ও বয়স অনুযায়ী আজকের সিস্টেমে <strong className="text-emerald-400 font-bold">{eligibleJobs.length} টি সম্ভাব্য যোগ্য চাকরি</strong> রয়েছে। যেকোনো চাকরিতে ১-ক্লিকে নির্ভুল আবেদন করুন।
+              আপনার যোগ্যতা ও বয়স অনুযায়ী আজকের সিস্টেমে <strong className="text-white font-semibold">{eligibleJobs.length} টি সম্ভাব্য যোগ্য চাকরি</strong> রয়েছে। যেকোনো চাকরিতে ১-ক্লিকে নির্ভুল আবেদন করুন।
             </p>
           </div>
 
           <div className="bg-slate-800/80 p-4 rounded-2xl border border-slate-700 min-w-[220px] space-y-2">
             <div className="flex items-center justify-between text-xs font-semibold">
               <span>প্রোফাইল সম্পূর্ণতা</span>
-              <span className="text-emerald-400 font-bold">{completion}%</span>
+              <span className="text-white font-bold">{completion}%</span>
             </div>
             <div className="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-emerald-500 rounded-full transition-all"
+                className="h-full bg-slate-200 rounded-full transition-all"
                 style={{ width: `${completion}%` }}
               />
             </div>
             <Link 
               href="/dashboard/profile"
-              className="text-[11px] text-emerald-400 hover:text-white flex items-center justify-between pt-1 font-semibold group"
+              className="text-[11px] text-slate-300 hover:text-white flex items-center justify-between pt-1 font-semibold group"
             >
               <span>প্রোফাইল আপডেট করুন</span>
               <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -213,7 +213,7 @@ export default function DashboardOverview() {
         {/* Metric 1: Eligible Jobs */}
         <Link 
           href="/dashboard/recommended-jobs"
-          className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm hover:border-emerald-300 hover:shadow-md transition-all group"
+          className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs hover:border-slate-400 hover:shadow-md transition-all group"
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-slate-500">যোগ্য চাকরি</span>
@@ -222,7 +222,7 @@ export default function DashboardOverview() {
             </div>
           </div>
           <div className="text-2xl font-black text-slate-900">{eligibleJobs.length} টি</div>
-          <div className="text-[11px] text-emerald-600 font-semibold mt-1">
+          <div className="text-[11px] text-slate-600 font-medium mt-1">
             {eligibleJobs.length > 0 ? 'বয়স ও ডিগ্রির সাথে শতভাগ মিল' : 'প্রোফাইল আপডেট করে যোগ্যতা দেখুন'}
           </div>
         </Link>
@@ -230,11 +230,11 @@ export default function DashboardOverview() {
         {/* Metric 2: Saved Jobs */}
         <Link 
           href="/dashboard/saved-jobs"
-          className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm hover:border-emerald-300 hover:shadow-md transition-all group"
+          className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-xs hover:border-slate-400 hover:shadow-md transition-all group"
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-slate-500">সংরক্ষিত সার্কুলার</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center group-hover:scale-110 transition-transform">
               <Bookmark className="w-4 h-4" />
             </div>
           </div>
@@ -247,7 +247,7 @@ export default function DashboardOverview() {
         {/* Metric 3: Active Applications */}
         <Link 
           href="/dashboard/applications"
-          className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm hover:border-emerald-300 hover:shadow-md transition-all group"
+          className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm hover:border-slate-300 hover:shadow-md transition-all group"
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-slate-500">চলমান আবেদন</span>
@@ -268,7 +268,7 @@ export default function DashboardOverview() {
         {/* Metric 4: Upcoming Exams */}
         <Link 
           href="/dashboard/exam-calendar"
-          className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm hover:border-emerald-300 hover:shadow-md transition-all group"
+          className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm hover:border-slate-300 hover:shadow-md transition-all group"
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-slate-500">আসন্ন পরীক্ষা</span>
@@ -286,36 +286,36 @@ export default function DashboardOverview() {
       </div>
 
       {/* 3. Quick Action Bar */}
-      <div className="bg-emerald-900/5 border border-emerald-200/80 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2 text-xs font-bold text-emerald-950">
-          <Sparkles className="w-4 h-4 text-emerald-600" />
+      <div className="bg-slate-100/90 backdrop-blur-md border border-slate-200/80 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2 text-xs font-semibold text-slate-800">
+          <Sparkles className="w-4 h-4 text-slate-600" />
           <span>প্রয়োজনীয় অ্যাকশন:</span>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Link
             href="/dashboard/vault"
-            className="px-3 py-1.5 bg-white border border-slate-200 hover:border-emerald-300 rounded-xl text-xs font-bold text-slate-700 hover:text-emerald-800 transition-colors flex items-center gap-1.5 shadow-sm"
+            className="px-3 py-1.5 bg-white border border-slate-200 hover:border-slate-400 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-950 transition-colors flex items-center gap-1.5 shadow-2xs"
           >
-            <Upload className="w-3.5 h-3.5 text-emerald-600" />
+            <Upload className="w-3.5 h-3.5 text-slate-500" />
             <span>ছবি/স্বাক্ষর রিসাইজ</span>
           </Link>
           <Link
             href="/dashboard/application-check"
-            className="px-3 py-1.5 bg-white border border-slate-200 hover:border-emerald-300 rounded-xl text-xs font-bold text-slate-700 hover:text-emerald-800 transition-colors flex items-center gap-1.5 shadow-sm"
+            className="px-3 py-1.5 bg-white border border-slate-200 hover:border-slate-400 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-950 transition-colors flex items-center gap-1.5 shadow-2xs"
           >
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            <CheckCircle2 className="w-3.5 h-3.5 text-slate-500" />
             <span>আবেদন ভুল শনাক্তকরণ</span>
           </Link>
           <Link
             href="/dashboard/cv-builder"
-            className="px-3 py-1.5 bg-white border border-slate-200 hover:border-emerald-300 rounded-xl text-xs font-bold text-slate-700 hover:text-emerald-800 transition-colors flex items-center gap-1.5 shadow-sm"
+            className="px-3 py-1.5 bg-white border border-slate-200 hover:border-slate-400 rounded-lg text-xs font-semibold text-slate-700 hover:text-slate-950 transition-colors flex items-center gap-1.5 shadow-2xs"
           >
-            <FileText className="w-3.5 h-3.5 text-emerald-600" />
+            <FileText className="w-3.5 h-3.5 text-slate-500" />
             <span>স্মার্ট সিভি জেনারেট</span>
           </Link>
           <Link
             href="/dashboard/admit-cards"
-            className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm"
+            className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-xs"
           >
             <Award className="w-3.5 h-3.5" />
             <span>অ্যাডমিট কার্ড ট্র্যাকার</span>
@@ -329,10 +329,10 @@ export default function DashboardOverview() {
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-emerald-600" />
+              <Sparkles className="w-4 h-4 text-slate-600" />
               <span>আপনার জন্য সাজেস্টেড যোগ্য চাকরি</span>
             </h2>
-            <Link href="/dashboard/recommended-jobs" className="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1">
+            <Link href="/dashboard/recommended-jobs" className="text-xs font-semibold text-slate-800 hover:text-slate-950 flex items-center gap-1">
               <span>সব দেখুন ({eligibleJobs.length})</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </Link>
@@ -345,7 +345,7 @@ export default function DashboardOverview() {
                 const match = rec.match;
                 const score = match?.overallScore || 85;
                 const badgeColor = score >= 90 
-                  ? 'bg-emerald-500 text-white' 
+                  ? 'bg-slate-900 text-white' 
                   : score >= 75 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-amber-500 text-white';
@@ -353,21 +353,21 @@ export default function DashboardOverview() {
                 return (
                   <div 
                     key={job.id}
-                    className="bg-white p-5 rounded-2xl border border-slate-200/90 hover:border-emerald-300 shadow-sm transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                    className="bg-white p-5 rounded-2xl border border-slate-200/90 hover:border-slate-400 shadow-xs transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                   >
                     <div className="space-y-1.5 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className={`text-[11px] font-black px-2.5 py-0.5 rounded-full shadow-xs ${badgeColor}`}>
+                        <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-2xs ${badgeColor}`}>
                           {score}% স্মার্ট ম্যাচ
                         </span>
-                        <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                        <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
                           {job.categoryLabel || job.category}
                         </span>
                         {job.grade && (
-                          <span className="text-xs text-slate-500 font-semibold">{job.grade}</span>
+                          <span className="text-xs text-slate-500 font-medium">{job.grade}</span>
                         )}
                       </div>
-                      <h3 className="font-bold text-sm sm:text-base text-slate-900 hover:text-emerald-700 transition-colors">
+                      <h3 className="font-semibold text-sm sm:text-base text-slate-900 hover:text-slate-700 transition-colors">
                         <Link href={`/jobs/${job.slug || job.id}`}>{job.title}</Link>
                       </h3>
                       <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500">
@@ -377,7 +377,7 @@ export default function DashboardOverview() {
                         <span className="text-rose-600 font-semibold">শেষ সময়: {job.deadline}</span>
                       </div>
                       {match?.matchReasonsBn?.[0] && (
-                        <p className="text-[11px] text-emerald-700 font-semibold pt-0.5 line-clamp-1">
+                        <p className="text-[11px] text-slate-600 font-medium pt-0.5 line-clamp-1">
                           {match.matchReasonsBn[0]}
                         </p>
                       )}
@@ -386,13 +386,13 @@ export default function DashboardOverview() {
                     <div className="flex items-center gap-2 flex-shrink-0 self-end sm:self-center">
                       <Link
                         href={`/jobs/${job.slug || job.id}`}
-                        className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors"
+                        className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition-colors"
                       >
                         বিস্তারিত
                       </Link>
                       <Link
                         href={`/apply/${job.id}`}
-                        className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold shadow-sm transition-colors"
+                        className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors"
                       >
                         ১-ক্লিক আবেদন
                       </Link>
@@ -404,16 +404,16 @@ export default function DashboardOverview() {
               eligibleJobs.slice(0, 3).map((job) => (
                 <div 
                   key={job.id}
-                  className="bg-white p-5 rounded-2xl border border-slate-200/90 hover:border-emerald-300 shadow-sm transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                  className="bg-white p-5 rounded-2xl border border-slate-200/90 hover:border-slate-400 shadow-xs transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                 >
                   <div className="space-y-1.5">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                      <span className="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-800 border border-slate-200">
                         {job.categoryLabel}
                       </span>
-                      <span className="text-xs text-slate-500 font-semibold">{job.grade}</span>
+                      <span className="text-xs text-slate-500 font-medium">{job.grade}</span>
                     </div>
-                    <h3 className="font-bold text-sm sm:text-base text-slate-900 hover:text-emerald-700 transition-colors">
+                    <h3 className="font-semibold text-sm sm:text-base text-slate-900 hover:text-slate-700 transition-colors">
                       <Link href={`/jobs/${job.slug || job.id}`}>{job.title}</Link>
                     </h3>
                     <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500">
@@ -428,7 +428,7 @@ export default function DashboardOverview() {
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <Link
                       href={`/apply/${job.id}`}
-                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-sm transition-colors"
+                      className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors"
                     >
                       ১-ক্লিক আবেদন
                     </Link>
@@ -491,7 +491,7 @@ export default function DashboardOverview() {
                         </Link>
                         <Link 
                           href={`/apply/${job.id}`} 
-                          className="px-2.5 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold text-[11px] shadow-2xs transition-colors flex items-center gap-1"
+                          className="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-white rounded-md font-semibold text-[11px] shadow-2xs transition-colors flex items-center gap-1"
                         >
                           <span>আবেদন</span>
                           <ArrowRight className="w-3 h-3" />
@@ -512,10 +512,10 @@ export default function DashboardOverview() {
           <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-emerald-600" />
+                <AlertCircle className="w-4 h-4 text-slate-600" />
                 <span>সাম্প্রতিক নোটিশ</span>
               </h3>
-              <Link href="/dashboard/notifications" className="text-xs text-emerald-700 font-bold hover:underline">
+              <Link href="/dashboard/notifications" className="text-xs text-slate-800 font-semibold hover:underline">
                 সবগুলো ({notifications.length})
               </Link>
             </div>

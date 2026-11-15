@@ -155,7 +155,7 @@ export default function TransactionsPage() {
 
         <Link
           href="/dashboard/wallet"
-          className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 self-start sm:self-center shadow-xs"
+          className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 self-start sm:self-center shadow-xs"
         >
           <Wallet className="w-3.5 h-3.5" />
           <span>+ ব্যালেন্স রিচার্জ করুন</span>
@@ -422,7 +422,7 @@ export default function TransactionsPage() {
               <button
                 type="button"
                 onClick={handlePrintReceipt}
-                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+                className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
               >
                 <Printer className="w-3.5 h-3.5" />
                 <span>প্রিন্ট / ডাউনলোড রসিদ</span>

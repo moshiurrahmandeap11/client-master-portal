@@ -163,7 +163,7 @@ export default function JobAlertsPage() {
   };
 
   return (
-    <div data-testid="job-alerts-page" className="space-y-6 max-w-4xl">
+    <div data-testid="job-alerts-page" className="space-y-6 w-full">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">

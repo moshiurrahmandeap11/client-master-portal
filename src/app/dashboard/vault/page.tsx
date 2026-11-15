@@ -348,7 +348,7 @@ export default function DocumentVaultPage() {
 
   if (!isMounted) {
     return (
-      <div className="space-y-8 max-w-6xl animate-pulse p-6">
+      <div className="space-y-8 w-full animate-pulse p-4 sm:p-6">
         <div className="h-8 bg-slate-200 rounded w-1/3 mb-4"></div>
         <div className="h-32 bg-slate-100 rounded-2xl mb-4"></div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -436,7 +436,7 @@ export default function DocumentVaultPage() {
   ];
 
   return (
-    <div className="space-y-8 max-w-6xl">
+    <div className="space-y-8 w-full">
       {/* Header */}
       <div>
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-800 rounded-full text-xs font-bold border border-emerald-200 mb-2">

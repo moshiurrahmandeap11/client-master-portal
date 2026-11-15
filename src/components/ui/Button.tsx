@@ -23,13 +23,13 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const variantClasses: Record<NonNullable<ButtonProps['variant']>, string> = {
-  primary: 'bg-slate-900 text-white hover:bg-slate-800 active:bg-slate-950 shadow-sm focus-visible:ring-slate-700',
+  primary: 'bg-emerald-700 text-white hover:bg-emerald-800 active:bg-emerald-900 shadow-sm focus-visible:ring-emerald-600',
   secondary: 'bg-slate-800 text-white hover:bg-slate-700 active:bg-slate-900 shadow-sm focus-visible:ring-slate-600',
   outline: 'border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400 active:bg-slate-100 focus-visible:ring-slate-400',
-  'outline-emerald': 'border border-slate-400 text-slate-800 bg-white hover:bg-slate-50 active:bg-slate-100 focus-visible:ring-slate-400',
+  'outline-emerald': 'border border-emerald-600 text-emerald-800 bg-emerald-50/50 hover:bg-emerald-100/60 active:bg-emerald-100 focus-visible:ring-emerald-500',
   ghost: 'text-slate-700 hover:bg-slate-100 active:bg-slate-200 focus-visible:ring-slate-400',
   danger: 'bg-rose-600 text-white hover:bg-rose-700 active:bg-rose-800 shadow-sm shadow-rose-900/10 focus-visible:ring-rose-500',
-  success: 'bg-slate-900 text-white hover:bg-slate-800 active:bg-slate-950 shadow-sm focus-visible:ring-slate-500',
+  success: 'bg-emerald-700 text-white hover:bg-emerald-800 active:bg-emerald-900 shadow-sm focus-visible:ring-emerald-600',
   subtle: 'bg-slate-100 text-slate-800 hover:bg-slate-200 active:bg-slate-300 border border-slate-200/80 focus-visible:ring-slate-400',
   glass: 'bg-white/80 hover:bg-white text-slate-900 border border-slate-200/80 shadow-xs backdrop-blur-md active:bg-slate-50 focus-visible:ring-slate-400',
 };

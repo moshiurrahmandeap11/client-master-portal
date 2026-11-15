@@ -556,7 +556,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                 {platformSettings?.general?.guestButtons?.showRegister !== false && (
                   <Link
                     href="/register"
-                    className="px-3.5 py-1.5 2xl:py-2 rounded-[7px] bg-slate-900 hover:bg-slate-800 text-white text-xs 2xl:text-sm font-semibold shadow-xs transition-all flex items-center gap-1.5"
+                    className="px-3.5 py-1.5 2xl:py-2 rounded-[7px] bg-emerald-700 hover:bg-emerald-800 text-white text-xs 2xl:text-sm font-semibold shadow-xs transition-all flex items-center gap-1.5"
                   >
                     <UserCheck className="w-3.5 h-3.5 text-white" />
                     <span>{platformSettings?.general?.guestButtons?.registerText || 'ফ্রি রেজিস্ট্রেশন'}</span>
@@ -707,7 +707,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
             ) : !auth.isLoggedIn ? (
               <Link 
                 href="/login"
-                className="bg-slate-900 text-white px-3 py-1.5 rounded-[7px] text-xs font-semibold"
+                className="bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-1.5 rounded-[7px] text-xs font-semibold"
               >
                 লগইন
               </Link>
@@ -817,7 +817,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                   <Link
                     href="/register"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2 shadow-xs"
+                    className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2 shadow-xs"
                   >
                     <UserCheck className="w-4 h-4 text-white" />
                     <span>{platformSettings?.general?.guestButtons?.registerText || 'ফ্রি রেজিস্ট্রেশন'}</span>
@@ -851,7 +851,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                 <Link
                   href="/dashboard"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
+                  className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-semibold text-sm flex items-center justify-center gap-2"
                 >
                   <Briefcase className="w-4 h-4" />
                   <span>আমার ড্যাশবোর্ড</span>

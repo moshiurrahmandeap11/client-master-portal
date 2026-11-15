@@ -382,7 +382,7 @@ export default function WalletPage() {
           <button
             type="submit"
             disabled={isRecharging}
-            className="w-full py-3 bg-slate-900 hover:bg-slate-800 active:scale-[0.99] disabled:opacity-50 text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3 bg-emerald-700 hover:bg-emerald-800 active:scale-[0.99] disabled:opacity-50 text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             {isRecharging ? (
               <>

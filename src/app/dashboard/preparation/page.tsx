@@ -29,7 +29,7 @@ export default function PreparationPage() {
       totalQuestions: 450, 
       completed: 320, 
       progress: 71,
-      accentColor: 'emerald'
+      accentColor: 'slate'
     },
     { 
       id: 'english', 
@@ -78,8 +78,8 @@ export default function PreparationPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-800 rounded-full text-xs font-bold border border-emerald-200 mb-2">
-            <BrainCircuit className="w-3.5 h-3.5 text-emerald-600" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-xs font-bold border border-slate-200 mb-2">
+            <BrainCircuit className="w-3.5 h-3.5 text-slate-700" />
             <span>স্টেপ ১২ — বিসিএস ও সরকারি নিয়োগ প্রস্তুতি হাব</span>
           </div>
           <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
@@ -96,13 +96,13 @@ export default function PreparationPage() {
             href="/previous-year-questions"
             className="px-4 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shadow-2xs"
           >
-            <BookOpen className="w-4 h-4 text-emerald-700" />
+            <BookOpen className="w-4 h-4 text-slate-800" />
             <span>বিগত বছরের প্রশ্নব্যাংক</span>
           </Link>
           <Link
             data-testid="btn-start-model-test"
             href="/model-tests"
-            className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm"
+            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm"
           >
             <Target className="w-4 h-4" />
             <span>অনলাইন মডেল টেস্ট</span>
@@ -117,7 +117,7 @@ export default function PreparationPage() {
       >
         <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-xl">
-            <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-white/10 text-emerald-300 border border-white/20 inline-flex items-center gap-1.5">
+            <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-white/10 text-slate-400 border border-white/20 inline-flex items-center gap-1.5">
               <Sparkles className="w-3 h-3" />
               সামগ্রিক প্রিলিমিনারি প্রস্তুতি সূচক
             </span>
@@ -130,17 +130,17 @@ export default function PreparationPage() {
           </div>
 
           <div className="flex items-center gap-4 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 min-w-[260px]">
-            <div className="w-16 h-16 rounded-2xl bg-emerald-500 text-white flex flex-col items-center justify-center font-black shadow-md">
+            <div className="w-16 h-16 rounded-2xl bg-slate-900 text-white flex flex-col items-center justify-center font-black shadow-md">
               <span className="text-2xl leading-none">{overallPercentage}%</span>
-              <span className="text-[10px] uppercase font-bold text-emerald-100">প্রস্তুত</span>
+              <span className="text-[10px] uppercase font-bold text-slate-200">প্রস্তুত</span>
             </div>
             <div className="space-y-1 text-xs">
-              <div className="flex items-center gap-1.5 text-emerald-300 font-bold">
+              <div className="flex items-center gap-1.5 text-slate-400 font-bold">
                 <Flame className="w-4 h-4 text-amber-400" />
                 <span>দৈনিক ধারাবাহিকতা: ৭ দিন</span>
               </div>
               <p className="text-slate-300">{totalCompleted} / {totalQuestions} প্রশ্ন সম্পন্ন</p>
-              <Link href="/model-tests" className="text-emerald-300 font-bold hover:underline inline-flex items-center gap-1">
+              <Link href="/model-tests" className="text-slate-400 font-bold hover:underline inline-flex items-center gap-1">
                 <span>টেস্ট শুরু করুন</span>
                 <ArrowRight className="w-3 h-3" />
               </Link>
@@ -153,7 +153,7 @@ export default function PreparationPage() {
       <div className="space-y-3">
         <div className="flex items-center justify-between pb-1">
           <h3 className="font-bold text-sm text-slate-800 flex items-center gap-1.5">
-            <Layers className="w-4 h-4 text-emerald-700" />
+            <Layers className="w-4 h-4 text-slate-800" />
             <span>বিষয়ভিত্তিক সিলেবাস ও প্রস্তুতি প্রগ্রেস</span>
           </h3>
           <span className="text-xs text-slate-500 font-semibold">৫টি মূল বিষয়</span>
@@ -164,12 +164,12 @@ export default function PreparationPage() {
             <div 
               key={s.id} 
               data-testid={`subject-card-${s.id}`}
-              className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-4 hover:border-emerald-300 hover:shadow-xs transition-all"
+              className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-4 hover:border-slate-300 hover:shadow-xs transition-all"
             >
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <h4 className="font-black text-sm text-slate-900 leading-snug">{s.title}</h4>
-                  <span className="text-xs font-black text-emerald-800 px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 font-mono">
+                  <span className="text-xs font-black text-slate-800 px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200 font-mono">
                     {s.progress}%
                   </span>
                 </div>
@@ -182,7 +182,7 @@ export default function PreparationPage() {
                 <div className="space-y-1">
                   <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-emerald-600 rounded-full transition-all duration-500" 
+                      className="h-full bg-slate-900 rounded-full transition-all duration-500" 
                       style={{ width: `${s.progress}%` }} 
                     />
                   </div>
@@ -194,7 +194,7 @@ export default function PreparationPage() {
 
                 <Link 
                   href="/model-tests" 
-                  className="w-full py-2 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-800 text-slate-700 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1.5 border border-slate-200"
+                  className="w-full py-2 bg-slate-50 hover:bg-slate-100 hover:text-slate-950 text-slate-700 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1.5 border border-slate-200"
                 >
                   <span>অনুশীলন শুরু করুন</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -209,7 +209,7 @@ export default function PreparationPage() {
       <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <h3 className="font-black text-base text-slate-900 flex items-center gap-2">
-            <Target className="w-5 h-5 text-emerald-700" />
+            <Target className="w-5 h-5 text-slate-800" />
             <span>বিসিএস ও ব্যাংকের ১০০ নম্বরের লাইভ মডেল টেস্ট</span>
           </h3>
           <p className="text-xs text-slate-600">
@@ -218,7 +218,7 @@ export default function PreparationPage() {
         </div>
         <Link 
           href="/model-tests" 
-          className="px-5 py-2.5 bg-slate-900 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs transition-all shrink-0 text-center"
+          className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-xs transition-all shrink-0 text-center"
         >
           মডেল টেস্ট দিন →
         </Link>

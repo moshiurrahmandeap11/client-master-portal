@@ -17,7 +17,7 @@ import {
   MapPin,
   Clock
 } from 'lucide-react';
-import { storage } from '@/lib/store';
+import { storage, syncAuthFromServer } from '@/lib/store';
 
 export default function ProfilePortalPage() {
   const router = useRouter();
@@ -27,13 +27,20 @@ export default function ProfilePortalPage() {
 
   useEffect(() => {
     setIsMounted(true);
-    const auth = storage.getAuth();
-    if (auth.isLoggedIn && auth.role === 'candidate') {
-      setIsLoggedIn(true);
-      setUser(storage.getUser());
-      // Direct jump to active profile editor
-      router.replace('/dashboard/profile');
-    }
+    const resolveAuthAndRedirect = async () => {
+      let auth = storage.getAuth();
+      if (!auth.isLoggedIn) {
+        auth = await syncAuthFromServer();
+      }
+      if (auth.isLoggedIn && auth.role === 'candidate') {
+        setIsLoggedIn(true);
+        setUser(storage.getUser());
+        router.replace('/dashboard/profile');
+      } else {
+        router.replace('/login?redirect=%2Fdashboard%2Fprofile');
+      }
+    };
+    resolveAuthAndRedirect();
   }, [router]);
 
   return (

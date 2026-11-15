@@ -34,13 +34,14 @@ import {
 } from 'lucide-react';
 import { storage } from '@/lib/store';
 import axiosInstance from '@/lib/axios';
+import { useQuery } from '@tanstack/react-query';
+import { useAuthSession } from '@/hooks/useAuthSession';
 import { CandidateProfile } from '@/types';
 import { emptyCandidateProfile as mockUserProfile } from '@/data/candidateDefaults';
 
 interface SidebarNavItem {
   title: string;
   href: string;
-  icon: any;
   badge?: string;
   badgeColor?: string;
 }
@@ -50,49 +51,48 @@ function getNavSections(unreadCount: number): { sectionTitle: string; items: Sid
     {
       sectionTitle: 'মূল ড্যাশবোর্ড',
       items: [
-        { title: 'ওভারভিউ', href: '/dashboard', icon: LayoutDashboard },
-        { title: 'ব্যক্তিগত প্রোফাইল', href: '/dashboard/profile', icon: User },
-        { title: 'স্মার্ট ডকুমেন্ট ভল্ট', href: '/dashboard/vault', icon: FileBox }
+        { title: 'ওভারভিউ', href: '/dashboard' },
+        { title: 'ব্যক্তিগত প্রোফাইল', href: '/dashboard/profile' },
+        { title: 'স্মার্ট ডকুমেন্ট ভল্ট', href: '/dashboard/vault' }
       ]
     },
     {
       sectionTitle: 'চাকরি ও আবেদন',
       items: [
-        { title: 'সুপারিশকৃত চাকরি (Recommended)', href: '/dashboard/recommended-jobs', icon: Sparkles },
-        { title: 'সংরক্ষিত সার্কুলার', href: '/dashboard/saved-jobs', icon: Bookmark },
-        { title: 'আবেদন প্রস্তুতি ও যাচাই', href: '/dashboard/application-check', icon: CheckCircle2 },
-        { title: 'আমার আবেদন ট্র্যাকিং', href: '/dashboard/applications', icon: FileText }
+        { title: 'সুপারিশকৃত চাকরি', href: '/dashboard/recommended-jobs' },
+        { title: 'সংরক্ষিত সার্কুলার', href: '/dashboard/saved-jobs' },
+        { title: 'আবেদন প্রস্তুতি ও যাচাই', href: '/dashboard/application-check' },
+        { title: 'আমার আবেদন ট্র্যাকিং', href: '/dashboard/applications' }
       ]
     },
     {
       sectionTitle: 'পরীক্ষা ও নোটিশ',
       items: [
-        { title: 'অ্যাডমিট কার্ড ট্র্যাকার', href: '/dashboard/admit-cards', icon: Award },
-        { title: 'পরীক্ষার ক্যালেন্ডার', href: '/dashboard/exam-calendar', icon: Calendar },
+        { title: 'অ্যাডমিট কার্ড ট্র্যাকার', href: '/dashboard/admit-cards' },
+        { title: 'পরীক্ষার ক্যালেন্ডার', href: '/dashboard/exam-calendar' },
         { 
           title: 'নোটিফিকেশন সেন্টার', 
           href: '/dashboard/notifications', 
-          icon: Bell, 
           badge: unreadCount > 0 ? `${unreadCount} নতুন` : undefined, 
-          badgeColor: 'bg-rose-100 text-rose-800 font-bold' 
+          badgeColor: 'bg-rose-50 text-rose-700 border border-rose-200' 
         },
-        { title: 'ব্যক্তিগত জব অ্যালার্ট', href: '/dashboard/alerts', icon: Briefcase }
+        { title: 'ব্যক্তিগত জব অ্যালার্ট', href: '/dashboard/alerts' }
       ]
     },
     {
       sectionTitle: 'প্রস্তুতি ও সিভি',
       items: [
-        { title: 'স্মার্ট সিভি বিল্ডার', href: '/dashboard/cv-builder', icon: FileCheck },
-        { title: 'পরীক্ষার প্রস্তুতি', href: '/dashboard/preparation', icon: BrainCircuit },
-        { title: 'পারফরম্যান্স অ্যানালিটিক্স', href: '/dashboard/performance', icon: TrendingUp }
+        { title: 'স্মার্ট সিভি বিল্ডার', href: '/dashboard/cv-builder' },
+        { title: 'পরীক্ষার প্রস্তুতি', href: '/dashboard/preparation' },
+        { title: 'পারফরম্যান্স অ্যানালিটিক্স', href: '/dashboard/performance' }
       ]
     },
     {
       sectionTitle: 'অ্যাকাউন্ট ও ফিন্যান্স',
       items: [
-        { title: 'আমার ওয়ালেট', href: '/dashboard/wallet', icon: Wallet },
-        { title: 'লেনদেন হিস্ট্রি', href: '/dashboard/transactions', icon: History },
-        { title: 'অ্যাকাউন্ট সেটিংস', href: '/dashboard/settings', icon: Settings }
+        { title: 'আমার ওয়ালেট', href: '/dashboard/wallet' },
+        { title: 'লেনদেন হিস্ট্রি', href: '/dashboard/transactions' },
+        { title: 'অ্যাকাউন্ট সেটিংস', href: '/dashboard/settings' }
       ]
     }
   ];
@@ -110,11 +110,51 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [impersonatingName, setImpersonatingName] = useState<string | null>(null);
 
   const navSections = useMemo(() => getNavSections(unreadNotifsCount), [unreadNotifsCount]);
+  const { session } = useAuthSession();
+
+  // Live unread notifications sync cached via TanStack Query
+  const { data: notificationsData } = useQuery({
+    queryKey: ['candidate', 'notifications'],
+    queryFn: async () => {
+      try {
+        const res = await axiosInstance.get('/api/candidate/notifications');
+        return res.data?.notifications || [];
+      } catch {
+        return [];
+      }
+    },
+    staleTime: 3 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    retry: 1,
+  });
+
+  useEffect(() => {
+    if (Array.isArray(notificationsData)) {
+      const unread = notificationsData.filter((n: any) => !n.read).length;
+      setUnreadNotifsCount(unread);
+    }
+  }, [notificationsData]);
 
   // Automatically close mobile sidebar on navigation
   useEffect(() => {
     setMobileSidebarOpen(false);
   }, [pathname]);
+
+  // Synchronize session from TanStack Query (shares cache with Navbar - 0 duplicate requests!)
+  useEffect(() => {
+    if (session) {
+      if (session.impersonatingName) {
+        setImpersonatingName(session.impersonatingName);
+      }
+      if (session.isLoggedIn && session.user && session.role === 'candidate') {
+        storage.setAuth({ isLoggedIn: true, role: 'candidate', userId: session.user.id, name: session.user.name, phone: session.user.phone });
+        storage.updateUser(session.user);
+        setProfile(session.user);
+        setCompletion(storage.calculateProfileCompletion(session.user, storage.getDocuments()));
+      }
+      setSessionChecked(true);
+    }
+  }, [session]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -132,7 +172,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       }
     }
 
-    // 1. Synchronously restore from client storage (zero flickering & no unwanted logouts)
+    // Synchronously restore from client storage (zero flickering & no unwanted logouts)
     const currentAuth = storage.getAuth();
     if (currentAuth.isLoggedIn && currentAuth.role === 'candidate') {
       const cachedUser = storage.getUser();
@@ -145,38 +185,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       const unread = notifs.filter(n => !n.read).length;
       setUnreadNotifsCount(unread);
     }
-
-    // 2. Validate session via server httpOnly cookies (axiosInstance auto-refreshes on 401)
-    axiosInstance.get('/api/auth/me')
-      .then(res => {
-        const data = res.data;
-        if (data?.impersonatingName) {
-          setImpersonatingName(data.impersonatingName);
-        }
-        if (data?.isLoggedIn && data?.role === 'candidate') {
-          storage.setAuth({ isLoggedIn: true, role: 'candidate', userId: data.user.id, name: data.user.name, phone: data.user.phone });
-          storage.updateUser(data.user);
-          setProfile(data.user);
-          setCompletion(storage.calculateProfileCompletion(data.user, storage.getDocuments()));
-        }
-      })
-      .catch((err) => {
-        console.warn('Dashboard session sync warning:', err);
-      })
-      .finally(() => {
-        setSessionChecked(true);
-      });
-
-    // 3. Live unread notifications sync
-    axiosInstance.get('/api/candidate/notifications')
-      .then(res => {
-        const data = res.data;
-        if (data?.notifications && Array.isArray(data.notifications)) {
-          const unread = data.notifications.filter((n: any) => !n.read).length;
-          setUnreadNotifsCount(unread);
-        }
-      })
-      .catch(() => {});
 
     const handleUserChange = () => {
       const u = storage.getUser();
@@ -249,7 +257,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return (
       <div role="status" className="min-h-screen bg-slate-50 flex items-center justify-center p-8">
         <div className="flex items-center gap-3 text-slate-700 font-bold text-sm bg-white px-5 py-3 rounded-2xl border border-slate-200 shadow-sm animate-pulse">
-          <div className="w-4 h-4 rounded-full border-2 border-emerald-600 border-t-transparent animate-spin" />
+          <div className="w-4 h-4 rounded-full border-2 border-slate-800 border-t-transparent animate-spin" />
           <span>ড্যাশবোর্ড লোড হচ্ছে...</span>
         </div>
       </div>
@@ -261,17 +269,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-white rounded-3xl p-8 text-center space-y-4 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-          <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto text-emerald-700 shadow-inner">
+          <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto text-slate-800 shadow-inner">
             <Lock className="w-8 h-8" />
           </div>
-          <h2 className="text-xl font-black text-slate-900">লগইন আবশ্যক</h2>
+          <h2 className="text-xl font-bold text-slate-900">লগইন আবশ্যক</h2>
           <p className="text-xs text-slate-600 leading-relaxed">
             প্রার্থী ড্যাশবোর্ড ও ব্যক্তিগত তথ্য অ্যাক্সেস করতে অনুগ্রহ করে প্রথমে আপনার অ্যাকাউন্টে লগইন করুন।
           </p>
           <div className="pt-2">
             <Link
               href={`/login?redirect=${encodeURIComponent(pathname)}`}
-              className="inline-flex items-center justify-center gap-2 w-full py-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-black transition-all shadow-md hover:scale-[1.01]"
+              className="inline-flex items-center justify-center gap-2 w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold transition-all shadow-sm"
             >
               <span>লগইন পেজে যান</span>
               <ChevronRight className="w-4 h-4" />
@@ -309,10 +317,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className="lg:hidden bg-white/95 backdrop-blur-md text-slate-800 px-4 py-2.5 flex items-center justify-between border-b border-slate-200 z-30 shadow-xs flex-shrink-0">
         <button
           onClick={() => setMobileSidebarOpen(true)}
-          className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-[7px] text-xs font-bold border border-emerald-200 transition-all cursor-pointer"
+          className="flex items-center gap-2 px-3 py-1.5 bg-slate-100/90 hover:bg-slate-200/80 text-slate-800 rounded-lg text-xs font-semibold border border-slate-200/80 transition-all cursor-pointer"
           aria-label="ড্যাশবোর্ড মেনু খুলুন"
         >
-          <Menu className="w-4 h-4 text-emerald-700" />
+          <Menu className="w-4 h-4 text-slate-600" />
           <span>ড্যাশবোর্ড মেনু</span>
         </button>
 
@@ -320,9 +328,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {isMounted ? (
             <Link 
               href="/dashboard/wallet" 
-              className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-2.5 py-1 rounded-[7px] font-bold flex items-center gap-1 hover:bg-emerald-100 transition-colors"
+              className="bg-slate-100/80 border border-slate-200/80 text-slate-800 px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1 hover:bg-slate-200/60 transition-colors"
             >
-              <Wallet className="w-3.5 h-3.5 text-emerald-700" />
               <span>৳{profile.walletBalance ?? 0}</span>
             </Link>
           ) : (
@@ -332,9 +339,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <img 
               src={(isMounted ? profile.photoUrl : '') || '/images/avatar-placeholder.png'} 
               alt={profile.name || 'প্রোফাইল'} 
-              className="w-7 h-7 rounded-full border border-emerald-500 object-cover" 
+              className="w-7 h-7 rounded-full border border-slate-200/90 object-cover" 
             />
-            <span className="font-bold text-slate-700 text-xs hidden sm:inline-block truncate max-w-[120px]">
+            <span className="font-semibold text-slate-700 text-xs hidden sm:inline-block truncate max-w-[120px]">
               {profile.nameBn || profile.name}
             </span>
           </Link>
@@ -359,7 +366,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {/* Sidebar Candidate Profile Snapshot Header */}
           <div className="p-4 sm:p-5 border-b border-slate-100 bg-white flex-shrink-0">
             <div className="flex items-center justify-between mb-3 lg:hidden">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">মেনু নেভিগেশন</span>
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">মেনু নেভিগেশন</span>
               <button onClick={() => setMobileSidebarOpen(false)} aria-label="মেনু বন্ধ করুন" className="p-1 text-slate-400 hover:text-slate-600">
                 <X className="w-4 h-4" />
               </button>
@@ -370,14 +377,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <img 
                   src={(isMounted ? profile.photoUrl : '') || '/images/avatar-placeholder.png'}
                   alt={isMounted ? profile.name : "প্রোফাইল ছবি"} 
-                  className="w-12 h-12 rounded-[10px] object-cover border-2 border-emerald-500 shadow-sm"
+                  className="w-11 h-11 rounded-lg object-cover border border-slate-200/80 shadow-xs"
                 />
                 <label 
                   htmlFor="sidebar-photo-upload" 
-                  className="absolute inset-0 bg-black/40 text-white rounded-[10px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                  className="absolute inset-0 bg-black/40 text-white rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                   title="ছবি আপলোড / পরিবর্তন করুন"
                 >
-                  <Camera className="w-4 h-4 text-white" />
+                  <Camera className="w-3.5 h-3.5 text-white" />
                   <input
                     id="sidebar-photo-upload"
                     type="file"
@@ -386,21 +393,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     onChange={handleQuickPhotoUpload}
                   />
                 </label>
-                <span className="absolute -bottom-1 -right-1 bg-emerald-600 text-white p-0.5 rounded-full pointer-events-none" title="ভেরিফাইড আইডি">
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                </span>
               </div>
               <div className="min-w-0 flex-1">
                 {isMounted ? (
                   <>
-                    <h3 className="font-bold text-sm text-slate-900 truncate">
+                    <h3 className="font-semibold text-sm text-slate-900 truncate">
                       {profile.nameBn || profile.name}
                     </h3>
                     <p className="text-[11px] text-slate-500 truncate flex items-center gap-1">
                       <span>আইডি: {profile.id || (profile.nid ? profile.nid.slice(0, 6) + '...' : profile.username || 'প্রার্থী')}</span>
                     </p>
                     <div className="flex items-center gap-1.5 mt-1">
-                      <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                      <span className="text-[10px] font-medium text-slate-700 bg-slate-100/90 px-2 py-0.5 rounded-md border border-slate-200/60">
                         ব্যালেন্স: ৳{profile.walletBalance ?? 0}
                       </span>
                     </div>
@@ -409,7 +413,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   <div className="space-y-1.5 animate-pulse">
                     <div className="h-4 w-28 bg-slate-200 rounded" />
                     <div className="h-3 w-20 bg-slate-100 rounded" />
-                    <div className="h-4 w-16 bg-emerald-100 rounded-full" />
+                    <div className="h-4 w-16 bg-slate-100 rounded-full" />
                   </div>
                 )}
               </div>
@@ -417,13 +421,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
             {/* Profile Completion Meter */}
             <div className="mt-3.5 pt-3 border-t border-slate-100">
-              <div className="flex items-center justify-between text-[11px] font-semibold text-slate-600 mb-1">
+              <div className="flex items-center justify-between text-[11px] font-medium text-slate-600 mb-1">
                 <span>প্রোফাইল সম্পূর্ণতা</span>
-                <span className="text-emerald-700 font-bold">{isMounted ? completion : 0}%</span>
+                <span className="text-slate-800 font-semibold">{isMounted ? completion : 0}%</span>
               </div>
               <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
                 <div 
-                  className="bg-emerald-600 h-1.5 rounded-full transition-all duration-500" 
+                  className="bg-slate-800 h-1.5 rounded-full transition-all duration-500 ease-[cubic-bezier(0.2,0,0,1)]" 
                   style={{ width: `${isMounted ? completion : 0}%` }}
                 />
               </div>
@@ -431,32 +435,28 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
 
           {/* Navigation Links (Scrollable: 5 Sections, 17 Items) */}
-          <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6 text-xs font-semibold custom-scrollbar">
+          <div className="flex-1 overflow-y-auto px-3 py-3.5 space-y-5 text-xs custom-scrollbar">
             {navSections.map((sec, sIdx) => (
-              <div key={sIdx} className="space-y-1">
-                <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              <div key={sIdx} className="space-y-0.5">
+                <div className="px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
                   {sec.sectionTitle}
                 </div>
                 {sec.items.map((item, idx) => {
-                  const Icon = item.icon;
                   const isActive = item.href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(item.href);
                   return (
                     <Link
                       key={idx}
                       href={item.href}
                       onClick={() => setMobileSidebarOpen(false)}
-                      className={`flex items-center justify-between px-3 py-2.5 rounded-[7px] transition-all ${
+                      className={`relative flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-all duration-200 ease-[cubic-bezier(0.2,0,0,1)] ${
                         isActive 
-                          ? 'bg-emerald-50 text-emerald-900 font-bold border border-emerald-200/80 shadow-sm' 
-                          : 'text-slate-600 hover:text-emerald-700 hover:bg-slate-100/70'
+                          ? 'bg-white/90 backdrop-blur-md text-slate-950 font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.06)] border border-slate-200/80 ring-1 ring-slate-900/[0.04]' 
+                          : 'text-slate-600 hover:text-slate-950 hover:bg-slate-100/60 font-medium'
                       }`}
                     >
-                      <div className="flex items-center gap-2.5">
-                        <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-700' : 'text-slate-400'}`} />
-                        <span>{item.title}</span>
-                      </div>
+                      <span className="truncate">{item.title}</span>
                       {item.badge && (
-                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-[5px] ${item.badgeColor || 'bg-slate-100 text-slate-700'}`}>
+                        <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-md ${item.badgeColor || 'bg-slate-100 text-slate-700'}`}>
                           {item.badge}
                         </span>
                       )}
@@ -468,22 +468,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
 
           {/* Sidebar Footer Support & Logout */}
-          <div className="p-3 border-t border-slate-200/80 bg-slate-50/50 space-y-2">
+          <div className="p-3 border-t border-slate-200/80 bg-slate-50/50 space-y-1.5">
             <a 
               href="https://wa.me/8801700000000" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-1.5 py-2 px-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-[7px] text-xs font-bold shadow-sm transition-colors"
+              className="flex items-center justify-center py-2 px-3 bg-white/90 hover:bg-white text-slate-800 hover:text-slate-950 border border-slate-200/80 rounded-lg text-xs font-semibold shadow-xs transition-all backdrop-blur-sm"
             >
-              <PhoneCall className="w-3.5 h-3.5" />
-              <span>সহায়তা ও আবেদন হেল্পলাইন</span>
+              <span>সহায়তা ও হেল্পলাইন</span>
             </a>
 
             <button
               onClick={handleLogout}
-              className="w-full flex items-center justify-center gap-1.5 py-1.5 text-xs text-rose-600 hover:bg-rose-50 rounded-[7px] transition-colors font-semibold cursor-pointer"
+              className="w-full flex items-center justify-center py-1.5 text-xs text-rose-600 hover:bg-rose-50/80 rounded-lg transition-colors font-medium cursor-pointer"
             >
-              <LogOut className="w-3.5 h-3.5" />
               <span>লগআউট করুন</span>
             </button>
           </div>

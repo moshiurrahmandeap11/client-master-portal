@@ -79,8 +79,8 @@ export default function AdmitCardsPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-800 rounded-full text-xs font-bold border border-emerald-200 mb-2">
-            <Award className="w-3.5 h-3.5 text-emerald-600" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-xs font-bold border border-slate-200 mb-2">
+            <Award className="w-3.5 h-3.5 text-slate-700" />
             <span>স্টেপ ১১ — প্রবেশপত্র ও টেলিটক ট্র্যাকিং হাব</span>
           </div>
           <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
@@ -98,14 +98,14 @@ export default function AdmitCardsPage() {
             onClick={() => setShowRecoveryGuide(!showRecoveryGuide)}
             className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors border border-slate-200"
           >
-            <HelpCircle className="w-4 h-4 text-emerald-700" />
+            <HelpCircle className="w-4 h-4 text-slate-800" />
             <span>আইডি/পাসওয়ার্ড উদ্ধার নির্দেশিকা</span>
             {showRecoveryGuide ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
           </button>
 
           <Link
             href="/jobs"
-            className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shadow-2xs"
+            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shadow-2xs"
           >
             <Briefcase className="w-4 h-4" />
             <span>নতুন চাকরির সার্কুলার</span>
@@ -159,7 +159,7 @@ export default function AdmitCardsPage() {
       {/* Main List */}
       {validApplications.length === 0 ? (
         <div className="bg-white p-12 rounded-3xl border border-slate-200 text-center space-y-4 shadow-sm">
-          <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto text-emerald-700">
+          <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto text-slate-800">
             <Award className="w-8 h-8" />
           </div>
           <div className="space-y-1">
@@ -170,7 +170,7 @@ export default function AdmitCardsPage() {
           </div>
           <Link
             href="/jobs"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-sm transition-all"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-sm transition-all"
           >
             <span>বর্তমান চাকরির সার্কুলার দেখুন</span>
             <ChevronRight className="w-4 h-4" />
@@ -189,13 +189,13 @@ export default function AdmitCardsPage() {
               <div
                 key={item.id}
                 data-testid="admit-card-card"
-                className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-6 transition-all hover:border-emerald-200"
+                className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-6 transition-all hover:border-slate-200"
               >
                 <div className="space-y-3 max-w-2xl flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-black ${
                       isCompleted 
-                        ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' 
+                        ? 'bg-slate-100 text-slate-800 border border-slate-200' 
                         : 'bg-blue-50 text-blue-800 border border-blue-200'
                     }`}>
                       {isCompleted ? 'আবেদন সম্পন্ন ও ভেরিফাইড' : 'আবেদন প্রক্রিয়াধীন (Processing)'}
@@ -210,7 +210,7 @@ export default function AdmitCardsPage() {
                     <h3 className="font-black text-base text-slate-900 leading-snug">
                       {item.jobTitle}
                     </h3>
-                    <p className="text-xs font-bold text-emerald-800 mt-0.5">
+                    <p className="text-xs font-bold text-slate-800 mt-0.5">
                       পদ: {item.postName}
                     </p>
                   </div>
@@ -225,11 +225,11 @@ export default function AdmitCardsPage() {
                         data-testid="copy-user-id-btn"
                         type="button"
                         onClick={() => handleCopy(userId, `uid-${item.id}`)}
-                        className="text-slate-400 hover:text-emerald-700 transition-colors p-1 rounded-md hover:bg-slate-200/60"
+                        className="text-slate-400 hover:text-slate-950 transition-colors p-1 rounded-md hover:bg-slate-200/60"
                         title="ইউজার আইডি কপি করুন"
                       >
                         {copiedField === `uid-${item.id}` ? (
-                          <Check className="w-3.5 h-3.5 text-emerald-600" />
+                          <Check className="w-3.5 h-3.5 text-slate-700" />
                         ) : (
                           <Copy className="w-3.5 h-3.5" />
                         )}
@@ -245,11 +245,11 @@ export default function AdmitCardsPage() {
                           data-testid="copy-password-btn"
                           type="button"
                           onClick={() => handleCopy(password, `pwd-${item.id}`)}
-                          className="text-slate-400 hover:text-emerald-700 transition-colors p-1 rounded-md hover:bg-slate-200/60"
+                          className="text-slate-400 hover:text-slate-950 transition-colors p-1 rounded-md hover:bg-slate-200/60"
                           title="পাসওয়ার্ড কপি করুন"
                         >
                           {copiedField === `pwd-${item.id}` ? (
-                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                            <Check className="w-3.5 h-3.5 text-slate-700" />
                           ) : (
                             <Copy className="w-3.5 h-3.5" />
                           )}
@@ -260,7 +260,7 @@ export default function AdmitCardsPage() {
 
                   <div className="text-xs text-slate-600 flex flex-wrap items-center gap-4 pt-0.5">
                     <span className="flex items-center gap-1.5 font-medium">
-                      <Calendar className="w-3.5 h-3.5 text-emerald-700" />
+                      <Calendar className="w-3.5 h-3.5 text-slate-800" />
                       <span>পরীক্ষার তারিখ: {isCompleted ? 'এসএমএসে জানানো হবে (আসন্ন)' : 'আবেদন যাচাই চলছে'}</span>
                     </span>
                     <span className="flex items-center gap-1.5 font-medium">
@@ -290,7 +290,7 @@ export default function AdmitCardsPage() {
                       href={admitCardUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-colors"
+                      className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-colors"
                     >
                       <Download className="w-4 h-4" />
                       <span>প্রবেশপত্র ডাউনলোড</span>

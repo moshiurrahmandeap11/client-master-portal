@@ -617,7 +617,7 @@ export default function ContactPage() {
             </Link>
             <Link
               href="/about-us"
-              className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-colors"
+              className="px-5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs transition-colors"
             >
               আমাদের পরিচিতি
             </Link>

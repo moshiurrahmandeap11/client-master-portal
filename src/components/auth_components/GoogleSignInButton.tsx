@@ -117,7 +117,7 @@ export default function GoogleSignInButton({
             type="button"
             disabled={isLoading}
             onClick={handleFallbackClick}
-            className="w-full py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-700 shadow-2xs flex items-center justify-center gap-2 transition-all"
+            className="w-full py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-300 rounded-[4px] text-xs font-normal text-slate-700 shadow-2xs flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -136,7 +136,7 @@ export default function GoogleSignInButton({
     <button
       type="button"
       onClick={handleFallbackClick}
-      className="w-full py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-700 shadow-2xs flex items-center justify-center gap-2 transition-all hover:border-slate-400"
+      className="w-full py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-300 rounded-[4px] text-xs font-normal text-slate-700 shadow-2xs flex items-center justify-center gap-2 transition-all hover:border-slate-400 cursor-pointer"
     >
       <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>

@@ -233,7 +233,7 @@ export default function ApplicationCheckPage() {
           <Link
             data-testid="apply-direct-btn"
             href={`/apply/${selectedJob.id}`}
-            className="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl text-xs font-bold shadow-md transition-colors flex items-center justify-center gap-2 flex-shrink-0"
+            className="px-6 py-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-2xl text-xs font-bold shadow-md transition-colors flex items-center justify-center gap-2 flex-shrink-0"
           >
             <span>১-ক্লিকে আবেদন সাবমিট করুন</span>
             <ArrowRight className="w-4 h-4" />

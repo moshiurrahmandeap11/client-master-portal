@@ -105,7 +105,7 @@ export default function AdmitCardsPage() {
 
           <Link
             href="/jobs"
-            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shadow-2xs"
+            className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shadow-2xs"
           >
             <Briefcase className="w-4 h-4" />
             <span>নতুন চাকরির সার্কুলার</span>
@@ -170,7 +170,7 @@ export default function AdmitCardsPage() {
           </div>
           <Link
             href="/jobs"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-sm transition-all"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-sm transition-all"
           >
             <span>বর্তমান চাকরির সার্কুলার দেখুন</span>
             <ChevronRight className="w-4 h-4" />
@@ -290,7 +290,7 @@ export default function AdmitCardsPage() {
                       href={admitCardUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-colors"
+                      className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-colors"
                     >
                       <Download className="w-4 h-4" />
                       <span>প্রবেশপত্র ডাউনলোড</span>

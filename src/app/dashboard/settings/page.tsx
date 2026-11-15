@@ -147,7 +147,7 @@ export default function SettingsPage() {
     <div data-testid="settings-page" className="space-y-6 w-full">
       <div>
         <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-          <Settings className="w-6 h-6 text-emerald-700" />
+          <Settings className="w-6 h-6 text-slate-800" />
           <span>অ্যাকাউন্ট সেটিংস ও নিরাপত্তা</span>
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 mt-1">
@@ -158,7 +158,7 @@ export default function SettingsPage() {
       {/* Account Overview Card */}
       <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
         <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-          <Shield className="w-4 h-4 text-emerald-700" />
+          <Shield className="w-4 h-4 text-slate-800" />
           <span>অ্যাকাউন্ট প্রোফাইল ও নিরাপত্তা অবস্থা</span>
         </h3>
 
@@ -166,7 +166,7 @@ export default function SettingsPage() {
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
             <span className="text-slate-400 font-bold block text-[10px]">অ্যাকাউন্ট স্ট্যাটাস:</span>
             <div className="flex items-center gap-1.5 pt-0.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+              <span className="w-2 h-2 rounded-full bg-slate-900 inline-block animate-pulse"></span>
               <span className="font-black text-slate-900 text-xs">সক্রিয় (Active)</span>
             </div>
             <span className="text-[10px] text-slate-500">সকল আবেদন সুবিধা উন্মুক্ত</span>
@@ -177,8 +177,8 @@ export default function SettingsPage() {
             <div className="flex items-center gap-1.5 pt-0.5">
               {profile?.isVerified ? (
                 <>
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  <span className="font-black text-emerald-700 text-xs">যাচাইকৃত (Verified)</span>
+                  <CheckCircle2 className="w-4 h-4 text-slate-700" />
+                  <span className="font-black text-slate-800 text-xs">যাচাইকৃত (Verified)</span>
                 </>
               ) : (
                 <>
@@ -205,7 +205,7 @@ export default function SettingsPage() {
       <form onSubmit={handlePasswordSubmit} className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-5 text-xs">
         <div className="border-b border-slate-100 pb-3">
           <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-            <KeyRound className="w-4 h-4 text-emerald-700" />
+            <KeyRound className="w-4 h-4 text-slate-800" />
             <span>পাসওয়ার্ড পরিবর্তন</span>
           </h3>
           <p className="text-[11px] text-slate-500 mt-0.5">
@@ -214,8 +214,8 @@ export default function SettingsPage() {
         </div>
 
         {passwordSuccess && (
-          <div data-testid="password-success-badge" className="p-3.5 bg-emerald-50 border border-emerald-300 rounded-2xl flex items-center gap-2 text-xs text-emerald-900 font-bold animate-fade-in">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+          <div data-testid="password-success-badge" className="p-3.5 bg-slate-100 border border-slate-200 rounded-2xl flex items-center gap-2 text-xs text-slate-900 font-bold animate-fade-in">
+            <CheckCircle2 className="w-4 h-4 text-slate-700 shrink-0" />
             <span>{passwordSuccess}</span>
           </div>
         )}
@@ -236,7 +236,7 @@ export default function SettingsPage() {
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               placeholder="বর্তমান পাসওয়ার্ড লিখুন" 
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-emerald-600 focus:bg-white transition-all text-xs" 
+              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-slate-400 focus:bg-white transition-all text-xs" 
             />
           </div>
           <div className="space-y-1.5">
@@ -247,7 +247,7 @@ export default function SettingsPage() {
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               placeholder="কমপক্ষে ৬ অক্ষর" 
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-emerald-600 focus:bg-white transition-all text-xs" 
+              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-slate-400 focus:bg-white transition-all text-xs" 
             />
           </div>
           <div className="space-y-1.5">
@@ -258,7 +258,7 @@ export default function SettingsPage() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="পুনরায় নতুন পাসওয়ার্ড লিখুন" 
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-emerald-600 focus:bg-white transition-all text-xs" 
+              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-slate-400 focus:bg-white transition-all text-xs" 
             />
           </div>
         </div>
@@ -268,7 +268,7 @@ export default function SettingsPage() {
             type="submit"
             data-testid="change-password-submit-btn"
             disabled={isChangingPassword}
-            className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 active:scale-[0.99] disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-2 shadow-2xs cursor-pointer"
+            className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 active:scale-[0.99] disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-2 shadow-2xs cursor-pointer"
           >
             {isChangingPassword ? (
               <>
@@ -288,7 +288,7 @@ export default function SettingsPage() {
       {/* Active Session & Device Information Card */}
       <div data-testid="session-info-card" className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4 text-xs">
         <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-          <Laptop className="w-4 h-4 text-emerald-700" />
+          <Laptop className="w-4 h-4 text-slate-800" />
           <span>সক্রিয় সেশন ও ডিভাইস নিরাপত্তা</span>
         </h3>
         <p className="text-slate-500 leading-relaxed">
@@ -297,13 +297,13 @@ export default function SettingsPage() {
 
         <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center shrink-0">
               <Laptop className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-black text-slate-900 text-xs">বর্তমান ডিভাইস (Current Session)</span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-800 border border-slate-200">
                   সক্রিয়
                 </span>
               </div>
@@ -323,7 +323,7 @@ export default function SettingsPage() {
       {/* Data Export & Privacy */}
       <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4 text-xs">
         <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-emerald-700" />
+          <ShieldCheck className="w-4 h-4 text-slate-800" />
           <span>ব্যক্তিগত ডেটা ব্যাকআপ ও অধিকার (GDPR Compliance)</span>
         </h3>
         <p className="text-slate-500 leading-relaxed">
@@ -336,7 +336,7 @@ export default function SettingsPage() {
             onClick={handleExportData}
             className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 active:scale-[0.99] text-slate-800 rounded-xl font-bold flex items-center gap-2 transition-colors cursor-pointer"
           >
-            <Download className="w-4 h-4 text-emerald-700" />
+            <Download className="w-4 h-4 text-slate-800" />
             <span>আমার সমস্ত ডেটা ডাউনলোড করুন (JSON Format)</span>
           </button>
         </div>

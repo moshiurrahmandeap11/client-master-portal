@@ -218,7 +218,7 @@ export default function ExamCalendarPage() {
   }, [currentYear, currentMonth, daysInMonth, firstDayOfWeek, events]);
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto pb-16" data-testid="exam-calendar-page">
+    <div className="space-y-6 w-full pb-16" data-testid="exam-calendar-page">
       {/* Page Header & View Toggles */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

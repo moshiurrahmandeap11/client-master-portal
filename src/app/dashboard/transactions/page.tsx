@@ -128,7 +128,7 @@ export default function TransactionsPage() {
 
   if (!isMounted) {
     return (
-      <div className="space-y-6 max-w-4xl animate-pulse p-6">
+      <div className="space-y-6 w-full animate-pulse p-4 sm:p-6">
         <div className="h-8 bg-slate-200 rounded w-1/3 mb-4"></div>
         <div className="h-32 bg-slate-100 rounded-2xl"></div>
       </div>
@@ -136,7 +136,7 @@ export default function TransactionsPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 w-full">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

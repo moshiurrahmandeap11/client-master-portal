@@ -101,7 +101,7 @@ export const ADMIN_NAV_ITEMS: NavMainItem[] = [
     badge: 'LIVE',
     badgeColor: 'bg-emerald-600 text-white',
     subItems: [
-      { id: 'gemini-browser-spider', label: 'লাইভ ব্রাউজার স্ক্রিন ও অটোমেশন' },
+      { id: 'gemini-browser-spider', label: 'জেমিনি এআই ও লাইভ অটোমেশন' },
       { id: 'source-monitoring', label: 'সোর্স স্ক্র্যাপার মনিটরিং' },
       { id: 'imported-drafts', label: 'খসড়া ও অনুমোদন কিউ' },
       { id: 'automation-hub', label: 'সেন্ট্রাল অটোমেশন ম্যানেজার' },

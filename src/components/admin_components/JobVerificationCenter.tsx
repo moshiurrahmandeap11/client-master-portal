@@ -959,7 +959,7 @@ export default function JobVerificationCenter({
             )}
 
             {/* TAB CONTENT: 5. CORRECTIONS */}
-            {activeTabInModal === 'corrections' && (
+            {activeTabInModal === 'corrections' /* Audit Trail History */ && (
               <div className="space-y-3 text-xs">
                 {selectedDraft.adminCorrections && selectedDraft.adminCorrections.length > 0 ? (
                   <div className="space-y-2">

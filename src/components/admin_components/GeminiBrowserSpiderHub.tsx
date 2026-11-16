@@ -503,7 +503,7 @@ export default function GeminiBrowserSpiderHub({
     if (!confirm(`আপনি কি নিশ্চিতভাবে নির্বাচিত ${selectedJobIds.length}টি সার্কুলার মুছে ফেলতে চান?`)) {
       return;
     }
-    setIsBulkProcessing(true);
+    setIsBulkProcessing(true); // Batch Toolbar
     addLog(`[DEL] নির্বাচিত ${selectedJobIds.length}টি সার্কুলার ডিলিট করা হচ্ছে...`);
     try {
       const res = await fetch('/api/admin/spider/gemini-browser', {
@@ -530,7 +530,7 @@ export default function GeminiBrowserSpiderHub({
 
   const handleBulkStatusChange = async (targetStatus: 'PUBLISHED' | 'DRAFT') => {
     if (selectedJobIds.length === 0) return;
-    setIsBulkProcessing(true);
+    setIsBulkProcessing(true); // Batch Toolbar
     const action = targetStatus === 'PUBLISHED' ? 'bulk_publish' : 'bulk_draft';
     addLog(`[UPD] নির্বাচিত ${selectedJobIds.length}টি সার্কুলার ${targetStatus === 'PUBLISHED' ? 'লাইভ পাবলিশ' : 'ড্রাফট'} করা হচ্ছে...`);
     try {

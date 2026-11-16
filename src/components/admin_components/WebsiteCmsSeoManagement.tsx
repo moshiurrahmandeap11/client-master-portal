@@ -42,6 +42,7 @@ import {
   Image as ImageIcon
 } from 'lucide-react';
 import { getAdminHeaders } from '@/lib/axios';
+import FluidTabBar from './layout/FluidTabBar';
 
 interface WebsiteCmsSeoManagementProps {
   activeTab?: string;
@@ -562,59 +563,17 @@ export default function WebsiteCmsSeoManagement({
         </div>
 
         {/* Sub-tab Pill Switcher */}
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl border border-slate-200 text-xs font-bold flex-wrap">
-          <button
-            type="button"
-            onClick={() => handleSubTabSwitch('pages-sections')}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-              currentSubTab === 'pages-sections' 
-                ? 'bg-white text-emerald-800 shadow-2xs' 
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Layers className="w-3.5 h-3.5" />
-            <span>সব পেইজ (All Pages)</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleSubTabSwitch('header-footer')}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-              currentSubTab === 'header-footer' 
-                ? 'bg-white text-emerald-800 shadow-2xs' 
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Layout className="w-3.5 h-3.5" />
-            <span>হেডার ও মেনু কাস্টমাইজার</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleSubTabSwitch('seo-meta')}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-              currentSubTab === 'seo-meta' 
-                ? 'bg-white text-emerald-800 shadow-2xs' 
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Search className="w-3.5 h-3.5" />
-            <span>এসইও মেটাডাটা</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleSubTabSwitch('revisions')}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-              currentSubTab === 'revisions' 
-                ? 'bg-white text-emerald-800 shadow-2xs' 
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <History className="w-3.5 h-3.5" />
-            <span>রিভিশন হিস্ট্রি</span>
-          </button>
-        </div>
+        <FluidTabBar
+          tabs={[
+            { id: 'pages-sections', label: 'সব পেইজ (All Pages)', icon: Layers },
+            { id: 'header-footer', label: 'হেডার ও মেনু কাস্টমাইজার', icon: Layout },
+            { id: 'seo-meta', label: 'এসইও মেটাডাটা', icon: Search },
+            { id: 'revisions', label: 'রিভিশন হিস্ট্রি', icon: History }
+          ]}
+          activeTab={currentSubTab}
+          onChange={(id) => handleSubTabSwitch(id as any)}
+          variant="slate"
+        />
       </div>
 
       {seoSavedToast && (

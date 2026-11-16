@@ -14,7 +14,17 @@ export const jobsService = {
   async getJobs(params: JobsQueryParams = {}): Promise<{ jobs: JobCircular[]; total?: number; totalPages?: number }> {
     try {
       const response = await apiClient.get('/api/jobs', { params });
-      return response.data;
+      const resData = response.data;
+      const rawJobs = Array.isArray(resData?.jobs)
+        ? resData.jobs
+        : Array.isArray(resData?.data)
+        ? resData.data
+        : [];
+      return {
+        jobs: rawJobs,
+        total: resData?.total ?? resData?.meta?.total ?? rawJobs.length,
+        totalPages: resData?.totalPages ?? resData?.meta?.totalPages ?? 1,
+      };
     } catch (error) {
       return handleApiError(error);
     }

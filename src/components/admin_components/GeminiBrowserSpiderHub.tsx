@@ -3,28 +3,26 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import {
-  Zap,
-  Lock,
-  Sparkles,
   RefreshCw,
   CheckCircle2,
-  ShieldCheck,
   FileText,
-  Database,
-  Terminal,
-  Cpu,
   Edit3,
   Eye,
   Trash2,
   Check,
   X,
   Search,
-  Filter,
-  Download
+  Download,
+  Building2,
+  Globe,
+  Clock,
+  Sliders,
+  ArrowRight
 } from 'lucide-react';
 import { JobCircular } from '@/types';
 import JobLogo from '@/components/shared/JobLogo';
 import { getAdminHeaders } from '@/lib/axios';
+import FluidTabBar from './layout/FluidTabBar';
 
 export interface GeminiBrowserSpiderHubProps {
   jobs?: JobCircular[];
@@ -43,14 +41,11 @@ export default function GeminiBrowserSpiderHub({
   const [syncedJobsList, setSyncedJobsList] = useState<JobCircular[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSyncing, setIsSyncing] = useState<boolean>(false);
-  const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [actionJobId, setActionJobId] = useState<string | null>(null);
-  const [selectedJobId, setSelectedJobId] = useState<string>('job-alljobs-dcjamalpur-15137');
-  const [verificationResult, setVerificationResult] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'OPEN' | 'DRAFT'>('ALL');
 
-  // In-System Standalone Browser & Autonomous Extractor State
+  // Policy & Extractor State
   const [isAutoPublish, setIsAutoPublish] = useState<boolean>(false);
   const [isTogglingAutoPublish, setIsTogglingAutoPublish] = useState<boolean>(false);
   const [extractorPdfUrl, setExtractorPdfUrl] = useState<string>('https://alljobs.teletalk.com.bd/media/public/uploads/governments/jobs/advertisement-1793683909289.pdf');
@@ -60,23 +55,11 @@ export default function GeminiBrowserSpiderHub({
 
   const [selectedJobIds, setSelectedJobIds] = useState<string[]>([]);
   const [isBulkProcessing, setIsBulkProcessing] = useState<boolean>(false);
+  const [statusMessage, setStatusMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
-  // Autonomous Audit Agent State
-  const [auditReport, setAuditReport] = useState<any>(null);
-  const [isRunningAudit, setIsRunningAudit] = useState<boolean>(false);
-
-  const [logs, setLogs] = useState<string[]>([
-    '[AI] [Gemini 3.5 Engine] Google Gemini 3.5 Flash-Lite ক্লাউড এআই ইঞ্জিন সক্রিয়',
-    '[KEY] [Dual API Keys] ডুয়াল এপিআই কী ও অটো-ফেলওভার রোটেশন কনফিগারড',
-    '[AUDIT] [Audit Agent] অটোনোমাস সিস্টেম অডিট ও সেলফ-হিলিং এজেন্ট প্রস্তুত',
-    '[NET] [Alljobs Engine] সরকারি চাকরির অলজবস লাইভ ডেটা ফিড কানেক্টেড',
-    '[SYNC] [Auto/Draft] সার্কুলার ড্রাফট ও পাবলিকেশন পলিসি কন্ট্রোল প্রস্তুত',
-    '[SEC] [Cloud Architecture] ক্লাউড এপিআই ভিত্তিক নিরাপদ ডাটা এক্সট্রাকশন প্রস্তুত'
-  ]);
-
-  const addLog = (msg: string) => {
-    const time = new Date().toLocaleTimeString();
-    setLogs(prev => [`[${time}] ${msg}`, ...prev.slice(0, 49)]);
+  const showToast = (text: string, type: 'success' | 'error' = 'success') => {
+    setStatusMessage({ text, type });
+    setTimeout(() => setStatusMessage(null), 4000);
   };
 
   const fetchStatus = async () => {
@@ -97,54 +80,18 @@ export default function GeminiBrowserSpiderHub({
         }
       }
     } catch (e: any) {
-      addLog(`ত্রুটি: ${e.message}`);
+      console.error('Failed to fetch status:', e);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleRunAudit = async (autoRepair = true) => {
-    setIsRunningAudit(true);
-    addLog('[AUDIT] অটোনোমাস সিস্টেম অডিট ও সেলফ-হিলিং শুরু হয়েছে...');
-    try {
-      const res = await fetch('/api/admin/audit', {
-        method: 'POST',
-        headers: getAdminHeaders(),
-        credentials: 'include',
-        body: JSON.stringify({ autoRepair })
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setAuditReport(data.report);
-        addLog(`[OK] অডিট সম্পন্ন! সামগ্রিক হেলথ স্কোর: ${data.report.overallScore}/১০০ (${data.report.overallStatus})`);
-        if (data.report.databaseStats?.repairedCount > 0) {
-          addLog(`[FIX] ${data.report.databaseStats.repairedCount}টি সার্কুলার স্বয়ংক্রিয়ভাবে রিপেয়ার ও ইনটিগ্রিটি ফিক্স করা হয়েছে।`);
-        }
-        await fetchStatus();
-        if (onRefreshData) onRefreshData();
-      } else {
-        addLog(`[ERR] অডিট ব্যর্থ: ${data.message || data.error || 'অজানা ত্রুটি'}`);
-      }
-    } catch (e: any) {
-      addLog(`[ERR] অডিট এরর: ${e.message}`);
-    } finally {
-      setIsRunningAudit(false);
-    }
-  };
-
   useEffect(() => {
     fetchStatus();
-    fetch('/api/admin/audit', { headers: getAdminHeaders(), credentials: 'include' })
-      .then(r => r.json())
-      .then(d => { if (d.success && d.report) setAuditReport(d.report); })
-      .catch(() => {});
   }, []);
 
-  // Compute effective synced jobs (prioritize parent jobs prop if available)
   const displayJobs = useMemo(() => {
-    const source = jobs.length > 0 
-      ? jobs 
-      : syncedJobsList;
+    const source = jobs.length > 0 ? jobs : syncedJobsList;
 
     return source.filter(j => {
       if (searchQuery.trim()) {
@@ -166,7 +113,18 @@ export default function GeminiBrowserSpiderHub({
     });
   }, [jobs, syncedJobsList, searchQuery, statusFilter]);
 
+  const liveJobsCount = useMemo(() => {
+    const source = jobs.length > 0 ? jobs : syncedJobsList;
+    return source.filter(j => {
+      const s = String((j as any).status || (j as any).publicationStatus || 'PUBLISHED').toUpperCase();
+      return s === 'OPEN' || s === 'PUBLISHED' || s === 'ACTIVE';
+    }).length;
+  }, [jobs, syncedJobsList]);
 
+  const draftJobsCount = useMemo(() => {
+    const source = jobs.length > 0 ? jobs : syncedJobsList;
+    return source.length - liveJobsCount;
+  }, [jobs, syncedJobsList, liveJobsCount]);
 
   const handleToggleAutoPublish = async () => {
     setIsTogglingAutoPublish(true);
@@ -180,26 +138,49 @@ export default function GeminiBrowserSpiderHub({
       const data = await res.json();
       if (res.ok && data.success) {
         setIsAutoPublish(data.autoPublish);
-        addLog(`[CFG] পাবলিশ পলিসি আপডেট: ${data.message}`);
+        showToast(data.message || 'পাবলিকেশন পলিসি আপডেট হয়েছে।');
       } else {
-        alert(data.message || data.error || 'পলিসি পরিবর্তন ব্যর্থ হয়েছে।');
+        showToast(data.message || data.error || 'পলিসি পরিবর্তন ব্যর্থ হয়েছে।', 'error');
       }
     } catch (e: any) {
-      addLog(`[ERR] ত্রুটি: ${e.message}`);
+      showToast(e.message || 'পলিসি পরিবর্তন ব্যর্থ হয়েছে।', 'error');
     } finally {
       setIsTogglingAutoPublish(false);
     }
   };
 
-  const handleRunAIExtraction = async (targetUrl?: string) => {
-    const url = (targetUrl || extractorPdfUrl).trim();
+  const handleRunSync = async () => {
+    setIsSyncing(true);
+    try {
+      const res = await fetch('/api/admin/spider/gemini-browser', {
+        method: 'POST',
+        headers: getAdminHeaders(),
+        credentials: 'include',
+        body: JSON.stringify({ action: 'sync', limit: 35 })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        showToast(data.message || 'নতুন সার্কুলার সফলভাবে সংগ্রহ করা হয়েছে।');
+        await fetchStatus();
+        if (onRefreshData) onRefreshData();
+      } else {
+        showToast(data.message || data.error || 'সিঙ্ক ব্যর্থ হয়েছে।', 'error');
+      }
+    } catch (e: any) {
+      showToast(`ত্রুটি: ${e.message}`, 'error');
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
+  const handleRunExtraction = async () => {
+    const url = extractorPdfUrl.trim();
     if (!url) {
-      alert('অনুগ্রহ করে সার্কুলারের একটি PDF লিঙ্ক বা নোটিশের URL দিন।');
+      showToast('অনুগ্রহ করে সার্কুলারের একটি PDF লিঙ্ক বা নোটিশের URL দিন।', 'error');
       return;
     }
     setIsExtractingCircular(true);
     setExtractedCircularResult(null);
-    addLog(`[AI] জেমিনি ৩.৫ ক্লাউড এআই ইঞ্জিন দিয়ে সম্পূর্ণ সার্কুলার বিশ্লেষণ শুরু: ${url}`);
     try {
       const res = await fetch('/api/admin/spider/gemini-browser', {
         method: 'POST',
@@ -210,13 +191,12 @@ export default function GeminiBrowserSpiderHub({
       const data = await res.json();
       if (res.ok && data.success && data.job) {
         setExtractedCircularResult(data.job);
-        addLog(`[DONE] জেমিনি ব্রাউজার বিশ্লেষণ সম্পন্ন! ${data.job.organization} - পদ সংখ্যা: ${data.job.positions?.length || 1}টি, ডেডলাইন: ${data.job.deadline}`);
+        showToast('সার্কুলার বিশ্লেষণ সম্পন্ন হয়েছে!');
       } else {
-        addLog(`[ERR] এআই স্ক্যান ত্রুটি: ${data.message || data.error || 'অজানা ত্রুটি'}`);
-        alert(data.message || data.error || 'সার্কুলার স্ক্যান করতে সমস্যা হয়েছে।');
+        showToast(data.message || data.error || 'সার্কুলার স্ক্যান করতে সমস্যা হয়েছে।', 'error');
       }
     } catch (e: any) {
-      alert(`ত্রুটি: ${e.message}`);
+      showToast(`ত্রুটি: ${e.message}`, 'error');
     } finally {
       setIsExtractingCircular(false);
     }
@@ -225,7 +205,6 @@ export default function GeminiBrowserSpiderHub({
   const handleSaveExtractedJob = async (publishImmediately: boolean) => {
     if (!extractedCircularResult) return;
     setIsSavingExtractedJob(true);
-    addLog(`[RUN] সার্কুলারটি ডাটাবেজে ${publishImmediately ? 'লাইভ পাবলিশ' : 'ড্রাফট হিসেবে সেভ'} করা হচ্ছে...`);
     try {
       const jobToSave = {
         ...extractedCircularResult,
@@ -244,53 +223,22 @@ export default function GeminiBrowserSpiderHub({
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        addLog(`[OK] ${data.message}`);
-        alert(data.message);
+        showToast(data.message || 'সার্কুলারটি ডাটাবেজে সংরক্ষিত হয়েছে।');
         setExtractedCircularResult(null);
         await fetchStatus();
         if (onRefreshData) onRefreshData();
       } else {
-        alert(data.message || data.error || 'ডাটাবেজে সংরক্ষণ ব্যর্থ হয়েছে।');
+        showToast(data.message || data.error || 'সংরক্ষণ ব্যর্থ হয়েছে।', 'error');
       }
     } catch (e: any) {
-      alert(`ত্রুটি: ${e.message}`);
+      showToast(`ত্রুটি: ${e.message}`, 'error');
     } finally {
       setIsSavingExtractedJob(false);
     }
   };
 
-  const handleRunSync = async () => {
-    setIsSyncing(true);
-    addLog('[SYNC] অলজবস লাইভ সার্কুলার কালেকশন শুরু হয়েছে...');
-    try {
-      const res = await fetch('/api/admin/spider/gemini-browser', {
-        method: 'POST',
-        headers: getAdminHeaders(),
-        credentials: 'include',
-        body: JSON.stringify({ action: 'sync', limit: 35 })
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        addLog(`[OK] ${data.message}`);
-        addLog(`[STAT] মোট প্রতিষ্ঠান: ${data.stats?.totalOrgsFound}, নতুন যুক্ত: ${data.stats?.newJobsAdded}, আপডেট: ${data.stats?.updatedJobs}`);
-        await fetchStatus();
-        if (onRefreshData) onRefreshData();
-        alert(data.message);
-      } else {
-        addLog(`[ERR] সিঙ্ক ব্যর্থ: ${data.message || data.error || 'সিঙ্ক ব্যর্থ হয়েছে'}`);
-        alert(data.message || data.error || 'সিঙ্ক ব্যর্থ হয়েছে');
-      }
-    } catch (e: any) {
-      addLog(`[ERR] নেটওয়ার্ক এরর: ${e.message}`);
-      alert(`ত্রুটি: ${e.message}`);
-    } finally {
-      setIsSyncing(false);
-    }
-  };
-
   const handleTogglePublish = async (job: JobCircular) => {
     setActionJobId(job.id);
-    addLog(`[UPD] পাবলিকেশন স্ট্যাটাস পরিবর্তন করা হচ্ছে: ${job.title}...`);
     try {
       const res = await fetch('/api/admin/spider/gemini-browser', {
         method: 'POST',
@@ -300,49 +248,24 @@ export default function GeminiBrowserSpiderHub({
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        addLog(`[OK] ${data.message}`);
+        showToast(data.message || 'স্ট্যাটাস আপডেট সফল হয়েছে।');
         await fetchStatus();
         if (onRefreshData) onRefreshData();
       } else {
-        addLog(`[ERR] স্ট্যাটাস পরিবর্তন ব্যর্থ: ${data.message || data.error || 'পরিবর্তন ব্যর্থ হয়েছে'}`);
-        alert(data.message || data.error || 'পরিবর্তন ব্যর্থ হয়েছে');
+        showToast(data.message || data.error || 'স্ট্যাটাস পরিবর্তন ব্যর্থ হয়েছে।', 'error');
       }
     } catch (e: any) {
-      addLog(`[ERR] ত্রুটি: ${e.message}`);
+      showToast(`ত্রুটি: ${e.message}`, 'error');
     } finally {
       setActionJobId(null);
     }
   };
 
-  const handleDeleteJobItem = async (job: JobCircular) => {
-    if (!confirm(`আপনি কি নিশ্চিত যে "${job.title}" সার্কুলারটি সম্পূর্ণ মুছে ফেলতে চান?`)) return;
-    
-    if (onDeleteJob) {
-      onDeleteJob(job.id, job.title);
-      addLog(`[DEL] সার্কুলার মোছার রিকোয়েস্ট পাঠানো হয়েছে: ${job.id}`);
-      return;
-    }
-
-    setActionJobId(job.id);
-    try {
-      const res = await fetch('/api/admin/spider/gemini-browser', {
-        method: 'POST',
-        headers: getAdminHeaders(),
-        credentials: 'include',
-        body: JSON.stringify({ action: 'delete_job', jobId: job.id })
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        addLog(`[OK] সার্কুলার মুছে ফেলা হয়েছে: ${job.title}`);
-        await fetchStatus();
-        if (onRefreshData) onRefreshData();
-      } else {
-        addLog(`[ERR] মোছা ব্যর্থ: ${data.message || data.error || 'মুছে ফেলা ব্যর্থ হয়েছে'}`);
+  const handleDeleteJobItem = (job: JobCircular) => {
+    if (confirm(`আপনি কি নিশ্চিতভাবে "${job.title}" সার্কুলারটি মুছে ফেলতে চান?`)) {
+      if (onDeleteJob) {
+        onDeleteJob(job.id, job.title);
       }
-    } catch (e: any) {
-      addLog(`[ERR] এরর: ${e.message}`);
-    } finally {
-      setActionJobId(null);
     }
   };
 
@@ -368,7 +291,6 @@ export default function GeminiBrowserSpiderHub({
       return;
     }
     setIsBulkProcessing(true);
-    addLog(`[DEL] নির্বাচিত ${selectedJobIds.length}টি সার্কুলার ডিলিট করা হচ্ছে...`);
     try {
       const res = await fetch('/api/admin/spider/gemini-browser', {
         method: 'POST',
@@ -378,16 +300,15 @@ export default function GeminiBrowserSpiderHub({
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        addLog(`[OK] ${data.message || 'সার্কুলারগুলো মুছে ফেলা হয়েছে'}`);
-        alert(data.message || 'সার্কুলারগুলো মুছে ফেলা হয়েছে');
+        showToast(data.message || 'সার্কুলারগুলো মুছে ফেলা হয়েছে।');
         setSelectedJobIds([]);
         await fetchStatus();
         if (onRefreshData) onRefreshData();
       } else {
-        alert(data.message || data.error || 'ডিলিট করতে সমস্যা হয়েছে');
+        showToast(data.message || data.error || 'ডিলিট করতে সমস্যা হয়েছে।', 'error');
       }
     } catch (err: any) {
-      alert(`ত্রুটি: ${err.message}`);
+      showToast(`ত্রুটি: ${err.message}`, 'error');
     } finally {
       setIsBulkProcessing(false);
     }
@@ -397,7 +318,6 @@ export default function GeminiBrowserSpiderHub({
     if (selectedJobIds.length === 0) return;
     setIsBulkProcessing(true);
     const action = targetStatus === 'PUBLISHED' ? 'bulk_publish' : 'bulk_draft';
-    addLog(`[UPD] নির্বাচিত ${selectedJobIds.length}টি সার্কুলার ${targetStatus === 'PUBLISHED' ? 'লাইভ পাবলিশ' : 'ড্রাফট'} করা হচ্ছে...`);
     try {
       const res = await fetch('/api/admin/spider/gemini-browser', {
         method: 'POST',
@@ -407,283 +327,194 @@ export default function GeminiBrowserSpiderHub({
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        addLog(`[OK] ${data.message}`);
-        alert(data.message);
+        showToast(data.message || 'স্ট্যাটাস সফলভাবে পরিবর্তন হয়েছে।');
         setSelectedJobIds([]);
         await fetchStatus();
         if (onRefreshData) onRefreshData();
       } else {
-        alert(data.message || data.error || 'স্ট্যাটাস পরিবর্তন ব্যর্থ হয়েছে');
+        showToast(data.message || data.error || 'স্ট্যাটাস পরিবর্তন ব্যর্থ হয়েছে।', 'error');
       }
     } catch (err: any) {
-      alert(`ত্রুটি: ${err.message}`);
+      showToast(`ত্রুটি: ${err.message}`, 'error');
     } finally {
       setIsBulkProcessing(false);
     }
   };
 
   return (
-    <div className="space-y-6">
-      {/* 1. TOP HEADER & TELEMETRY */}
-      <div className="bg-slate-900 rounded-3xl p-6 text-white shadow-xl border border-slate-700/60">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-700 flex items-center justify-center text-white shadow-lg">
-              <Sparkles className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl sm:text-2xl font-black tracking-tight">জেমিনি এআই ও স্বয়ংক্রিয় সার্কুলার স্ক্র্যাপার হাব</h1>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  GEMINI 3.5 AI CLOUD ENGINE
-                </span>
-              </div>
-              <p className="text-xs sm:text-sm text-slate-300 font-medium mt-0.5">
-                গুগল জেমিনি ৩.৫ ক্লাউড এআই ইঞ্জিন • টেলিটক অলজবস লাইভ স্ক্র্যাপার • তাৎক্ষণিক স্ট্রাকচার্ড এআই পার্সিং
-              </p>
-            </div>
+    <div className="w-full space-y-6">
+      {/* 1. UNIFIED STATS ROW (Identical style, pure white, cohesive polish) */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+        {/* Card 1: Total */}
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 sm:p-5 flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-500">মোট সার্কুলার</span>
+            <span className="text-slate-400">
+              <FileText className="w-4 h-4" />
+            </span>
           </div>
-
-          <div className="flex flex-wrap items-center gap-2.5">
-            <button
-              onClick={handleRunSync}
-              disabled={isSyncing}
-              className="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black flex items-center gap-2 transition-all shadow-lg shadow-emerald-900/30 disabled:opacity-50 cursor-pointer"
-              title="সরকারি চাকরির লাইভ পোর্টাল থেকে নতুন সার্কুলার এআই দিয়ে সংগ্রহ করুন"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
-              <span>{isSyncing ? 'সিঙ্ক চলছে...' : 'অলজবস লাইভ সিঙ্ক চালান'}</span>
-            </button>
-
-            <button
-              onClick={() => { fetchStatus(); if (onRefreshData) onRefreshData(); }}
-              disabled={isLoading}
-              className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold flex items-center gap-1.5 transition-all border border-slate-700 disabled:opacity-50 cursor-pointer"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
-              <span>রিফ্রেশ</span>
-            </button>
+          <div className="my-2">
+            <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              {displayJobs.length}টি
+            </span>
           </div>
+          <span className="text-[11px] text-slate-400 font-medium">ডাটাবেজে সংরক্ষিত</span>
         </div>
 
-        {/* Status Metrics Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-slate-700/60">
-          <div className="bg-slate-800/60 p-3 rounded-2xl border border-slate-700/50">
-            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">টেলিটক ও জেমিনি সার্কুলার</div>
-            <div className="text-xl font-black text-emerald-400 mt-0.5">{displayJobs.length}টি</div>
-            <div className="text-[10px] text-slate-400">লাইভ ডাটাবেজে সংরক্ষিত</div>
+        {/* Card 2: Published */}
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 sm:p-5 flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-500">লাইভ প্রকাশিত</span>
+            <span className="text-slate-400">
+              <Globe className="w-4 h-4" />
+            </span>
           </div>
-          <div className="bg-slate-800/60 p-3 rounded-2xl border border-slate-700/50">
-            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">মোট ডাটাবেজ সার্কুলার</div>
-            <div className="text-xl font-black text-white mt-0.5">{jobs.length || spiderStatus?.totalJobs || displayJobs.length}টি</div>
-            <div className="text-[10px] text-emerald-400 font-semibold">সকল ক্যাটাগরি সমন্বিত</div>
+          <div className="my-2">
+            <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              {liveJobsCount}টি
+            </span>
           </div>
-          <div className="bg-slate-800/60 p-3 rounded-2xl border border-slate-700/50">
-            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">জেমিনি এআই ইঞ্জিন</div>
-            <div className="text-xl font-black text-emerald-300 mt-0.5">সক্রিয় (Active)</div>
-            <div className="text-[10px] text-slate-400">Gemini 3.5 Flash-Lite (কী রোটেশন সহ)</div>
+          <span className="text-[11px] text-slate-400 font-medium">ওয়েবসাইটে সক্রিয়</span>
+        </div>
+
+        {/* Card 3: Drafts */}
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 sm:p-5 flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-500">অপেক্ষমাণ খসড়া</span>
+            <span className="text-slate-400">
+              <Clock className="w-4 h-4" />
+            </span>
           </div>
-          <div className="bg-slate-800/60 p-3 rounded-2xl border border-slate-700/50">
-            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">পাবলিকেশন পলিসি</div>
-            <div className={`text-xl font-black mt-0.5 ${isAutoPublish ? 'text-emerald-400' : 'text-amber-300'}`}>
-              {isAutoPublish ? 'অটো-পাবলিশ' : 'ড্রাফট মোড'}
-            </div>
-            <div className="text-[10px] text-slate-400">
-              {isAutoPublish ? 'সরাসরি লাইভ হয়' : 'অ্যাডমিন রিভিউ অপেক্ষমান'}
-            </div>
+          <div className="my-2">
+            <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              {draftJobsCount}টি
+            </span>
+          </div>
+          <span className="text-[11px] text-slate-400 font-medium">যাচাই ও অনুমোদন প্রয়োজন</span>
+        </div>
+
+        {/* Card 4: Publication Policy (Consistent style with sleek toggle link) */}
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 sm:p-5 flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-slate-500">প্রকাশনা পলিসি</span>
+            <span className="text-slate-400">
+              <Sliders className="w-4 h-4" />
+            </span>
+          </div>
+          <div className="my-2">
+            <span className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
+              {isAutoPublish ? 'স্বয়ংক্রিয় লাইভ' : 'খসড়া অনুমোদন'}
+            </span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] text-slate-400 font-medium">
+              {isAutoPublish ? 'সরাসরি ওয়েবসাইটে প্রকাশ' : 'অ্যাডমিন রিভিউ আবশ্যক'}
+            </span>
+            <button
+              type="button"
+              onClick={handleToggleAutoPublish}
+              disabled={isTogglingAutoPublish}
+              className="text-[11px] font-bold text-emerald-700 hover:text-emerald-800 transition-colors inline-flex items-center gap-0.5 cursor-pointer disabled:opacity-50"
+            >
+              <span>{isAutoPublish ? 'ড্রাফট করুন' : 'অটো অন'}</span>
+              <ArrowRight className="w-3 h-3" />
+            </button>
           </div>
         </div>
       </div>
 
-      {/* 2. INTERACTIVE CONTROLS GRID */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* Card 1: GEMINI 3.5 CLOUD AI ENGINE */}
-        <div className="bg-white rounded-3xl p-5 border border-emerald-200/90 shadow-sm space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2.5 bg-emerald-100 text-emerald-800 rounded-2xl">
-                <Cpu className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-black text-sm text-slate-900">১. জেমিনি ৩.৫ ক্লাউড এআই ইঞ্জিন</h3>
-                <p className="text-[11px] text-slate-500 font-medium">Google Gemini 3.5 Flash-Lite</p>
-              </div>
-            </div>
-            <span className="inline-flex items-center gap-1.5 text-[10px] font-black px-2.5 py-1 rounded-full border bg-emerald-50 text-emerald-800 border-emerald-300">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>এআই ক্লাউড সক্রিয়</span>
-            </span>
+      {/* Global Toast Feedback */}
+      {statusMessage && (
+        <div className={`p-3.5 rounded-xl text-xs font-bold flex items-center justify-between transition-all ${
+          statusMessage.type === 'success'
+            ? 'bg-emerald-50 text-emerald-900 border border-emerald-200'
+            : 'bg-rose-50 text-rose-900 border border-rose-200'
+        }`}>
+          <div className="flex items-center gap-2">
+            {statusMessage.type === 'success' ? (
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            ) : (
+              <X className="w-4 h-4 text-rose-600 shrink-0" />
+            )}
+            <span>{statusMessage.text}</span>
           </div>
-
-          <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/70 text-xs space-y-2.5">
-            <div className="flex items-center justify-between text-[11px]">
-              <span className="text-slate-500 font-semibold">মডেল ইঞ্জিন:</span>
-              <span className="font-mono font-bold text-slate-800">gemini-3.5-flash-lite</span>
-            </div>
-            <div className="flex items-center justify-between text-[11px]">
-              <span className="text-slate-500 font-semibold">এপিআই কী মোড:</span>
-              <span className="font-bold text-emerald-700">২টি কী (Auto Key Rotation)</span>
-            </div>
-            <div className="flex items-center justify-between text-[11px]">
-              <span className="text-slate-500 font-semibold">প্রসেসিং মেথড:</span>
-              <span className="font-mono text-[10px] text-emerald-800 font-bold">100% Cloud Generative API</span>
-            </div>
-            <p className="text-[11px] text-slate-600 leading-relaxed pt-1">
-              সরাসরি ক্লাউড এআই দিয়ে সকল সরকারি সার্কুলার ও নোটিশ দ্রুত পার্স করা হচ্ছে। আলাদা কোনো ব্রাউজার স্ক্রিন বা ম্যানুয়াল লগইনের প্রয়োজন নেই।
-            </p>
-          </div>
-
-          <div className="space-y-2 pt-1">
-            <button
-              type="button"
-              onClick={() => handleRunAudit(true)}
-              disabled={isRunningAudit}
-              className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer disabled:opacity-50"
-            >
-              <ShieldCheck className="w-4 h-4 text-emerald-200" />
-              <span>{isRunningAudit ? 'অডিট চলছে...' : 'এআই ও সিস্টেম হেলথ অডিট চালান'}</span>
-            </button>
-            <p className="text-[10px] text-center text-slate-400">
-              ক্লাউড এপিআই স্ট্যাটাস ও কোটা সার্বক্ষণিক স্বয়ংক্রিয়ভাবে মনিটর করা হয়।
-            </p>
-          </div>
-        </div>
-
-        {/* Card 2: PUBLISHING POLICY & ALLJOBS LIVE SYNC */}
-        <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-sm space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2.5 bg-emerald-50 text-emerald-700 rounded-2xl">
-                <RefreshCw className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-black text-sm text-slate-900">২. অলজবস সিঙ্ক ও পাবলিকেশন পলিসি</h3>
-                <p className="text-[11px] text-slate-500 font-medium">অটো-পাবলিশ বনাম অ্যাডমিন ড্রাফট</p>
-              </div>
-            </div>
-            <span className={`inline-flex items-center gap-1.5 text-[10px] font-black px-2.5 py-1 rounded-full border ${
-              isAutoPublish
-                ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                : 'bg-amber-50 text-amber-800 border-amber-300'
-            }`}>
-              <span className={`w-2 h-2 rounded-full ${isAutoPublish ? 'bg-emerald-500' : 'bg-amber-500'}`} />
-              <span>{isAutoPublish ? 'অটো-পাবলিশ' : 'ড্রাফট রিভিউ'}</span>
-            </span>
-          </div>
-
-          <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/70 text-xs space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-slate-800">সার্কুলার প্রকাশ পলিসি:</span>
-              <button
-                type="button"
-                onClick={handleToggleAutoPublish}
-                disabled={isTogglingAutoPublish}
-                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
-                  isAutoPublish
-                    ? 'bg-emerald-600 text-white border-emerald-600'
-                    : 'bg-amber-100 text-amber-800 border-amber-300'
-                }`}
-              >
-                {isAutoPublish ? 'অটো-পাবলিশ অন' : 'ড্রাফট মোড অন'}
-              </button>
-            </div>
-            <p className="text-[11px] text-slate-600 leading-relaxed">
-              {isAutoPublish ? (
-                <span className="inline-flex items-start gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>জেমিনি বা অলজবস থেকে যেকোনো নতুন সার্কুলার পাওয়া মাত্রই স্বয়ংক্রিয়ভাবে ওয়েবসাইটে লাইভ প্রকাশ হয়ে যাবে।</span>
-                </span>
-              ) : (
-                <span className="inline-flex items-start gap-1.5">
-                  <Lock className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
-                  <span>নতুন সার্কুলারগুলো আগে ড্রাফটে জমা থাকবে। অ্যাডমিন ভেরিফাই করে ১-ক্লিকে ওয়েবসাইটে লাইভ পাবলিশ করবেন।</span>
-                </span>
-              )}
-            </p>
-          </div>
-
           <button
             type="button"
-            onClick={handleRunSync}
-            disabled={isSyncing}
-            className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-sm shadow-emerald-900/10 disabled:opacity-50 cursor-pointer"
+            onClick={() => setStatusMessage(null)}
+            className="text-slate-400 hover:text-slate-600"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
-            <span>{isSyncing ? 'সিঙ্ক চলছে...' : 'টেলিটক অলজবস লাইভ সিঙ্ক চালান'}</span>
+            <X className="w-4 h-4" />
           </button>
         </div>
+      )}
 
-        {/* Card 3: SMART AUTONOMOUS GEMINI CIRCULAR EXTRACTOR */}
-        <div className="bg-white rounded-3xl p-5 border border-indigo-200/90 shadow-sm space-y-4">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2.5 bg-indigo-50 text-indigo-700 rounded-2xl">
-              <Zap className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-black text-sm text-slate-900">৩. সার্কুলার PDF ও নোটিশ এআই পার্সার</h3>
-              <p className="text-[11px] text-slate-500 font-medium">স্বয়ংক্রিয় প্রম্পট ও কন্টেন্ট জেনারেশন</p>
-            </div>
+      {/* 2. DIRECT CIRCULAR PDF / NOTICE EXTRACTOR */}
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-5 space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-100">
+          <div>
+            <h2 className="text-sm font-black text-slate-900">
+              সার্কুলার লিংক বা নোটিশ থেকে সরাসরি তথ্য সংগ্রহ
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              যেকোনো সার্কুলারের অফিসিয়াল PDF বা লিংক দিয়ে সরাসরি পদের বিবরণ ও ডেডলাইন বিশ্লেষণ করুন
+            </p>
           </div>
 
-          <div className="space-y-2 text-xs">
-            <label className="block text-[11px] font-bold text-slate-700">
-              সার্কুলার PDF লিংক, অলজবস লিংক বা নোটিশ URL:
-            </label>
-            <input
-              type="text"
-              value={extractorPdfUrl}
-              onChange={(e) => setExtractorPdfUrl(e.target.value)}
-              placeholder="https://alljobs.teletalk.com.bd/.../advertisement.pdf"
-              className="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-slate-50 focus:bg-white font-mono"
-            />
+          <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => handleRunAIExtraction()}
-              disabled={isExtractingCircular || !extractorPdfUrl.trim()}
-              className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-sm disabled:opacity-50 cursor-pointer"
+              onClick={handleRunSync}
+              disabled={isSyncing}
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-2 cursor-pointer disabled:opacity-50"
             >
-              <Sparkles className={`w-4 h-4 text-amber-300 ${isExtractingCircular ? 'animate-spin' : ''}`} />
-              <span>{isExtractingCircular ? 'জেমিনি এআই স্ক্যান করছে...' : 'জেমিনি এআই দিয়ে সার্কুলার প্রসেস করুন'}</span>
+              <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
+              <span>{isSyncing ? 'সংগ্রহ চলছে...' : 'অলজবস থেকে সার্কুলার সংগ্রহ করুন'}</span>
             </button>
           </div>
         </div>
+
+        <div className="flex flex-col sm:flex-row items-center gap-2.5 pt-1">
+          <input
+            type="text"
+            value={extractorPdfUrl}
+            onChange={(e) => setExtractorPdfUrl(e.target.value)}
+            placeholder="https://alljobs.teletalk.com.bd/.../advertisement.pdf"
+            className="w-full sm:flex-1 px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-slate-50 focus:bg-white transition-all font-mono"
+          />
+          <button
+            type="button"
+            onClick={handleRunExtraction}
+            disabled={isExtractingCircular || !extractorPdfUrl.trim()}
+            className="w-full sm:w-auto px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0"
+          >
+            <ArrowRight className={`w-3.5 h-3.5 ${isExtractingCircular ? 'animate-spin' : ''}`} />
+            <span>{isExtractingCircular ? 'বিশ্লেষণ চলছে...' : 'সার্কুলার বিশ্লেষণ করুন'}</span>
+          </button>
+        </div>
       </div>
 
-      {/* EXTRACTED AI WORKSPACE MODAL / PREVIEW */}
+      {/* EXTRACTED CIRCULAR PREVIEW CARD */}
       {extractedCircularResult && (
-        <div className="bg-white border-2 border-indigo-300 rounded-3xl p-5 sm:p-6 space-y-5 shadow-xl animate-fadeIn">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-indigo-100">
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <span className="p-1.5 bg-indigo-100 text-indigo-800 rounded-lg">
-                  <CheckCircle2 className="w-4 h-4" />
-                </span>
-                <h4 className="text-base font-black text-slate-900">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <h3 className="text-sm font-black text-slate-900">
                   {extractedCircularResult.organization} — {extractedCircularResult.title}
-                </h4>
+                </h3>
               </div>
-              <p className="text-xs text-slate-500 mt-1">
-                জেমিনি ৩.৫ ক্লাউড এআই সরাসরি মূল PDF পড়ে এবং সম্পাদকীয় বিবরণ, পদবিন্যাস ও এসইও কিওয়ার্ড তৈরি করেছে:
+              <p className="text-xs text-slate-500 mt-0.5">
+                সার্কুলারটি সফলভাবে বিশ্লেষণ হয়েছে। খসড়া হিসেবে সেভ করুন অথবা সরাসরি লাইভ প্রকাশ করুন।
               </p>
             </div>
+
             <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  if (onOpenEditJob) {
-                    onOpenEditJob(extractedCircularResult as JobCircular);
-                  }
-                }}
-                className="px-3.5 py-2 bg-purple-50 hover:bg-purple-100 text-purple-800 rounded-xl text-xs font-bold border border-purple-200 transition-colors flex items-center gap-1.5 cursor-pointer"
-              >
-                <Edit3 className="w-3.5 h-3.5" />
-                <span>Elementor বিল্ডারে খুলুন</span>
-              </button>
               <button
                 type="button"
                 onClick={() => handleSaveExtractedJob(false)}
                 disabled={isSavingExtractedJob}
-                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors cursor-pointer"
               >
                 খসড়া (Draft) সেভ
               </button>
@@ -691,202 +522,77 @@ export default function GeminiBrowserSpiderHub({
                 type="button"
                 onClick={() => handleSaveExtractedJob(true)}
                 disabled={isSavingExtractedJob}
-                className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center gap-1.5 cursor-pointer"
+                className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
               >
-                <Check className="w-4 h-4" />
-                <span>{isSavingExtractedJob ? 'পাবলিশ হচ্ছে...' : 'সরাসরি লাইভ পাবলিশ'}</span>
+                <Check className="w-3.5 h-3.5" />
+                <span>সরাসরি লাইভ পাবলিশ</span>
               </button>
               <button
                 type="button"
                 onClick={() => setExtractedCircularResult(null)}
-                className="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100"
+                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
           </div>
 
-          {/* Quick Metrics */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-            <div className="bg-indigo-50/70 p-3 rounded-2xl border border-indigo-100">
-              <span className="text-[10px] font-bold text-indigo-700 uppercase">মোট শূন্যপদ</span>
-              <div className="text-lg font-black text-indigo-950 mt-0.5">{extractedCircularResult.totalPosts}</div>
+            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
+              <span className="text-[10px] font-bold text-slate-500 uppercase">মোট শূন্যপদ</span>
+              <div className="text-base font-black text-slate-900 mt-0.5">{extractedCircularResult.totalPosts || 1}টি</div>
             </div>
-            <div className="bg-emerald-50/70 p-3 rounded-2xl border border-emerald-100">
-              <span className="text-[10px] font-bold text-emerald-700 uppercase">আবেদনের শেষ তারিখ</span>
-              <div className="text-sm font-black text-emerald-950 mt-0.5">{extractedCircularResult.deadline}</div>
+            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
+              <span className="text-[10px] font-bold text-slate-500 uppercase">আবেদনের শেষ তারিখ</span>
+              <div className="text-xs font-black text-slate-900 mt-0.5">{extractedCircularResult.deadline}</div>
             </div>
-            <div className="bg-purple-50/70 p-3 rounded-2xl border border-purple-100">
-              <span className="text-[10px] font-bold text-purple-700 uppercase">বেতন স্কেল ও গ্রেড</span>
-              <div className="text-xs font-black text-purple-950 mt-0.5">{extractedCircularResult.salary} ({extractedCircularResult.grade})</div>
+            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
+              <span className="text-[10px] font-bold text-slate-500 uppercase">বেতন স্কেল</span>
+              <div className="text-xs font-black text-slate-900 mt-0.5">{extractedCircularResult.salary || 'জাতীয় স্কেল'}</div>
             </div>
-            <div className="bg-amber-50/70 p-3 rounded-2xl border border-amber-100">
-              <span className="text-[10px] font-bold text-amber-700 uppercase">বয়সসীমা ও কাট-অফ</span>
-              <div className="text-xs font-black text-amber-950 mt-0.5">{extractedCircularResult.ageLimit}</div>
+            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
+              <span className="text-[10px] font-bold text-slate-500 uppercase">বয়সসীমা</span>
+              <div className="text-xs font-black text-slate-900 mt-0.5">{extractedCircularResult.ageLimit || '১৮-৩০ বছর'}</div>
             </div>
           </div>
-
-          {/* Extracted Positions Breakdown Table */}
-          {extractedCircularResult.positions && extractedCircularResult.positions.length > 0 && (
-            <div className="space-y-2">
-              <h5 className="font-bold text-xs text-slate-800 flex items-center gap-1.5">
-                <FileText className="w-3.5 h-3.5 text-indigo-700" />
-                <span>নোটিশের সকল পদের তালিকা ({extractedCircularResult.positions.length}টি পদবি):</span>
-              </h5>
-              <div className="overflow-x-auto rounded-xl border border-slate-200">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 text-slate-600 font-bold border-b border-slate-200">
-                    <tr>
-                      <th className="py-2.5 px-3">পদের নাম</th>
-                      <th className="py-2.5 px-3">গ্রেড</th>
-                      <th className="py-2.5 px-3">শূন্যপদ</th>
-                      <th className="py-2.5 px-3">বেতন স্কেল</th>
-                      <th className="py-2.5 px-3">শিক্ষাগত যোগ্যতা</th>
-                      <th className="py-2.5 px-3">ফি</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 font-medium">
-                    {extractedCircularResult.positions.map((pos: any, idx: number) => (
-                      <tr key={idx} className="hover:bg-slate-50/60">
-                        <td className="py-2.5 px-3 font-bold text-slate-900">{pos.title}</td>
-                        <td className="py-2.5 px-3 text-slate-700">{pos.grade || 'গ্রেড অনুযায়ী'}</td>
-                        <td className="py-2.5 px-3 font-black text-indigo-700">{pos.vacancies || pos.posts}</td>
-                        <td className="py-2.5 px-3 text-slate-700">{pos.salary || 'স্কেল অনুযায়ী'}</td>
-                        <td className="py-2.5 px-3 text-slate-600 max-w-xs">{pos.education || pos.minEducation}</td>
-                        <td className="py-2.5 px-3 font-bold text-emerald-800">৳{pos.govtFee || 200}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-
-          {/* Editorial Preview Snippet */}
-          {extractedCircularResult.editorialOverview && (
-            <div className="bg-emerald-50/60 p-4 rounded-2xl border border-emerald-100 text-xs space-y-1">
-              <span className="font-bold text-emerald-950 block">জেমিনি জেনারেটেড সম্পাদকীয় বিবরণ:</span>
-              <p className="text-slate-700 leading-relaxed whitespace-pre-line line-clamp-3">
-                {extractedCircularResult.editorialOverview}
-              </p>
-            </div>
-          )}
         </div>
       )}
 
-      {/* 2.5 AUTONOMOUS SYSTEM AUDIT AGENT PANEL */}
-      <div className="bg-slate-900 rounded-3xl p-5 sm:p-6 text-white border border-indigo-700/50 shadow-xl space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-indigo-800/60">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-emerald-700 flex items-center justify-center text-white shadow-md">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="font-black text-sm sm:text-base text-white">
-                  অটোনোমাস সিস্টেম অডিট এজেন্ট (Self-Healing Audit Agent)
-                </h3>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                  {auditReport?.overallScore || 100}/১০০ হেলথ ({auditReport?.overallStatus || 'OPTIMAL'})
-                </span>
-              </div>
-              <p className="text-xs text-indigo-200/80 font-medium mt-0.5">
-                অলজবস লাইভ সোর্স, রেজিলিয়েন্ট ইঞ্জিন, ডাটাবেজ ইন্টিগ্রিটি ও সিকিউরিটি স্বয়ংক্রিয় অডিট ও সেলফ-হিলিং
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => handleRunAudit(true)}
-              disabled={isRunningAudit}
-              className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center gap-2 cursor-pointer disabled:opacity-50"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${isRunningAudit ? 'animate-spin' : ''}`} />
-              <span>{isRunningAudit ? 'অডিট ও রিপেয়ার চলছে...' : 'ফুল সিস্টেম অডিট ও অটো-রিপেয়ার চালান'}</span>
-            </button>
-          </div>
-        </div>
-
-        {/* 5 Audit Pillars Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 text-xs">
-          {(auditReport?.checks || [
-            { id: '1', name: 'টেলিটক অলজবস API', score: 100, message: 'সফলভাবে লাইভ সংযোগ বিদ্যমান', status: 'PASSED' },
-            { id: '2', name: 'রেজিলিয়েন্ট ইঞ্জিন', score: 100, message: 'জিরো-ক্র্যাশ এন্টারপ্রাইজ রেজিলিয়েন্ট', status: 'PASSED' },
-            { id: '3', name: 'স্মার্ট পার্সার', score: 100, message: 'URL ও PDF অটো-রেজোলিউশন সক্রিয়', status: 'PASSED' },
-            { id: '4', name: 'ডাটাবেজ ইন্টিগ্রিটি', score: 100, message: 'সকল সার্কুলার ফিল্ড সম্পূর্ণ ও ত্রুটিমুক্ত', status: 'PASSED' },
-            { id: '5', name: 'জিরো-এপিআই সিকিউরিটি', score: 100, message: '০% ক্লাউড API ডিপেন্ডেন্সি', status: 'PASSED' }
-          ]).map((check: any) => (
-            <div key={check.id} className="bg-white/5 border border-white/10 rounded-2xl p-3 space-y-1.5 backdrop-blur-xs">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-black uppercase text-indigo-300 truncate max-w-[120px]">{check.name}</span>
-                <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300">
-                  {check.score}%
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-300 leading-tight line-clamp-2">
-                {check.message}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Audit Stats Banner */}
-        <div className="flex flex-wrap items-center justify-between text-xs text-indigo-200/90 bg-indigo-950/60 p-3 rounded-2xl border border-indigo-800/40">
-          <div className="flex items-center gap-3">
-            <span>এনভায়রনমেন্ট: <strong className="text-white">{auditReport?.environment || 'Node.js Engine'}</strong></span>
-            <span>•</span>
-            <span>অডিটকৃত সার্কুলার: <strong className="text-emerald-400">{auditReport?.databaseStats?.totalJobs || displayJobs.length}টি</strong></span>
-            <span>•</span>
-            <span>স্বয়ংক্রিয় রিপেয়ার: <strong className="text-amber-300">{auditReport?.databaseStats?.repairedCount || 0}টি</strong></span>
-          </div>
-          <span className="text-[11px] text-emerald-400 font-bold flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>সিস্টেম ১০০% সুস্থ ও উৎপাদনের জন্য প্রস্তুত</span>
-          </span>
-        </div>
-      </div>
-
-      {/* 3. SYNCED JOBS MANAGEMENT TABLE WITH EDIT, UPDATE & 1-CLICK PUBLISH */}
-      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-5 sm:p-6 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-3">
+      {/* 3. SYNCED JOBS MANAGEMENT TABLE */}
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-5 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-3">
           <div>
-            <div className="flex items-center gap-2">
-              <div className="p-2 bg-emerald-50 text-emerald-700 rounded-xl">
-                <Database className="w-4 h-4" />
-              </div>
-              <h2 className="font-black text-base text-slate-900">
-                জেমিনি ও অলজবস থেকে সংগৃহীত সার্কুলার ব্যবস্থাপনা ({displayJobs.length}টি)
-              </h2>
-            </div>
+            <h2 className="font-black text-sm text-slate-900">
+              সংগৃহীত সার্কুলার তালিকা ({displayJobs.length}টি)
+            </h2>
             <p className="text-xs text-slate-500 mt-0.5">
-              প্রতিটি সংগৃহীত সার্কুলার এখান থেকেই সরাসরি সম্পাদনা (Edit), তথ্য আপডেট (Update), এবং ১-ক্লিকে ওয়েবসাইটে লাইভ প্রকাশ (Publish) করতে পারবেন।
+              সার্কুলার সম্পাদনা, স্ট্যাটাস পরিবর্তন এবং সরাসরি ওয়েবসাইটে প্রকাশ করুন
             </p>
           </div>
 
           <div className="flex items-center gap-2">
             <button
-              onClick={handleRunSync}
-              disabled={isSyncing}
-              className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
+              type="button"
+              onClick={() => { fetchStatus(); if (onRefreshData) onRefreshData(); }}
+              disabled={isLoading}
+              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
-              <span>নতুন সার্কুলার আনুন</span>
+              <RefreshCw className={`w-3 h-3 ${isLoading ? 'animate-spin' : ''}`} />
+              <span>রিফ্রেশ</span>
             </button>
           </div>
         </div>
 
-        {/* Search & Status Filter Strip */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-          <div className="sm:col-span-2 relative">
+        {/* Search & Filter Strip */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+          <div className="relative flex-1 max-w-md">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="সার্কুলারের শিরোনাম, প্রতিষ্ঠান বা আইডি দিয়ে খুঁজুন..."
-              className="w-full pl-9 pr-8 py-2 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50/50 focus:bg-white transition-all font-semibold"
+              className="w-full pl-9 pr-8 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-slate-50 focus:bg-white transition-all font-medium"
             />
             {searchQuery && (
               <button
@@ -899,63 +605,45 @@ export default function GeminiBrowserSpiderHub({
             )}
           </div>
 
-          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
-            <button
-              type="button"
-              onClick={() => setStatusFilter('ALL')}
-              className={`flex-1 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                statusFilter === 'ALL' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              সব ({displayJobs.length})
-            </button>
-            <button
-              type="button"
-              onClick={() => setStatusFilter('OPEN')}
-              className={`flex-1 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                statusFilter === 'OPEN' ? 'bg-emerald-700 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              লাইভ প্রকাশিত
-            </button>
-            <button
-              type="button"
-              onClick={() => setStatusFilter('DRAFT')}
-              className={`flex-1 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                statusFilter === 'DRAFT' ? 'bg-amber-600 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              ড্রাফট / স্থগিত
-            </button>
-          </div>
+          <FluidTabBar
+            tabs={[
+              { id: 'ALL', label: 'সব', count: displayJobs.length },
+              { id: 'OPEN', label: 'লাইভ প্রকাশিত', count: liveJobsCount },
+              { id: 'DRAFT', label: 'ড্রাফট', count: draftJobsCount }
+            ]}
+            activeTab={statusFilter}
+            onChange={(id) => setStatusFilter(id as 'ALL' | 'OPEN' | 'DRAFT')}
+            size="sm"
+            variant="slate"
+          />
         </div>
 
         {/* Floating Bulk Action Bar */}
         {selectedJobIds.length > 0 && (
-          <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-slate-900 text-white rounded-2xl shadow-lg border border-purple-800/50 animate-fadeIn">
-            <div className="flex items-center gap-2.5">
-              <span className="flex items-center justify-center w-7 h-7 rounded-full bg-purple-500 text-white font-black text-xs">
+          <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-slate-900 text-white rounded-xl shadow-md animate-fadeIn">
+            <div className="flex items-center gap-2">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500 text-white font-bold text-xs">
                 {selectedJobIds.length}
               </span>
               <span className="text-xs font-bold text-slate-200">
-                টি সার্কুলার নির্বাচন করা হয়েছে
+                টি সার্কুলার নির্বাচিত
               </span>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => handleBulkStatusChange('PUBLISHED')}
                 disabled={isBulkProcessing}
-                className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition-all flex items-center gap-1 cursor-pointer disabled:opacity-50"
               >
                 <Check className="w-3.5 h-3.5" />
-                <span>লাইভ পাবলিশ</span>
+                <span>লাইভ প্রকাশ</span>
               </button>
               <button
                 type="button"
                 onClick={() => handleBulkStatusChange('DRAFT')}
                 disabled={isBulkProcessing}
-                className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                className="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-lg transition-all flex items-center gap-1 cursor-pointer disabled:opacity-50"
               >
                 <span>ড্রাফট করুন</span>
               </button>
@@ -963,15 +651,15 @@ export default function GeminiBrowserSpiderHub({
                 type="button"
                 onClick={handleBulkDelete}
                 disabled={isBulkProcessing}
-                className="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 shadow-sm cursor-pointer disabled:opacity-50"
+                className="px-3 py-1 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-lg transition-all flex items-center gap-1 cursor-pointer disabled:opacity-50"
               >
                 <Trash2 className="w-3.5 h-3.5" />
-                <span>{isBulkProcessing ? 'ডিলিট হচ্ছে...' : 'এক সাথে ডিলিট করুন'}</span>
+                <span>ডিলিট</span>
               </button>
               <button
                 type="button"
                 onClick={() => setSelectedJobIds([])}
-                className="p-1.5 hover:bg-white/10 text-slate-300 hover:text-white rounded-lg transition-colors cursor-pointer"
+                className="p-1 text-slate-400 hover:text-white rounded transition-colors cursor-pointer"
                 title="নির্বাচন বাতিল করুন"
               >
                 <X className="w-4 h-4" />
@@ -980,35 +668,35 @@ export default function GeminiBrowserSpiderHub({
           </div>
         )}
 
-        {/* Synced Jobs Table */}
-        <div className="overflow-x-auto rounded-2xl border border-slate-200/90">
+        {/* Jobs Table */}
+        <div className="overflow-x-auto rounded-xl border border-slate-200">
           <table className="w-full text-left text-xs text-slate-700">
-            <thead className="bg-slate-50 text-slate-600 uppercase font-black text-[10px] tracking-wider border-b border-slate-200">
+            <thead className="bg-slate-50 text-slate-600 uppercase font-bold text-[10px] tracking-wider border-b border-slate-200">
               <tr>
                 <th className="py-3 px-3 w-10 text-center">
                   <input
                     type="checkbox"
                     checked={displayJobs.length > 0 && displayJobs.every(j => selectedJobIds.includes(j.id))}
                     onChange={handleToggleSelectAll}
-                    className="w-4 h-4 rounded text-purple-600 border-slate-300 focus:ring-purple-500 cursor-pointer"
+                    className="w-4 h-4 rounded text-emerald-600 border-slate-300 focus:ring-emerald-500 cursor-pointer"
                     title="সবগুলো নির্বাচন করুন"
                   />
                 </th>
-                <th className="py-3 px-3.5">সার্কুলার ও প্রতিষ্ঠান</th>
-                <th className="py-3 px-3">পদ ও শূন্যপদ</th>
+                <th className="py-3 px-3">সার্কুলার ও প্রতিষ্ঠান</th>
+                <th className="py-3 px-3">পদ সংখ্যা</th>
                 <th className="py-3 px-3">ডেডলাইন</th>
                 <th className="py-3 px-3">সরকারি ফি</th>
-                <th className="py-3 px-3">বর্তমান স্ট্যাটাস</th>
-                <th className="py-3 px-3 text-right">এডিট ও পাবলিশ অ্যাকশনসমূহ</th>
+                <th className="py-3 px-3">স্ট্যাটাস</th>
+                <th className="py-3 px-3 text-right">অ্যাকশন</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 font-medium">
               {displayJobs.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-10 text-center text-slate-500">
-                    <p className="font-bold text-sm text-slate-800">কোনো সার্কুলার পাওয়া যায়নি</p>
-                    <p className="text-xs text-slate-500 mt-1">
-                      ফিল্টার পরিবর্তন করুন অথবা &quot;অলজবস লাইভ সিঙ্ক চালান&quot; বাটনে ক্লিক করে নতুন সার্কুলার সংগ্রহ করুন।
+                  <td colSpan={7} className="py-8 text-center text-slate-500">
+                    <p className="font-bold text-xs text-slate-700">কোনো সার্কুলার পাওয়া যায়নি</p>
+                    <p className="text-[11px] text-slate-400 mt-0.5">
+                      "অলজবস থেকে সার্কুলার সংগ্রহ করুন" বাটনে ক্লিক করে তথ্য সংগ্রহ করুন।
                     </p>
                   </td>
                 </tr>
@@ -1019,18 +707,19 @@ export default function GeminiBrowserSpiderHub({
                   const isProcessing = actionJobId === job.id;
 
                   return (
-                    <tr key={job.id} className={"transition-colors " + (selectedJobIds.includes(job.id) ? "bg-purple-50/70" : "hover:bg-slate-50/80")}>
+                    <tr key={job.id} className={`transition-colors ${selectedJobIds.includes(job.id) ? 'bg-slate-50' : 'hover:bg-slate-50/70'}`}>
                       {/* Checkbox */}
-                      <td className="py-3.5 px-3 text-center">
+                      <td className="py-3 px-3 text-center">
                         <input
                           type="checkbox"
                           checked={selectedJobIds.includes(job.id)}
                           onChange={() => handleToggleSelect(job.id)}
-                          className="w-4 h-4 rounded text-purple-600 border-slate-300 focus:ring-purple-500 cursor-pointer"
+                          className="w-4 h-4 rounded text-emerald-600 border-slate-300 focus:ring-emerald-500 cursor-pointer"
                         />
                       </td>
+
                       {/* Title & Organization */}
-                      <td className="py-3 px-3.5 max-w-[280px]">
+                      <td className="py-3 px-3 max-w-[280px]">
                         <div className="flex items-center gap-2">
                           <JobLogo logo={job.logo} organization={job.organization} size="sm" />
                           <div className="min-w-0">
@@ -1040,7 +729,7 @@ export default function GeminiBrowserSpiderHub({
                             <div className="text-[11px] text-slate-500 flex items-center gap-1.5 mt-0.5 truncate">
                               <span>{job.organization}</span>
                               <span className="text-slate-300">•</span>
-                              <span className="text-[10px] font-mono text-emerald-800 bg-emerald-50 px-1 rounded">
+                              <span className="text-[10px] font-mono text-slate-500">
                                 {job.id}
                               </span>
                             </div>
@@ -1051,117 +740,82 @@ export default function GeminiBrowserSpiderHub({
                       {/* Vacancies */}
                       <td className="py-3 px-3">
                         <div className="font-bold text-slate-900">{(job as any).totalPositions || job.totalPosts || 1}টি পদ</div>
-                        {job.positions && job.positions.length > 0 && (
-                          <div className="text-[10px] text-emerald-700 font-bold">
-                            +{job.positions.length}টি উপ-পদবী
-                          </div>
-                        )}
                       </td>
 
                       {/* Deadline */}
                       <td className="py-3 px-3">
                         <div className="font-semibold text-slate-800">{job.deadline}</div>
-                        <div className="text-[10px] text-slate-400">
-                          {job.daysRemaining > 0 ? `${job.daysRemaining} দিন বাকি` : 'মেয়াদ শেষ'}
-                        </div>
                       </td>
 
                       {/* Fee */}
-                      <td className="py-3 px-3 font-bold text-emerald-800">
+                      <td className="py-3 px-3 font-bold text-slate-900">
                         ৳{(job as any).officialFee || job.govtFee || 200}
                       </td>
 
                       {/* Status */}
                       <td className="py-3 px-3">
-                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black inline-flex items-center gap-1 ${
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold inline-flex items-center gap-1 ${
                           isPublished
-                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                            : 'bg-amber-100 text-amber-800 border border-amber-300'
+                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                            : 'bg-amber-100 text-amber-800 border border-amber-200'
                         }`}>
                           <span className={`w-1.5 h-1.5 rounded-full ${isPublished ? 'bg-emerald-600' : 'bg-amber-600'}`} />
-                          <span>{isPublished ? 'লাইভ প্রকাশিত' : 'ড্রাফট / স্থগিত'}</span>
+                          <span>{isPublished ? 'লাইভ প্রকাশিত' : 'ড্রাফট'}</span>
                         </span>
                       </td>
 
-                      {/* Actions: Edit, Publish Toggle, View Live, View PDF */}
+                      {/* Actions */}
                       <td className="py-3 px-3 text-right whitespace-nowrap">
                         <div className="inline-flex items-center gap-1.5">
-                          {/* 1-Click Publish / Unpublish Toggle */}
                           <button
                             type="button"
                             onClick={() => handleTogglePublish(job)}
                             disabled={isProcessing}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all flex items-center gap-1 shadow-2xs cursor-pointer ${
+                            className={`px-2.5 py-1 rounded-lg text-xs font-bold border transition-all flex items-center gap-1 cursor-pointer ${
                               isPublished
-                                ? 'bg-amber-50 hover:bg-amber-100 text-amber-800 border-amber-300'
-                                : 'bg-emerald-700 hover:bg-emerald-800 text-white border-emerald-700'
+                                ? 'bg-amber-50 hover:bg-amber-100 text-amber-800 border-amber-200'
+                                : 'bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600'
                             }`}
-                            title={isPublished ? 'বিজ্ঞপ্তিটি আনপাবলিশ করে ড্রাফটে নিতে ক্লিক করুন' : 'বিজ্ঞপ্তিটি অবিলম্বে ওয়েবসাইটে লাইভ প্রকাশ করতে ক্লিক করুন'}
+                            title={isPublished ? 'বিজ্ঞপ্তিটি ড্রাফটে নিতে ক্লিক করুন' : 'বিজ্ঞপ্তিটি অবিলম্বে লাইভ প্রকাশ করতে ক্লিক করুন'}
                           >
                             {isProcessing ? (
                               <RefreshCw className="w-3 h-3 animate-spin" />
                             ) : isPublished ? (
-                              <>
-                                <X className="w-3 h-3 text-amber-700" />
-                                <span>ড্রাফট করুন</span>
-                              </>
+                              <span>ড্রাফট করুন</span>
                             ) : (
-                              <>
-                                <Check className="w-3 h-3 text-white" />
-                                <span>লাইভ পাবলিশ</span>
-                              </>
+                              <span>লাইভ পাবলিশ</span>
                             )}
                           </button>
 
-                          {/* Edit & Update Button */}
                           <button
                             type="button"
                             onClick={() => {
-                              if (onOpenEditJob) {
-                                onOpenEditJob(job);
-                              } else {
-                                alert(`এডিট উইন্ডো খুলছে: ${job.title}`);
-                              }
+                              if (onOpenEditJob) onOpenEditJob(job);
                             }}
-                            className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-xl text-xs font-bold transition-all flex items-center gap-1 shadow-2xs cursor-pointer"
-                            title="Elementor বিল্ডারে শিরোনাম, পদ, বেতন, গ্রেড ও ডেডলাইন এডিট করুন"
+                            className="px-2.5 py-1 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                            title="সার্কুলার সম্পাদনা করুন"
                           >
-                            <Edit3 className="w-3 h-3 text-emerald-700" />
-                            <span>Elementor এডিট</span>
+                            <Edit3 className="w-3 h-3 text-slate-600" />
+                            <span>সম্পাদনা</span>
                           </button>
 
-                          {/* View Live Public Page */}
                           <Link
                             href={`/jobs/${job.id}`}
                             target="_blank"
-                            className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors inline-flex items-center"
-                            title="ওয়েবসাইটে পাবলিক পেজ দেখুন"
+                            className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-xs font-bold transition-colors inline-flex items-center"
+                            title="ওয়েবসাইটে দেখুন"
                           >
-                            <Eye className="w-3.5 h-3.5 text-slate-600" />
+                            <Eye className="w-3.5 h-3.5" />
                           </Link>
 
-                          {/* Official PDF Link */}
-                          {job.circularPdfUrl && (
-                            <a
-                              href={job.circularPdfUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-bold transition-colors inline-flex items-center"
-                              title="মূল টেলিটক গ্যাজেট PDF ডাউনলোড বা ওপেন করুন"
-                            >
-                              <Download className="w-3.5 h-3.5 text-blue-600" />
-                            </a>
-                          )}
-
-                          {/* Delete Button */}
                           <button
                             type="button"
                             onClick={() => handleDeleteJobItem(job)}
                             disabled={isProcessing}
-                            className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-xl text-xs font-bold transition-colors border border-rose-200 cursor-pointer"
-                            title="সার্কুলার ডাটাবেজ থেকে মুছে ফেলুন"
+                            className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs font-bold transition-colors border border-rose-200 cursor-pointer"
+                            title="মুছে ফেলুন"
                           >
-                            <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </td>
@@ -1171,38 +825,6 @@ export default function GeminiBrowserSpiderHub({
               )}
             </tbody>
           </table>
-        </div>
-      </div>
-
-      {/* 4. REAL-TIME ACTIVITY TERMINAL LOG */}
-      <div className="bg-slate-900 rounded-3xl p-5 border border-slate-800 shadow-xl space-y-3">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-          <div className="flex items-center gap-2">
-            <Terminal className="w-4 h-4 text-emerald-400" />
-            <h4 className="text-xs font-black text-slate-200 tracking-wider uppercase">
-              লাইভ স্পাইডার ও জেমিনি ৩.৫ ক্লাউড ইঞ্জিন কনসোল
-            </h4>
-          </div>
-          <span className="text-[10px] font-mono text-slate-400 font-bold">
-            Realtime Console • Gemini 3.5 Cloud AI & Alljobs Spider
-          </span>
-        </div>
-        <div className="bg-black/40 rounded-2xl p-4 font-mono text-[11px] space-y-1.5 max-h-56 overflow-y-auto text-slate-300 border border-slate-800/80">
-          {logs.map((log, index) => (
-            <div key={index} className="flex items-start gap-2">
-              <span className="text-slate-500 shrink-0">&gt;</span>
-              <span className={
-                log.includes('[OK]') || log.includes('[DONE]') ? 'text-emerald-300 font-bold' :
-                log.includes('[ERR]') ? 'text-rose-400 font-bold' :
-                log.includes('[RUN]') || log.includes('[AUDIT]') ? 'text-teal-300 font-bold' :
-                log.includes('[SYNC]') || log.includes('[WARN]') ? 'text-amber-300 font-bold' :
-                log.includes('[UPD]') || log.includes('[FIX]') ? 'text-blue-300 font-bold' :
-                'text-slate-300'
-              }>
-                {log}
-              </span>
-            </div>
-          ))}
         </div>
       </div>
     </div>

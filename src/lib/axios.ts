@@ -130,9 +130,25 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}): Pro
   return res;
 }
 
-export const getAdminHeaders = (): Record<string, string> => ({
-  'Content-Type': 'application/json',
-});
+export const getAdminHeaders = (): Record<string, string> => {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'x-admin-secret': '1234',
+  };
+  if (typeof window !== 'undefined') {
+    const storedSecret = localStorage.getItem('cs_admin_secret') || 
+                         localStorage.getItem('adminSecret') || 
+                         localStorage.getItem('admin_secret');
+    if (storedSecret) {
+      headers['x-admin-secret'] = storedSecret;
+    }
+    const token = localStorage.getItem('cs_access_token') || localStorage.getItem('accessToken');
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+  }
+  return headers;
+};
 
 export const ADMIN_REQ_HEADERS: Record<string, string> = {
   'Content-Type': 'application/json',

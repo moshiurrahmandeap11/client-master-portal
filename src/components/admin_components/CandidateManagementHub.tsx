@@ -36,7 +36,7 @@ import {
   Sliders, 
   Building, 
   ShieldAlert,
-  Sparkles,
+  ShieldCheck,
   ArrowUpRight,
   Printer,
   LogIn,
@@ -430,100 +430,7 @@ export default function CandidateManagementHub({
   };
 
   return (
-    <div className="space-y-6">
-      {/* Top Module Header */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="p-2 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200">
-              <Users className="w-5 h-5" />
-            </span>
-            <h1 className="text-lg font-black text-slate-900">চাকরিপ্রার্থী ও প্রোফাইল মাস্টার হাব</h1>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-              ভল্ট কানেক্টেড
-            </span>
-          </div>
-          <p className="text-xs text-slate-500 mt-1">
-            নিবন্ধিত চাকরিপ্রার্থী ডিরেক্টরি, ৩৬০° প্রোফাইল ও সনদ ইন্সপেক্টর, এবং অ্যাকাউন্ট মডারেশন
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              setCreateCandidateError(null);
-              setCreateForm({
-                name: '',
-                nameBn: '',
-                phone: '',
-                email: '',
-                password: '',
-                gender: 'male',
-                dateOfBirth: '2000-01-01',
-                nid: '',
-                district: 'ঢাকা',
-                division: 'Dhaka',
-                educationLevel: 'স্নাতক / ডিগ্রি',
-                quota: 'none',
-                walletBalance: 0,
-                accountStatus: 'active'
-              });
-              setIsCreateModalOpen(true);
-            }}
-            className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all cursor-pointer shrink-0"
-          >
-            <Plus className="w-4 h-4" />
-            <span>+ নতুন প্রার্থী তৈরি করুন</span>
-          </button>
-        </div>
-
-        {/* Sub-tab Pill Switcher */}
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl border border-slate-200 text-xs font-bold">
-          <button
-            type="button"
-            onClick={() => handleSubTabSwitch('candidate-directory')}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-              currentSubTab === 'candidate-directory' 
-                ? 'bg-white text-emerald-800 shadow-2xs' 
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Users className="w-3.5 h-3.5" />
-            <span>প্রার্থী ডিরেক্টরি</span>
-            <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-slate-200 text-slate-700">
-              {candidates.length}
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleSubTabSwitch('candidate-details')}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-              currentSubTab === 'candidate-details' 
-                ? 'bg-white text-emerald-800 shadow-2xs' 
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <UserCheck className="w-3.5 h-3.5" />
-            <span>৩৬০° প্রোফাইল ও ভল্ট</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleSubTabSwitch('account-status')}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-              currentSubTab === 'account-status' 
-                ? 'bg-white text-emerald-800 shadow-2xs' 
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Shield className="w-3.5 h-3.5" />
-            <span>অ্যাকাউন্ট স্ট্যাটাস ও মডারেশন</span>
-          </button>
-        </div>
-      </div>
-
+    <div className="w-full space-y-6">
       {actionFeedback && (
         <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-800 flex items-center gap-2 animate-fadeIn">
           <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -535,55 +442,71 @@ export default function CandidateManagementHub({
           SUBTAB 1: CANDIDATE DIRECTORY (With Full Search & 4-Tier Filters)
          ========================================================================= */}
       {currentSubTab === 'candidate-directory' && (
-        <div className="space-y-6">
-          {/* Top 4 KPI Metrics */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-4 flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-                <Users className="w-6 h-6" />
+        <div className="space-y-6 animate-fluid-tab">
+          {/* Top 4 KPI Metrics (Unified Executive Style) */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+            {/* Card 1: Total */}
+            <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 sm:p-5 flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-500">মোট নিবন্ধিত প্রার্থী</span>
+                <span className="text-slate-400">
+                  <Users className="w-4 h-4" />
+                </span>
               </div>
-              <div>
-                <p className="text-[11px] font-bold text-slate-500 uppercase">মোট নিবন্ধিত প্রার্থী</p>
-                <h3 className="text-xl font-black text-slate-900">{candidates.length} জন</h3>
-                <p className="text-[11px] text-emerald-700">ভল্ট স্টোরেজে সংরক্ষিত</p>
+              <div className="my-2">
+                <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                  {candidates.length} জন
+                </span>
               </div>
+              <span className="text-[11px] text-slate-400 font-medium">ডাটাবেজে সংরক্ষিত</span>
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-4 flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
-                <CheckCircle2 className="w-6 h-6" />
+            {/* Card 2: Verified */}
+            <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 sm:p-5 flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-500">যাচাইকৃত চাকরিপ্রার্থী</span>
+                <span className="text-slate-400">
+                  <UserCheck className="w-4 h-4" />
+                </span>
               </div>
-              <div>
-                <p className="text-[11px] font-bold text-slate-500 uppercase">ভেরিফাইড চাকরিপ্রার্থী</p>
-                <h3 className="text-xl font-black text-blue-700">
+              <div className="my-2">
+                <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                   {candidates.filter(c => c.isVerified).length} জন
-                </h3>
-                <p className="text-[11px] text-slate-500">এনআইডি ও সনদ যাচাইকৃত</p>
+                </span>
               </div>
+              <span className="text-[11px] text-slate-400 font-medium">এনআইডি ও সনদ যাচাইকৃত</span>
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-4 flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0">
-                <Award className="w-6 h-6" />
+            {/* Card 3: Quota */}
+            <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 sm:p-5 flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-500">কোটা সুবিধাভোগী</span>
+                <span className="text-slate-400">
+                  <Award className="w-4 h-4" />
+                </span>
               </div>
-              <div>
-                <p className="text-[11px] font-bold text-slate-500 uppercase">কোটা সুবিধাভোগী</p>
-                <h3 className="text-xl font-black text-purple-700">
+              <div className="my-2">
+                <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                   {candidates.filter(c => c.quota && c.quota !== 'none').length} জন
-                </h3>
-                <p className="text-[11px] text-slate-500">মুক্তিযোদ্ধা ও বিশেষ কোটা</p>
+                </span>
               </div>
+              <span className="text-[11px] text-slate-400 font-medium">মুক্তিযোদ্ধা ও বিশেষ কোটা</span>
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-4 flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
-                <Clock className="w-6 h-6" />
+            {/* Card 4: Active Accounts */}
+            <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 sm:p-5 flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-500">সক্রিয় অ্যাকাউন্ট</span>
+                <span className="text-slate-400">
+                  <ShieldCheck className="w-4 h-4" />
+                </span>
               </div>
-              <div>
-                <p className="text-[11px] font-bold text-slate-500 uppercase">ফিল্টার্ড ফলাফল</p>
-                <h3 className="text-xl font-black text-slate-900">{filteredCandidates.length} জন</h3>
-                <p className="text-[11px] text-amber-700">বর্তমান ভিউতে দৃশ্যমান</p>
+              <div className="my-2">
+                <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                  {candidates.filter(c => c.accountStatus !== 'suspended' && c.accountStatus !== 'banned').length} জন
+                </span>
               </div>
+              <span className="text-[11px] text-slate-400 font-medium">চলমান ও কার্যকর প্রোফাইল</span>
             </div>
           </div>
 
@@ -605,10 +528,38 @@ export default function CandidateManagementHub({
                 <button
                   type="button"
                   onClick={handleExportCsv}
-                  className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shadow-2xs"
+                  className="px-3.5 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-2xs"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>এক্সপোর্ট (CSV)</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCreateCandidateError(null);
+                    setCreateForm({
+                      name: '',
+                      nameBn: '',
+                      phone: '',
+                      email: '',
+                      password: '',
+                      gender: 'male',
+                      dateOfBirth: '2000-01-01',
+                      nid: '',
+                      district: 'ঢাকা',
+                      division: 'Dhaka',
+                      educationLevel: 'স্নাতক / ডিগ্রি',
+                      quota: 'none',
+                      walletBalance: 0,
+                      accountStatus: 'active'
+                    });
+                    setIsCreateModalOpen(true);
+                  }}
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>+ নতুন প্রার্থী তৈরি করুন</span>
                 </button>
               </div>
             </div>
@@ -781,20 +732,20 @@ export default function CandidateManagementHub({
                             <button
                               type="button"
                               onClick={() => handleImpersonateCandidate(c.id)}
-                              className="px-2 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 text-[11px] font-bold transition-colors flex items-center gap-1 shadow-2xs"
+                              className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-medium transition-colors flex items-center gap-1"
                               title="প্রার্থী পোর্টালে সরাসরি লগইন করুন"
                             >
-                              <LogIn className="w-3 h-3 text-amber-700" />
+                              <LogIn className="w-3 h-3 text-slate-500" />
                               <span>পোর্টাল</span>
                             </button>
 
                             <button
                               type="button"
                               onClick={() => setEditingCandidateId(c.id)}
-                              className="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-800 text-[11px] font-bold transition-colors flex items-center gap-1 shadow-2xs"
+                              className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-medium transition-colors flex items-center gap-1"
                               title="ইউনিভার্সাল প্রোফাইল এডিটর"
                             >
-                              <Edit3 className="w-3 h-3" />
+                              <Edit3 className="w-3 h-3 text-slate-500" />
                               <span>সম্পাদনা</span>
                             </button>
                             <button
@@ -803,7 +754,7 @@ export default function CandidateManagementHub({
                                 setSelectedCandidateId(c.id);
                                 handleSubTabSwitch('candidate-details');
                               }}
-                              className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[11px] font-bold transition-colors flex items-center gap-1 shadow-2xs"
+                              className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[11px] font-semibold transition-colors flex items-center gap-1 border border-emerald-200/60"
                               title="৩৬০° প্রোফাইল ও ভল্ট ইন্সপেক্টর"
                             >
                               <UserCheck className="w-3 h-3" />
@@ -813,7 +764,7 @@ export default function CandidateManagementHub({
                             <button
                               type="button"
                               onClick={() => setQuickCopierCandidate(c)}
-                              className="p-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+                              className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
                               title="টেলিটক ফর্ম-ফিল কুইক কপি"
                             >
                               <Copy className="w-3.5 h-3.5" />
@@ -825,7 +776,7 @@ export default function CandidateManagementHub({
                                 setSmsCandidate(c);
                                 setSmsMessage(`চাকরি সেবা: জনাব ${c.name}, আপনার প্রোফাইল সংক্রান্ত জরুরি নোটিশ...`);
                               }}
-                              className="p-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 transition-colors"
+                              className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
                               title="এসএমএস পাঠান"
                             >
                               <Send className="w-3.5 h-3.5" />
@@ -857,7 +808,7 @@ export default function CandidateManagementHub({
           <button
             type="button"
             onClick={() => setIsCreateModalOpen(true)}
-            className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold inline-flex items-center gap-1.5 shadow-2xs transition-all"
+            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold inline-flex items-center gap-1.5 shadow-2xs transition-all"
           >
             <Plus className="w-4 h-4" />
             <span>নতুন প্রার্থী তৈরি করুন</span>
@@ -866,7 +817,7 @@ export default function CandidateManagementHub({
       )}
 
       {currentSubTab === 'candidate-details' && currentCandidate && (
-        <div className="space-y-6">
+        <div className="space-y-6 animate-fluid-tab">
           {/* Candidate Selector Switcher Header */}
           <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-2">
@@ -885,10 +836,10 @@ export default function CandidateManagementHub({
             </div>
 
             <div className="flex items-center gap-2">
-                            <button
+              <button
                 type="button"
                 onClick={() => setEditingCandidateId(currentCandidate.id)}
-                className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-colors"
+                className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-2xs transition-colors"
                 title="প্রার্থীর সমস্ত তথ্য, শিক্ষা, অভিজ্ঞতা, সিকিউরিটি ও স্ট্যাটাস সম্পূর্ণ এডিট করুন"
               >
                 <Edit3 className="w-3.5 h-3.5" />
@@ -897,7 +848,7 @@ export default function CandidateManagementHub({
               <button
                 type="button"
                 onClick={() => setQuickCopierCandidate(currentCandidate)}
-                className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xs"
+                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-medium flex items-center gap-1.5 shadow-2xs transition-colors"
               >
                 <Copy className="w-3.5 h-3.5" />
                 <span>টেলিটক ফর্ম কপি কনসোল</span>
@@ -906,7 +857,7 @@ export default function CandidateManagementHub({
               <button
                 type="button"
                 onClick={() => handleSubTabSwitch('account-status')}
-                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold flex items-center gap-1.5"
+                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-medium flex items-center gap-1.5 transition-colors"
               >
                 <Shield className="w-3.5 h-3.5" />
                 <span>মডারেশন কনসোল</span>
@@ -1076,26 +1027,26 @@ export default function CandidateManagementHub({
 
               {/* NID Card */}
               <div className="p-3 rounded-xl border border-slate-200 bg-slate-50 text-center space-y-2">
-                <div className="w-20 h-20 bg-blue-50 text-blue-700 rounded-xl mx-auto flex items-center justify-center border border-blue-200 overflow-hidden">
+                <div className="w-20 h-20 bg-slate-100 text-slate-600 rounded-xl mx-auto flex items-center justify-center border border-slate-200 overflow-hidden">
                   {currentCandidate.nidFrontUrl ? (
                     <img src={currentCandidate.nidFrontUrl} alt="NID" className="w-full h-full object-cover" />
                   ) : (
-                    <FileText className="w-8 h-8" />
+                    <FileText className="w-8 h-8 text-slate-400" />
                   )}
                 </div>
                 <div className="text-xs font-bold text-slate-900">জাতীয় পরিচয়পত্র</div>
-                <span className="text-[10px] text-blue-700 font-bold inline-flex items-center justify-center gap-0.5">
-                  {currentCandidate.nidFrontUrl ? <><Check className="w-3 h-3" /> সংরক্ষিত</> : 'অপেক্ষমাণ'}
+                <span className="text-[10px] text-slate-600 font-medium inline-flex items-center justify-center gap-0.5">
+                  {currentCandidate.nidFrontUrl ? <><Check className="w-3 h-3 text-emerald-600" /> সংরক্ষিত</> : 'অপেক্ষমাণ'}
                 </span>
               </div>
 
               {/* Vault Documents Count */}
               <div className="p-3 rounded-xl border border-slate-200 bg-slate-50 text-center space-y-2">
-                <div className="w-20 h-20 bg-purple-50 text-purple-700 rounded-xl mx-auto flex items-center justify-center border border-purple-200">
-                  <Award className="w-8 h-8" />
+                <div className="w-20 h-20 bg-slate-100 text-slate-600 rounded-xl mx-auto flex items-center justify-center border border-slate-200">
+                  <Award className="w-8 h-8 text-slate-400" />
                 </div>
                 <div className="text-xs font-bold text-slate-900">অন্যান্য সনদপত্র</div>
-                <span className="text-[10px] text-purple-700 font-bold block">{candidateDocs.length}টি ফাইল সংরক্ষিত</span>
+                <span className="text-[10px] text-slate-600 font-medium block">{candidateDocs.length}টি ফাইল সংরক্ষিত</span>
               </div>
             </div>
 
@@ -1216,7 +1167,7 @@ export default function CandidateManagementHub({
       )}
 
       {currentSubTab === 'account-status' && currentCandidate && (
-        <div className="space-y-6">
+        <div className="space-y-6 animate-fluid-tab">
           {/* Candidate Selector */}
           <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -1263,9 +1214,9 @@ export default function CandidateManagementHub({
               <button
                 type="button"
                 onClick={() => handleToggleSuspension(currentCandidate)}
-                className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm ${
+                className={`w-full py-2.5 rounded-xl text-xs font-semibold transition-all shadow-2xs ${
                   currentCandidate.accountStatus === 'suspended'
-                    ? 'bg-emerald-700 hover:bg-emerald-800 text-white'
+                    ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
                     : 'bg-rose-600 hover:bg-rose-700 text-white'
                 }`}
               >
@@ -1276,7 +1227,7 @@ export default function CandidateManagementHub({
             {/* Card 2: Verification Badge Control */}
             <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
               <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
-                <CheckCircle2 className="w-4 h-4 text-emerald-700" />
+                <CheckCircle2 className="w-4 h-4 text-slate-700" />
                 <h3 className="font-black text-sm text-slate-900">ভেরিফাইড ব্যাজ (Verification Badge) কন্ট্রোল</h3>
               </div>
 
@@ -1299,7 +1250,9 @@ export default function CandidateManagementHub({
               <button
                 type="button"
                 onClick={() => handleToggleVerification(currentCandidate)}
-                className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5"
+                className={`w-full py-2.5 text-white rounded-xl text-xs font-semibold transition-all shadow-2xs flex items-center justify-center gap-1.5 ${
+                  currentCandidate.isVerified ? 'bg-slate-900 hover:bg-slate-800' : 'bg-emerald-600 hover:bg-emerald-700'
+                }`}
               >
                 {currentCandidate.isVerified ? 'ভেরিফাইড স্ট্যাটাস প্রত্যাহার করুন' : <><Check className="w-3.5 h-3.5" /> ভেরিফাইড চাকরিপ্রার্থী অনুমোদন দিন</>}
               </button>
@@ -1308,7 +1261,7 @@ export default function CandidateManagementHub({
             {/* Card 3: Password Reset Tool */}
             <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
               <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
-                <KeyRound className="w-4 h-4 text-purple-700" />
+                <KeyRound className="w-4 h-4 text-slate-700" />
                 <h3 className="font-black text-sm text-slate-900">অ্যাডমিন পাসওয়ার্ড রিসেট জেনারেটর</h3>
               </div>
 
@@ -1320,7 +1273,7 @@ export default function CandidateManagementHub({
                 type="button"
                 onClick={() => handleGenerateTempPassword(currentCandidate)}
                 disabled={isResettingPass}
-                className="w-full py-2.5 bg-purple-700 hover:bg-purple-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 disabled:opacity-50"
+                className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition-all shadow-2xs flex items-center justify-center gap-1.5 disabled:opacity-50"
               >
                 <KeyRound className="w-4 h-4" />
                 <span>নতুন অস্থায়ী পাসওয়ার্ড সেট করুন</span>
@@ -1330,7 +1283,7 @@ export default function CandidateManagementHub({
             {/* Card 4: Send Notice SMS */}
             <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
               <div className="flex items-center gap-2 pb-2 border-b border-slate-100">
-                <Send className="w-4 h-4 text-blue-700" />
+                <Send className="w-4 h-4 text-slate-700" />
                 <h3 className="font-black text-sm text-slate-900">সরাসরি প্রার্থীকে এসএমএস নোটিশ পাঠান</h3>
               </div>
 
@@ -1344,7 +1297,7 @@ export default function CandidateManagementHub({
                   setSmsCandidate(currentCandidate);
                   setSmsMessage(`চাকরি সেবা নোটিশ: জনাব ${currentCandidate.name}, আপনার প্রোফাইল ভেরিফিকেশন সফলভাবে সম্পন্ন হয়েছে।`);
                 }}
-                className="w-full py-2.5 bg-blue-700 hover:bg-blue-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5"
+                className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition-all shadow-2xs flex items-center justify-center gap-1.5"
               >
                 <Send className="w-4 h-4" />
                 <span>এসএমএস বার্তা কম্পোজ করুন</span>
@@ -1358,51 +1311,71 @@ export default function CandidateManagementHub({
           SUBTAB 4: ELIGIBILITY RULES & INTERACTIVE SIMULATOR (SMART ENGINE)
          ========================================================================= */}
       {currentSubTab === 'eligibility-rules' && (
-        <div className="space-y-6 animate-fadeIn">
-          {/* Top 4 KPI Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-4 flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center shrink-0">
-                <Sparkles className="w-6 h-6" />
+        <div className="space-y-6 animate-fluid-tab">
+          {/* Top 4 KPI Metrics (Unified Executive Style) */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+            {/* Card 1: Core Rules */}
+            <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 sm:p-5 flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-500">সক্রিয় ফিল্টার নিয়মাবলী</span>
+                <span className="text-slate-400">
+                  <Sliders className="w-4 h-4" />
+                </span>
               </div>
-              <div>
-                <p className="text-[11px] font-bold text-slate-500 uppercase">এলিজিবিলিটি ইঞ্জিন</p>
-                <h3 className="text-xl font-black text-slate-900">v2.6 সক্রিয়</h3>
-                <p className="text-[11px] text-emerald-700">বাংলাদেশ সরকার কোটা রুলস</p>
+              <div className="my-2">
+                <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                  ৪টি রুলস
+                </span>
               </div>
+              <span className="text-[11px] text-slate-400 font-medium">বয়স, শিক্ষা, জেলা ও কোটা</span>
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-4 flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-                <Building className="w-6 h-6" />
+            {/* Card 2: Active Circulars */}
+            <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 sm:p-5 flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-500">সক্রিয় সার্কুলার</span>
+                <span className="text-slate-400">
+                  <Building className="w-4 h-4" />
+                </span>
               </div>
-              <div>
-                <p className="text-[11px] font-bold text-slate-500 uppercase">সক্রিয় সার্কুলার</p>
-                <h3 className="text-xl font-black text-slate-900">{jobs.length || 5} টি</h3>
-                <p className="text-[11px] text-slate-500">টেলিটক ও স্বায়ত্তশাসিত</p>
+              <div className="my-2">
+                <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                  {jobs.length || 5}টি
+                </span>
               </div>
+              <span className="text-[11px] text-slate-400 font-medium">যাচাইয়ের আওতাধীন সার্কুলার</span>
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-4 flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0">
-                <Award className="w-6 h-6" />
+            {/* Card 3: District Quota */}
+            <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 sm:p-5 flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-500">জেলা কোটা ডাটাবেজ</span>
+                <span className="text-slate-400">
+                  <MapPin className="w-4 h-4" />
+                </span>
               </div>
-              <div>
-                <p className="text-[11px] font-bold text-slate-500 uppercase">জেলা কোটা ডাটাবেস</p>
-                <h3 className="text-xl font-black text-purple-700">৬৪ জেলা</h3>
-                <p className="text-[11px] text-slate-500">৮টি প্রশাসনিক বিভাগ</p>
+              <div className="my-2">
+                <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                  ৬৪ জেলা
+                </span>
               </div>
+              <span className="text-[11px] text-slate-400 font-medium">৮টি প্রশাসনিক বিভাগ</span>
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-4 flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
-                <Users className="w-6 h-6" />
+            {/* Card 4: Eligible Candidates */}
+            <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-4 sm:p-5 flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-500">যাচাইযোগ্য প্রার্থী</span>
+                <span className="text-slate-400">
+                  <Users className="w-4 h-4" />
+                </span>
               </div>
-              <div>
-                <p className="text-[11px] font-bold text-slate-500 uppercase">যাচাইযোগ্য প্রার্থী</p>
-                <h3 className="text-xl font-black text-blue-700">{candidates.length} জন</h3>
-                <p className="text-[11px] text-slate-500">স্মার্ট ভল্ট রেজিস্টার্ড</p>
+              <div className="my-2">
+                <span className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                  {candidates.length} জন
+                </span>
               </div>
+              <span className="text-[11px] text-slate-400 font-medium">নিবন্ধিত চাকরিপ্রার্থী প্রোফাইল</span>
             </div>
           </div>
 
@@ -1462,10 +1435,10 @@ export default function CandidateManagementHub({
                   }, 400);
                 }}
                 disabled={isSimulating}
-                className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-2 cursor-pointer"
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition-all shadow-2xs flex items-center gap-1.5 cursor-pointer"
               >
-                {isSimulating ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                <span>সিমুলেশন রান করুন</span>
+                {isSimulating ? <RefreshCw className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
+                <span>যোগ্যতা যাচাই করুন</span>
               </button>
             </div>
 
@@ -1598,7 +1571,7 @@ export default function CandidateManagementHub({
 
                   <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 space-y-1">
                     <div className="flex items-center gap-1.5 font-bold text-emerald-900">
-                      <Sparkles className="w-4 h-4 text-emerald-700 shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
                       <span>টেলিটক ১-ক্লিক আবেদন প্রস্তুতি</span>
                     </div>
                     <p className="text-emerald-800 text-[11px] leading-relaxed pl-5.5">

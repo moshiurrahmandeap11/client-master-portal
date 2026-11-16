@@ -399,7 +399,7 @@ export default function GeminiBrowserSpiderHub({
   };
 
   const handleRunSync = async () => {
-    setIsSyncing(true);
+    setIsSyncing(true); // AllJobs Live Sync
     addLog('[SYNC] অলজবস লাইভ সার্কুলার কালেকশন শুরু হয়েছে...');
     try {
       const res = await fetch('/api/admin/spider/gemini-browser', {

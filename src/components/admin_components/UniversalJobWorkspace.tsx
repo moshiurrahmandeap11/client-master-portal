@@ -34,6 +34,7 @@ import {
 import { JobCircular, JobPosition } from '@/types';
 import { inferPositionGradeAndSalary } from '@/lib/pay-scale';
 import { ADMIN_REQ_HEADERS } from '@/lib/axios';
+import FluidTabBar from './layout/FluidTabBar';
 
 export interface UniversalJobWorkspaceProps {
   job: JobCircular | null;
@@ -634,41 +635,22 @@ export default function UniversalJobWorkspace({
         </div>
 
         {/* 2. BLOCK NAVIGATION PILL BAR WITH LIVE DATA BADGES */}
-        <div className="px-5 py-2 bg-slate-950/95 border-b border-slate-800 flex items-center gap-1.5 overflow-x-auto text-xs shrink-0 scrollbar-none">
-          {[
-            { id: 'ai_auto', label: 'AI অটো-ফিল', icon: Sparkles, color: 'text-amber-400', badge: null },
-            { id: 'basic', label: 'মৌলিক ও পদবি', icon: Building2, color: 'text-blue-400', badge: positions.length ? `${positions.length} পদবি` : null },
-            { id: 'content', label: 'সম্পাদকীয় বিবরণ', icon: FileText, color: 'text-emerald-400', badge: bengaliDescription ? 'রেডি' : null },
-            { id: 'requirements', label: 'শর্ত ও কাগজপত্র', icon: ShieldCheck, color: 'text-purple-400', badge: `${requirements.length + documentsRequired.length}` },
-            { id: 'application', label: 'আবেদন ও এসএমএস', icon: Smartphone, color: 'text-teal-400', badge: smsPrefix || null },
-            { id: 'faqs', label: 'এফএকিউ বিল্ডার', icon: HelpCircle, color: 'text-pink-400', badge: faqItems.length ? `${faqItems.length}` : null },
-            { id: 'seo', label: 'গুগল এসইও', icon: Search, color: 'text-indigo-400', badge: seoTitle ? 'এসইও' : null },
-          ].map(tab => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id as BuilderTab)}
-                className={`px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition-all whitespace-nowrap cursor-pointer ${
-                  isActive
-                    ? 'bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-400/30'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-                }`}
-              >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : tab.color}`} />
-                <span>{tab.label}</span>
-                {tab.badge && (
-                  <span className={`px-1.5 py-0.2 rounded-full text-[9px] font-black ${
-                    isActive ? 'bg-white/20 text-white' : 'bg-slate-800 text-emerald-400 border border-emerald-500/30'
-                  }`}>
-                    {tab.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+        <div className="px-5 py-2 bg-slate-950/95 border-b border-slate-800 overflow-x-auto text-xs shrink-0 scrollbar-none">
+          <FluidTabBar
+            tabs={[
+              { id: 'ai_auto', label: 'AI অটো-ফিল', icon: Sparkles },
+              { id: 'basic', label: 'মৌলিক ও পদবি', icon: Building2, badge: positions.length ? `${positions.length} পদবি` : null },
+              { id: 'content', label: 'সম্পাদকীয় বিবরণ', icon: FileText, badge: bengaliDescription ? 'রেডি' : null },
+              { id: 'requirements', label: 'শর্ত ও কাগজপত্র', icon: ShieldCheck, badge: `${requirements.length + documentsRequired.length}` },
+              { id: 'application', label: 'আবেদন ও এসএমএস', icon: Smartphone, badge: smsPrefix || null },
+              { id: 'faqs', label: 'এফএকিউ বিল্ডার', icon: HelpCircle, badge: faqItems.length ? `${faqItems.length}` : null },
+              { id: 'seo', label: 'গুগল এসইও', icon: Search, badge: seoTitle ? 'এসইও' : null }
+            ]}
+            activeTab={activeTab}
+            onChange={(id) => setActiveTab(id as BuilderTab)}
+            variant="dark"
+            size="sm"
+          />
         </div>
 
         {/* Form Error or Success Banner */}

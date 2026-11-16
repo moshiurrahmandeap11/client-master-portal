@@ -69,7 +69,6 @@ export const ADMIN_NAV_ITEMS: NavMainItem[] = [
     id: 'all-applications',
     label: 'আবেদন ও অর্ডার হাব',
     icon: FileText,
-    badge: 'আবেদন',
     subItems: [
       { id: 'all-applications', label: 'সকল আবেদন তালিকা' },
       { id: 'payment-verification', label: 'পেমেন্ট ভেরিফিকেশন কিউ' },
@@ -96,16 +95,14 @@ export const ADMIN_NAV_ITEMS: NavMainItem[] = [
   // ০৪. অটোমেশন ও লাইভ এজেন্ট (৫টি সাব-ট্যাব)
   {
     id: 'gemini-browser-spider',
-    label: 'অটোমেশন ও লাইভ এজেন্ট',
+    label: 'অটোমেশন ও জব কালেক্টর',
     icon: Bot,
-    badge: 'LIVE',
-    badgeColor: 'bg-emerald-600 text-white',
     subItems: [
-      { id: 'gemini-browser-spider', label: 'জেমিনি এআই ও লাইভ অটোমেশন' },
-      { id: 'source-monitoring', label: 'সোর্স স্ক্র্যাপার মনিটরিং' },
+      { id: 'gemini-browser-spider', label: 'স্বয়ংক্রিয় সার্কুলার সংগ্রহ' },
+      { id: 'source-monitoring', label: 'চাকরির সোর্স ও মনিটরিং' },
       { id: 'imported-drafts', label: 'খসড়া ও অনুমোদন কিউ' },
-      { id: 'automation-hub', label: 'সেন্ট্রাল অটোমেশন ম্যানেজার' },
-      { id: 'testing-spider', label: 'টেস্টিং স্পাইডার স্যান্ডবক্স' }
+      { id: 'automation-hub', label: 'অটোমেশন ও শিডিউলার' },
+      { id: 'testing-spider', label: 'সার্কুলার টেস্ট ও প্রিভিউ' }
     ]
   },
   // ০৫. প্রার্থী ও প্রতিষ্ঠান হাব (৭টি সাব-ট্যাব)
@@ -157,11 +154,9 @@ export const ADMIN_NAV_ITEMS: NavMainItem[] = [
     id: 'notifications',
     label: 'যোগাযোগ ও মেসেজিং',
     icon: Bell,
-    badge: 'টিকেট',
-    badgeColor: 'bg-rose-500 text-white',
     subItems: [
-      { id: 'job-reports', label: 'ভুয়া সার্কুলার ও অভিযোগ সেল', badge: 'অভিযোগ' },
-      { id: 'support-tickets', label: 'সাপোর্ট টিকেট ও হেল্পডেস্ক', badge: 'টিকেট' },
+      { id: 'job-reports', label: 'ভুয়া সার্কুলার ও অভিযোগ সেল' },
+      { id: 'support-tickets', label: 'সাপোর্ট টিকেট ও হেল্পডেস্ক' },
       { id: 'notifications', label: 'নোটিফিকেশন ও ব্রডকাস্ট' },
       { id: 'sms-status', label: 'এসএমএস গেটওয়ে ও ব্যালেন্স' },
       { id: 'templates-delivery', label: 'মেসেজ টেমপ্লেট ও ডেলিভারি লগ' }
@@ -172,7 +167,6 @@ export const ADMIN_NAV_ITEMS: NavMainItem[] = [
     id: 'settings',
     label: 'সিস্টেম ও সিকিউরিটি',
     icon: Settings,
-    hasStatusDot: true,
     subItems: [
       { id: 'system-health', label: 'সিস্টেম স্বাস্থ্য ও লাইভ পিং' },
       { id: 'settings', label: 'প্ল্যাটফর্ম গ্লোবাল সেটিংস' },
@@ -283,19 +277,12 @@ export default function AdminSidebar({
             </div>
             {!isCollapsed && (
               <div className="flex flex-col min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl font-bold tracking-tight text-white truncate">
-                    চাকরি সেবা
-                  </span>
-                </div>
-                <span className="text-2xs text-slate-400 font-medium truncate">
-                  সরকারি চাকরির তথ্য ও সেবা
+                <span className="text-lg font-bold tracking-tight text-white truncate">
+                  চাকরি সেবা
                 </span>
-                <div className="mt-1">
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-600 text-white tracking-wide">
-                    অ্যাডমিন প্যানেল
-                  </span>
-                </div>
+                <span className="text-2xs text-slate-400 font-medium truncate">
+                  অ্যাডমিন কন্ট্রোল সেন্টার
+                </span>
               </div>
             )}
           </div>
@@ -324,16 +311,16 @@ export default function AdminSidebar({
                   type="button"
                   onClick={() => handleMainMenuClick(item)}
                   title={item.label}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all group ${
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all group ${
                     active
-                      ? 'bg-[#4f46e5] text-white shadow-md shadow-indigo-900/30 font-semibold'
-                      : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
+                      ? 'bg-slate-800/90 text-emerald-400 font-semibold shadow-xs'
+                      : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
                   }`}
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <Icon
-                      className={`w-5 h-5 flex-shrink-0 transition-transform group-hover:scale-105 ${
-                        active ? 'text-white' : 'text-slate-400 group-hover:text-white'
+                      className={`w-4.5 h-4.5 flex-shrink-0 transition-transform group-hover:scale-105 ${
+                        active ? 'text-emerald-400' : 'text-slate-400 group-hover:text-white'
                       }`}
                     />
                     {!isCollapsed && (
@@ -343,18 +330,6 @@ export default function AdminSidebar({
 
                   {!isCollapsed && (
                     <div className="flex items-center gap-1.5">
-                      {item.hasStatusDot && (
-                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                      )}
-                      {item.badge && (
-                        <span
-                          className={`text-2xs font-bold px-1.5 py-0.5 rounded-full ${
-                            item.badgeColor || 'bg-slate-800 text-slate-300'
-                          }`}
-                        >
-                          {item.badge}
-                        </span>
-                      )}
                       {hasChildren && (
                         <ChevronDown
                           className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
@@ -368,7 +343,7 @@ export default function AdminSidebar({
 
                 {/* Submenu Accordion */}
                 {!isCollapsed && hasChildren && isOpen && (
-                  <div className="mt-1 ml-4 pl-3.5 border-l border-slate-800/90 space-y-1 py-1">
+                  <div className="mt-1 ml-4 pl-3.5 border-l border-slate-800/80 space-y-0.5 py-1">
                     {item.subItems!.map((sub) => {
                       const isSubActive = activeTab === sub.id;
                       return (
@@ -381,16 +356,11 @@ export default function AdminSidebar({
                           }}
                           className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-xs transition-colors ${
                             isSubActive
-                              ? 'text-indigo-400 bg-indigo-950/40 font-semibold'
+                              ? 'text-emerald-400 bg-emerald-950/30 font-semibold'
                               : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
                           }`}
                         >
                           <span className="truncate">{sub.label}</span>
-                          {sub.badge && (
-                            <span className="text-3xs font-semibold px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">
-                              {sub.badge}
-                            </span>
-                          )}
                         </button>
                       );
                     })}

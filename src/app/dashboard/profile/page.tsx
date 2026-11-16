@@ -327,7 +327,9 @@ export default function ProfilePage() {
       const mergedProfile = {
         ...profileToSave,
         ...data.profile,
-        education: data.profile.education || profileToSave.education || [],
+        education: (Array.isArray(data.profile?.education) && data.profile.education.length > 0)
+          ? data.profile.education
+          : (Array.isArray(profileToSave.education) ? profileToSave.education : (data.profile?.education || [])),
       };
       setProfile(mergedProfile);
       storage.updateUser(mergedProfile);

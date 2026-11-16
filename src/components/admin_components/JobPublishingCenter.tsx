@@ -16,6 +16,7 @@ import {
   PublishingAnalyticsSummary
 } from '@/types/publishing.types';
 import { ADMIN_REQ_HEADERS } from '@/lib/axios';
+import FluidTabBar from './layout/FluidTabBar';
 
 export default function JobPublishingCenter() {
   const [activeTab, setActiveTab] = useState<'published' | 'queue' | 'calendar' | 'redirects' | 'audit' | 'analytics'>('published');
@@ -404,52 +405,19 @@ export default function JobPublishingCenter() {
       )}
 
       {/* Tabs Navigation */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-2">
-        <button
-          onClick={() => setActiveTab('published')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black transition-all ${
-            activeTab === 'published' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
-          }`}
-        >
-          <Globe className="w-4 h-4" />
-          প্রকাশিত সার্কুলার ({filteredJobs.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('queue')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black transition-all ${
-            activeTab === 'queue' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
-          }`}
-        >
-          <Layers className="w-4 h-4" />
-          পাবলিশিং কিউ ({queue.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('calendar')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black transition-all ${
-            activeTab === 'calendar' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
-          }`}
-        >
-          <Calendar className="w-4 h-4" />
-          BST পাবলিকেশন শিডিউল
-        </button>
-        <button
-          onClick={() => setActiveTab('redirects')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black transition-all ${
-            activeTab === 'redirects' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
-          }`}
-        >
-          <Link2 className="w-4 h-4" />
-          ৩০১ রিডাইরেক্ট ম্যানেজার ({redirects.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('analytics')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black transition-all ${
-            activeTab === 'analytics' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
-          }`}
-        >
-          <BarChart3 className="w-4 h-4" />
-          পাবলিশিং অ্যানালিটিক্স
-        </button>
+      <div className="border-b border-slate-200 pb-2">
+        <FluidTabBar
+          tabs={[
+            { id: 'published', label: `প্রকাশিত সার্কুলার (${filteredJobs.length})`, icon: Globe },
+            { id: 'queue', label: `পাবলিশিং কিউ (${queue.length})`, icon: Layers },
+            { id: 'calendar', label: 'BST পাবলিকেশন শিডিউল', icon: Calendar },
+            { id: 'redirects', label: `৩০১ রিডাইরেক্ট ম্যানেজার (${redirects.length})`, icon: Link2 },
+            { id: 'analytics', label: 'পাবলিশিং অ্যানালিটিক্স', icon: BarChart3 }
+          ]}
+          activeTab={activeTab}
+          onChange={(id) => setActiveTab(id as any)}
+          variant="white"
+        />
       </div>
 
       {/* TAB 1: PUBLISHED JOBS */}

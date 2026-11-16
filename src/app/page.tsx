@@ -928,22 +928,22 @@ export default function HomePage() {
                       {job.positions && job.positions.length > 1 ? (
                         <span className="bg-slate-100 text-slate-800 text-xs font-normal px-2.5 py-1 rounded-md border border-slate-200 flex items-center gap-1">
                           <Layers className="w-3.5 h-3.5 text-slate-600" />
-                          <span>{job.positions.length}টি ভিন্ন পদ ({job.grade})</span>
+                          <span>{job.positions.length}টি ভিন্ন পদ {job.grade || job.positions?.[0]?.grade ? `(${job.grade || job.positions?.[0]?.grade})` : ''}</span>
                         </span>
                       ) : (
                         <span className="bg-slate-100 text-slate-800 text-xs font-normal px-2.5 py-1 rounded-md border border-slate-200">
-                          {job.grade}
+                          {job.grade || job.positions?.[0]?.grade || 'সরকারি গ্রেড'}
                         </span>
                       )}
                       <span className="bg-slate-100 text-slate-800 text-xs font-normal px-2.5 py-1 rounded-md border border-slate-200 flex items-center gap-1">
                         <Users className="w-3.5 h-3.5 text-slate-600" />
-                        {job.totalPosts} টি পদ
+                        {(job as any).totalPositions || job.totalPosts || 1} টি পদ
                       </span>
                       <span className={`text-xs font-normal px-2.5 py-1 rounded-md flex items-center gap-1 ml-auto ${
                         isUrgent ? 'bg-emerald-50 text-emerald-800 border border-emerald-300' : 'bg-slate-100 text-slate-700 border border-slate-200'
                       }`}>
                         <Clock className="w-3.5 h-3.5" />
-                        {job.daysRemaining} দিন বাকি
+                        {job.daysRemaining ?? Math.max(0, Math.ceil((new Date(job.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))} দিন বাকি
                       </span>
                     </div>
 
@@ -966,23 +966,23 @@ export default function HomePage() {
                         <GraduationCap className="w-3.5 h-3.5 text-slate-500 mt-0.5 flex-shrink-0" />
                         <div>
                           <span className="font-bold text-slate-800">যোগ্যতা: </span>
-                          <span className="text-slate-600">{job.minEducation}</span>
+                          <span className="text-slate-600">{job.minEducation || (job as any).eligibility?.education || job.positions?.[0]?.minEducation || 'বিজ্ঞপ্তি অনুসারে'}</span>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
                         <Banknote className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
                         <div>
                           <span className="font-bold text-slate-800">বেতন: </span>
-                          <span className="text-slate-600">{job.salary}</span>
+                          <span className="text-slate-600">{job.salary || job.positions?.[0]?.salary || 'জাতীয় পে স্কেল অনুযায়ী'}</span>
                         </div>
                       </div>
                       <div className="pt-2 border-t border-slate-200 text-[14px] flex items-center justify-between gap-1 flex-wrap">
-                        <span className="text-slate-500 whitespace-nowrap">শেষ তারিখ: <strong className="text-slate-800 font-bold">{job.deadline}</strong></span>
+                        <span className="text-slate-500 whitespace-nowrap">শেষ তারিখ: <strong className="text-slate-800 font-bold">{job.deadlineFormatted || (job.deadline ? new Date(job.deadline).toISOString().split('T')[0] : job.deadline)}</strong></span>
                         <span className="text-emerald-800 font-bold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 whitespace-nowrap">
                           {job.feeRange ? (
-                            <span>ফি: {job.feeRange} + ৳{job.serviceFee}</span>
+                            <span>ফি: {job.feeRange} + ৳{job.serviceFee || 50}</span>
                           ) : (
-                            <span>ফি: ৳{job.govtFee} + ৳{job.serviceFee}</span>
+                            <span>ফি: ৳{job.govtFee || (job as any).officialFee || 200} + ৳{job.serviceFee || 50}</span>
                           )}
                         </span>
                       </div>

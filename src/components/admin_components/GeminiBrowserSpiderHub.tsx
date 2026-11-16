@@ -338,7 +338,7 @@ export default function GeminiBrowserSpiderHub({
       alert('অনুগ্রহ করে সার্কুলারের একটি PDF লিঙ্ক বা নোটিশের URL দিন।');
       return;
     }
-    setIsExtractingCircular(true);
+    setIsExtractingCircular(true); // PDF Extractor
     setExtractedCircularResult(null);
     addLog(`[AI] অভ্যন্তরীণ জেমিনি ব্রাউজার এজেন্ট দিয়ে সম্পূর্ণ সার্কুলার বিশ্লেষণ শুরু: ${url}`);
     try {

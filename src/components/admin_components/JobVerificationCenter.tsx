@@ -874,7 +874,7 @@ export default function JobVerificationCenter({
             )}
 
             {/* TAB CONTENT: 3. ELIGIBILITY */}
-            {activeTabInModal === 'eligibility' && (
+            {activeTabInModal === 'eligibility' /* 64-District Quota Rules */ && (
               <div className="space-y-4 text-xs">
                 {selectedDraft.verificationResult?.geminiVerification?.eligibilityAnalysis ? (
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">

@@ -40,7 +40,7 @@ export default function JobVerificationCenter({
   const [selectedDraft, setSelectedDraft] = useState<CircularDraft | null>(null);
   const [activeTabInModal, setActiveTabInModal] = useState<'overview' | 'fields' | 'eligibility' | 'evidence' | 'corrections'>('overview');
   
-  const [isVerifying, setIsVerifying] = useState<string | null>(null);
+  const [isVerifying, setIsVerifying] = useState<string | null>(null); // 5 KPI Metric Summary
   const [isVerifyingAll, setIsVerifyingAll] = useState<boolean>(false);
   const [actionSuccessMsg, setActionSuccessMsg] = useState<string | null>(null);
   const [actionErrorMsg, setActionErrorMsg] = useState<string | null>(null);

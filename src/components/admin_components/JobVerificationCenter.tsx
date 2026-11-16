@@ -741,7 +741,7 @@ export default function JobVerificationCenter({
             )}
 
             {/* TAB CONTENT: 2. FIELD CONCORDANCE */}
-            {activeTabInModal === 'fields' && (
+            {activeTabInModal === 'fields' /* Field Comparison & Manual Corrections */ && (
               <div className="space-y-4">
                 <div className="overflow-x-auto">
                   <table className="w-full text-xs text-left">

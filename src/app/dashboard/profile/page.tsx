@@ -214,6 +214,19 @@ export default function ProfilePage() {
     }
   };
 
+  const populatePreferencesFromProfile = (p: any) => {
+    if (!p) return;
+    const prefs = p.careerPreferences;
+    if (prefs && typeof prefs === 'object') {
+      if (Array.isArray(prefs.preferredCategories)) setPrefCategories(prefs.preferredCategories);
+      if (Array.isArray(prefs.preferredOrgTypes)) setPrefOrgTypes(prefs.preferredOrgTypes);
+      if (Array.isArray(prefs.preferredDivisions)) setPrefDivisions(prefs.preferredDivisions);
+      if (prefs.preferredSalaryMin !== undefined && prefs.preferredSalaryMin !== null && prefs.preferredSalaryMin !== '') {
+        setPrefSalaryMin(String(prefs.preferredSalaryMin));
+      }
+    }
+  };
+
   useEffect(() => {
     const local = storage.getUser();
     setProfile(local);
@@ -224,6 +237,7 @@ export default function ProfilePage() {
       }
     }
     populateAddressFromProfile(local);
+    populatePreferencesFromProfile(local);
     setIsLoaded(true);
   }, []);
 
@@ -240,6 +254,7 @@ export default function ProfilePage() {
       };
       setProfile(normalized);
       populateAddressFromProfile(normalized);
+      populatePreferencesFromProfile(normalized);
       storage.updateUser(normalized);
       setIsLoaded(true);
     }
@@ -544,27 +559,37 @@ export default function ProfilePage() {
     e.preventDefault();
     setIsSavingPrefs(true);
     try {
-      const payload = {
+      const prefsPayload = {
         preferredCategories: prefCategories,
         preferredOrgTypes: prefOrgTypes,
         preferredDivisions: prefDivisions,
         preferredSalaryMin: prefSalaryMin ? Number(prefSalaryMin) : undefined
       };
-      const res = await fetchWithAuth('/api/user/career-preferences', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      if (res.ok) {
-        const updated = { ...profile, careerPreferences: { ...(profile.careerPreferences || {}), ...payload } as any };
-        setProfile(updated);
-        storage.updateUser(updated);
-        window.dispatchEvent(new Event('cs_user_changed'));
+
+      const updatedProfile: CandidateProfile = {
+        ...profile,
+        careerPreferences: prefsPayload as any,
+        careerObjective: (profile.careerObjective || '').trim(),
+        professionalSummary: (profile.professionalSummary || '').trim(),
+        currentPosition: (profile.currentPosition || '').trim(),
+        currentOrganization: (profile.currentOrganization || '').trim(),
+      };
+
+      const saved = await syncProfileToServer(updatedProfile);
+      if (saved) {
         setSavedSuccess(true);
+        toast.fire({
+          icon: 'success',
+          title: 'ক্যারিয়ার পছন্দ সফলভাবে সংরক্ষণ করা হয়েছে!'
+        });
         setTimeout(() => setSavedSuccess(false), 3000);
       }
     } catch (err) {
       console.error('Failed to save career preferences:', err);
+      toast.fire({
+        icon: 'error',
+        title: 'ক্যারিয়ার পছন্দ সংরক্ষণ ব্যর্থ হয়েছে'
+      });
     } finally {
       setIsSavingPrefs(false);
     }

@@ -28,3 +28,9 @@ yarn-error.log*
 # OS files
 .DS_Store
 Thumbs.db
+
+# Heavy uploads, scanned circulars & PDFs (stored externally in Cloudflare R2 / Object Storage)
+public/uploads/
+public/pdfs/
+public/images/circulars/
+

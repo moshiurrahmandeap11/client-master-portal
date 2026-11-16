@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { getAdminHeaders } from '@/lib/axios';
+import FluidTabBar from './layout/FluidTabBar';
 import { 
   Settings, 
   HardDrive, 
@@ -322,46 +323,16 @@ export default function SystemSettingsDiagnostics({
         </div>
 
         {/* Sub-tab Pill Switcher */}
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl border border-slate-200 text-xs font-bold">
-          <button
-            type="button"
-            onClick={() => handleSubTabSwitch('settings')}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-              currentSubTab === 'settings' 
-                ? 'bg-white text-emerald-800 shadow-2xs' 
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Sliders className="w-3.5 h-3.5" />
-            <span>সিস্টেম সেটিংস</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleSubTabSwitch('backup-diagnostics')}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-              currentSubTab === 'backup-diagnostics' 
-                ? 'bg-white text-emerald-800 shadow-2xs' 
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <HardDrive className="w-3.5 h-3.5" />
-            <span>ব্যাকআপ ও ডায়াগনস্টিকস</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleSubTabSwitch('staff-roles')}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-              currentSubTab === 'staff-roles' 
-                ? 'bg-white text-emerald-800 shadow-2xs' 
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <ShieldAlert className="w-3.5 h-3.5" />
-            <span>স্টাফ ও রোল পারমিশন</span>
-          </button>
-        </div>
+        <FluidTabBar
+          tabs={[
+            { id: 'settings', label: 'সিস্টেম সেটিংস', icon: Sliders },
+            { id: 'backup-diagnostics', label: 'ব্যাকআপ ও ডায়াগনস্টিকস', icon: HardDrive },
+            { id: 'staff-roles', label: 'স্টাফ ও রোল পারমিশন', icon: ShieldAlert }
+          ]}
+          activeTab={currentSubTab}
+          onChange={(id) => handleSubTabSwitch(id as any)}
+          variant="slate"
+        />
       </div>
 
       {/* SUBTAB 1: SYSTEM SETTINGS & PAYMENT CONFIGURATION */}

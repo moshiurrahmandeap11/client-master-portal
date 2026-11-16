@@ -664,7 +664,7 @@ export default function JobVerificationCenter({
             </div>
 
             {/* TAB CONTENT: 1. OVERVIEW & EXPLANATION */}
-            {activeTabInModal === 'overview' && (
+            {activeTabInModal === 'overview' /* Gemini AI Reasoning & Positions */ && (
               <div className="space-y-4">
                 <div className="p-4 bg-slate-50 border border-indigo-200/80 rounded-2xl space-y-2">
                   <div className="flex items-center gap-2 text-indigo-900 font-black text-xs">

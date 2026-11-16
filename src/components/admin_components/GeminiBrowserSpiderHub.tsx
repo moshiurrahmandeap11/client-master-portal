@@ -216,7 +216,7 @@ export default function GeminiBrowserSpiderHub({
   };
 
   const handleRunAudit = async (autoRepair = true) => {
-    setIsRunningAudit(true);
+    setIsRunningAudit(true); // AI Engine Audit
     addLog('[AUDIT] অটোনোমাস সিস্টেম অডিট ও সেলফ-হিলিং শুরু হয়েছে...');
     try {
       const res = await fetch('/api/admin/audit', {

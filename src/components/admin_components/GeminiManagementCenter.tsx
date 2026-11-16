@@ -19,6 +19,7 @@ import {
   HardDrive
 } from 'lucide-react';
 import { AIUsageLog } from '@/types/verification.types';
+import FluidTabBar from './layout/FluidTabBar';
 
 interface GeminiManagementCenterProps {
   isOpen: boolean;
@@ -110,26 +111,18 @@ export default function GeminiManagementCenter({ isOpen, onClose }: GeminiManage
         </div>
 
         {/* Sub-navigation tabs */}
-        <div className="flex items-center gap-2 border-b border-slate-100 pb-2 overflow-x-auto scrollbar-none">
-          {[
-            { id: 'health', label: 'প্রোভাইডার স্থিতি ও পিং' },
-            { id: 'prompts', label: 'প্রম্পট ভার্সন রেজিস্ট্রি' },
-            { id: 'usage', label: 'টোকেন ও খরচ এনালিটিক্স' },
-            { id: 'quotas', label: 'কোটা ও অটোমেশন কন্ট্রোল' }
-          ].map(t => (
-            <button
-              key={t.id}
-              type="button"
-              onClick={() => setActiveTab(t.id as any)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
-                activeTab === t.id
-                  ? 'bg-purple-700 text-white shadow-2xs'
-                  : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
-              }`}
-            >
-              {t.label}
-            </button>
-          ))}
+        <div className="border-b border-slate-100 pb-2">
+          <FluidTabBar
+            tabs={[
+              { id: 'health', label: 'প্রোভাইডার স্থিতি ও পিং' },
+              { id: 'prompts', label: 'প্রম্পট ভার্সন রেজিস্ট্রি' },
+              { id: 'usage', label: 'টোকেন ও খরচ এনালিটিক্স' },
+              { id: 'quotas', label: 'কোটা ও অটোমেশন কন্ট্রোল' }
+            ]}
+            activeTab={activeTab}
+            onChange={(id) => setActiveTab(id as any)}
+            variant="slate"
+          />
         </div>
 
         {/* TAB 1: HEALTH & PING */}

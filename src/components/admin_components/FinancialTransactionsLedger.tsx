@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { ApplicationRequest, JobCircular, WalletTransaction } from '@/types';
 import { getAdminHeaders } from '@/lib/axios';
+import FluidTabBar from './layout/FluidTabBar';
 
 interface FinancialTransactionsLedgerProps {
   activeTab?: string;
@@ -186,46 +187,16 @@ export default function FinancialTransactionsLedger({
         </div>
 
         {/* Sub-tab Pill Switcher */}
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl border border-slate-200 text-xs font-bold">
-          <button
-            type="button"
-            onClick={() => handleSubTabSwitch('transactions')}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-              currentSubTab === 'transactions' 
-                ? 'bg-white text-emerald-800 shadow-2xs' 
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Receipt className="w-3.5 h-3.5" />
-            <span>ট্রানজেকশন তালিকা</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleSubTabSwitch('invoices')}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-              currentSubTab === 'invoices' 
-                ? 'bg-white text-emerald-800 shadow-2xs' 
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <FileText className="w-3.5 h-3.5" />
-            <span>ইনভয়েস ও রসিদ</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleSubTabSwitch('service-fees')}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-              currentSubTab === 'service-fees' 
-                ? 'bg-white text-emerald-800 shadow-2xs' 
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <PieChart className="w-3.5 h-3.5" />
-            <span>সার্ভিস ফি হিসাব</span>
-          </button>
-        </div>
+        <FluidTabBar
+          tabs={[
+            { id: 'transactions', label: 'ট্রানজেকশন তালিকা', icon: Receipt },
+            { id: 'invoices', label: 'ইনভয়েস ও রসিদ', icon: FileText },
+            { id: 'service-fees', label: 'সার্ভিস ফি হিসাব', icon: PieChart }
+          ]}
+          activeTab={currentSubTab}
+          onChange={(id) => handleSubTabSwitch(id as any)}
+          variant="slate"
+        />
       </div>
 
       {/* Top 4 KPI Metrics */}

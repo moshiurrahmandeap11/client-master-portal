@@ -26,6 +26,7 @@ import {
 import { FeedMetricsSummary, GlobalFeedConfig } from '@/types/feeds.types';
 import { JobCircular } from '@/types';
 import { ADMIN_REQ_HEADERS } from '@/lib/axios';
+import FluidTabBar from './layout/FluidTabBar';
 
 const toBn = (n: number | string) => String(n).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[+d]);
 
@@ -274,31 +275,19 @@ export default function JobFeedManager() {
       )}
 
       {/* Tabs Navigation */}
-      <div className="flex items-center gap-2 border-b border-slate-200 overflow-x-auto pb-1 scrollbar-none">
-        {[
-          { id: 'metrics', label: '১. ড্যাশবোর্ড ও পরিসংখ্যান', icon: TrendingUp },
-          { id: 'featured', label: '২. ফিচার্ড জবস কন্ট্রোল', icon: Award },
-          { id: 'config', label: '৩. হোমপেজ ও ফিড কনফিগারেশন', icon: Sliders },
-          { id: 'preview', label: '৪. লাইভ ফিড প্রিভিউ', icon: Eye },
-          { id: 'audit', label: '৫. অডিট হিস্ট্রি', icon: History }
-        ].map(tab => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
-              className={`px-4 py-2.5 text-sm font-bold rounded-xl transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer ${
-                isActive
-                  ? 'bg-amber-600 text-white shadow-md shadow-amber-600/20'
-                  : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
-              }`}
-            >
-              <Icon className="w-4 h-4" />
-              <span>{tab.label}</span>
-            </button>
-          );
-        })}
+      <div className="border-b border-slate-200 pb-2">
+        <FluidTabBar
+          tabs={[
+            { id: 'metrics', label: '১. ড্যাশবোর্ড ও পরিসংখ্যান', icon: TrendingUp },
+            { id: 'featured', label: '২. ফিচার্ড জবস কন্ট্রোল', icon: Award },
+            { id: 'config', label: '৩. হোমপেজ ও ফিড কনফিগারেশন', icon: Sliders },
+            { id: 'preview', label: '৪. লাইভ ফিড প্রিভিউ', icon: Eye },
+            { id: 'audit', label: '৫. অডিট হিস্ট্রি', icon: History }
+          ]}
+          activeTab={activeTab}
+          onChange={(id) => setActiveTab(id as any)}
+          variant="white"
+        />
       </div>
 
       {/* TAB 1: METRICS & DASHBOARD */}

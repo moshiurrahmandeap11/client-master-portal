@@ -1728,7 +1728,7 @@ function AdminContent() {
           badgeColor: 'bg-amber-500 text-slate-900',
           keywords: ['ব্রাউজার', 'browser', 'agent', 'gemini', 'লাইভ', 'chrome', 'ক্রোম', 'spider', 'অটোমেশন'],
           subTabs: [
-            { id: 'gemini-browser-spider', label: 'লাইভ ব্রাউজার স্ক্রিন ও অটোমেশন' },
+            { id: 'gemini-browser-spider', label: 'জেমিনি এআই ও লাইভ অটোমেশন' },
             { id: 'source-monitoring', label: 'সোর্স স্ক্র্যাপার মনিটরিং' },
             { id: 'imported-drafts', label: 'খসড়া ও অনুমোদন কিউ' },
             { id: 'automation-hub', label: 'সেন্ট্রাল অটোমেশন ম্যানেজার' },

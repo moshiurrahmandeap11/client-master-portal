@@ -923,7 +923,7 @@ export default function JobVerificationCenter({
             )}
 
             {/* TAB CONTENT: 4. EVIDENCE */}
-            {activeTabInModal === 'evidence' && (
+            {activeTabInModal === 'evidence' /* Source Links & PDF Document Preview */ && (
               <div className="space-y-3 text-xs">
                 <div className="p-3 bg-slate-100 rounded-xl flex items-center justify-between font-bold text-slate-700">
                   <span>সোর্স লিঙ্ক: {selectedDraft.sourceUrl}</span>

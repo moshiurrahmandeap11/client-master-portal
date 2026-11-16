@@ -29,20 +29,20 @@ export default function AdminHeader({
   onOpenSearch,
   onSelectTab,
   onLogout,
-  unreadNotificationsCount = 5,
+  unreadNotificationsCount = 0,
   adminName = 'সুপার অ্যাডমিন'
 }: AdminHeaderProps) {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between px-4 lg:px-6 py-2.5 bg-white border-b border-slate-200 shadow-sm font-solaiman">
+    <header className="sticky top-0 z-30 flex items-center justify-between px-4 lg:px-6 py-2.5 bg-white border-b border-slate-200 shadow-2xs font-solaiman">
       {/* Left Area: Toggle & Search */}
       <div className="flex items-center gap-3 lg:gap-4 flex-1 max-w-2xl">
         {/* Sidebar Toggle Button */}
         <button
           type="button"
           onClick={onToggleSidebar}
-          className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+          className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-none"
           title="মেনু টগল করুন"
         >
           <Menu className="w-5 h-5" />
@@ -51,38 +51,32 @@ export default function AdminHeader({
         {/* Global Search Bar (opens search modal) */}
         <div
           onClick={onOpenSearch}
-          className="flex-1 flex items-center justify-between px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-slate-300 hover:bg-slate-100/70 cursor-pointer transition-all text-slate-500 group shadow-sm"
+          className="flex-1 flex items-center justify-between px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-slate-300 hover:bg-slate-100/70 cursor-pointer transition-all text-slate-500 group shadow-2xs"
         >
           <div className="flex items-center gap-2.5 min-w-0">
-            <Search className="w-4 h-4 text-slate-400 group-hover:text-indigo-600 transition-colors flex-shrink-0" />
+            <Search className="w-4 h-4 text-slate-400 group-hover:text-slate-700 transition-colors flex-shrink-0" />
             <span className="text-xs lg:text-sm truncate text-slate-500">
-              চাকরি, প্রতিষ্ঠান, পদ, পৃষ্ঠা বা প্রার্থীর তথ্য খুঁজুন...
+              সার্কুলার, প্রতিষ্ঠান বা প্রার্থী খুঁজুন...
             </span>
           </div>
-          <kbd className="hidden sm:inline-flex items-center gap-0.5 px-2 py-0.5 text-[11px] font-semibold text-slate-500 bg-white border border-slate-200 rounded-md shadow-xs">
+          <kbd className="hidden sm:inline-flex items-center gap-0.5 px-2 py-0.5 text-[11px] font-medium text-slate-400 bg-white border border-slate-200 rounded-md shadow-2xs">
             Ctrl + K
           </kbd>
         </div>
       </div>
 
-      {/* Right Area: Live Site, Status, Notifications & Profile */}
-      <div className="flex items-center gap-2 sm:gap-3.5 ml-3">
+      {/* Right Area: Live Site, Notifications & Profile */}
+      <div className="flex items-center gap-2 sm:gap-3 ml-3">
         {/* Live Site Link */}
         <Link
           href="/"
           target="_blank"
           rel="noopener noreferrer"
-          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-700 hover:text-indigo-600 hover:bg-slate-100 border border-slate-200 transition-all"
+          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 transition-all"
         >
-          <span>লাইভ সাইট দেখুন</span>
+          <span>লাইভ ওয়েবসাইট</span>
           <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
         </Link>
-
-        {/* System Active Status Pill */}
-        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-700 text-xs font-semibold">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span>সিস্টেম সচল</span>
-        </div>
 
         {/* Notification Bell */}
         <button
@@ -91,7 +85,7 @@ export default function AdminHeader({
           className="relative p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
           title="নোটিফিকেশন"
         >
-          <Bell className="w-5 h-5" />
+          <Bell className="w-4.5 h-4.5" />
           {unreadNotificationsCount > 0 && (
             <span className="absolute top-1.5 right-1.5 flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-rose-500 text-[10px] font-bold text-white shadow-xs">
               {unreadNotificationsCount}

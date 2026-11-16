@@ -923,7 +923,7 @@ export default function HomePage() {
                     {/* Badges Bar */}
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="bg-emerald-50 text-emerald-800 text-xs font-normal px-2.5 py-1 rounded-md border border-emerald-200">
-                        {job.categoryLabel}
+                        {job.categoryLabel || (job as any).category?.titleBn || 'সরকারি'}
                       </span>
                       {job.positions && job.positions.length > 1 ? (
                         <span className="bg-slate-100 text-slate-800 text-xs font-normal px-2.5 py-1 rounded-md border border-slate-200 flex items-center gap-1">

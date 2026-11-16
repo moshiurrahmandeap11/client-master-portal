@@ -468,7 +468,7 @@ export default function JobVerificationCenter({
             filteredDrafts.map(draft => {
               const vr = draft.verificationResult;
               const authorityLevel = vr?.sourceAuthority?.level || (draft.sourceUrl?.includes('.gov.bd') ? 1 : 2);
-              const score = Math.round((vr?.confidenceScore || draft.confidenceScore || 0) * 100);
+              const score = Math.round((vr?.confidenceScore /* Tier Badge & Confidence Indicator */ || draft.confidenceScore /* Tier Badge & Confidence Indicator */ || 0) * 100);
 
               return (
                 <div

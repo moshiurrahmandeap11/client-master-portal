@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { getAdminHeaders } from '@/lib/axios';
+import FluidTabBar from './layout/FluidTabBar';
 import { 
   MessageSquare, 
   Bell, 
@@ -309,46 +310,16 @@ export default function SmsNotificationsManagement({
         </div>
 
         {/* Sub-tab Pill Switcher */}
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl border border-slate-200 text-xs font-bold">
-          <button
-            type="button"
-            onClick={() => handleSubTabSwitch('sms-status')}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-              currentSubTab === 'sms-status' 
-                ? 'bg-white text-emerald-800 shadow-2xs' 
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Radio className="w-3.5 h-3.5" />
-            <span>এসএমএস গেটওয়ে</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleSubTabSwitch('notifications')}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-              currentSubTab === 'notifications' 
-                ? 'bg-white text-emerald-800 shadow-2xs' 
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Bell className="w-3.5 h-3.5" />
-            <span>ব্রডকাস্ট নোটিফিকেশন</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleSubTabSwitch('templates-delivery')}
-            className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-              currentSubTab === 'templates-delivery' 
-                ? 'bg-white text-emerald-800 shadow-2xs' 
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <Mail className="w-3.5 h-3.5" />
-            <span>টেমপ্লেট ও হিস্ট্রি</span>
-          </button>
-        </div>
+        <FluidTabBar
+          tabs={[
+            { id: 'sms-status', label: 'এসএমএস গেটওয়ে', icon: Radio },
+            { id: 'notifications', label: 'ব্রডকাস্ট নোটিফিকেশন', icon: Bell },
+            { id: 'templates-delivery', label: 'টেমপ্লেট ও হিস্ট্রি', icon: Mail }
+          ]}
+          activeTab={currentSubTab}
+          onChange={(id) => handleSubTabSwitch(id as any)}
+          variant="slate"
+        />
       </div>
 
       {/* SUBTAB 1: SMS GATEWAY STATUS & LIVE DISPATCHER */}

@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { Coupon, RaffleCampaign } from '@/types';
 import { getAdminHeaders } from '@/lib/axios';
+import FluidTabBar from './layout/FluidTabBar';
 
 interface CouponsRaffleManagementProps {
   initialTab?: 'coupons' | 'raffles';
@@ -356,31 +357,15 @@ export default function CouponsRaffleManagement({ initialTab = 'coupons' }: Coup
           
           {/* Subtabs Header */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-6 rounded-3xl border border-slate-200 shadow-sm">
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setCouponsSubTab('coupons')}
-                className={`px-5 py-2.5 rounded-2xl font-black text-xs flex items-center gap-2 transition-all ${
-                  couponsSubTab === 'coupons'
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                }`}
-              >
-                <Tag className="w-4 h-4" />
-                <span>প্রোমো কুপন ({coupons.length})</span>
-              </button>
-
-              <button
-                onClick={() => setCouponsSubTab('raffles')}
-                className={`px-5 py-2.5 rounded-2xl font-black text-xs flex items-center gap-2 transition-all ${
-                  couponsSubTab === 'raffles'
-                    ? 'bg-teal-700 text-white shadow-md shadow-teal-700/20'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                }`}
-              >
-                <Gift className="w-4 h-4" />
-                <span>র‍্যাফেল ও বোনাস ক্যাম্পেইন ({campaigns.length})</span>
-              </button>
-            </div>
+            <FluidTabBar
+              tabs={[
+                { id: 'coupons', label: `প্রোমো কুপন (${coupons.length})`, icon: Tag },
+                { id: 'raffles', label: `র‍্যাফেল ও বোনাস ক্যাম্পেইন (${campaigns.length})`, icon: Gift }
+              ]}
+              activeTab={couponsSubTab}
+              onChange={(id) => setCouponsSubTab(id as 'coupons' | 'raffles')}
+              variant="slate"
+            />
 
             <div className="flex items-center gap-2">
               <button

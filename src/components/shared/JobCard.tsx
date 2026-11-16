@@ -85,19 +85,19 @@ export default function JobCard({ job }: JobCardProps) {
             <GraduationCap className="w-3.5 h-3.5 text-slate-500 mt-0.5 flex-shrink-0" />
             <div>
               <span className="font-bold text-slate-800">যোগ্যতা: </span>
-              <span className="text-slate-600">{job.minEducation}</span>
+              <span className="text-slate-600">{job.minEducation || (job as any).eligibility?.education || job.positions?.[0]?.minEducation || 'বিজ্ঞপ্তি অনুসারে'}</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <Banknote className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
             <div>
               <span className="font-bold text-slate-800">বেতন: </span>
-              <span className="text-slate-600">{job.salary}</span>
+              <span className="text-slate-600">{job.salary || job.positions?.[0]?.salary || 'জাতীয় পে স্কেল অনুযায়ী'}</span>
             </div>
           </div>
           <div className="flex items-center justify-between pt-1 border-t border-slate-200/60 text-[14px]">
-            <span className="text-slate-500">শেষ তারিখ: <strong className="text-slate-700">{job.deadline}</strong></span>
-            <span className="text-emerald-700 font-semibold">ফি: ৳{job.govtFee} + ৳{job.serviceFee}</span>
+            <span className="text-slate-500">শেষ তারিখ: <strong className="text-slate-700">{(job as any).deadlineFormatted || (job.deadline ? new Date(job.deadline).toISOString().split('T')[0] : job.deadline)}</strong></span>
+            <span className="text-emerald-700 font-semibold">ফি: ৳{job.govtFee || (job as any).officialFee || 200} + ৳{job.serviceFee || 50}</span>
           </div>
         </div>
 

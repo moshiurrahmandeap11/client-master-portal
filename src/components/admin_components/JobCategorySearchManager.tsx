@@ -29,6 +29,7 @@ import {
 import { CategoryRecord } from '@/types/taxonomy.types';
 import { SearchAnalyticsSummary } from '@/types/search.types';
 import { ADMIN_REQ_HEADERS } from '@/lib/axios';
+import FluidTabBar from './layout/FluidTabBar';
 
 export default function JobCategorySearchManager() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'categories' | 'job-mapping' | 'analytics' | 'diagnostics'>('dashboard');
@@ -307,62 +308,19 @@ export default function JobCategorySearchManager() {
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex items-center gap-2 pt-6 mt-6 border-t border-purple-800/40 overflow-x-auto text-xs font-bold">
-          <button
-            onClick={() => setActiveTab('dashboard')}
-            className={`px-4 py-2 rounded-xl transition-all whitespace-nowrap flex items-center gap-2 cursor-pointer ${
-              activeTab === 'dashboard'
-                ? 'bg-purple-600 text-white shadow-sm'
-                : 'text-purple-200 hover:bg-purple-900/50'
-            }`}
-          >
-            <BarChart3 className="w-3.5 h-3.5" />
-            <span>ড্যাশবোর্ড ও পরিসংখ্যান</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('categories')}
-            className={`px-4 py-2 rounded-xl transition-all whitespace-nowrap flex items-center gap-2 cursor-pointer ${
-              activeTab === 'categories'
-                ? 'bg-purple-600 text-white shadow-sm'
-                : 'text-purple-200 hover:bg-purple-900/50'
-            }`}
-          >
-            <FolderTree className="w-3.5 h-3.5" />
-            <span>ক্যাটাগরি ট্রি ও CRUD ({categories.length})</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('job-mapping')}
-            className={`px-4 py-2 rounded-xl transition-all whitespace-nowrap flex items-center gap-2 cursor-pointer ${
-              activeTab === 'job-mapping'
-                ? 'bg-purple-600 text-white shadow-sm'
-                : 'text-purple-200 hover:bg-purple-900/50'
-            }`}
-          >
-            <Tag className="w-3.5 h-3.5" />
-            <span>জব ক্লাসিফিকেশন ও ম্যাপিং ({jobs.length})</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('analytics')}
-            className={`px-4 py-2 rounded-xl transition-all whitespace-nowrap flex items-center gap-2 cursor-pointer ${
-              activeTab === 'analytics'
-                ? 'bg-purple-600 text-white shadow-sm'
-                : 'text-purple-200 hover:bg-purple-900/50'
-            }`}
-          >
-            <TrendingUp className="w-3.5 h-3.5" />
-            <span>সার্চ অ্যানালিটিক্স</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('diagnostics')}
-            className={`px-4 py-2 rounded-xl transition-all whitespace-nowrap flex items-center gap-2 cursor-pointer ${
-              activeTab === 'diagnostics'
-                ? 'bg-purple-600 text-white shadow-sm'
-                : 'text-purple-200 hover:bg-purple-900/50'
-            }`}
-          >
-            <Search className="w-3.5 h-3.5" />
-            <span>সার্চ ইঞ্জিন ডায়াগনস্টিকস</span>
-          </button>
+        <div className="pt-6 mt-6 border-t border-purple-800/40">
+          <FluidTabBar
+            tabs={[
+              { id: 'dashboard', label: 'ড্যাশবোর্ড ও পরিসংখ্যান', icon: BarChart3 },
+              { id: 'categories', label: `ক্যাটাগরি ট্রি ও CRUD (${categories.length})`, icon: FolderTree },
+              { id: 'job-mapping', label: `জব ক্লাসিফিকেশন ও ম্যাপিং (${jobs.length})`, icon: Tag },
+              { id: 'analytics', label: 'সার্চ অ্যানালিটিক্স', icon: TrendingUp },
+              { id: 'diagnostics', label: 'সার্চ ইঞ্জিন ডায়াগনস্টিকস', icon: Search }
+            ]}
+            activeTab={activeTab}
+            onChange={(id) => setActiveTab(id as any)}
+            variant="dark"
+          />
         </div>
       </div>
 

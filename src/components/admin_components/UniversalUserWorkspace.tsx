@@ -47,6 +47,7 @@ import {
 } from 'lucide-react';
 import { CandidateProfile, EducationRecord, ExperienceRecord, CandidateDocument } from '@/types';
 import { BD_DIVISIONS_EN } from '@/constants';
+import FluidTabBar from './layout/FluidTabBar';
 
 import { getAdminHeaders } from '@/lib/axios';
 
@@ -433,49 +434,30 @@ export default function UniversalUserWorkspace({
         {/* ============================================================== */}
         {/* 2. TAB NAVIGATION BAR (13 ORGANIZED WORKSPACE TABS) */}
         {/* ============================================================== */}
-        <div className="px-6 py-2.5 bg-slate-100 border-b border-slate-200 flex items-center gap-1.5 overflow-x-auto shrink-0 scrollbar-none text-xs">
-          {[
-            { id: 'overview', label: 'সারসংক্ষেপ', icon: LayoutDashboard },
-            { id: 'personal', label: 'ব্যক্তিগত তথ্য', icon: User },
-            { id: 'professional', label: 'পেশাগত তথ্য', icon: Briefcase },
-            { id: 'education', label: 'শিক্ষাগত যোগ্যতা', icon: GraduationCap, badge: (formData.education || []).length },
-            { id: 'experience', label: 'চাকরির অভিজ্ঞতা', icon: Award, badge: (formData.experiences || []).length },
-            { id: 'skills', label: 'দক্ষতা ও ভাষা', icon: Sliders },
-            { id: 'preferences', label: 'ক্যারিয়ার পছন্দ', icon: Heart },
-            { id: 'documents', label: 'সার্টিফিকেট ও ফাইল', icon: FileText, badge: documents.length },
-            { id: 'applications', label: 'চাকরির আবেদনসমূহ', icon: Briefcase, badge: applications.length },
-            { id: 'wallet', label: 'ওয়ালেট ও লেনদেন', icon: CreditCard, badge: transactions.length },
-            { id: 'saved_jobs', label: 'সংরক্ষিত চাকরি', icon: Bookmark, badge: savedJobs.length },
-            { id: 'notifications', label: 'নোটিফিকেশন', icon: Bell, badge: notifications.length },
-            { id: 'security', label: 'অ্যাকাউন্ট সিকিউরিটি', icon: Shield },
-            { id: 'admin_notes', label: 'গোপন নোট', icon: FileEdit, badge: (formData.adminNotes || []).length },
-            { id: 'audit_log', label: 'অডিট হিস্ট্রি', icon: History }
-          ].map(tab => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setActiveTab(tab.id as UserWorkspaceTab)}
-                className={`px-3.5 py-1.5 rounded-xl font-bold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                  isActive
-                    ? 'bg-emerald-700 text-white shadow-sm'
-                    : 'text-slate-600 hover:bg-slate-200/80 hover:text-slate-900'
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{tab.label}</span>
-                {tab.badge !== undefined && tab.badge > 0 && (
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                    isActive ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
-                  }`}>
-                    {tab.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+        <div className="px-6 py-2 bg-slate-100 border-b border-slate-200 overflow-x-auto shrink-0 scrollbar-none text-xs">
+          <FluidTabBar
+            tabs={[
+              { id: 'overview', label: 'সারসংক্ষেপ', icon: LayoutDashboard },
+              { id: 'personal', label: 'ব্যক্তিগত তথ্য', icon: User },
+              { id: 'professional', label: 'পেশাগত তথ্য', icon: Briefcase },
+              { id: 'education', label: 'শিক্ষাগত যোগ্যতা', icon: GraduationCap, badge: (formData.education || []).length },
+              { id: 'experience', label: 'চাকরির অভিজ্ঞতা', icon: Award, badge: (formData.experiences || []).length },
+              { id: 'skills', label: 'দক্ষতা ও ভাষা', icon: Sliders },
+              { id: 'preferences', label: 'ক্যারিয়ার পছন্দ', icon: Heart },
+              { id: 'documents', label: 'সার্টিফিকেট ও ফাইল', icon: FileText, badge: documents.length },
+              { id: 'applications', label: 'চাকরির আবেদনসমূহ', icon: Briefcase, badge: applications.length },
+              { id: 'wallet', label: 'ওয়ালেট ও লেনদেন', icon: CreditCard, badge: transactions.length },
+              { id: 'saved_jobs', label: 'সংরক্ষিত চাকরি', icon: Bookmark, badge: savedJobs.length },
+              { id: 'notifications', label: 'নোটিফিকেশন', icon: Bell, badge: notifications.length },
+              { id: 'security', label: 'অ্যাকাউন্ট সিকিউরিটি', icon: Shield },
+              { id: 'admin_notes', label: 'গোপন নোট', icon: FileEdit, badge: (formData.adminNotes || []).length },
+              { id: 'audit_log', label: 'অডিট হিস্ট্রি', icon: History }
+            ]}
+            activeTab={activeTab}
+            onChange={(id) => setActiveTab(id as UserWorkspaceTab)}
+            variant="slate"
+            size="sm"
+          />
         </div>
 
         {/* ============================================================== */}

@@ -152,6 +152,7 @@ export const getAdminHeaders = (): Record<string, string> => {
 
 export const ADMIN_REQ_HEADERS: Record<string, string> = {
   'Content-Type': 'application/json',
+  'x-admin-secret': '1234',
 };
 
 /**

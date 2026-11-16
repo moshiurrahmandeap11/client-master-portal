@@ -49,6 +49,7 @@ import {
 } from '@/types/content-studio.types';
 import { createNewBlock, blocksToMarkdown } from '@/lib/content_studio/blocks_converter';
 import { getAdminHeaders } from '@/lib/axios';
+import FluidTabBar from './layout/FluidTabBar';
 
 export default function JobContentStudio({ initialDraftId }: { initialDraftId?: string }) {
   // State
@@ -755,39 +756,19 @@ export default function JobContentStudio({ initialDraftId }: { initialDraftId?: 
         <div className="w-96 bg-white border-l border-slate-200 flex flex-col shrink-0">
           
           {/* Tabs */}
-          <div className="flex items-center border-b border-slate-200 bg-slate-50 p-1.5 gap-1 text-[11px] font-bold">
-            <button
-              onClick={() => setActiveTab('seo')}
-              className={`flex-1 py-1.5 px-2 rounded-lg text-center transition-all ${
-                activeTab === 'seo' ? 'bg-white text-indigo-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              এসইও ও মেটা
-            </button>
-            <button
-              onClick={() => setActiveTab('facts')}
-              className={`flex-1 py-1.5 px-2 rounded-lg text-center transition-all ${
-                activeTab === 'facts' ? 'bg-white text-indigo-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              ফ্যাক্ট চেক
-            </button>
-            <button
-              onClick={() => setActiveTab('keywords')}
-              className={`flex-1 py-1.5 px-2 rounded-lg text-center transition-all ${
-                activeTab === 'keywords' ? 'bg-white text-indigo-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              কিওয়ার্ড
-            </button>
-            <button
-              onClick={() => setActiveTab('blocks')}
-              className={`flex-1 py-1.5 px-2 rounded-lg text-center transition-all ${
-                activeTab === 'blocks' ? 'bg-white text-indigo-700 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              ব্লক
-            </button>
+          <div className="border-b border-slate-200 bg-slate-50 p-1.5">
+            <FluidTabBar
+              tabs={[
+                { id: 'seo', label: 'এসইও ও মেটা' },
+                { id: 'facts', label: 'ফ্যাক্ট চেক' },
+                { id: 'keywords', label: 'কিওয়ার্ড' },
+                { id: 'blocks', label: 'ব্লক' }
+              ]}
+              activeTab={activeTab}
+              onChange={(id) => setActiveTab(id as any)}
+              size="sm"
+              variant="slate"
+            />
           </div>
 
           {/* Tab Contents */}

@@ -118,6 +118,7 @@ import TestingSpiderHub from '@/components/admin_components/TestingSpiderHub';
 import GeminiBrowserSpiderHub from '@/components/admin_components/GeminiBrowserSpiderHub';
 import AdminLayout from '@/components/admin_components/layout/AdminLayout';
 import AdminDashboardOverview from '@/components/admin_components/dashboard/AdminDashboardOverview';
+import SubHubNavBar from '@/components/admin_components/layout/SubHubNavBar';
 import CertificateVerificationQueue from '@/components/admin_components/CertificateVerificationQueue';
 import { getAdminHeaders, ADMIN_REQ_HEADERS } from '@/lib/axios';
 
@@ -1722,17 +1723,16 @@ function AdminContent() {
         },
         { 
           id: 'gemini-browser-spider', 
-          label: 'অটোমেশন ও লাইভ এজেন্ট', 
+          label: 'অটোমেশন ও জব কালেক্টর', 
           icon: Globe, 
-          badge: 'LIVE VIEW',
-          badgeColor: 'bg-amber-500 text-slate-900',
+          badge: null,
           keywords: ['ব্রাউজার', 'browser', 'agent', 'gemini', 'লাইভ', 'chrome', 'ক্রোম', 'spider', 'অটোমেশন'],
           subTabs: [
-            { id: 'gemini-browser-spider', label: 'জেমিনি এআই ও লাইভ অটোমেশন' },
-            { id: 'source-monitoring', label: 'সোর্স স্ক্র্যাপার মনিটরিং' },
+            { id: 'gemini-browser-spider', label: 'স্বয়ংক্রিয় সার্কুলার সংগ্রহ' },
+            { id: 'source-monitoring', label: 'চাকরির সোর্স ও মনিটরিং' },
             { id: 'imported-drafts', label: 'খসড়া ও অনুমোদন কিউ' },
-            { id: 'automation-hub', label: 'সেন্ট্রাল অটোমেশন ম্যানেজার' },
-            { id: 'testing-spider', label: 'টেস্টিং স্পাইডার স্যান্ডবক্স' }
+            { id: 'automation-hub', label: 'অটোমেশন ও শিডিউলার' },
+            { id: 'testing-spider', label: 'সার্কুলার টেস্ট ও প্রিভিউ' }
           ]
         },
         { 
@@ -2114,27 +2114,13 @@ function AdminContent() {
         )}
 
 
-          {/* 2.5 SUB-HUB NAVIGATION PILL BAR */}
-          {activeHub && activeHub.subTabs && activeHub.subTabs.length > 1 && (
-            <div className="mb-6 flex flex-wrap items-center gap-1.5 p-1.5 bg-white rounded-2xl border border-slate-200/90 shadow-2xs">
-              {activeHub.subTabs.map((sub) => {
-                const isSubActive = activeTab === sub.id;
-                return (
-                  <button
-                    key={sub.id}
-                    type="button"
-                    onClick={() => handleTabChange(sub.id)}
-                    className={'px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ' +
-                      (isSubActive
-                        ? 'bg-emerald-800 text-white shadow-xs'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100')
-                    }
-                  >
-                    {sub.label}
-                  </button>
-                );
-              })}
-            </div>
+          {/* 2.5 SUB-HUB NAVIGATION PILL BAR (Fluid Animated Green Pill) */}
+          {activeTab !== 'dashboard' && activeHub && activeHub.subTabs && activeHub.subTabs.length > 1 && (
+            <SubHubNavBar
+              subTabs={activeHub.subTabs}
+              activeTab={activeTab}
+              onTabChange={handleTabChange}
+            />
           )}
 
           {/* TAB 1: OVERVIEW -> APPROVED BANGLA ADMIN DASHBOARD REDESIGN */}
@@ -5479,10 +5465,16 @@ function AdminContent() {
 
                     {/* TAB: BUSINESS INTELLIGENCE & ANALYTICS (PHASE 05) */}
           {(activeTab === 'analytics-center' || activeTab === 'report-builder' || activeTab === 'data-quality-inspector' || activeTab === 'automation-center' || activeTab === 'duplicate-detection') && (
-            <div className="space-y-4">
+            <div className="w-full">
               <AnalyticsIntelligenceHub 
                 activeTab={(activeTab === 'data-quality-inspector' || activeTab === 'duplicate-detection') ? 'data-quality-inspector' : activeTab === 'report-builder' ? 'report-builder' : 'analytics-center'} 
                 onTabChange={handleTabChange}
+                jobs={jobs}
+                candidates={candidates}
+                applications={applications}
+                stats={stats}
+                sources={sources}
+                drafts={drafts}
               />
             </div>
           )}

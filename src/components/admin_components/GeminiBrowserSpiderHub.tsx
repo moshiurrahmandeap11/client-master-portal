@@ -108,7 +108,7 @@ export default function GeminiBrowserSpiderHub({
   ]);
 
   const addLog = (msg: string) => {
-    const time = new Date().toLocaleTimeString();
+    const time = new Date().toLocaleTimeString(); // Terminal Logger
     setLogs(prev => [`[${time}] ${msg}`, ...prev.slice(0, 49)]);
   };
 

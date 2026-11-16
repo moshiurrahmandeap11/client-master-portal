@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { JobReportItem } from '@/types';
 import { getAdminHeaders } from '@/lib/axios';
+import FluidTabBar from './layout/FluidTabBar';
 
 export default function JobReportsManagement() {
   const [reports, setReports] = useState<JobReportItem[]>([]);
@@ -181,26 +182,19 @@ export default function JobReportsManagement() {
         </div>
 
         <div className="flex items-center gap-1.5 overflow-x-auto text-xs font-bold">
-          <span className="text-slate-400 mr-1 shrink-0">ফিল্টার:</span>
-          {[
-            { id: 'all', label: 'সকল' },
-            { id: 'pending', label: 'নতুন' },
-            { id: 'investigating', label: 'তদন্তাধীন' },
-            { id: 'resolved', label: 'সমাধানকৃত' },
-            { id: 'dismissed', label: 'খারিজ' }
-          ].map(f => (
-            <button
-              key={f.id}
-              onClick={() => setStatusFilter(f.id)}
-              className={`px-3 py-1.5 rounded-lg transition-all shrink-0 cursor-pointer ${
-                statusFilter === f.id
-                  ? 'bg-slate-900 text-white shadow-2xs'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-              }`}
-            >
-              {f.label}
-            </button>
-          ))}
+          <FluidTabBar
+            tabs={[
+              { id: 'all', label: 'সকল' },
+              { id: 'pending', label: 'নতুন' },
+              { id: 'investigating', label: 'তদন্তাধীন' },
+              { id: 'resolved', label: 'সমাধানকৃত' },
+              { id: 'dismissed', label: 'খারিজ' }
+            ]}
+            activeTab={statusFilter}
+            onChange={(id) => setStatusFilter(id)}
+            size="sm"
+            variant="slate"
+          />
         </div>
       </div>
 

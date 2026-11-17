@@ -736,7 +736,7 @@ function AdminContent() {
 
       // 3. Fetch remaining modules concurrently without blocking each other
       await Promise.allSettled([
-        fetch('/api/applications', { headers: adminHeaders }).then(async r => {
+        fetch('/api/admin/applications', { headers: adminHeaders }).then(async r => {
           if (r.ok) {
             const data = await r.json();
             setApplications(Array.isArray(data) ? data : (data.applications || []));
@@ -1227,7 +1227,7 @@ function AdminContent() {
   // Inspecting Candidate match for Drawer
   const inspectingCandidate = useMemo(() => {
     if (!inspectingApp) return null;
-    return candidates.find(c => 
+    return (inspectingApp as any).candidate || candidates.find(c => 
       c.id === (inspectingApp as any).candidateId || 
       (inspectingApp.candidatePhone && c.phone && (c.phone === inspectingApp.candidatePhone || c.phone.replace(/\D/g, '') === inspectingApp.candidatePhone.replace(/\D/g, '')))
     );
@@ -3397,7 +3397,7 @@ function AdminContent() {
                           <span className="text-slate-500 font-bold">প্রার্থীর নাম (English & Bangla):</span>
                           <button
                             type="button"
-                            onClick={() => handleCopyField((inspectingCandidate?.name || inspectingApp.candidateName).toUpperCase(), 'ইংরেজি নাম')}
+                            onClick={() => handleCopyField((inspectingCandidate?.name || inspectingApp.candidateName || 'APPLICANT').toUpperCase(), 'ইংরেজি নাম')}
                             className="text-[10px] text-emerald-700 font-bold hover:underline"
                           >
                             কপি English
@@ -3406,11 +3406,11 @@ function AdminContent() {
                         <div className="grid grid-cols-2 gap-2 text-slate-900 font-bold">
                           <div className="p-1.5 bg-slate-50 rounded border border-slate-200/80">
                             <span className="text-[10px] text-slate-400 block font-normal">English (BLOCK LETTERS):</span>
-                            {(inspectingCandidate?.name || inspectingApp.candidateName).toUpperCase()}
+                            {(inspectingCandidate?.name || inspectingApp.candidateName || 'N/A').toUpperCase()}
                           </div>
                           <div className="p-1.5 bg-slate-50 rounded border border-slate-200/80 font-sans">
                             <span className="text-[10px] text-slate-400 block font-normal">বাংলায়:</span>
-                            {inspectingCandidate?.nameBn || inspectingApp.candidateName}
+                            {inspectingCandidate?.nameBn || inspectingApp.candidateName || 'প্রার্থীর নাম'}
                           </div>
                         </div>
                       </div>

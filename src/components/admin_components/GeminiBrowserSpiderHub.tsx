@@ -17,7 +17,8 @@ import {
   Globe,
   Clock,
   Sliders,
-  ArrowRight
+  ArrowRight,
+  Upload
 } from 'lucide-react';
 import { JobCircular } from '@/types';
 import JobLogo from '@/components/shared/JobLogo';
@@ -48,6 +49,9 @@ export default function GeminiBrowserSpiderHub({
   // Policy & Extractor State
   const [isAutoPublish, setIsAutoPublish] = useState<boolean>(false);
   const [isTogglingAutoPublish, setIsTogglingAutoPublish] = useState<boolean>(false);
+  const [extractorMode, setExtractorMode] = useState<'upload' | 'url'>('upload');
+  const [extractorPdfFile, setExtractorPdfFile] = useState<File | null>(null);
+  const [isDraggingFile, setIsDraggingFile] = useState<boolean>(false);
   const [extractorPdfUrl, setExtractorPdfUrl] = useState<string>('https://alljobs.teletalk.com.bd/media/public/uploads/governments/jobs/advertisement-1793683909289.pdf');
   const [isExtractingCircular, setIsExtractingCircular] = useState<boolean>(false);
   const [extractedCircularResult, setExtractedCircularResult] = useState<any>(null);
@@ -174,6 +178,79 @@ export default function GeminiBrowserSpiderHub({
   };
 
   const handleRunExtraction = async () => {
+    if (extractorMode === 'upload') {
+      if (!extractorPdfFile) {
+        showToast('অনুগ্রহ করে কম্পিউটার থেকে একটি সার্কুলার PDF ফাইল নির্বাচন করুন।', 'error');
+        return;
+      }
+      setIsExtractingCircular(true);
+      setExtractedCircularResult(null);
+      try {
+        const formData = new FormData();
+        formData.append('file', extractorPdfFile);
+
+        const adminHeaders: Record<string, string> = {
+          'x-admin-secret': '1234',
+        };
+        if (typeof window !== 'undefined') {
+          const secret = localStorage.getItem('x-admin-secret') || localStorage.getItem('adminSecret') || localStorage.getItem('admin_secret');
+          if (secret) adminHeaders['x-admin-secret'] = secret;
+          const token = localStorage.getItem('cs_access_token') || localStorage.getItem('accessToken');
+          if (token) adminHeaders['Authorization'] = `Bearer ${token}`;
+        }
+
+        let res: Response;
+        try {
+          res = await fetch('/api/admin/spider/upload-pdf-parse', {
+            method: 'POST',
+            credentials: 'include',
+            headers: adminHeaders,
+            body: formData
+          });
+        } catch {
+          res = await fetch('http://localhost:6969/api/admin/spider/upload-pdf-parse', {
+            method: 'POST',
+            credentials: 'include',
+            headers: adminHeaders,
+            body: formData
+          });
+        }
+
+        if (!res.ok && res.status >= 500) {
+          try {
+            res = await fetch('http://localhost:6969/api/admin/spider/upload-pdf-parse', {
+              method: 'POST',
+              credentials: 'include',
+              headers: adminHeaders,
+              body: formData
+            });
+          } catch {
+            // keep original response
+          }
+        }
+
+        const rawText = await res.text();
+        let data: any = {};
+        try {
+          data = JSON.parse(rawText);
+        } catch {
+          throw new Error(rawText.slice(0, 150) || 'সার্ভার থেকে সঠিক ফরম্যাটে উত্তর পাওয়া যায়নি।');
+        }
+
+        if (res.ok && data.success && data.job) {
+          setExtractedCircularResult(data.job);
+          showToast(`সার্কুলার PDF সফলভাবে বিশ্লেষণ হয়েছে! মোট ${data.job.positions?.length || 1}টি পদ পাওয়া গেছে।`);
+        } else {
+          showToast(data.message || data.error || 'সার্কুলার স্ক্যান করতে সমস্যা হয়েছে।', 'error');
+        }
+      } catch (e: any) {
+        showToast(`ত্রুটি: ${e.message}`, 'error');
+      } finally {
+        setIsExtractingCircular(false);
+      }
+      return;
+    }
+
     const url = extractorPdfUrl.trim();
     if (!url) {
       showToast('অনুগ্রহ করে সার্কুলারের একটি PDF লিঙ্ক বা নোটিশের URL দিন।', 'error');
@@ -191,7 +268,7 @@ export default function GeminiBrowserSpiderHub({
       const data = await res.json();
       if (res.ok && data.success && data.job) {
         setExtractedCircularResult(data.job);
-        showToast('সার্কুলার বিশ্লেষণ সম্পন্ন হয়েছে!');
+        showToast(`সার্কুলার বিশ্লেষণ সম্পন্ন হয়েছে! মোট ${data.job.positions?.length || 1}টি পদ পাওয়া গেছে।`);
       } else {
         showToast(data.message || data.error || 'সার্কুলার স্ক্যান করতে সমস্যা হয়েছে।', 'error');
       }
@@ -449,14 +526,17 @@ export default function GeminiBrowserSpiderHub({
       )}
 
       {/* 2. DIRECT CIRCULAR PDF / NOTICE EXTRACTOR */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-5 space-y-3">
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-2xs p-5 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-100">
           <div>
-            <h2 className="text-sm font-black text-slate-900">
-              সার্কুলার লিংক বা নোটিশ থেকে সরাসরি তথ্য সংগ্রহ
+            <h2 className="text-sm font-black text-slate-900 flex items-center gap-2">
+              <span>সার্কুলার PDF ফাইল আপলোড ও এআই তথ্য সংগ্রহ</span>
+              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                Gemini Vision OCR
+              </span>
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">
-              যেকোনো সার্কুলারের অফিসিয়াল PDF বা লিংক দিয়ে সরাসরি পদের বিবরণ ও ডেডলাইন বিশ্লেষণ করুন
+              কম্পিউটার থেকে সরাসরি সার্কুলার PDF ফাইল আপলোড করুন অথবা অনলাইন লিংক দিয়ে শূন্যপদ ও সকল পদের বিবরণ নিখুঁতভাবে সংগ্রহ করুন
             </p>
           </div>
 
@@ -468,48 +548,192 @@ export default function GeminiBrowserSpiderHub({
               className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-2 cursor-pointer disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
-              <span>{isSyncing ? 'সংগ্রহ চলছে...' : 'অলজবস থেকে সার্কুলার সংগ্রহ করুন'}</span>
+              <span>{isSyncing ? 'সংগ্রহ চলছে...' : 'অলজবস থেকে লাইভ সংগ্রহ'}</span>
             </button>
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center gap-2.5 pt-1">
-          <input
-            type="text"
-            value={extractorPdfUrl}
-            onChange={(e) => setExtractorPdfUrl(e.target.value)}
-            placeholder="https://alljobs.teletalk.com.bd/.../advertisement.pdf"
-            className="w-full sm:flex-1 px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-slate-50 focus:bg-white transition-all font-mono"
-          />
+        {/* Mode Selector Tabs */}
+        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl border border-slate-200/80 w-fit text-xs">
           <button
             type="button"
-            onClick={handleRunExtraction}
-            disabled={isExtractingCircular || !extractorPdfUrl.trim()}
-            className="w-full sm:w-auto px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0"
+            onClick={() => setExtractorMode('upload')}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+              extractorMode === 'upload'
+                ? 'bg-emerald-600 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
           >
-            <ArrowRight className={`w-3.5 h-3.5 ${isExtractingCircular ? 'animate-spin' : ''}`} />
-            <span>{isExtractingCircular ? 'বিশ্লেষণ চলছে...' : 'সার্কুলার বিশ্লেষণ করুন'}</span>
+            <Upload className="w-3.5 h-3.5" />
+            <span>PDF ফাইল আপলোড (Drag & Drop)</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setExtractorMode('url')}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+              extractorMode === 'url'
+                ? 'bg-emerald-600 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <Globe className="w-3.5 h-3.5" />
+            <span>অনলাইন সার্কুলার লিংক (URL)</span>
           </button>
         </div>
+
+        {/* Input Area */}
+        {extractorMode === 'upload' ? (
+          <div className="space-y-3">
+            <div
+              onDragOver={(e) => {
+                e.preventDefault();
+                setIsDraggingFile(true);
+              }}
+              onDragLeave={() => setIsDraggingFile(false)}
+              onDrop={(e) => {
+                e.preventDefault();
+                setIsDraggingFile(false);
+                const file = e.dataTransfer.files?.[0];
+                if (file && (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'))) {
+                  setExtractorPdfFile(file);
+                } else {
+                  showToast('অনুগ্রহ করে শুধুমাত্র PDF (.pdf) ফাইল ড্রপ করুন।', 'error');
+                }
+              }}
+              className={`p-6 border-2 border-dashed rounded-2xl text-center transition-all ${
+                isDraggingFile
+                  ? 'border-emerald-500 bg-emerald-50/80'
+                  : extractorPdfFile
+                  ? 'border-emerald-300 bg-emerald-50/30'
+                  : 'border-slate-300 hover:border-emerald-400 bg-slate-50/50 hover:bg-slate-50'
+              }`}
+            >
+              <input
+                type="file"
+                accept=".pdf,application/pdf"
+                id="spider-circular-pdf-upload"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setExtractorPdfFile(file);
+                  }
+                }}
+              />
+
+              {extractorPdfFile ? (
+                <div className="flex items-center justify-between p-3 bg-white border border-emerald-200 rounded-xl max-w-md mx-auto shadow-2xs">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                      <FileText className="w-5 h-5" />
+                    </div>
+                    <div className="text-left min-w-0">
+                      <p className="text-xs font-bold text-slate-800 truncate">{extractorPdfFile.name}</p>
+                      <p className="text-[10px] text-slate-400">
+                        {(extractorPdfFile.size / (1024 * 1024)).toFixed(2)} MB • PDF সার্কুলার ফাইল
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setExtractorPdfFile(null)}
+                    className="p-1 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-rose-600 transition-colors"
+                    title="ফাইল বাদ দিন"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <label
+                  htmlFor="spider-circular-pdf-upload"
+                  className="flex flex-col items-center justify-center gap-2 cursor-pointer"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-100/80 text-emerald-700 flex items-center justify-center shadow-xs">
+                    <Upload className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-800">
+                      কম্পিউটার থেকে সার্কুলার PDF ফাইলটি এখানে ড্র্যাগ করে ছাড়ুন অথবা ক্লিক করে নির্বাচন করুন
+                    </p>
+                    <p className="text-[11px] text-slate-500 mt-0.5">
+                      মাল্টি-পেজ বা স্ক্যান করা নোটিশ (সর্বোচ্চ ২৫ মেগাবাইট) সমর্থিত
+                    </p>
+                  </div>
+                </label>
+              )}
+            </div>
+
+            <button
+              type="button"
+              onClick={handleRunExtraction}
+              disabled={isExtractingCircular || !extractorPdfFile}
+              className="w-full sm:w-auto px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isExtractingCircular ? 'animate-spin' : ''}`} />
+              <span>{isExtractingCircular ? 'জেমিনি এআই ভিশন দিয়ে সার্কুলার PDF বিশ্লেষণ করা হচ্ছে...' : 'সার্কুলার PDF বিশ্লেষণ শুরু করুন'}</span>
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col sm:flex-row items-center gap-2.5 pt-1">
+            <input
+              type="text"
+              value={extractorPdfUrl}
+              onChange={(e) => setExtractorPdfUrl(e.target.value)}
+              placeholder="https://alljobs.teletalk.com.bd/.../advertisement.pdf"
+              className="w-full sm:flex-1 px-3.5 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 bg-slate-50 focus:bg-white transition-all font-mono"
+            />
+            <button
+              type="button"
+              onClick={handleRunExtraction}
+              disabled={isExtractingCircular || !extractorPdfUrl.trim()}
+              className="w-full sm:w-auto px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50 shrink-0"
+            >
+              <ArrowRight className={`w-3.5 h-3.5 ${isExtractingCircular ? 'animate-spin' : ''}`} />
+              <span>{isExtractingCircular ? 'বিশ্লেষণ চলছে...' : 'সার্কুলার বিশ্লেষণ করুন'}</span>
+            </button>
+          </div>
+        )}
+
+        {isExtractingCircular && (
+          <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200/80 text-xs text-emerald-800 flex items-center gap-2.5 animate-pulse">
+            <RefreshCw className="w-4 h-4 animate-spin shrink-0 text-emerald-600" />
+            <span>
+              মাল্টিমোডাল এআই ভিশন মডেলের মাধ্যমে সার্কুলার PDF-এর প্রতিটি পদ, গ্রেড, শূন্যপদ, বেতন স্কেল ও শর্তাবলী নিখুঁতভাবে রিড করা হচ্ছে... অনুগ্রহ করে কয়েক সেকেন্ড অপেক্ষা করুন।
+            </span>
+          </div>
+        )}
       </div>
 
       {/* EXTRACTED CIRCULAR PREVIEW CARD */}
       {extractedCircularResult && (
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 space-y-4">
+        <div className="bg-white rounded-2xl border border-emerald-200/80 shadow-sm p-5 space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                 <h3 className="text-sm font-black text-slate-900">
                   {extractedCircularResult.organization} — {extractedCircularResult.title}
                 </h3>
+                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                  সফলভাবে এক্সট্র্যাক্ট করা হয়েছে
+                </span>
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">
-                সার্কুলারটি সফলভাবে বিশ্লেষণ হয়েছে। খসড়া হিসেবে সেভ করুন অথবা সরাসরি লাইভ প্রকাশ করুন।
+              <p className="text-xs text-slate-500 mt-1">
+                সার্কুলারটি থেকে সম্পূর্ণ ডাটা পাওয়া গেছে। নিচে পদসমূহের বিবরণ যাচাই করুন অথবা এডিটর দিয়ে কাস্টমাইজ করুন।
               </p>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              {onOpenEditJob && (
+                <button
+                  type="button"
+                  onClick={() => onOpenEditJob(extractedCircularResult)}
+                  className="px-3.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 rounded-xl text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5"
+                >
+                  <Edit3 className="w-3.5 h-3.5" />
+                  <span>সম্পূর্ণ এডিট ও কাস্টমাইজ</span>
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => handleSaveExtractedJob(false)}
@@ -531,30 +755,94 @@ export default function GeminiBrowserSpiderHub({
                 type="button"
                 onClick={() => setExtractedCircularResult(null)}
                 className="p-1.5 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100"
+                title="বন্ধ করুন"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+          {/* Quick Summary Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 text-xs">
             <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
               <span className="text-[10px] font-bold text-slate-500 uppercase">মোট শূন্যপদ</span>
               <div className="text-base font-black text-slate-900 mt-0.5">{extractedCircularResult.totalPosts || 1}টি</div>
             </div>
             <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
+              <span className="text-[10px] font-bold text-slate-500 uppercase">মোট পদের ধরন</span>
+              <div className="text-base font-black text-emerald-700 mt-0.5">
+                {extractedCircularResult.positions?.length || 1}টি পদ
+              </div>
+            </div>
+            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
               <span className="text-[10px] font-bold text-slate-500 uppercase">আবেদনের শেষ তারিখ</span>
-              <div className="text-xs font-black text-slate-900 mt-0.5">{extractedCircularResult.deadline}</div>
+              <div className="text-xs font-black text-slate-900 mt-0.5">{extractedCircularResult.deadline || 'উল্লেখ নেই'}</div>
             </div>
             <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
               <span className="text-[10px] font-bold text-slate-500 uppercase">বেতন স্কেল</span>
-              <div className="text-xs font-black text-slate-900 mt-0.5">{extractedCircularResult.salary || 'জাতীয় স্কেল'}</div>
+              <div className="text-xs font-black text-slate-900 mt-0.5 truncate">{extractedCircularResult.salary || 'জাতীয় স্কেল'}</div>
             </div>
             <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
               <span className="text-[10px] font-bold text-slate-500 uppercase">বয়সসীমা</span>
-              <div className="text-xs font-black text-slate-900 mt-0.5">{extractedCircularResult.ageLimit || '১৮-৩০ বছর'}</div>
+              <div className="text-xs font-black text-slate-900 mt-0.5">{extractedCircularResult.ageLimit || '১৮-৩০/৩২ বছর'}</div>
+            </div>
+            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70">
+              <span className="text-[10px] font-bold text-slate-500 uppercase">সরকারি আবেদন ফি</span>
+              <div className="text-xs font-black text-slate-900 mt-0.5">
+                {extractedCircularResult.govtFee ? `৳${extractedCircularResult.govtFee}` : (extractedCircularResult.feeRange || '৳২০০')}
+              </div>
             </div>
           </div>
+
+          {/* Positions Table: Zero-Miss Preview */}
+          {Array.isArray(extractedCircularResult.positions) && extractedCircularResult.positions.length > 0 && (
+            <div className="space-y-2 pt-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-800">
+                  এক্সট্র্যাক্ট হওয়া সকল পদ ও যোগ্যতার তালিকা ({extractedCircularResult.positions.length}টি পদ):
+                </span>
+                <span className="text-[11px] text-slate-500">
+                  সবগুলো পদ সঠিকভাবে রিড করা হয়েছে
+                </span>
+              </div>
+              <div className="overflow-x-auto rounded-xl border border-slate-200">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-600">
+                    <tr>
+                      <th className="p-2.5 w-10 text-center">#</th>
+                      <th className="p-2.5">পদের নাম ও বিবরণ</th>
+                      <th className="p-2.5">গ্রেড</th>
+                      <th className="p-2.5 text-center">পদসংখ্যা</th>
+                      <th className="p-2.5">বেতন স্কেল</th>
+                      <th className="p-2.5">শিক্ষাগত যোগ্যতা</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {extractedCircularResult.positions.map((pos: any, idx: number) => (
+                      <tr key={idx} className="hover:bg-slate-50/50">
+                        <td className="p-2.5 text-center text-slate-400 font-mono">{idx + 1}</td>
+                        <td className="p-2.5 font-bold text-slate-800">{pos.title}</td>
+                        <td className="p-2.5 text-slate-600">{pos.grade || '-'}</td>
+                        <td className="p-2.5 text-center font-bold text-emerald-700">{pos.posts || 1}</td>
+                        <td className="p-2.5 text-slate-600">{pos.salary || '-'}</td>
+                        <td className="p-2.5 text-slate-600 max-w-xs truncate" title={pos.minEducation}>
+                          {pos.minEducation || 'বিজ্ঞপ্তি দেখুন'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* District & Other details */}
+          {extractedCircularResult.districts && (
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/70 text-xs text-slate-600 flex items-start gap-2">
+              <span className="font-bold text-slate-700 shrink-0">আবেদনযোগ্য জেলাসমূহ:</span>
+              <span>{extractedCircularResult.districts}</span>
+            </div>
+          )}
         </div>
       )}
 

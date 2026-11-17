@@ -141,6 +141,16 @@ const normalizePaymentMethod = (m?: string | null): 'bKash' | 'Nagad' | 'Wallet'
   return 'bKash';
 };
 
+// Helper to normalize application status across PostgreSQL uppercase and client UI formats
+const normalizeAppStatus = (status?: string | null): 'pending_payment' | 'processing' | 'completed' | 'rejected' => {
+  if (!status) return 'pending_payment';
+  const s = String(status).toUpperCase();
+  if (s === 'COMPLETED' || s === 'ADMIT_ISSUED') return 'completed';
+  if (s === 'PROCESSING' || s === 'PAYMENT_COMPLETED') return 'processing';
+  if (s === 'REJECTED' || s === 'CANCELLED') return 'rejected';
+  return 'pending_payment';
+};
+
 function AdminContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -739,7 +749,12 @@ function AdminContent() {
         fetch('/api/admin/applications', { headers: adminHeaders }).then(async r => {
           if (r.ok) {
             const data = await r.json();
-            setApplications(Array.isArray(data) ? data : (data.applications || []));
+            const raw = Array.isArray(data) ? data : (data.applications || []);
+            setApplications(raw.map((a: any) => ({
+              ...a,
+              status: normalizeAppStatus(a.status),
+              rawStatus: a.status,
+            })));
           }
         }),
         fetch('/api/admin/jobs', { headers: adminHeaders }).then(async r => {
@@ -1488,7 +1503,10 @@ function AdminContent() {
   };
 
   const openAppDrawer = (app: ApplicationRequest) => {
-    setInspectingApp(app);
+    setInspectingApp({
+      ...app,
+      status: normalizeAppStatus(app.status),
+    });
     setDrawerTrackingId(app.teleTalkTrackingId || '');
     setDrawerPassword(app.teleTalkPassword || '');
     setDrawerCorporateId(app.corporateTrackingId || '');
@@ -2718,7 +2736,7 @@ function AdminContent() {
                   >
                     <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" /> অপেক্ষমাণ পেমেন্ট</span>
                     <span className="px-1.5 py-0.2 bg-amber-200/50 rounded-full text-[10px]">
-                      {applications.filter(a => a.status === 'pending_payment').length}
+                      {applications.filter(a => normalizeAppStatus(a.status) === 'pending_payment').length}
                     </span>
                   </button>
 
@@ -2733,7 +2751,7 @@ function AdminContent() {
                   >
                     <span className="inline-flex items-center gap-1"><RefreshCw className="w-3 h-3" /> প্রসেসিং কিউ</span>
                     <span className="px-1.5 py-0.2 bg-blue-200/50 rounded-full text-[10px]">
-                      {applications.filter(a => a.status === 'processing').length}
+                      {applications.filter(a => normalizeAppStatus(a.status) === 'processing').length}
                     </span>
                   </button>
 
@@ -2748,7 +2766,7 @@ function AdminContent() {
                   >
                     <span className="inline-flex items-center gap-1"><Check className="w-3 h-3" /> সম্পন্ন</span>
                     <span className="px-1.5 py-0.2 bg-emerald-200/50 rounded-full text-[10px]">
-                      {applications.filter(a => a.status === 'completed').length}
+                      {applications.filter(a => normalizeAppStatus(a.status) === 'completed').length}
                     </span>
                   </button>
 
@@ -2763,7 +2781,7 @@ function AdminContent() {
                   >
                     <span className="inline-flex items-center gap-1"><X className="w-3 h-3" /> বাতিল</span>
                     <span className="px-1.5 py-0.2 bg-rose-200/50 rounded-full text-[10px]">
-                      {applications.filter(a => a.status === 'rejected').length}
+                      {applications.filter(a => normalizeAppStatus(a.status) === 'rejected').length}
                     </span>
                   </button>
                 </div>
@@ -2808,6 +2826,7 @@ function AdminContent() {
                       </tr>
                     ) : (
                       filteredApplications.map((app) => {
+                        const appStatus = normalizeAppStatus(app.status);
                         const cleanTrx = app.trxId ? app.trxId.trim().toUpperCase() : '';
                         const isDuplicateTrx = cleanTrx && duplicateTrxMap[cleanTrx] > 1;
                         const matchingJob = jobs.find(j => j.id === app.jobId);
@@ -2976,7 +2995,7 @@ function AdminContent() {
                               )}
 
                               {/* 1-Click WhatsApp Payment Dispute Shortcuts */}
-                              {app.status === 'pending_payment' && (
+                              {appStatus === 'pending_payment' && (
                                 <div className="flex flex-wrap items-center gap-1 mt-1.5">
                                   <a
                                     href={`https://wa.me/88${app.candidatePhone ? app.candidatePhone.replace(/\D/g, '') : ''}?text=${encodeURIComponent(`আসসালামু আলাইকুম ${app.candidateName}, চাকরি সেবা অ্যাডমিন টিম থেকে আপনার "${app.jobTitle}" আবেদনের জন্য যোগাযোগ করা হচ্ছে। নির্ধারিত ফি ৳${app.totalAmount || 0}-এর বিপরীতে প্রেরিত TrxID-তে সমস্যা পাওয়া গেছে। অনুগ্রহ করে যাচাই করে জানান।`)}`}
@@ -3002,7 +3021,7 @@ function AdminContent() {
 
                             {/* 5. Live Status Badge */}
                             <td className="py-3 px-3">
-                              {app.status === 'completed' ? (
+                              {appStatus === 'completed' ? (
                                 <div className="space-y-1">
                                   <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">
                                     <CheckCircle2 className="w-3 h-3 text-emerald-700" />
@@ -3031,7 +3050,7 @@ function AdminContent() {
                                     </span>
                                   )}
                                 </div>
-                              ) : app.status === 'processing' ? (
+                              ) : appStatus === 'processing' ? (
                                 <div className="space-y-1">
                                   <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-100 text-blue-800">
                                     <Clock className="w-3 h-3 text-blue-700" />
@@ -3052,7 +3071,7 @@ function AdminContent() {
                                     );
                                   })()}
                                 </div>
-                              ) : app.status === 'pending_payment' ? (
+                              ) : appStatus === 'pending_payment' ? (
                                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800">
                                   <Clock className="w-3 h-3 text-amber-700" />
                                   <span>অপেক্ষমাণ</span>
@@ -3087,7 +3106,7 @@ function AdminContent() {
                                   <span>ভল্ট ড্রয়ার</span>
                                 </button>
 
-                                {app.status === 'pending_payment' && (
+                                {appStatus === 'pending_payment' && (
                                   <>
                                     <button
                                       type="button"
@@ -3108,7 +3127,7 @@ function AdminContent() {
                                   </>
                                 )}
 
-                                {app.status === 'processing' && (
+                                {appStatus === 'processing' && (
                                   <>
                                     <button
                                       type="button"
@@ -3145,7 +3164,7 @@ function AdminContent() {
                                   </>
                                 )}
 
-                                {app.status === 'completed' && (
+                                {appStatus === 'completed' && (
                                   <>
                                     {(app.applicantCopyPdfUrl || app.pdfUrl) ? (
                                       <a
@@ -3195,7 +3214,7 @@ function AdminContent() {
                                   </>
                                 )}
 
-                                {app.status === 'rejected' && (
+                                {appStatus === 'rejected' && (
                                   <>
                                     {/* Restore to Processing Queue */}
                                     <button

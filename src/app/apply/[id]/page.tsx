@@ -3,15 +3,48 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { serverDB } from '@/lib/db';
+import { JobCircular } from '@/types';
 import ApplyClient from '@/components/apply_components/ApplyClient';
 
 interface Props {
   params: Promise<{ id: string }>;
 }
 
+async function fetchJobFromBackend(idOrSlug: string): Promise<JobCircular | null> {
+  try {
+    const backendUrl = (process.env.INTERNAL_BACKEND_URL || 'http://localhost:6969').replace(/\/+$/, '');
+    const res = await fetch(`${backendUrl}/api/jobs/${encodeURIComponent(idOrSlug)}`, {
+      cache: 'no-store',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const rawJob = data.job || data.data;
+      if (rawJob && (rawJob.id || rawJob.slug)) {
+        return rawJob as JobCircular;
+      }
+    }
+  } catch {
+    // Backend fetch failed or timed out
+  }
+  return null;
+}
+
+async function resolveJob(idOrSlug: string): Promise<JobCircular | null> {
+  const local = serverDB.getPublicJobById(idOrSlug) || serverDB.getJobByIdOrSlug(idOrSlug);
+  if (local) return local;
+
+  const remote = await fetchJobFromBackend(idOrSlug);
+  if (remote) return remote;
+
+  return null;
+}
+
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
-  const job = serverDB.getPublicJobById(params.id);
+  const job = await resolveJob(params.id);
   if (!job || job.id.startsWith('draft-') || (job as any).status === 'UNPUBLISHED') {
     return {
       title: 'আবেদন | চাকরি সেবা',
@@ -36,7 +69,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
 export default async function ApplyPage(props: Props) {
   const params = await props.params;
-  const job = serverDB.getPublicJobById(params.id);
+  const job = await resolveJob(params.id);
 
   if (!job || job.id.startsWith('draft-') || (job as any).status === 'UNPUBLISHED') {
     redirect(`/jobs?search=${encodeURIComponent(params.id)}`);

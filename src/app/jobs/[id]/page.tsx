@@ -2,6 +2,7 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound, redirect, RedirectType } from 'next/navigation';
 import { serverDB } from '@/lib/db';
+import { JobCircular } from '@/types';
 import JobDetailClient from '@/components/jobs_components/JobDetailClient';
 
 interface Props {
@@ -78,10 +79,42 @@ function parseSalaryRange(salaryStr?: string): { min?: number; max?: number } | 
   return null;
 }
 
+async function fetchJobFromBackend(idOrSlug: string): Promise<JobCircular | null> {
+  try {
+    const backendUrl = (process.env.INTERNAL_BACKEND_URL || 'http://localhost:6969').replace(/\/+$/, '');
+    const res = await fetch(`${backendUrl}/api/jobs/${encodeURIComponent(idOrSlug)}`, {
+      cache: 'no-store',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const rawJob = data.job || data.data;
+      if (rawJob && (rawJob.id || rawJob.slug)) {
+        return rawJob as JobCircular;
+      }
+    }
+  } catch {
+    // Backend fetch failed or timed out
+  }
+  return null;
+}
+
+async function resolveJob(idOrSlug: string): Promise<JobCircular | null> {
+  const local = serverDB.getPublicJobById(idOrSlug) || serverDB.getJobByIdOrSlug(idOrSlug);
+  if (local) return local;
+
+  const remote = await fetchJobFromBackend(idOrSlug);
+  if (remote) return remote;
+
+  return null;
+}
+
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
   const jobId = params?.id || '';
-  const job = serverDB.getPublicJobById(jobId);
+  const job = await resolveJob(jobId);
   const pubStatus = (job as any)?.publicationStatus;
   if (
     !job ||
@@ -175,8 +208,8 @@ export default async function SingleJobPage(props: Props) {
     redirect(redirectRecord.targetPath, RedirectType.replace);
   }
 
-  // 2. Resolve job by ID or clean SEO Slug
-  const job = serverDB.getPublicJobById(params.id);
+  // 2. Resolve job by ID or clean SEO Slug (local store + live PostgreSQL)
+  const job = await resolveJob(params.id);
   const pubStatus = (job as any)?.publicationStatus;
 
   // 3. Strict public visibility guard (0% leakage of drafts/unapproved/scheduled)

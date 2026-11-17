@@ -491,27 +491,28 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
 
       const data = await res.json();
       console.log('>>> [handleSubmitOrder] res.ok:', res.ok, 'data:', JSON.stringify(data));
-      if (res.ok && data.success && data.createdApp) {
-        setCreatedOrderNumber(data.createdApp.id);
+      const app = data.createdApp || data.application || data.data;
+      if (res.ok && data.success && app) {
+        setCreatedOrderNumber(app.id);
         try {
-          storage.addApplication(data.createdApp);
+          storage.addApplication(app);
           if (paymentMethod === 'Wallet' || (useWalletSplit && splitWalletAmount > 0)) {
             const user = storage.getUser();
             if (typeof data.walletBalance === 'number') {
               user.walletBalance = data.walletBalance;
             } else {
-              user.walletBalance = Math.max(0, (user.walletBalance || 0) - (data.createdApp.totalAmount || 0));
+              user.walletBalance = Math.max(0, (user.walletBalance || 0) - (app.totalAmount || 0));
             }
             storage.updateUser(user);
 
             const txn = data.transaction || {
-              id: 'TXN-' + data.createdApp.id,
+              id: 'TXN-' + app.id,
               date: new Date().toISOString(),
-              amount: data.createdApp.totalAmount,
+              amount: app.totalAmount,
               type: 'fee_deduction',
-              description: `${data.createdApp.jobTitle} - ${data.createdApp.postName}`,
+              description: `${app.jobTitle} - ${app.postName}`,
               method: 'Wallet',
-              trxId: 'WALLET-' + data.createdApp.id,
+              trxId: 'WALLET-' + app.id,
               status: 'completed'
             };
             storage.addTransaction(txn);
@@ -520,7 +521,7 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
             window.dispatchEvent(new Event('cs_txs_changed'));
             window.dispatchEvent(new Event('cs_user_changed'));
           }
-          window.dispatchEvent(new CustomEvent('cs_application_submitted', { detail: data.createdApp }));
+          window.dispatchEvent(new CustomEvent('cs_application_submitted', { detail: app }));
         } catch (storageErr) {
           console.warn('Storage sync error:', storageErr);
         }
@@ -1367,7 +1368,7 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
                     <span className="font-bold text-slate-900">
                       {paymentMethod === 'bKash' ? 'বিকাশ পার্সোনাল নম্বর: ' : 'নগদ পার্সোনাল নম্বর: '}
                     </span>
-                    <strong className="text-emerald-700 font-mono text-sm"> 01712-345678</strong>
+                    <strong className="text-emerald-700 font-mono text-sm"> 01774-366643</strong>
                     <p className="text-[11px] text-slate-500 mt-0.5">
                       উক্ত নম্বরে <strong>৳{totalFee}</strong> Send Money করে নিচের বক্সে TrxID এবং আপনার প্রেরক নম্বর দিন।
                     </p>

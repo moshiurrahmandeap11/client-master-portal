@@ -29,7 +29,8 @@ import {
   ChevronRight,
   LayoutTemplate,
   Globe,
-  Calculator
+  Calculator,
+  Upload
 } from 'lucide-react';
 import { JobCircular, JobPosition } from '@/types';
 import { inferPositionGradeAndSalary } from '@/lib/pay-scale';
@@ -89,7 +90,9 @@ export default function UniversalJobWorkspace({
   const [previewMode, setPreviewMode] = useState<'card' | 'full_page'>('full_page');
 
   // AI Auto-Fill Mode & Inputs
-  const [aiInputMode, setAiInputMode] = useState<'url' | 'text'>('url');
+  const [aiInputMode, setAiInputMode] = useState<'file' | 'url' | 'text'>('file');
+  const [uploadedPdfFile, setUploadedPdfFile] = useState<File | null>(null);
+  const [isDraggingPdf, setIsDraggingPdf] = useState(false);
   const [aiInputUrl, setAiInputUrl] = useState('');
   const [aiInputText, setAiInputText] = useState('');
   const [isAiGenerating, setIsAiGenerating] = useState(false);
@@ -261,8 +264,173 @@ export default function UniversalJobWorkspace({
     return positions.reduce((sum, p) => sum + (Number(p.posts) || 0), 0) || 1;
   }, [positions]);
 
+  const applyExtractedJobData = (ext: any, sourcePdf?: string) => {
+    // Populate Basic Identity
+    if (ext.title) setTitle(ext.title);
+    if (ext.organization) setOrganization(ext.organization);
+    if (ext.category) setCategory(ext.category);
+    if (ext.grade || (ext.positions && ext.positions[0]?.grade)) {
+      setGrade(ext.grade || ext.positions[0].grade);
+    }
+    if (ext.salary || (ext.positions && ext.positions[0]?.salary)) {
+      setSalary(ext.salary || ext.positions[0].salary);
+    }
+    if (ext.minEducation || (ext.positions && ext.positions[0]?.minEducation)) {
+      setMinEducation(ext.minEducation || ext.positions[0].minEducation);
+    }
+    if (ext.minAge) setMinAge(Number(ext.minAge) || 18);
+    if (ext.maxAge) setMaxAge(Number(ext.maxAge) || 32);
+    if (ext.ageCutOffDate || ext.deadline) setAgeCutOffDate(ext.ageCutOffDate || ext.deadline);
+    if (ext.districts) setDistricts(ext.districts);
+    if (ext.deadline) setDeadline(ext.deadline);
+    if (ext.applicationStartDate || ext.startDate) {
+      setApplicationStartDate(ext.applicationStartDate || ext.startDate);
+    }
+    if (ext.govtFee || (ext.positions && ext.positions[0]?.govtFee)) {
+      setGovtFee(Number(ext.govtFee || ext.positions[0].govtFee));
+    }
+    if (ext.serviceFee) setServiceFee(Number(ext.serviceFee) || 50);
+    if (ext.feeRange) setFeeRange(ext.feeRange);
+    if (ext.officialLink) setOfficialLink(ext.officialLink);
+    if (ext.officialPdfUrl || sourcePdf) {
+      setCircularPdfUrl(ext.officialPdfUrl || sourcePdf || '');
+    }
+    if (ext.circularImage) setCircularImage(ext.circularImage);
+    if (ext.instructions?.smsPrefix || ext.smsPrefix) {
+      setSmsPrefix(ext.instructions?.smsPrefix || ext.smsPrefix);
+    }
+    if (ext.instructions?.smsFormat || ext.smsFormat) {
+      setSmsFormat(ext.instructions?.smsFormat || ext.smsFormat);
+    } else if (ext.smsPrefix) {
+      setSmsFormat(`১ম এসএমএস: ${ext.smsPrefix} <Space> User_ID পাঠিয়ে দিন 16222 নম্বরে।`);
+    }
+
+    // Content & Guidelines
+    if (ext.bengaliDescription || ext.editorialOverview) {
+      setBengaliDescription(ext.bengaliDescription || ext.editorialOverview);
+    }
+    if (Array.isArray(ext.positions) && ext.positions.length > 0) {
+      setPositions(ext.positions.map((p: any) => {
+        const inf = inferPositionGradeAndSalary(p.title || '');
+        return {
+          title: p.title || '',
+          grade: p.grade || inf.grade,
+          posts: Number(p.posts) || 1,
+          salary: p.salary || inf.salary,
+          minEducation: p.minEducation || inf.minEducation,
+          govtFee: p.govtFee ?? inf.govtFee
+        };
+      }));
+    }
+    if (Array.isArray(ext.requirements) && ext.requirements.length > 0) {
+      setRequirements(ext.requirements);
+    }
+    if (Array.isArray(ext.documentsRequired) && ext.documentsRequired.length > 0) {
+      setDocumentsRequired(ext.documentsRequired);
+    }
+    if (ext.applicationInstructions) {
+      setApplicationInstructions(ext.applicationInstructions);
+    } else if (ext.instructions?.steps && Array.isArray(ext.instructions.steps)) {
+      setApplicationInstructions(ext.instructions.steps.join('\n'));
+    }
+    if (ext.selectionProcess) setSelectionProcess(ext.selectionProcess);
+    if (Array.isArray(ext.faqItems) && ext.faqItems.length > 0) {
+      setFaqItems(ext.faqItems);
+    } else if (Array.isArray(ext.faqs) && ext.faqs.length > 0) {
+      setFaqItems(ext.faqs.map((f: any) => ({
+        question: f.q || f.question || '',
+        answer: f.a || f.answer || ''
+      })));
+    }
+    if (ext.seoTitle) setSeoTitle(ext.seoTitle);
+    if (ext.seoDescription) setSeoDescription(ext.seoDescription);
+    if (Array.isArray(ext.seoKeywords)) {
+      setSeoKeywords(ext.seoKeywords.join(', '));
+    } else if (typeof ext.seoKeywords === 'string') {
+      setSeoKeywords(ext.seoKeywords);
+    }
+
+    const count = ext.positions?.length || 1;
+    setAiSuccessMessage(`জেমিনি এআই সফলভাবে ${count}টি পদবি, বেতন স্কেল, জেলাভিত্তিক যোগ্যতা, আবেদন ফি ও এসএমএস ফরম্যাট নির্ভুলভাবে এক্সট্র্যাক্ট করেছে!`);
+    setActiveTab('basic');
+  };
+
   // Handler: Call Gemini AI to Auto-Fill All Blocks
   const handleAiAutoFill = async () => {
+    if (aiInputMode === 'file') {
+      if (!uploadedPdfFile) {
+        setFormError('অনুগ্রহ করে কম্পিউটার থেকে একটি সার্কুলার PDF ফাইল নির্বাচন বা ড্রপ করুন।');
+        return;
+      }
+      setIsAiGenerating(true);
+      setFormError(null);
+      setAiSuccessMessage(null);
+
+      try {
+        const formData = new FormData();
+        formData.append('file', uploadedPdfFile);
+
+        const adminHeaders: Record<string, string> = {
+          'x-admin-secret': '1234',
+        };
+        if (typeof window !== 'undefined') {
+          const secret = localStorage.getItem('x-admin-secret') || localStorage.getItem('adminSecret') || localStorage.getItem('admin_secret');
+          if (secret) adminHeaders['x-admin-secret'] = secret;
+          const token = localStorage.getItem('cs_access_token') || localStorage.getItem('accessToken');
+          if (token) adminHeaders['Authorization'] = `Bearer ${token}`;
+        }
+
+        let res: Response;
+        try {
+          res = await fetch('/api/admin/spider/upload-pdf-parse', {
+            method: 'POST',
+            credentials: 'include',
+            headers: adminHeaders,
+            body: formData,
+          });
+        } catch {
+          res = await fetch('http://localhost:6969/api/admin/spider/upload-pdf-parse', {
+            method: 'POST',
+            credentials: 'include',
+            headers: adminHeaders,
+            body: formData,
+          });
+        }
+
+        if (!res.ok && res.status >= 500) {
+          try {
+            res = await fetch('http://localhost:6969/api/admin/spider/upload-pdf-parse', {
+              method: 'POST',
+              credentials: 'include',
+              headers: adminHeaders,
+              body: formData,
+            });
+          } catch {
+            // keep original response
+          }
+        }
+
+        const rawText = await res.text();
+        let data: any = {};
+        try {
+          data = JSON.parse(rawText);
+        } catch {
+          throw new Error(rawText.slice(0, 150) || 'সার্ভার থেকে সঠিক ফরম্যাটে উত্তর পাওয়া যায়নি।');
+        }
+
+        if (!res.ok || !data.success || !data.extracted) {
+          throw new Error(data.message || data.error || 'PDF ফাইল স্ক্যান করতে সমস্যা হয়েছে।');
+        }
+
+        applyExtractedJobData(data.extracted, uploadedPdfFile.name);
+      } catch (err: any) {
+        setFormError(`PDF পার্সিং ব্যর্থ: ${err.message}`);
+      } finally {
+        setIsAiGenerating(false);
+      }
+      return;
+    }
+
     const inputContent = aiInputMode === 'url' ? aiInputUrl.trim() : aiInputText.trim();
     if (!inputContent) {
       setFormError(aiInputMode === 'url' 
@@ -287,6 +455,7 @@ export default function UniversalJobWorkspace({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-admin-secret': '1234'
         },
         credentials: 'include',
         body: JSON.stringify(payload)
@@ -297,88 +466,7 @@ export default function UniversalJobWorkspace({
         throw new Error(data.error || 'জেমিনি এআই সার্কুলার বিশ্লেষণ করতে পারেনি।');
       }
 
-      const ext = data.extracted;
-
-      // Populate Basic Identity
-      if (ext.title) setTitle(ext.title);
-      if (ext.organization) setOrganization(ext.organization);
-      if (ext.category) setCategory(ext.category);
-      if (ext.grade || (ext.positions && ext.positions[0]?.grade)) {
-        setGrade(ext.grade || ext.positions[0].grade);
-      }
-      if (ext.salary || (ext.positions && ext.positions[0]?.salary)) {
-        setSalary(ext.salary || ext.positions[0].salary);
-      }
-      if (ext.minEducation || (ext.positions && ext.positions[0]?.minEducation)) {
-        setMinEducation(ext.minEducation || ext.positions[0].minEducation);
-      }
-      if (ext.minAge) setMinAge(Number(ext.minAge) || 18);
-      if (ext.maxAge) setMaxAge(Number(ext.maxAge) || 32);
-      if (ext.ageCutOffDate || ext.deadline) setAgeCutOffDate(ext.ageCutOffDate || ext.deadline);
-      if (ext.districts) setDistricts(ext.districts);
-      if (ext.deadline) setDeadline(ext.deadline);
-      if (ext.applicationStartDate || ext.startDate) {
-        setApplicationStartDate(ext.applicationStartDate || ext.startDate);
-      }
-      if (ext.govtFee || (ext.positions && ext.positions[0]?.govtFee)) {
-        setGovtFee(Number(ext.govtFee || ext.positions[0].govtFee));
-      }
-      if (ext.serviceFee) setServiceFee(Number(ext.serviceFee) || 50);
-      if (ext.feeRange) setFeeRange(ext.feeRange);
-      if (ext.officialLink) setOfficialLink(ext.officialLink);
-      if (ext.circularPdfUrl || (aiInputMode === 'url' ? inputContent : '')) {
-        setCircularPdfUrl(ext.circularPdfUrl || inputContent);
-      }
-      if (ext.circularImage) setCircularImage(ext.circularImage);
-      if (ext.smsPrefix) setSmsPrefix(ext.smsPrefix);
-      if (ext.smsFormat) setSmsFormat(ext.smsFormat);
-      else if (ext.smsPrefix) {
-        setSmsFormat(`১ম এসএমএস: ${ext.smsPrefix} <Space> User_ID পাঠিয়ে দিন 16222 নম্বরে।`);
-      }
-
-      // Content & Guidelines
-      if (ext.bengaliDescription || ext.editorialOverview) {
-        setBengaliDescription(ext.bengaliDescription || ext.editorialOverview);
-      }
-      if (Array.isArray(ext.positions) && ext.positions.length > 0) {
-        setPositions(ext.positions.map((p: any) => {
-          const inf = inferPositionGradeAndSalary(p.title || '');
-          return {
-            title: p.title || '',
-            grade: p.grade || inf.grade,
-            posts: Number(p.posts) || 1,
-            salary: p.salary || inf.salary,
-            minEducation: p.minEducation || inf.minEducation,
-            govtFee: p.govtFee ?? inf.govtFee
-          };
-        }));
-      }
-      if (Array.isArray(ext.requirements) && ext.requirements.length > 0) {
-        setRequirements(ext.requirements);
-      }
-      if (Array.isArray(ext.documentsRequired) && ext.documentsRequired.length > 0) {
-        setDocumentsRequired(ext.documentsRequired);
-      }
-      if (ext.applicationInstructions) setApplicationInstructions(ext.applicationInstructions);
-      if (ext.selectionProcess) setSelectionProcess(ext.selectionProcess);
-      if (Array.isArray(ext.faqItems) && ext.faqItems.length > 0) {
-        setFaqItems(ext.faqItems);
-      } else if (Array.isArray(ext.faqs) && ext.faqs.length > 0) {
-        setFaqItems(ext.faqs.map((f: any) => ({
-          question: f.q || f.question || '',
-          answer: f.a || f.answer || ''
-        })));
-      }
-      if (ext.seoTitle) setSeoTitle(ext.seoTitle);
-      if (ext.seoDescription) setSeoDescription(ext.seoDescription);
-      if (Array.isArray(ext.seoKeywords)) {
-        setSeoKeywords(ext.seoKeywords.join(', '));
-      } else if (typeof ext.seoKeywords === 'string') {
-        setSeoKeywords(ext.seoKeywords);
-      }
-
-      setAiSuccessMessage(`এআই সফলভাবে ${ext.positions?.length || 1}টি পদ, সম্পাদকীয় বিবরণ, শর্তাবলী, এসএমএস ও এসইও ডেটা পূরণ করেছে! প্রতিটি ট্যাব ও ডানপাশের লাইভ প্রিভিউ দেখুন।`);
-      setActiveTab('basic');
+      applyExtractedJobData(data.extracted, aiInputMode === 'url' ? inputContent : undefined);
     } catch (err: any) {
       setFormError(`এআই অটো-ফিল ব্যর্থ: ${err.message}`);
     } finally {
@@ -692,30 +780,133 @@ export default function UniversalJobWorkspace({
                   </div>
 
                   {/* Mode Selector */}
-                  <div className="flex items-center gap-2 p-1 bg-amber-100/50 rounded-xl border border-amber-200/60 w-fit text-xs">
+                  <div className="flex flex-wrap items-center gap-1.5 p-1 bg-amber-100/60 rounded-xl border border-amber-200/80 w-fit text-xs">
+                    <button
+                      type="button"
+                      onClick={() => setAiInputMode('file')}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+                        aiInputMode === 'file' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'
+                      }`}
+                    >
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>কম্পিউটার থেকে PDF আপলোড (Drag & Drop)</span>
+                    </button>
                     <button
                       type="button"
                       onClick={() => setAiInputMode('url')}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all ${
-                        aiInputMode === 'url' ? 'bg-amber-600 text-white shadow-xs' : 'text-amber-900 hover:text-amber-700'
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+                        aiInputMode === 'url' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'
                       }`}
                     >
                       <Globe className="w-3.5 h-3.5" />
-                      <span>সার্কুলারের লিংক (URL / PDF)</span>
+                      <span>অনলাইন PDF বা নোটিশ লিংক</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setAiInputMode('text')}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all ${
-                        aiInputMode === 'text' ? 'bg-amber-600 text-white shadow-xs' : 'text-amber-900 hover:text-amber-700'
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+                        aiInputMode === 'text' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-700 hover:text-slate-900'
                       }`}
                     >
                       <FileText className="w-3.5 h-3.5" />
-                      <span>সার্কুলারের টেক্সট পেস্ট করুন (Raw Notice)</span>
+                      <span>টেক্সট পেস্ট করুন</span>
                     </button>
                   </div>
 
-                  {aiInputMode === 'url' ? (
+                  {aiInputMode === 'file' ? (
+                    <div className="space-y-3">
+                      <div
+                        onDragOver={(e) => {
+                          e.preventDefault();
+                          setIsDraggingPdf(true);
+                        }}
+                        onDragLeave={() => setIsDraggingPdf(false)}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          setIsDraggingPdf(false);
+                          const file = e.dataTransfer.files?.[0];
+                          if (file && (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'))) {
+                            setUploadedPdfFile(file);
+                            setFormError(null);
+                          } else {
+                            setFormError('শুধুমাত্র PDF (.pdf) ফাইল আপলোড করা যাবে।');
+                          }
+                        }}
+                        className={`p-6 border-2 border-dashed rounded-2xl text-center transition-all ${
+                          isDraggingPdf
+                            ? 'border-emerald-500 bg-emerald-50/80'
+                            : uploadedPdfFile
+                            ? 'border-emerald-300 bg-emerald-50/30'
+                            : 'border-slate-300 hover:border-emerald-400 bg-white'
+                        }`}
+                      >
+                        <input
+                          type="file"
+                          accept=".pdf,application/pdf"
+                          id="universal-circular-pdf-upload"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              setUploadedPdfFile(file);
+                              setFormError(null);
+                            }
+                          }}
+                        />
+
+                        {uploadedPdfFile ? (
+                          <div className="flex items-center justify-between p-3 bg-white border border-emerald-200 rounded-xl max-w-md mx-auto shadow-2xs">
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                                <FileText className="w-5 h-5" />
+                              </div>
+                              <div className="text-left min-w-0">
+                                <p className="text-xs font-bold text-slate-800 truncate">{uploadedPdfFile.name}</p>
+                                <p className="text-[10px] text-slate-400">
+                                  {(uploadedPdfFile.size / (1024 * 1024)).toFixed(2)} MB • PDF সার্কুলার ফাইল
+                                </p>
+                              </div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => setUploadedPdfFile(null)}
+                              className="p-1 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-rose-600 transition-colors"
+                              title="ফাইল বাদ দিন"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
+                        ) : (
+                          <label
+                            htmlFor="universal-circular-pdf-upload"
+                            className="flex flex-col items-center justify-center gap-2 cursor-pointer"
+                          >
+                            <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center shadow-xs">
+                              <Upload className="w-6 h-6" />
+                            </div>
+                            <div>
+                              <p className="text-xs font-bold text-slate-800">
+                                কম্পিউটার থেকে সার্কুলার PDF ফাইলটি এখানে ড্র্যাগ করে ছাড়ুন অথবা ক্লিক করে নির্বাচন করুন
+                              </p>
+                              <p className="text-[11px] text-slate-500 mt-0.5">
+                                যেকোনো পেজ সংখ্যা ও স্ক্যান করা PDF (সর্বোচ্চ ২৫ মেগাবাইট) সমর্থিত
+                              </p>
+                            </div>
+                          </label>
+                        )}
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={handleAiAutoFill}
+                        disabled={isAiGenerating || !uploadedPdfFile}
+                        className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer disabled:opacity-50"
+                      >
+                        <Sparkles className={`w-4 h-4 ${isAiGenerating ? 'animate-spin' : ''}`} />
+                        <span>{isAiGenerating ? 'জেমিনি এআই দিয়ে সম্পূর্ণ সার্কুলার PDF বিশ্লেষণ ও পদবিসমূহ সাজানো হচ্ছে...' : 'সার্কুলার PDF স্ক্যান ও সম্পূর্ণ পেজ তৈরি করুন'}</span>
+                      </button>
+                    </div>
+                  ) : aiInputMode === 'url' ? (
                     <div className="space-y-2">
                       <label className="text-xs font-bold text-slate-800">
                         সার্কুলার PDF লিঙ্ক বা টেলিটক URL দিন:
@@ -726,13 +917,13 @@ export default function UniversalJobWorkspace({
                           value={aiInputUrl}
                           onChange={(e) => setAiInputUrl(e.target.value)}
                           placeholder="যেমন: https://alljobs.teletalk.com.bd/... অথবা http://dcbagerhat.teletalk.com.bd"
-                          className="flex-1 px-3.5 py-2.5 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white font-mono"
+                          className="flex-1 px-3.5 py-2.5 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white font-mono"
                         />
                         <button
                           type="button"
                           onClick={handleAiAutoFill}
-                          disabled={isAiGenerating}
-                          className="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-md transition-all cursor-pointer disabled:opacity-50 shrink-0"
+                          disabled={isAiGenerating || !aiInputUrl.trim()}
+                          className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer disabled:opacity-50 shrink-0"
                         >
                           <Sparkles className={`w-4 h-4 ${isAiGenerating ? 'animate-spin' : ''}`} />
                           <span>{isAiGenerating ? 'বিশ্লেষণ হচ্ছে...' : 'সম্পূর্ণ পেজ বানান'}</span>
@@ -749,13 +940,13 @@ export default function UniversalJobWorkspace({
                         value={aiInputText}
                         onChange={(e) => setAiInputText(e.target.value)}
                         placeholder="ফেসবুক, পত্রিকা বা নোটিশ থেকে কপি করা সার্কুলারের লেখা এখানে পেস্ট করুন..."
-                        className="w-full p-3.5 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white font-normal"
+                        className="w-full p-3.5 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white font-normal"
                       />
                       <button
                         type="button"
                         onClick={handleAiAutoFill}
-                        disabled={isAiGenerating}
-                        className="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer disabled:opacity-50"
+                        disabled={isAiGenerating || !aiInputText.trim()}
+                        className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer disabled:opacity-50"
                       >
                         <Sparkles className={`w-4 h-4 ${isAiGenerating ? 'animate-spin' : ''}`} />
                         <span>{isAiGenerating ? 'এআই দিয়ে বিশ্লেষণ ও পেজ তৈরি হচ্ছে...' : 'টেক্সট দিয়ে সম্পূর্ণ পেজ বানান'}</span>

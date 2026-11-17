@@ -151,6 +151,15 @@ export default function CvBuilderPage() {
             </button>
           </div>
 
+          <Link
+            href="/dashboard/profile"
+            className="px-3.5 py-2 border border-emerald-200 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-800 hover:bg-emerald-100 flex items-center gap-1.5 transition-colors shadow-xs"
+            title="বিদ্যমান সিভি PDF আপলোড করে প্রোফাইল হালনাগাদ করুন"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+            <span>PDF সিভি ইম্পোর্ট</span>
+          </Link>
+
           <button
             data-testid="copy-cv-btn"
             onClick={handleCopyText}

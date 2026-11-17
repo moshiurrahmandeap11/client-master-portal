@@ -23,7 +23,12 @@ import {
   Mail,
   Calendar,
   Check,
-  X
+  X,
+  Upload,
+  RefreshCw,
+  FileText,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { storage } from '@/lib/store';
 import { fetchWithAuth } from '@/lib/axios';
@@ -106,6 +111,171 @@ export default function ProfilePage() {
   const [eduReg, setEduReg] = useState('');
   const [eduYear, setEduYear] = useState('2021');
   const [eduResult, setEduResult] = useState('');
+
+  // AI Resume / CV PDF Import States
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [isDraggingResume, setIsDraggingResume] = useState<boolean>(false);
+  const [isImportingResume, setIsImportingResume] = useState<boolean>(false);
+  const [resumeImportSuccess, setResumeImportSuccess] = useState<string | null>(null);
+  const [resumeImportError, setResumeImportError] = useState<string | null>(null);
+  const [isResumeCardExpanded, setIsResumeCardExpanded] = useState<boolean>(true);
+
+  const mapGeminiResumeToProfile = (parsed: any, currentProfile: CandidateProfile): CandidateProfile => {
+    // Normalize Education
+    const educations: EducationRecord[] = (parsed.educations || []).map((e: any, idx: number) => {
+      let lvl = 'স্নাতক (অনার্স)';
+      const rawLvl = (e.level || '').toLowerCase();
+      if (rawLvl.includes('ssc') || rawLvl.includes('secondary') || rawLvl.includes('dakhil')) {
+        lvl = 'মাধ্যমিক (এসএসসি / সমমান)';
+      } else if (rawLvl.includes('hsc') || rawLvl.includes('higher') || rawLvl.includes('alim') || rawLvl.includes('diploma')) {
+        lvl = 'উচ্চ মাধ্যমিক (এইচএসসি / সমমান)';
+      } else if (rawLvl.includes('master') || rawLvl.includes('post') || rawLvl.includes('mba') || rawLvl.includes('m.sc')) {
+        lvl = 'স্নাতকোত্তর (মাস্টার্স)';
+      }
+
+      return {
+        id: 'EDU-' + Date.now().toString(36) + '-' + idx,
+        level: lvl,
+        degree: e.examTitle || e.degree || (lvl === 'মাধ্যমিক (এসএসসি / সমমান)' ? 'এসএসসি' : 'এইচএসসি'),
+        boardOrUni: e.boardUniversity || e.institute || 'ঢাকা',
+        roll: e.rollNumber || 'N/A',
+        reg: e.regNumber || 'N/A',
+        year: String(e.passingYear || '2020'),
+        result: e.gpaCgpa ? String(e.gpaCgpa) : 'GPA 5.00',
+      };
+    });
+
+    // Normalize Experiences
+    const experiences = (parsed.experiences || []).map((exp: any, idx: number) => ({
+      id: 'exp_' + Date.now() + '_' + idx,
+      designation: exp.designation || 'কর্মকর্তা',
+      organization: exp.organization || 'প্রতিষ্ঠান',
+      startDate: exp.startDate || '2022-01',
+      endDate: exp.isCurrent ? '' : (exp.endDate || '2024-01'),
+      isCurrent: Boolean(exp.isCurrent),
+      responsibilities: exp.responsibilities || '',
+    }));
+
+    // Normalize Skills
+    const skills = (parsed.skills || []).map((s: string, idx: number) => ({
+      id: 'sk_' + Date.now() + '_' + idx,
+      name: typeof s === 'string' ? s : (s as any).name,
+      proficiency: 'INTERMEDIATE',
+    }));
+
+    return {
+      ...currentProfile,
+      name: parsed.name || currentProfile.name,
+      nameBn: parsed.nameBn || currentProfile.nameBn || currentProfile.name,
+      fatherName: parsed.fatherName || currentProfile.fatherName,
+      motherName: parsed.motherName || currentProfile.motherName,
+      dob: parsed.dob || currentProfile.dob,
+      gender: (parsed.gender === 'female' ? 'female' : 'male') as any,
+      maritalStatus: (parsed.maritalStatus === 'married' ? 'married' : 'single') as any,
+      religion: parsed.religion || currentProfile.religion || 'ইসলাম (Islam)',
+      nid: parsed.nid || currentProfile.nid,
+      phone: parsed.phone || currentProfile.phone,
+      email: parsed.email || currentProfile.email,
+      district: parsed.district ? parsed.district.toUpperCase() : currentProfile.district,
+      division: parsed.division ? parsed.division.toUpperCase() : currentProfile.division,
+      careerObjective: parsed.careerObjective || currentProfile.careerObjective,
+      education: educations.length > 0 ? educations : currentProfile.education,
+      experiences: experiences.length > 0 ? experiences : currentProfile.experiences,
+      skills: skills.length > 0 ? skills : currentProfile.skills,
+    };
+  };
+
+  const handleImportResumePdf = async () => {
+    if (!resumeFile) {
+      toast.fire({ icon: 'warning', title: 'অনুগ্রহ করে একটি সিভি PDF ফাইল নির্বাচন করুন।' });
+      return;
+    }
+
+    setIsImportingResume(true);
+    setResumeImportError(null);
+    setResumeImportSuccess(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', resumeFile);
+
+      let res: Response;
+      try {
+        res = await fetchWithAuth('/api/candidate/import-resume', {
+          method: 'POST',
+          body: formData,
+        });
+      } catch {
+        res = await fetchWithAuth('http://localhost:6969/api/candidate/import-resume', {
+          method: 'POST',
+          body: formData,
+        });
+      }
+
+      if (!res.ok && res.status >= 500) {
+        try {
+          res = await fetchWithAuth('http://localhost:6969/api/candidate/import-resume', {
+            method: 'POST',
+            body: formData,
+          });
+        } catch {}
+      }
+
+      const rawText = await res.text();
+      let data: any = {};
+      try {
+        data = JSON.parse(rawText);
+      } catch {
+        throw new Error('সার্ভার থেকে সঠিক ফরম্যাটে উত্তর পাওয়া যায়নি।');
+      }
+
+      if (!res.ok || !data.success || !data.parsed) {
+        throw new Error(data.message || data.error || 'সিভি বিশ্লেষণ করতে সমস্যা হয়েছে।');
+      }
+
+      const updated = mapGeminiResumeToProfile(data.parsed, profile);
+      setProfile(updated);
+
+      if (data.parsed.district) {
+        const distUpper = data.parsed.district.toUpperCase();
+        setPresentDistrict(distUpper);
+        setPermanentDistrict(distUpper);
+      }
+      if (data.parsed.division) {
+        const divUpper = data.parsed.division.toUpperCase();
+        setPresentDivision(divUpper);
+        setPermanentDivision(divUpper);
+      }
+      if (data.parsed.presentAddress) {
+        setPresentVillageRoad(data.parsed.presentAddress);
+      }
+      if (data.parsed.permanentAddress) {
+        setPermanentVillageRoad(data.parsed.permanentAddress);
+      }
+
+      await syncProfileToServer(updated);
+      try {
+        if (refreshCandidateData) {
+          await refreshCandidateData();
+        }
+      } catch {}
+
+      const eduCount = (data.parsed.educations || []).length;
+      const expCount = (data.parsed.experiences || []).length;
+      const skillCount = (data.parsed.skills || []).length;
+
+      const successMsg = `সিভি সফলভাবে বিশ্লেষণ হয়েছে! ${eduCount}টি ডিগ্রি, ${expCount}টি অভিজ্ঞতা ও ${skillCount}টি স্কিল আপনার প্রোফাইলে যুক্ত হয়েছে।`;
+      setResumeImportSuccess(successMsg);
+      toast.fire({ icon: 'success', title: successMsg });
+      setResumeFile(null);
+    } catch (err: any) {
+      const msg = err.message || 'সিভি আপলোড ব্যর্থ হয়েছে।';
+      setResumeImportError(msg);
+      showError(msg, 'ত্রুটি');
+    } finally {
+      setIsImportingResume(false);
+    }
+  };
 
   // Transliterate / Normalize Bengali Address data to English Standard
   const toEnDigits = (str: string) => str.replace(/[০-৯]/g, (d) => String.fromCharCode(d.charCodeAt(0) - 0x09E6 + 0x30));
@@ -667,6 +837,183 @@ export default function ProfilePage() {
         {savedSuccess && (
           <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-semibold shadow-xs animate-in fade-in self-start sm:self-auto">
             <span>তথ্য সফলভাবে সংরক্ষিত হয়েছে!</span>
+          </div>
+        )}
+      </div>
+
+      {/* AI Resume / CV PDF Import Banner */}
+      <div className="bg-gradient-to-r from-emerald-950 via-slate-900 to-emerald-900 text-white rounded-2xl p-5 sm:p-6 shadow-md border border-emerald-800/40 relative overflow-hidden transition-all duration-300">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
+
+        <div className="flex items-start justify-between gap-4 relative z-10">
+          <div className="flex items-start gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center shrink-0 text-emerald-300 shadow-inner">
+              <Sparkles className="w-5 h-5 animate-pulse" />
+            </div>
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/20 text-emerald-300 text-[11px] font-semibold mb-1">
+                <span>AI রেজ্যুমে অটোপাইলট</span>
+                <span className="w-1 h-1 rounded-full bg-emerald-400"></span>
+                <span>Gemini OCR</span>
+              </div>
+              <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
+                বিদ্যমান সিভি (PDF) থেকে ১-ক্লিকে প্রোফাইল তৈরি করুন
+              </h2>
+              <p className="text-xs text-emerald-100/80 mt-0.5 max-w-2xl leading-relaxed">
+                আপনার বিদ্যমান জীবনবৃত্তান্ত / রেজ্যুমে PDF আপলোড করুন। AI স্বয়ংক্রিয়ভাবে আপনার শিক্ষাগত যোগ্যতা, চাকুরির অভিজ্ঞতা, ব্যক্তিগত বিবরণ ও স্কিল পড়ে নিয়ে প্রোফাইল তৈরি করে দেবে।
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsResumeCardExpanded(!isResumeCardExpanded)}
+            className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/80 transition-colors shrink-0 cursor-pointer"
+            title={isResumeCardExpanded ? 'সংকোচন করুন' : 'প্রসারিত করুন'}
+          >
+            {isResumeCardExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
+        </div>
+
+        {isResumeCardExpanded && (
+          <div className="mt-4 pt-4 border-t border-emerald-800/40 relative z-10 space-y-3.5">
+            {/* Upload Dropzone */}
+            <div
+              onDragOver={(e) => {
+                e.preventDefault();
+                setIsDraggingResume(true);
+              }}
+              onDragLeave={(e) => {
+                e.preventDefault();
+                setIsDraggingResume(false);
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                setIsDraggingResume(false);
+                const file = e.dataTransfer.files?.[0];
+                if (file) {
+                  if (file.type !== 'application/pdf' && !file.name.endsWith('.pdf')) {
+                    toast.fire({ icon: 'warning', title: 'শুধুমাত্র PDF ফাইল আপলোড করা যাবে।' });
+                    return;
+                  }
+                  setResumeFile(file);
+                  setResumeImportError(null);
+                  setResumeImportSuccess(null);
+                }
+              }}
+              className={`border-2 border-dashed rounded-xl p-4 sm:p-5 text-center transition-all duration-200 cursor-pointer ${
+                isDraggingResume
+                  ? 'border-emerald-400 bg-emerald-500/20 ring-4 ring-emerald-500/20'
+                  : resumeFile
+                  ? 'border-emerald-400/80 bg-emerald-950/40'
+                  : 'border-emerald-700/50 hover:border-emerald-500/70 bg-black/20 hover:bg-black/30'
+              }`}
+              onClick={() => {
+                const input = document.getElementById('resume-pdf-input');
+                if (input) input.click();
+              }}
+            >
+              <input
+                id="resume-pdf-input"
+                type="file"
+                accept=".pdf,application/pdf"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    if (file.type !== 'application/pdf' && !file.name.endsWith('.pdf')) {
+                      toast.fire({ icon: 'warning', title: 'শুধুমাত্র PDF ফাইল আপলোড করা যাবে।' });
+                      return;
+                    }
+                    setResumeFile(file);
+                    setResumeImportError(null);
+                    setResumeImportSuccess(null);
+                  }
+                }}
+              />
+
+              {resumeFile ? (
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300 shrink-0">
+                      <FileText className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-white truncate max-w-xs sm:max-w-md">
+                        {resumeFile.name}
+                      </p>
+                      <p className="text-xs text-emerald-200/70">
+                        সাইজ: {(resumeFile.size / (1024 * 1024)).toFixed(2)} MB • PDF ফাইল নির্বাচিত
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setResumeFile(null);
+                        setResumeImportError(null);
+                        setResumeImportSuccess(null);
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-medium text-white transition-colors cursor-pointer"
+                    >
+                      বাতিল
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isImportingResume}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleImportResumePdf();
+                      }}
+                      className="px-4 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold transition-all shadow-sm flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                    >
+                      {isImportingResume ? (
+                        <>
+                          <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                          <span>সিভি বিশ্লেষণ হচ্ছে...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="w-3.5 h-3.5" />
+                          <span>এআই দিয়ে তথ্য ইম্পোর্ট করুন</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center gap-2 py-2">
+                  <div className="w-11 h-11 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                    <Upload className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs sm:text-sm font-semibold text-white">
+                      আপনার সিভি বা রেজ্যুমে PDF এখানে ড্র্যাগ করুন অথবা ক্লিক করে ফাইল সিলেক্ট করুন
+                    </p>
+                    <p className="text-[11px] text-emerald-200/60 mt-0.5">
+                      (সর্বোচ্চ ১৫ MB, বাংলা বা ইংরেজি যেকোনো স্ট্যান্ডার্ড কারিকুলাম ভিটা / জীবনবৃত্তান্ত)
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Status Feedback */}
+            {resumeImportSuccess && (
+              <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-emerald-500/20 border border-emerald-400/30 text-emerald-200 text-xs font-medium animate-in fade-in">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>{resumeImportSuccess}</span>
+              </div>
+            )}
+            {resumeImportError && (
+              <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-rose-500/20 border border-rose-400/30 text-rose-200 text-xs font-medium animate-in fade-in">
+                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                <span>{resumeImportError}</span>
+              </div>
+            )}
           </div>
         )}
       </div>

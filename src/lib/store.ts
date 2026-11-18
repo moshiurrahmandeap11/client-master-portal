@@ -116,7 +116,7 @@ const initialDocs: CandidateDocument[] = [
   {
     id: 'DOC-02',
     type: 'signature',
-    title: 'ডিজিタル স্বাক্ষর (স্বচ্ছ ব্যাকগ্রাউন্ড)',
+    title: 'ডিজিটাল স্বাক্ষর (স্বচ্ছ ব্যাকগ্রাউন্ড)',
     fileName: 'candidate-signature-300x80.png',
     fileSize: '৩৮ KB',
     dimensions: '300 × 80 px',

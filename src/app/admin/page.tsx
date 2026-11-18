@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { getDivisionForDistrict, normalizeToEnglishDistrict, normalizeToEnglishDivision } from '@/constants';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { 
-  BarChart3,
-  FileSpreadsheet,
   ShieldCheck,
   PenTool, 
   Users, 
@@ -15,10 +13,8 @@ import {
   FileText, 
   Upload, 
   Send, 
-  Share2, 
   CreditCard, 
   Download, 
-  Plus, 
   Copy, 
   ExternalLink, 
   Sparkles, 
@@ -28,42 +24,27 @@ import {
   X, 
   Tag, 
   Globe, 
-  Rss, 
   Building, 
-  Radio, 
-  FileCheck, 
   AlertTriangle, 
   Lock, 
   Eye, 
   KeyRound, 
   RefreshCw, 
-  Sliders, 
   History, 
-  Menu, 
   ChevronRight, 
   LayoutDashboard, 
   Activity, 
   Briefcase, 
   PlusCircle, 
-  UserCheck, 
-  Shield, 
   Receipt, 
-  PieChart, 
-  DollarSign, 
   Gift, 
-  Layers, 
-  Layout, 
   Bell, 
   MessageSquare, 
   Mail, 
-  ShieldAlert, 
-  Database, 
   Settings, 
-  HardDrive,
   Zap, 
   ArrowUpRight, 
   CheckCircle, 
-  XCircle, 
   AlertCircle, 
   Trash2, 
   Edit3, 
@@ -72,21 +53,17 @@ import {
   MessageCircle, 
   GraduationCap, 
   Award, 
-  Calendar,
-  User,
-  Smartphone,
-  Wallet,
-  Building2,
-  MapPin,
-  Home,
-  BadgeCheck,
-  IdCard,
-  Camera,
-  Folder,
-  Inbox,
-  Lightbulb,
-  MessageSquareWarning,
-  Headphones
+  User, 
+  Smartphone, 
+  Wallet, 
+  Building2, 
+  MapPin, 
+  Home, 
+  IdCard, 
+  Camera, 
+  Folder, 
+  Inbox, 
+  Lightbulb
 } from 'lucide-react';
 import { FaLandmarkFlag, FaBuildingColumns } from 'react-icons/fa6';
 import CouponsRaffleManagement from '@/components/admin_components/CouponsRaffleManagement';
@@ -1223,7 +1200,7 @@ function AdminContent() {
   const duplicateTrxMap = useMemo(() => {
     const counts: Record<string, number> = {};
     applications.forEach(a => {
-      if (a.trxId && a.trxId.trim()) {
+      if (a.trxId && typeof a.trxId === 'string' && a.trxId.trim()) {
         const clean = a.trxId.trim().toUpperCase();
         counts[clean] = (counts[clean] || 0) + 1;
       }
@@ -1602,12 +1579,12 @@ function AdminContent() {
   const filteredApplications = useMemo(() => {
     let list = applications;
     if (activeTab === 'payment-verification') {
-      list = list.filter(a => a.status === 'pending_payment');
+      list = list.filter(a => normalizeAppStatus(a.status) === 'pending_payment');
       if (paymentGatewayFilter !== 'all') {
         list = list.filter(a => normalizePaymentMethod(a.paymentMethod) === paymentGatewayFilter);
       }
     } else if (activeTab === 'processing-queue') {
-      list = list.filter(a => a.status === 'processing');
+      list = list.filter(a => normalizeAppStatus(a.status) === 'processing');
       if (processingChannelFilter !== 'all') {
         list = list.filter(a => {
           const job = jobs.find(j => j.id === a.jobId || (a.jobTitle && (j.title.includes(a.jobTitle) || a.jobTitle.includes(j.title))));
@@ -1650,19 +1627,22 @@ function AdminContent() {
         });
       }
     } else if (activeTab === 'completed-rejected' || activeTab === 'application-history') {
-      list = list.filter(a => a.status === 'completed' || a.status === 'rejected');
+      list = list.filter(a => {
+        const st = normalizeAppStatus(a.status);
+        return st === 'completed' || st === 'rejected';
+      });
       if (completedSubFilter === 'completed') {
-        list = list.filter(a => a.status === 'completed');
+        list = list.filter(a => normalizeAppStatus(a.status) === 'completed');
       } else if (completedSubFilter === 'pdf_missing') {
-        list = list.filter(a => a.status === 'completed' && !a.applicantCopyPdfUrl && !a.pdfUrl);
+        list = list.filter(a => normalizeAppStatus(a.status) === 'completed' && !a.applicantCopyPdfUrl && !a.pdfUrl);
       } else if (completedSubFilter === 'pdf_ready') {
-        list = list.filter(a => a.status === 'completed' && !!(a.applicantCopyPdfUrl || a.pdfUrl));
+        list = list.filter(a => normalizeAppStatus(a.status) === 'completed' && !!(a.applicantCopyPdfUrl || a.pdfUrl));
       } else if (completedSubFilter === 'rejected') {
-        list = list.filter(a => a.status === 'rejected');
+        list = list.filter(a => normalizeAppStatus(a.status) === 'rejected');
       }
     } else if (activeTab === 'all-applications') {
       if (appStatusFilter !== 'all') {
-        list = list.filter(a => a.status === appStatusFilter);
+        list = list.filter(a => normalizeAppStatus(a.status) === appStatusFilter);
       }
     }
     if (!searchTerm.trim()) return list;
@@ -2486,7 +2466,7 @@ function AdminContent() {
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           processingChannelFilter === 'teletalk' ? 'bg-white/25 text-white' : 'bg-blue-100 text-blue-800'
                         }`}>
-                          {applications.filter(a => a.status === 'processing' && detectSubmissionChannel(a, jobs.find(j => j.id === a.jobId)) === 'teletalk').length}
+                          {applications.filter(a => normalizeAppStatus(a.status) === 'processing' && detectSubmissionChannel(a, jobs.find(j => j.id === a.jobId)) === 'teletalk').length}
                         </span>
                       </button>
 
@@ -2503,7 +2483,7 @@ function AdminContent() {
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           processingChannelFilter === 'bank_erecruitment' ? 'bg-white/25 text-white' : 'bg-blue-100 text-blue-800'
                         }`}>
-                          {applications.filter(a => a.status === 'processing' && detectSubmissionChannel(a, jobs.find(j => j.id === a.jobId)) === 'bank_erecruitment').length}
+                          {applications.filter(a => normalizeAppStatus(a.status) === 'processing' && detectSubmissionChannel(a, jobs.find(j => j.id === a.jobId)) === 'bank_erecruitment').length}
                         </span>
                       </button>
 
@@ -2520,7 +2500,7 @@ function AdminContent() {
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           processingChannelFilter === 'corporate_portal' ? 'bg-white/25 text-white' : 'bg-blue-100 text-blue-800'
                         }`}>
-                          {applications.filter(a => a.status === 'processing' && detectSubmissionChannel(a, jobs.find(j => j.id === a.jobId)) === 'corporate_portal').length}
+                          {applications.filter(a => normalizeAppStatus(a.status) === 'processing' && detectSubmissionChannel(a, jobs.find(j => j.id === a.jobId)) === 'corporate_portal').length}
                         </span>
                       </button>
 
@@ -2537,7 +2517,7 @@ function AdminContent() {
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           processingChannelFilter === 'hr_email' ? 'bg-white/25 text-white' : 'bg-blue-100 text-blue-800'
                         }`}>
-                          {applications.filter(a => a.status === 'processing' && detectSubmissionChannel(a, jobs.find(j => j.id === a.jobId)) === 'hr_email').length}
+                          {applications.filter(a => normalizeAppStatus(a.status) === 'processing' && detectSubmissionChannel(a, jobs.find(j => j.id === a.jobId)) === 'hr_email').length}
                         </span>
                       </button>
 
@@ -2554,7 +2534,7 @@ function AdminContent() {
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           processingChannelFilter === 'custom_portal' ? 'bg-white/25 text-white' : 'bg-blue-100 text-blue-800'
                         }`}>
-                          {applications.filter(a => a.status === 'processing' && ['custom_portal', 'postal_offline'].includes(detectSubmissionChannel(a, jobs.find(j => j.id === a.jobId)))).length}
+                          {applications.filter(a => normalizeAppStatus(a.status) === 'processing' && ['custom_portal', 'postal_offline'].includes(detectSubmissionChannel(a, jobs.find(j => j.id === a.jobId)))).length}
                         </span>
                       </button>
                     </div>
@@ -2647,7 +2627,7 @@ function AdminContent() {
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           completedSubFilter === 'pdf_missing' ? 'bg-white/25 text-white' : 'bg-amber-200 text-amber-900 font-mono'
                         }`}>
-                          {applications.filter(a => a.status === 'completed' && !a.applicantCopyPdfUrl && !a.pdfUrl).length}
+                          {applications.filter(a => normalizeAppStatus(a.status) === 'completed' && !a.applicantCopyPdfUrl && !a.pdfUrl).length}
                         </span>
                       </button>
 
@@ -2665,7 +2645,7 @@ function AdminContent() {
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           completedSubFilter === 'pdf_ready' ? 'bg-white/25 text-white' : 'bg-blue-100 text-blue-800'
                         }`}>
-                          {applications.filter(a => a.status === 'completed' && !!(a.applicantCopyPdfUrl || a.pdfUrl)).length}
+                          {applications.filter(a => normalizeAppStatus(a.status) === 'completed' && !!(a.applicantCopyPdfUrl || a.pdfUrl)).length}
                         </span>
                       </button>
 
@@ -2682,7 +2662,7 @@ function AdminContent() {
                         <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                           completedSubFilter === 'rejected' ? 'bg-white/25 text-white' : 'bg-rose-100 text-rose-800'
                         }`}>
-                          {applications.filter(a => a.status === 'rejected').length}
+                          {applications.filter(a => normalizeAppStatus(a.status) === 'rejected').length}
                         </span>
                       </button>
                     </div>
@@ -2690,13 +2670,13 @@ function AdminContent() {
                     {/* Summary Metrics */}
                     <div className="flex items-center gap-3 shrink-0 text-xs">
                       <div className="bg-white px-3 py-1 rounded-xl border border-slate-200 text-slate-600">
-                        সম্পন্ন রাজস্ব: <strong className="text-emerald-800 font-mono text-sm">৳{applications.filter(a => a.status === 'completed').reduce((acc, curr) => acc + (curr.totalAmount || 0), 0)}</strong>
+                        সম্পন্ন রাজস্ব: <strong className="text-emerald-800 font-mono text-sm">৳{applications.filter(a => normalizeAppStatus(a.status) === 'completed').reduce((acc, curr) => acc + (curr.totalAmount || 0), 0)}</strong>
                       </div>
                       <div className="bg-white px-3 py-1 rounded-xl border border-slate-200 text-slate-600">
                         সফলতার হার: <strong className="text-blue-800 font-mono text-sm">
                           {(() => {
-                            const comp = applications.filter(a => a.status === 'completed').length;
-                            const rej = applications.filter(a => a.status === 'rejected').length;
+                            const comp = applications.filter(a => normalizeAppStatus(a.status) === 'completed').length;
+                            const rej = applications.filter(a => normalizeAppStatus(a.status) === 'rejected').length;
                             const total = comp + rej;
                             return total > 0 ? `${Math.round((comp / total) * 100)}%` : '০%';
                           })()}
@@ -3379,14 +3359,14 @@ function AdminContent() {
                       <div className="bg-white p-3 rounded-xl border border-slate-200 text-center flex flex-col items-center">
                         <div className="w-28 h-14 rounded-lg border border-slate-300 bg-slate-100 overflow-hidden flex items-center justify-center mb-2 p-1">
                           <img 
-                            src={inspectingCandidate?.signatureUrl || 'https://dummyimage.com/300x80/f1f5f9/0f172a&text=' + encodeURIComponent(inspectingApp.candidateName)} 
+                            src={inspectingCandidate?.signatureUrl || `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="80" viewBox="0 0 300 80"><rect width="300" height="80" fill="%23f1f5f9"/><text x="150" y="45" font-family="sans-serif" font-size="14" fill="%2364748b" text-anchor="middle">${encodeURIComponent(inspectingApp.candidateName || 'স্বাক্ষর')}</text></svg>`} 
                             alt="Signature"
                             className="max-h-full object-contain"
                           />
                         </div>
                         <span className="text-[11px] font-bold text-slate-700">ডিজিটাল স্বাক্ষর (300×80)</span>
                         <a 
-                          href={inspectingCandidate?.signatureUrl || `https://dummyimage.com/300x80/f1f5f9/0f172a&text=${encodeURIComponent(inspectingApp.candidateName)}`}
+                          href={inspectingCandidate?.signatureUrl || `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="80" viewBox="0 0 300 80"><rect width="300" height="80" fill="%23f1f5f9"/><text x="150" y="45" font-family="sans-serif" font-size="14" fill="%2364748b" text-anchor="middle">${encodeURIComponent(inspectingApp.candidateName || 'স্বাক্ষর')}</text></svg>`}
                           download={`${inspectingApp.candidateName}_signature.png`}
                           target="_blank"
                           rel="noopener noreferrer"

@@ -302,39 +302,7 @@ function LoginForm() {
     }
   };
 
-  // 1-Click Fast Demo Login for Testers / Reviewers
-  const handleQuickDemoLogin = async () => {
-    setError('');
-    setIsSubmitting(true);
-    setLoginIdentifier('tanvir.jobseeker@gmail.com');
-    setLoginPassword('123456');
 
-    try {
-      const data = await loginService.login({
-        email: 'tanvir.jobseeker@gmail.com',
-        password: '123456',
-        role: 'candidate'
-      });
-
-      if (data?.success) {
-        storage.setAuth({
-          isLoggedIn: true,
-          role: 'candidate',
-          name: data.user?.name || data.user?.nameBn || 'চাকরিপ্রার্থী',
-          phone: data.user?.phone || '01712-345678',
-          userId: data.user?.id || ''
-        });
-
-        setSuccessMsg('ডেমো অ্যাকাউন্টে সফলভাবে প্রবেশ করা হয়েছে!');
-        setTimeout(() => {
-          window.location.href = getRedirectTarget();
-        }, 500);
-      }
-    } catch (err: unknown) {
-      setError(extractErrorMessage(err, 'ডেমো লগইন ব্যর্থ হয়েছে।'));
-      setIsSubmitting(false);
-    }
-  };
 
   // Handle New Email-Based Registration (Phone Optional) -> Triggers Verification OTP
   const handleRegister = async (e: React.FormEvent) => {

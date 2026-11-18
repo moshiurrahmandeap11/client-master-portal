@@ -33,11 +33,11 @@ async function fetchJobFromBackend(idOrSlug: string): Promise<JobCircular | null
 }
 
 async function resolveJob(idOrSlug: string): Promise<JobCircular | null> {
-  const local = serverDB.getPublicJobById(idOrSlug) || serverDB.getJobByIdOrSlug(idOrSlug);
-  if (local) return local;
-
   const remote = await fetchJobFromBackend(idOrSlug);
   if (remote) return remote;
+
+  const local = serverDB.getPublicJobById(idOrSlug) || serverDB.getJobByIdOrSlug(idOrSlug);
+  if (local) return local;
 
   return null;
 }

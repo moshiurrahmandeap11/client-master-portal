@@ -1781,7 +1781,7 @@ export default function ProfilePage() {
                         type="text"
                         value={eduLevel}
                         onChange={(e) => setEduLevel(e.target.value)}
-                        placeholder="যেমন: ও-লেভেল, এ-লেভেল, ডিপ্লোমা ఇన్ নার্সিং..."
+                        placeholder="যেমন: ও-লেভেল, এ-লেভেল, ডিপ্লোমা ইন নার্সিং..."
                         className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-xs outline-none"
                         required
                       />

@@ -432,7 +432,6 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
 
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('>>> [handleSubmitOrder] triggered, paymentMethod:', paymentMethod, 'totalFee:', totalFee);
     if (paymentMethod !== 'Wallet' && !trxId.trim()) {
       alert('দয়া করে বিকাশ বা নগদের ট্রানজ্যাকশন আইডি (TrxID) প্রদান করুন।');
       return;
@@ -442,14 +441,11 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
     try {
       const me = await fetchWithAuth('/api/auth/me', { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } });
       const meData = await me.json().catch(() => ({}));
-      console.log('>>> [handleSubmitOrder] meData:', JSON.stringify(meData));
       if (!me.ok || !meData.isLoggedIn) {
-        console.log('>>> [handleSubmitOrder] NOT logged in, redirecting to login');
         router.push('/login?redirect=' + encodeURIComponent(window.location.pathname + window.location.search));
         return;
       }
 
-      console.log('>>> [handleSubmitOrder] calling POST /api/applications...');
       const res = await fetchWithAuth('/api/applications', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -490,7 +486,6 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
       });
 
       const data = await res.json();
-      console.log('>>> [handleSubmitOrder] res.ok:', res.ok, 'data:', JSON.stringify(data));
       const app = data.createdApp || data.application || data.data;
       if (res.ok && data.success && app) {
         setCreatedOrderNumber(app.id);

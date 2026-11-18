@@ -61,8 +61,26 @@ export default function ApplicationsPage() {
   const [isSubmittingDispute, setIsSubmittingDispute] = useState(false);
   const [disputeSuccessMessage, setDisputeSuccessMessage] = useState<string | null>(null);
 
-  const getSmsPrefix = (jobId: string) => {
-    if (!jobId) return 'JOB';
+  const normalizeAppStatus = (status?: string | null): 'pending_payment' | 'processing' | 'completed' | 'rejected' => {
+    if (!status) return 'pending_payment';
+    const s = String(status).toUpperCase();
+    if (s === 'COMPLETED' || s === 'ADMIT_ISSUED' || s === 'SUBMITTED') return 'completed';
+    if (s === 'PROCESSING' || s === 'PAYMENT_COMPLETED') return 'processing';
+    if (s === 'REJECTED' || s === 'CANCELLED') return 'rejected';
+    return 'pending_payment';
+  };
+
+  const mapAppItem = (a: any): ApplicationRequest => ({
+    ...a,
+    status: normalizeAppStatus(a.status),
+    jobTitle: a.jobTitle || a.job?.title || a.job?.titleBn || 'সরকারি চাকরির আবেদন',
+    organization: a.organization || a.job?.organization || '',
+    date: a.date || (a.submittedAt ? new Date(a.submittedAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]),
+    totalAmount: a.totalAmount ?? Number(a.totalPaid || (Number(a.govtFee || 0) + Number(a.serviceFee || 0))),
+  });
+
+  const getSmsPrefix = (jobId?: string) => {
+    if (!jobId || typeof jobId !== 'string') return 'JOB';
     if (jobId.startsWith('bb')) return 'BBAD';
     if (jobId.startsWith('sonali')) return 'SONALI';
     if (jobId.startsWith('bpsc')) return 'BPSC';
@@ -78,8 +96,9 @@ export default function ApplicationsPage() {
     // 1. Initial fast local state
     const localApps = storage.getApplications();
     if (localApps && localApps.length > 0) {
-      setApplications(localApps);
-      setSelectedApp(prev => prev || localApps[0]);
+      const mappedLocal = localApps.map(mapAppItem);
+      setApplications(mappedLocal);
+      setSelectedApp(prev => prev || mappedLocal[0]);
     }
 
     // 2. Fetch live applications from backend API (httpOnly cookie)
@@ -88,20 +107,21 @@ export default function ApplicationsPage() {
       if (res.ok) {
         const data = await res.json();
         if (data.success && Array.isArray(data.applications)) {
-          setApplications(data.applications);
-          if (data.applications.length > 0) {
+          const mappedServer = data.applications.map(mapAppItem);
+          setApplications(mappedServer);
+          if (mappedServer.length > 0) {
             setSelectedApp(prev => {
-              if (!prev) return data.applications[0];
-              const matching = data.applications.find((a: any) => a.id === prev.id);
-              return matching || data.applications[0];
+              if (!prev) return mappedServer[0];
+              const matching = mappedServer.find((a: any) => a.id === prev.id);
+              return matching || mappedServer[0];
             });
           }
           if (typeof window !== 'undefined') {
             try {
-              localStorage.setItem('cs_apps_data', JSON.stringify(data.applications));
+              localStorage.setItem('cs_apps_data', JSON.stringify(mappedServer));
               const user = storage.getUser();
               if (user && user.id) {
-                localStorage.setItem('cs_apps_data_' + user.id, JSON.stringify(data.applications));
+                localStorage.setItem('cs_apps_data_' + user.id, JSON.stringify(mappedServer));
               }
             } catch {}
           }
@@ -116,7 +136,7 @@ export default function ApplicationsPage() {
     loadApps();
 
     const handleSync = () => {
-      const updated = storage.getApplications();
+      const updated = storage.getApplications().map(mapAppItem);
       setApplications(updated);
       if (updated.length > 0) setSelectedApp(prev => prev || updated[0]);
     };
@@ -136,10 +156,10 @@ export default function ApplicationsPage() {
   // Summary Metrics Counts
   const stats = useMemo(() => {
     const total = applications.length;
-    const processing = applications.filter(a => a.status === 'processing').length;
-    const completed = applications.filter(a => a.status === 'completed' || a.status === 'submitted').length;
-    const pendingPayment = applications.filter(a => a.status === 'pending_payment').length;
-    const rejected = applications.filter(a => a.status === 'rejected').length;
+    const processing = applications.filter(a => normalizeAppStatus(a.status) === 'processing').length;
+    const completed = applications.filter(a => normalizeAppStatus(a.status) === 'completed').length;
+    const pendingPayment = applications.filter(a => normalizeAppStatus(a.status) === 'pending_payment').length;
+    const rejected = applications.filter(a => normalizeAppStatus(a.status) === 'rejected').length;
     return { total, processing, completed, pendingPayment, rejected };
   }, [applications]);
 
@@ -231,10 +251,11 @@ export default function ApplicationsPage() {
   // Build Chronological Timeline for Selected App
   const timelineSteps = useMemo(() => {
     if (!selectedApp) return [];
-    const isCompleted = selectedApp.status === 'completed' || selectedApp.status === 'submitted';
-    const isProcessing = selectedApp.status === 'processing';
-    const isPendingPayment = selectedApp.status === 'pending_payment';
-    const isRejected = selectedApp.status === 'rejected';
+    const st = normalizeAppStatus(selectedApp.status);
+    const isCompleted = st === 'completed';
+    const isProcessing = st === 'processing';
+    const isPendingPayment = st === 'pending_payment';
+    const isRejected = st === 'rejected';
 
     return [
       {
@@ -470,10 +491,11 @@ export default function ApplicationsPage() {
         {/* Left: Applications List */}
         <div className="md:col-span-2 space-y-3" data-testid="applications-list">
           {filteredApps.map((app) => {
-            const isCompleted = app.status === 'completed' || app.status === 'submitted';
-            const isProcessing = app.status === 'processing';
-            const isPendingPayment = app.status === 'pending_payment';
-            const isRejected = app.status === 'rejected';
+            const st = normalizeAppStatus(app.status);
+            const isCompleted = st === 'completed';
+            const isProcessing = st === 'processing';
+            const isPendingPayment = st === 'pending_payment';
+            const isRejected = st === 'rejected';
 
             return (
               <div
@@ -624,15 +646,15 @@ export default function ApplicationsPage() {
                 <div className="flex justify-between py-1 border-b border-slate-100">
                   <span className="text-slate-400">আবেদন স্ট্যাটাস:</span>
                   <span className={`font-bold inline-flex items-center gap-1 ${
-                    selectedApp.status === 'completed' || selectedApp.status === 'submitted'
+                    normalizeAppStatus(selectedApp.status) === 'completed'
                       ? 'text-slate-800' 
-                      : selectedApp.status === 'processing' 
+                      : normalizeAppStatus(selectedApp.status) === 'processing' 
                       ? 'text-blue-700' 
                       : 'text-amber-700'
                   }`}>
-                    {selectedApp.status === 'completed' || selectedApp.status === 'submitted' 
+                    {normalizeAppStatus(selectedApp.status) === 'completed' 
                       ? <><Check className="w-3.5 h-3.5" /> আবেদন সম্পন্ন</> 
-                      : selectedApp.status === 'processing' 
+                      : normalizeAppStatus(selectedApp.status) === 'processing' 
                       ? <><Settings className="w-3.5 h-3.5 animate-spin" /> টিম পূরণ করছে</> 
                       : <><Clock className="w-3.5 h-3.5" /> পেন্ডিং</>}
                   </span>
@@ -657,7 +679,7 @@ export default function ApplicationsPage() {
                     <span>৫-ধাপের লাইভ অগ্রগতি ট্র্যাকার</span>
                   </div>
                   <span className="text-[10px] font-mono text-slate-800 bg-slate-100 px-2 py-0.5 rounded-full font-bold">
-                    {(selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? (selectedApp.admitCardUrl ? 'ধাপ ৫/৫' : 'ধাপ ৪/৫') : selectedApp.status === 'processing' ? 'ধাপ ৩/৫' : selectedApp.status === 'pending_payment' ? 'ধাপ ২/৫' : 'ধাপ ১/৫'}
+                    {normalizeAppStatus(selectedApp.status) === 'completed' ? (selectedApp.admitCardUrl ? 'ধাপ ৫/৫' : 'ধাপ ৪/৫') : normalizeAppStatus(selectedApp.status) === 'processing' ? 'ধাপ ৩/৫' : normalizeAppStatus(selectedApp.status) === 'pending_payment' ? 'ধাপ ২/৫' : 'ধাপ ১/৫'}
                   </span>
                 </div>
 
@@ -670,34 +692,34 @@ export default function ApplicationsPage() {
                   {/* Step 2: ফি যাচাই */}
                   <div className="space-y-1">
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto font-bold text-[10px] ${
-                      (selectedApp.status === 'completed' || selectedApp.status === 'submitted' || selectedApp.status === 'processing') ? 'bg-slate-900 text-white' : 'bg-amber-500 text-white animate-pulse'
+                      (normalizeAppStatus(selectedApp.status) === 'completed' || normalizeAppStatus(selectedApp.status) === 'processing') ? 'bg-slate-900 text-white' : 'bg-amber-500 text-white animate-pulse'
                     }`}>
-                      {(selectedApp.status === 'completed' || selectedApp.status === 'submitted' || selectedApp.status === 'processing') ? <Check className="w-3.5 h-3.5" /> : '২'}
+                      {(normalizeAppStatus(selectedApp.status) === 'completed' || normalizeAppStatus(selectedApp.status) === 'processing') ? <Check className="w-3.5 h-3.5" /> : '২'}
                     </div>
                     <span className="font-bold text-slate-900 block truncate">২. ফি যাচাই</span>
                   </div>
                   {/* Step 3: ফরম পূরণ */}
                   <div className="space-y-1">
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto font-bold text-[10px] ${
-                      (selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? 'bg-slate-900 text-white' : selectedApp.status === 'processing' ? 'bg-blue-600 text-white animate-pulse' : 'bg-slate-200 text-slate-400'
+                      normalizeAppStatus(selectedApp.status) === 'completed' ? 'bg-slate-900 text-white' : normalizeAppStatus(selectedApp.status) === 'processing' ? 'bg-blue-600 text-white animate-pulse' : 'bg-slate-200 text-slate-400'
                     }`}>
-                      {(selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? <Check className="w-3.5 h-3.5" /> : '৩'}
+                      {normalizeAppStatus(selectedApp.status) === 'completed' ? <Check className="w-3.5 h-3.5" /> : '৩'}
                     </div>
                     <span className="font-bold text-slate-900 block truncate">৩. ফরম পূরণ</span>
                   </div>
                   {/* Step 4: স্লিপ রেডি */}
                   <div className="space-y-1">
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto font-bold text-[10px] ${
-                      (selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? 'bg-slate-900 text-white' : 'bg-slate-200 text-slate-400'
+                      normalizeAppStatus(selectedApp.status) === 'completed' ? 'bg-slate-900 text-white' : 'bg-slate-200 text-slate-400'
                     }`}>
-                      {(selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? <Check className="w-3.5 h-3.5" /> : '৪'}
+                      {normalizeAppStatus(selectedApp.status) === 'completed' ? <Check className="w-3.5 h-3.5" /> : '৪'}
                     </div>
                     <span className="font-bold text-slate-900 block truncate">৪. স্লিপ রেডি</span>
                   </div>
                   {/* Step 5: প্রবেশপত্র */}
                   <div className="space-y-1">
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center mx-auto font-bold text-[10px] ${
-                      selectedApp.admitCardUrl ? 'bg-slate-900 text-white' : (selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? 'bg-indigo-600 text-white animate-pulse' : 'bg-slate-200 text-slate-400'
+                      selectedApp.admitCardUrl ? 'bg-slate-900 text-white' : normalizeAppStatus(selectedApp.status) === 'completed' ? 'bg-indigo-600 text-white animate-pulse' : 'bg-slate-200 text-slate-400'
                     }`}>
                       {selectedApp.admitCardUrl ? <Check className="w-3.5 h-3.5" /> : '৫'}
                     </div>
@@ -743,7 +765,7 @@ export default function ApplicationsPage() {
 
               {/* Action Buttons: Applicant's Copy PDF, Voucher, Dispute */}
               <div className="pt-3 space-y-2">
-                {(selectedApp.status === 'completed' || selectedApp.status === 'submitted') ? (
+                {normalizeAppStatus(selectedApp.status) === 'completed' ? (
                   <>
                     <div className="grid grid-cols-2 gap-2">
                       <a
@@ -796,7 +818,7 @@ export default function ApplicationsPage() {
                 </button>
 
                 {/* Dispute / TrxID Correction Button */}
-                {(selectedApp.status === 'pending_payment' || selectedApp.status === 'rejected') && (
+                {(normalizeAppStatus(selectedApp.status) === 'pending_payment' || normalizeAppStatus(selectedApp.status) === 'rejected') && (
                   <button
                     type="button"
                     data-testid="dispute-trx-btn"

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import SingleBlogClient from '@/components/guides_components/SingleBlogClient';
-import { blogPostsData } from '@/data/preparationData';
+import { serverApi } from '@/lib/server-api';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -10,14 +10,21 @@ interface PageProps {
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const params = await props.params;
   const slug = params?.slug || '';
-  const post = blogPostsData.find(p => p.slug === slug) || blogPostsData[0];
+  const post = await serverApi.getContentPostBySlug(slug);
+
+  if (!post) {
+    return {
+      title: 'চাকরি সেবা ব্লগ',
+      description: 'সরকারি ও ব্যাংক চাকরি প্রস্তুতি ও ক্যারিয়ার বিশ্লেষণ।',
+    };
+  }
 
   return {
     title: `${post.title} | চাকরি সেবা ব্লগ`,
-    description: post.excerpt,
+    description: post.excerpt || '',
     openGraph: {
       title: `${post.title} | চাকরি সেবা`,
-      description: post.excerpt,
+      description: post.excerpt || '',
     },
   };
 }

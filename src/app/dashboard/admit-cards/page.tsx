@@ -81,7 +81,7 @@ export default function AdmitCardsPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-xs font-bold border border-slate-200 mb-2">
             <Award className="w-3.5 h-3.5 text-slate-700" />
-            <span>স্টেপ ১১ — প্রবেশপত্র ও টেলিটক ট্র্যাকিং হাব</span>
+            <span>প্রবেশপত্র ও টেলিটক ট্র্যাকিং হাব</span>
           </div>
           <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
             <span>অ্যাডমিট কার্ড ও আবেদন ট্র্যাকার</span>

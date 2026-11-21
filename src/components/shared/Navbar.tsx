@@ -212,21 +212,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
     const handleDocsChange = () => syncUserData();
     const handleNotifsChange = () => syncUserData();
 
-    const fetchSettings = () => {
-      fetch('/api/platform/settings', { cache: 'no-store' })
-        .then(res => res.json())
-        .then(d => {
-          const live = d.settings || d.data;
-          if (d.success && live) setPlatformSettings(live);
-        })
-        .catch(err => {
-          console.error('[Navbar] Settings fetch failed:', err);
-        });
-    };
-    if (!initialSettings) {
-      fetchSettings();
-    }
-    window.addEventListener('cs_settings_changed', fetchSettings);
+    // Platform settings are provided via SSR initialSettings + centralized usePlatformSettings hook
 
     window.addEventListener('cs_auth_changed', handleAuthChange);
     window.addEventListener('cs_user_changed', handleUserChange);
@@ -235,7 +221,6 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
     window.addEventListener('cs_notifications_changed', handleNotifsChange);
 
     return () => {
-      window.removeEventListener('cs_settings_changed', fetchSettings);
       window.removeEventListener('cs_auth_changed', handleAuthChange);
       window.removeEventListener('cs_user_changed', handleUserChange);
       window.removeEventListener('cs_documents_changed', handleDocsChange);

@@ -69,67 +69,18 @@ export default function ApplicationsTrackingClient() {
 
   // Sync Applications & Saved Jobs
   useEffect(() => {
-    // 1. Initial local load
+    // 1. Initial local load (no fabricated demo applications)
     const localApps = storage.getApplications();
     if (localApps && localApps.length > 0) {
       setApplications(localApps);
       setSelectedApp(localApps[0]);
     } else {
-      // Provide default demo application so candidates immediately see the interactive tracking interface
-      const demoApps: ApplicationRequest[] = [
-        {
-          id: 'APP-2026-891',
-          jobId: 'job-alljobs-15178',
-          jobTitle: 'সহকারী পরিচালক (সাধারণ)',
-          organization: 'বাংলাদেশ মৎস্য গবেষণা ইনস্টিটিউট (BFRI)',
-          postName: 'সহকারী পরিচালক (সাধারণ)',
-          candidateName: 'আরিফুল ইসলাম',
-          candidatePhone: '01712345678',
-          candidateDistrict: 'ঢাকা',
-          date: '০৮ নভেম্বর ২০২৬',
-          status: 'completed',
-          totalAmount: 280,
-          serviceCharge: 80,
-          governmentFee: 200,
-          paymentMethod: 'bKash',
-          trxId: 'BK9X87M2LQ',
-          teleTalkTrackingId: 'BFRI-AD-98214',
-          teleTalkPassword: 'PASS-98214-BFRI',
-          applicantCopyPdfUrl: 'https://alljobs.teletalk.com.bd/media/public/uploads/governments/jobs/advertisement-1794128565411.pdf',
-          verificationType: 'admin_verified',
-          notes: 'টেলিটক সার্ভারে আবেদন সফল হয়েছে এবং ফি প্রাপ্তি কনফার্ম।'
-        },
-        {
-          id: 'APP-2026-892',
-          jobId: 'job-boesl-overseas-2026',
-          jobTitle: 'উপ-সহকারী প্রকৌশলী',
-          organization: 'বাংলাদেশ ওভারসিজ এমপ্লয়মেন্ট অ্যান্ড সার্ভিসেস লি.',
-          postName: 'উপ-সহকারী প্রকৌশলী',
-          candidateName: 'আরিফুল ইসলাম',
-          candidatePhone: '01712345678',
-          candidateDistrict: 'ঢাকা',
-          date: '০৯ নভেম্বর ২০২৬',
-          status: 'processing',
-          totalAmount: 380,
-          serviceCharge: 80,
-          governmentFee: 300,
-          paymentMethod: 'bKash',
-          trxId: 'BK7Y21Q9MN',
-          verificationType: 'user_reported',
-          notes: 'অফিশিয়াল পোর্টালে ডাটা সাবমিশন চলমান।'
-        }
-      ];
-      setApplications(demoApps);
-      setSelectedApp(demoApps[0]);
+      setApplications([]);
+      setSelectedApp(null);
     }
 
     const localSaved = storage.getSavedJobIds();
-    if (localSaved && localSaved.length > 0) {
-      setSavedJobIds(localSaved);
-    } else {
-      const defaultSaved = ['job-alljobs-15178', 'job-boesl-overseas-2026'];
-      setSavedJobIds(defaultSaved);
-    }
+    setSavedJobIds(Array.isArray(localSaved) ? localSaved : []);
 
     // 2. Fetch public jobs to populate saved jobs metadata
     fetchPublicJobs().then((jobs) => {

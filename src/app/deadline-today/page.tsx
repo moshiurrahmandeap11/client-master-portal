@@ -2,7 +2,7 @@ import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Clock, AlertTriangle, ArrowRight, Building2, Calendar, MapPin, Banknote, Sparkles } from 'lucide-react';
-import { serverDB } from '@/lib/db';
+import { serverApi } from '@/lib/server-api';
 import { CentralDeadlineEngine } from '@/lib/deadlines/engine';
 import { BangladeshDateHelper } from '@/lib/feeds/timezone';
 import DeadlineCountdown from '@/components/shared/deadlines/DeadlineCountdown';
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   }
 };
 
-export default function DeadlineTodayPage() {
-  const allJobs = serverDB.getPublicJobs();
+export default async function DeadlineTodayPage() {
+  const allJobs = await serverApi.getPublicJobs();
   const todayJobs: any[] = [];
 
   for (const job of allJobs) {

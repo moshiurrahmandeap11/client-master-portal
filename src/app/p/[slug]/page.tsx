@@ -2,6 +2,7 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { serverDB } from '@/lib/db';
+import { serverApi } from '@/lib/server-api';
 import CmsPageRenderer from '@/components/shared/CmsPageRenderer';
 import { PageRecord } from '@/types';
 
@@ -11,23 +12,12 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-function resolvePage(rawSlug: string): PageRecord | null {
+async function resolvePage(rawSlug: string): Promise<PageRecord | null> {
   if (!rawSlug) return null;
+  const livePage = await serverApi.getCmsPageBySlug(rawSlug);
+  if (livePage) return livePage;
+
   const cleanSlug = rawSlug.replace(/^_/, '');
-  
-  // 1. Direct ID lookups
-  const byId = serverDB.getPublishedPageById(rawSlug) || 
-               serverDB.getPublishedPageById(cleanSlug) ||
-               serverDB.getPublishedPageById(`_${cleanSlug}`);
-  if (byId) return byId;
-
-  // 2. Direct slug lookups
-  const bySlug = serverDB.getPublishedPageBySlug(rawSlug) || 
-                 serverDB.getPublishedPageBySlug(cleanSlug) ||
-                 serverDB.getPublishedPageBySlug(`/${cleanSlug}`);
-  if (bySlug) return bySlug as any;
-
-  // 3. Fallback scan over registered pages
   const allPages = serverDB.getPages();
   const matched = allPages.find(p => 
     p.id === rawSlug || 
@@ -40,7 +30,7 @@ function resolvePage(rawSlug: string): PageRecord | null {
   );
 
   if (matched) {
-    return serverDB.getPublishedPageById(matched.id) || (matched as any);
+    return (serverDB.getPublishedPageById(matched.id) || matched) as any;
   }
 
   return null;
@@ -49,7 +39,7 @@ function resolvePage(rawSlug: string): PageRecord | null {
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
   const rawSlug = params?.slug || '';
-  const page = resolvePage(rawSlug);
+  const page = await resolvePage(rawSlug);
 
   if (!page) {
     return { 
@@ -75,11 +65,12 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 export default async function DynamicCmsPage(props: Props) {
   const params = await props.params;
   const rawSlug = params?.slug || '';
-  const page = resolvePage(rawSlug);
+  const page = await resolvePage(rawSlug);
 
   if (!page) {
     notFound();
   }
 
-  return <CmsPageRenderer page={page} initialJobs={serverDB.getPublicJobs()} />;
+  const publicJobs = await serverApi.getPublicJobs(60);
+  return <CmsPageRenderer page={page} initialJobs={publicJobs} />;
 }

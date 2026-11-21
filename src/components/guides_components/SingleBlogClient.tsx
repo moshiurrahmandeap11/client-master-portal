@@ -16,7 +16,7 @@ import {
   AlertCircle,
   ArrowUpRight
 } from 'lucide-react';
-import { blogPostsData } from '@/data/preparationData';
+import { useCmsContentDetail } from '@/hooks/usePlatformQueries';
 import { BlogPostItem } from '@/types/preparation.types';
 
 interface SingleBlogClientProps {
@@ -25,12 +25,49 @@ interface SingleBlogClientProps {
 
 export default function SingleBlogClient({ slug }: SingleBlogClientProps) {
   const [copied, setCopied] = useState(false);
+  const { data: rawPost, isLoading } = useCmsContentDetail(slug);
 
-  // Defensive find with fallback
-  const post: BlogPostItem = React.useMemo(() => {
-    const found = blogPostsData.find(p => p.slug === slug);
-    return found || blogPostsData[0];
-  }, [slug]);
+  const post: BlogPostItem | null = React.useMemo(() => {
+    if (!rawPost) return null;
+    const paragraphs = typeof rawPost.content === 'string' ? rawPost.content.split('\n\n').filter(Boolean) : [];
+    return {
+      id: rawPost.id,
+      slug: rawPost.slug,
+      title: rawPost.title || '',
+      excerpt: rawPost.excerpt || '',
+      category: rawPost.category || 'ক্যারিয়ার',
+      categorySlug: (rawPost.category || 'career').toLowerCase(),
+      author: rawPost.author || 'চাকরি সেবা এডিটোরিয়াল',
+      authorRole: 'এডিটোরিয়াল টিম',
+      date: rawPost.publishedAt ? new Date(rawPost.publishedAt).toLocaleDateString('bn-BD') : '',
+      readTime: rawPost.readTime || '৫ মিনিট',
+      viewsCount: 0,
+      coverGradient: 'from-emerald-800 to-teal-900',
+      sections: paragraphs.length > 0 ? [{ heading: rawPost.title || 'বিস্তারিত', paragraphs }] : [],
+      relatedSlugs: [],
+      tags: Array.isArray(rawPost.tags) ? rawPost.tags : [],
+    } as BlogPostItem;
+  }, [rawPost]);
+
+  if (isLoading) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-16 text-center text-slate-500 text-sm">
+        আর্টিকেল লোড হচ্ছে...
+      </div>
+    );
+  }
+
+  if (!post) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-16 text-center space-y-4">
+        <h1 className="text-xl font-bold text-slate-800">আর্টিকেলটি পাওয়া যায়নি</h1>
+        <p className="text-sm text-slate-500">এই ব্লগ আর্টিকেলটি এখনো যুক্ত করা হয়নি অথবা সরিয়ে ফেলা হয়েছে।</p>
+        <Link href="/blog" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-700 text-white text-sm font-bold">
+          সকল ব্লগে ফিরে যান
+        </Link>
+      </div>
+    );
+  }
 
   // Bengali numerals converter
   const toBn = (num: number | string | undefined | null) => {
@@ -154,7 +191,7 @@ export default function SingleBlogClient({ slug }: SingleBlogClientProps) {
 
           <div className="flex flex-wrap gap-2 text-xs">
             {post.relatedSlugs.map((rSlug) => {
-              const rPost = blogPostsData.find(p => p.slug === rSlug);
+              const rPost = null as BlogPostItem | null;
               if (!rPost) return null;
               return (
                 <Link

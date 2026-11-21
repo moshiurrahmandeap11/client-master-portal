@@ -167,7 +167,7 @@ export default function SmartMatchingAdmin() {
         <div className="space-y-1">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>স্টেপ ০৯ — কন্ট্রোল সেন্টার</span>
+            <span>স্মার্ট ম্যাচিং কন্ট্রোল সেন্টার</span>
           </div>
           <h2 className="text-xl font-black text-slate-900">
             স্মার্ট জব ম্যাচিং ও রিকমেন্ডেশন ইঞ্জিন কন্ট্রোল

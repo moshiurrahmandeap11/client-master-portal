@@ -1,6 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { serverApi } from '@/lib/server-api';
 import { 
   ShieldCheck, 
   ChevronRight, 
@@ -27,12 +28,16 @@ export const metadata: Metadata = {
   description: 'চাকরি সেবা প্ল্যাটফর্মের লক্ষ্য, উদ্দেশ্য, ৫টি মূল ভিত্তি এবং পেশাদার টিম পরিচিতি।',
 };
 
-export default function AboutUsPage() {
+const toBn = (n: number | string) =>
+  String(n).replace(/\d/g, (d) => '০১২৩৪৫৬৭৮৯'[Number(d)]);
+
+export default async function AboutUsPage() {
+  const liveStats = await serverApi.getPublicStats();
   const stats = [
-    { label: 'যাচাইকৃত চাকরি বিজ্ঞপ্তি', value: '৫,০০০+', subtext: '১০০% সরকারি গেজেট ও দৈনিক থেকে যাচাইকৃত' },
-    { label: 'নিবন্ধিত সক্রিয় চাকরিপ্রার্থী', value: '১২০,০০০+', subtext: '৬৪টি জেলা থেকে নিয়মিত সেবা গ্রহণকারী' },
-    { label: 'সফল আবেদন ও ট্র্যাকিং রেট', value: '৯৯.৪%', subtext: 'কোনো ফর্ম বাতিল বা সাইজ রিজেকশন ছাড়াই' },
-    { label: 'জরুরি হেল্পডেস্ক সমাধান', value: '১৫ মিনিট', subtext: 'সকাল ৯:০০টা হতে রাত ১১:০০টা লাইভ সাপোর্ট' },
+    { label: 'প্রকাশিত চাকরি বিজ্ঞপ্তি', value: toBn(liveStats.publishedJobs || 0), subtext: 'যাচাইকৃত চলমান সরকারি ও ব্যাংক সার্কুলার' },
+    { label: 'নিবন্ধিত চাকরিপ্রার্থী', value: toBn(liveStats.totalCandidates || 0), subtext: 'প্ল্যাটফর্মে নিবন্ধিত প্রার্থীর সংখ্যা' },
+    { label: 'মোট আবেদন প্রক্রিয়াকৃত', value: toBn(liveStats.totalApplications || 0), subtext: 'স্বচ্ছ ট্র্যাকিং ও ভেরিফাইড আবেদন' },
+    { label: 'জব অ্যালার্ট সাবস্ক্রাইবার', value: toBn(liveStats.totalSubscribers || 0), subtext: 'নিয়মিত সার্কুলার আপডেট গ্রহণকারী' },
   ];
 
   const pillars = [

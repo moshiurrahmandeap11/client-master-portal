@@ -3,7 +3,7 @@ import './globals.css';
 import ConditionalLayout from '@/components/shared/layout/ConditionalLayout';
 import SweetAlertInitializer from '@/components/shared/SweetAlertInitializer';
 import { QueryProvider } from '@/providers/QueryProvider';
-import { serverDB } from '@/lib/db';
+import { serverApi } from '@/lib/server-api';
 
 export const revalidate = 60;
 
@@ -46,31 +46,35 @@ const defaultMetadata: Metadata = {
   },
 };
 
-export function generateMetadata(): Metadata {
-  const homePage = serverDB.getPageById('home') || serverDB.getPages().find(p => p.id === 'home' || p.slug === '/');
-  const settings = serverDB.getPlatformSettings();
-  const title = homePage?.metaTitle || homePage?.title || settings.seo?.defaultTitle || 'চাকরি সেবা • Chakri Sheba | বিডি চাকরির খবর ও আবেদন সার্ভিস';
-  const description = homePage?.metaDescription || settings.seo?.defaultDescription || 'বাংলাদেশের সকল সরকারি ও বেসরকারি চাকরির নিয়মিত আপডেট এবং ঘরে বসেই নির্ভুল আবেদনের বিশ্বস্ত প্ল্যাটফর্ম।';
-  const ogImage = (homePage as any)?.ogImage || (homePage as any)?.content?.ogImage || settings.seo?.defaultOgImage;
+export async function generateMetadata(): Promise<Metadata> {
+  const [settings, homePage] = await Promise.all([
+    serverApi.getPlatformSettings(),
+    serverApi.getCmsPageBySlug('home'),
+  ]);
+  const title = homePage?.metaTitle || homePage?.title || settings?.seo?.defaultTitle || settings?.seoDefaults?.defaultTitle || 'চাকরি সেবা • Chakri Sheba | বিডি চাকরির খবর ও আবেদন সার্ভিস';
+  const description = homePage?.metaDescription || settings?.seo?.defaultDescription || settings?.seoDefaults?.defaultDescription || 'বাংলাদেশের সকল সরকারি ও বেসরকারি চাকরির নিয়মিত আপডেট এবং ঘরে বসেই নির্ভুল আবেদনের বিশ্বস্ত প্ল্যাটফর্ম।';
+  const ogImage = (homePage as any)?.ogImage || (homePage as any)?.content?.ogImage || settings?.seo?.defaultOgImage;
   return {
     ...defaultMetadata,
     title: { default: title, template: '%s | চাকরি সেবা' },
     description,
-    keywords: settings.seo?.defaultKeywords,
+    keywords: settings?.seo?.defaultKeywords || defaultMetadata.keywords,
     openGraph: { ...defaultMetadata.openGraph, title, description, images: ogImage ? [ogImage] : [] },
     twitter: { ...defaultMetadata.twitter, title, description }
   };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const settings = serverDB.getPlatformSettings();
-  const homePage = serverDB.getPageById('home') || serverDB.getPages().find(p => p.id === 'home' || p.slug === '/');
-  const initialHomeHero = homePage?.sections?.find(s => s.type === 'hero' && s.isVisible !== false) || null;
-  const initialHomeSections = homePage?.sections || [];
+  const [settings, homePage] = await Promise.all([
+    serverApi.getPlatformSettings(),
+    serverApi.getCmsPageBySlug('home'),
+  ]);
+  const initialHomeHero = (homePage as any)?.sections?.find((s: any) => s.type === 'hero' && s.isVisible !== false) || null;
+  const initialHomeSections = (homePage as any)?.sections || [];
 
   return (
     <html lang="bn" className="overflow-x-hidden max-w-full" suppressHydrationWarning>

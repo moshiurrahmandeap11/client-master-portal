@@ -3,6 +3,7 @@ import { CentralDeadlineEngine } from '@/lib/deadlines/engine';
 
 import { emptyCandidateProfile } from '@/data/candidateDefaults';
 import { fetchWithAuth } from '@/lib/axios';
+import { usePlatformSettings, getPlatformContacts } from '@/hooks/usePlatformQueries';
 
 import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import Link from 'next/link';
@@ -107,6 +108,8 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
     return positions[0];
   }, [positions, initialPositionParam]);
 
+  const { data: platformSettings } = usePlatformSettings();
+  const platformContacts = getPlatformContacts(platformSettings);
   const [selectedPosition, setSelectedPosition] = useState<JobPosition>(initialPosition);
   const [paymentMethod, setPaymentMethod] = useState<'bKash' | 'Nagad' | 'Wallet'>('bKash');
   const [trxId, setTrxId] = useState('');
@@ -1378,9 +1381,13 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
                   <Smartphone className="w-4 h-4 text-emerald-700 mt-0.5 flex-shrink-0" />
                   <div>
                     <span className="font-bold text-slate-900">
-                      {paymentMethod === 'bKash' ? 'বিকাশ পার্সোনাল নম্বর: ' : 'নগদ পার্সোনাল নম্বর: '}
+                      {paymentMethod === 'bKash' ? 'বিকাশ নম্বর: ' : 'নগদ নম্বর: '}
                     </span>
-                    <strong className="text-emerald-700 font-mono text-sm"> 01774-366643</strong>
+                    <strong className="text-emerald-700 font-mono text-sm">
+                      {' '}{paymentMethod === 'bKash'
+                        ? (platformContacts.bkashNumber || platformContacts.supportPhone || 'অ্যাডমিন সেটিংস থেকে নির্ধারিত হবে')
+                        : (platformContacts.nagadNumber || platformContacts.bkashNumber || platformContacts.supportPhone || 'অ্যাডমিন সেটিংস থেকে নির্ধারিত হবে')}
+                    </strong>
                     <p className="text-[11px] text-slate-500 mt-0.5">
                       উক্ত নম্বরে <strong>৳{totalFee}</strong> Send Money করে নিচের বক্সে TrxID এবং আপনার প্রেরক নম্বর দিন।
                     </p>

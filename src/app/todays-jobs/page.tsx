@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import { serverDB } from '@/lib/db';
+import { serverApi } from '@/lib/server-api';
 import { JobFeedEngine } from '@/lib/feeds/engine';
 import { BangladeshDateHelper } from '@/lib/feeds/timezone';
 import JobFeedClient from '@/components/shared/feeds/JobFeedClient';
@@ -24,17 +24,21 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function TodaysJobsPage() {
-  const jobs = serverDB.getPublicJobs();
-  const placements = serverDB.getFeaturedPlacements();
+export default async function TodaysJobsPage() {
+  const [jobs, rawCategories] = await Promise.all([
+    serverApi.getPublicJobs(),
+    serverApi.getCategories(),
+  ]);
   const todayInfo = BangladeshDateHelper.getBangladeshTodayDate();
-  const categories = serverDB.getCategories().filter(c => c.is_active).map(c => ({
-    id: c.id,
-    name_bn: c.name_bn,
-    slug: c.slug
-  }));
+  const categories = rawCategories
+    .filter((c: any) => c.isActive !== false && c.is_active !== false)
+    .map((c: any) => ({
+      id: c.id,
+      name_bn: c.titleBn || c.name_bn || c.titleEn || c.slug,
+      slug: c.slug,
+    }));
 
-  const initialResult = JobFeedEngine.getFeed(jobs, { feedType: 'today', limit: 9 }, placements);
+  const initialResult = JobFeedEngine.getFeed(jobs, { feedType: 'today', limit: 9 }, []);
 
   const collectionSchema = {
     '@context': 'https://schema.org',

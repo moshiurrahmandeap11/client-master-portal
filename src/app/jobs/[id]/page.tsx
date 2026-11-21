@@ -2,6 +2,7 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound, redirect, RedirectType } from 'next/navigation';
 import { serverDB } from '@/lib/db';
+import { serverApi } from '@/lib/server-api';
 import { JobCircular } from '@/types';
 import JobDetailClient from '@/components/jobs_components/JobDetailClient';
 
@@ -120,6 +121,8 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     !job ||
     job.id.startsWith('draft-') ||
     (job as any).status === 'UNPUBLISHED' ||
+    (job as any).status === 'DRAFT' ||
+    (job as any).status === 'ARCHIVED' ||
     pubStatus === 'UNPUBLISHED' ||
     pubStatus === 'DRAFT' ||
     pubStatus === 'CONTENT_IN_PROGRESS' ||
@@ -217,6 +220,8 @@ export default async function SingleJobPage(props: Props) {
     !job ||
     job.id.startsWith('draft-') ||
     (job as any).status === 'UNPUBLISHED' ||
+    (job as any).status === 'DRAFT' ||
+    (job as any).status === 'ARCHIVED' ||
     pubStatus === 'UNPUBLISHED' ||
     pubStatus === 'DRAFT' ||
     pubStatus === 'CONTENT_IN_PROGRESS' ||
@@ -226,7 +231,7 @@ export default async function SingleJobPage(props: Props) {
     pubStatus === 'REJECTED' ||
     pubStatus === 'PUBLICATION_FAILED'
   ) {
-    redirect(`/jobs?search=${encodeURIComponent(params?.id || '')}`);
+    notFound();
   }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://chakrisheba.com';
@@ -402,7 +407,7 @@ export default async function SingleJobPage(props: Props) {
   };
 
   // 5. Semantic Internal Related Jobs (Topic Clusters) - Top 3 Scored
-  const allJobs = serverDB.getJobs();
+  const allJobs = await serverApi.getPublicJobs(60);
   const activeJobs = allJobs.filter(j => j.id !== job.id && (j.status === 'OPEN' || j.status === 'PUBLISHED' || (j as any).publicationStatus === 'PUBLISHED'));
 
   const scoredJobs = activeJobs.map(other => {

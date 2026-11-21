@@ -39,30 +39,6 @@ export default function HeroSection({ initialData }: { initialData?: HeroCmsData
     }
   }, [homeHero]);
 
-  useEffect(() => {
-    const fetchHeroData = () => {
-      fetch('/api/platform/settings', { cache: 'no-store' })
-        .then(res => res.json())
-        .then(d => {
-          if (d.success && d.homeHero) {
-            setCmsData(d.homeHero);
-          }
-        })
-        .catch(() => {});
-    };
-
-    // Only fetch if initial data is missing
-    if (!effectiveInitial) {
-      fetchHeroData();
-    }
-    window.addEventListener('cs_settings_changed', fetchHeroData);
-    window.addEventListener('cs_page_changed', fetchHeroData);
-    return () => {
-      window.removeEventListener('cs_settings_changed', fetchHeroData);
-      window.removeEventListener('cs_page_changed', fetchHeroData);
-    };
-  }, [effectiveInitial]);
-
   const badgeText = cmsData?.content?.badge || 'সঠিক তথ্য • নির্ভরযোগ্য চাকরির খবর • আপনার ক্যারিয়ারের সঙ্গী';
   const heroTitle = cmsData?.title || 'চাকরির খবর জানুন সবার আগে — ১০০% নির্ভুল আবেদন ও স্মার্ট ক্যারিয়ার সেবা ২০২৬';
   const heroSubtitle = cmsData?.subtitle || 'সরকারি ও বেসরকারি চাকরির সর্বশেষ বিজ্ঞপ্তি, আবেদন প্রক্রিয়া, যোগ্যতা, প্রয়োজনীয় কাগজপত্র এবং পরীক্ষার আপডেট—সবকিছু এক জায়গায়, আপনার জন্য।';
@@ -113,7 +89,7 @@ export default function HeroSection({ initialData }: { initialData?: HeroCmsData
       <div className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
           <div className="lg:col-span-7 space-y-4 text-center lg:text-left">
-            <h1 className={`${getTitleSizeClass(cmsData?.style?.titleFontSize)} font-normal text-white leading-[1.3] whitespace-pre-line`}>
+            <h1 className={`${getTitleSizeClass(cmsData?.style?.titleFontSize)} font-bold text-white leading-[1.3] whitespace-pre-line`}>
               {heroTitle}
             </h1>
 

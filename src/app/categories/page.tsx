@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Metadata } from 'next';
-import { serverDB } from '@/lib/db';
+import { serverApi } from '@/lib/server-api';
 import { JobTaxonomyClassifier } from '@/lib/taxonomy/classifier';
 import CategoriesDirectoryClient, { CategoryItem } from '@/components/shared/categories/CategoriesDirectoryClient';
 
@@ -21,9 +21,13 @@ export const metadata: Metadata = {
   }
 };
 
-export default function CategoriesDirectoryPage() {
-  const allCategories = serverDB.getCategories().filter((c) => c.is_active);
-  const eligibleJobs = serverDB.getPublicJobs().filter((j) => {
+export default async function CategoriesDirectoryPage() {
+  const [rawCategories, rawJobs] = await Promise.all([
+    serverApi.getCategories(),
+    serverApi.getPublicJobs(),
+  ]);
+  const allCategories = rawCategories.filter((c) => c.is_active);
+  const eligibleJobs = rawJobs.filter((j) => {
     if (j.id?.startsWith('draft-')) return false;
     const pubStatus = ((j as any).publicationStatus || '').toUpperCase();
     return pubStatus !== 'UNPUBLISHED' && pubStatus !== 'DRAFT';

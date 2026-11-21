@@ -32,12 +32,18 @@ export default function NotificationsPage() {
       const headers: Record<string, string> = {};
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
-      const res = await fetch('/api/candidate/notifications', { headers });
+      const res = await fetch('/api/candidate/notifications', { headers, credentials: 'include' });
       if (res.ok) {
         const data = await res.json();
         if (data.success && Array.isArray(data.notifications)) {
-          setNotifications(data.notifications);
-          setUnreadCount(data.unreadCount || 0);
+          const normalized = data.notifications.map((n: any) => ({
+            ...n,
+            read: n.read ?? n.isRead ?? false,
+            date: n.date || n.createdAt || new Date().toISOString(),
+            link: n.link || n.actionUrl,
+          }));
+          setNotifications(normalized);
+          setUnreadCount(typeof data.unreadCount === 'number' ? data.unreadCount : normalized.filter((n: any) => !n.read).length);
           setIsLoading(false);
           return;
         }
@@ -73,6 +79,7 @@ export default function NotificationsPage() {
       await fetch('/api/candidate/notifications', {
         method: 'PATCH',
         headers,
+        credentials: 'include',
         body: JSON.stringify({ id })
       });
     } catch {

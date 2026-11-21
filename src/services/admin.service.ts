@@ -75,7 +75,7 @@ export const adminService = {
 
   async getApplications(): Promise<{ applications?: ApplicationRequest[] }> {
     try {
-      const response = await apiClient.get('/api/applications');
+      const response = await apiClient.get('/api/admin/applications');
       return response.data;
     } catch (error) {
       return handleApiError(error);

@@ -14,10 +14,21 @@ import {
   HelpCircle,
   Briefcase
 } from 'lucide-react';
-import { careerGuidesData } from '@/data/preparationData';
+import { useCmsContent } from '@/hooks/usePlatformQueries';
 
 export default function CareerGuidesListClient() {
-  const [guides] = useState(Object.values(careerGuidesData));
+  const { data: rawGuides = [] } = useCmsContent('guide');
+  const guides = useMemo(
+    () =>
+      rawGuides.map((g: any) => ({
+        slug: g.slug,
+        title: g.title || '',
+        category: g.category || 'ক্যারিয়ার গাইড',
+        readTime: g.readTime || '৫ মিনিট',
+        heroSummary: g.excerpt || '',
+      })),
+    [rawGuides],
+  );
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
 

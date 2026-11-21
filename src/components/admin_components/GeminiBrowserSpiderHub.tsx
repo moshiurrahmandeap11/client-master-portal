@@ -189,45 +189,18 @@ export default function GeminiBrowserSpiderHub({
         const formData = new FormData();
         formData.append('file', extractorPdfFile);
 
-        const adminHeaders: Record<string, string> = {
-          'x-admin-secret': '1234',
-        };
+        const adminHeaders: Record<string, string> = {};
         if (typeof window !== 'undefined') {
-          const secret = localStorage.getItem('x-admin-secret') || localStorage.getItem('adminSecret') || localStorage.getItem('admin_secret');
-          if (secret) adminHeaders['x-admin-secret'] = secret;
           const token = localStorage.getItem('cs_access_token') || localStorage.getItem('accessToken');
           if (token) adminHeaders['Authorization'] = `Bearer ${token}`;
         }
 
-        let res: Response;
-        try {
-          res = await fetch('/api/admin/spider/upload-pdf-parse', {
-            method: 'POST',
-            credentials: 'include',
-            headers: adminHeaders,
-            body: formData
-          });
-        } catch {
-          res = await fetch('http://localhost:6969/api/admin/spider/upload-pdf-parse', {
-            method: 'POST',
-            credentials: 'include',
-            headers: adminHeaders,
-            body: formData
-          });
-        }
-
-        if (!res.ok && res.status >= 500) {
-          try {
-            res = await fetch('http://localhost:6969/api/admin/spider/upload-pdf-parse', {
-              method: 'POST',
-              credentials: 'include',
-              headers: adminHeaders,
-              body: formData
-            });
-          } catch {
-            // keep original response
-          }
-        }
+        const res = await fetch('/api/admin/spider/upload-pdf-parse', {
+          method: 'POST',
+          credentials: 'include',
+          headers: adminHeaders,
+          body: formData
+        });
 
         const rawText = await res.text();
         let data: any = {};

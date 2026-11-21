@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import { serverDB } from '@/lib/db';
+import { serverApi } from '@/lib/server-api';
 import { JobFeedEngine } from '@/lib/feeds/engine';
 import JobFeedClient from '@/components/shared/feeds/JobFeedClient';
 
@@ -20,16 +20,20 @@ export const metadata: Metadata = {
   }
 };
 
-export default function LatestJobsPage() {
-  const jobs = serverDB.getPublicJobs();
-  const placements = serverDB.getFeaturedPlacements();
-  const categories = serverDB.getCategories().filter(c => c.is_active).map(c => ({
-    id: c.id,
-    name_bn: c.name_bn,
-    slug: c.slug
-  }));
+export default async function LatestJobsPage() {
+  const [jobs, rawCategories] = await Promise.all([
+    serverApi.getPublicJobs(),
+    serverApi.getCategories(),
+  ]);
+  const categories = rawCategories
+    .filter((c: any) => c.isActive !== false && c.is_active !== false)
+    .map((c: any) => ({
+      id: c.id,
+      name_bn: c.titleBn || c.name_bn || c.titleEn || c.slug,
+      slug: c.slug,
+    }));
 
-  const initialResult = JobFeedEngine.getFeed(jobs, { feedType: 'latest', limit: 9 }, placements);
+  const initialResult = JobFeedEngine.getFeed(jobs, { feedType: 'latest', limit: 9 }, []);
 
   // CollectionPage & BreadcrumbList structured schemas (Strictly NO JobPosting on feed pages)
   const collectionSchema = {

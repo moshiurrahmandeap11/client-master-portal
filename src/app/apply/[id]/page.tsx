@@ -2,7 +2,7 @@ import { CentralDeadlineEngine } from '@/lib/deadlines/engine';
 import React from 'react';
 import { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
-import { serverDB } from '@/lib/db';
+import { serverApi } from '@/lib/server-api';
 import { JobCircular } from '@/types';
 import ApplyClient from '@/components/apply_components/ApplyClient';
 
@@ -10,36 +10,8 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
-async function fetchJobFromBackend(idOrSlug: string): Promise<JobCircular | null> {
-  try {
-    const backendUrl = (process.env.INTERNAL_BACKEND_URL || 'http://localhost:6969').replace(/\/+$/, '');
-    const res = await fetch(`${backendUrl}/api/jobs/${encodeURIComponent(idOrSlug)}`, {
-      cache: 'no-store',
-      headers: {
-        'Accept': 'application/json',
-      },
-    });
-    if (res.ok) {
-      const data = await res.json();
-      const rawJob = data.job || data.data;
-      if (rawJob && (rawJob.id || rawJob.slug)) {
-        return rawJob as JobCircular;
-      }
-    }
-  } catch {
-    // Backend fetch failed or timed out
-  }
-  return null;
-}
-
 async function resolveJob(idOrSlug: string): Promise<JobCircular | null> {
-  const remote = await fetchJobFromBackend(idOrSlug);
-  if (remote) return remote;
-
-  const local = serverDB.getPublicJobById(idOrSlug) || serverDB.getJobByIdOrSlug(idOrSlug);
-  if (local) return local;
-
-  return null;
+  return await serverApi.getJobByIdOrSlug(idOrSlug);
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {

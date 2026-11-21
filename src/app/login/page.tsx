@@ -270,6 +270,7 @@ function LoginForm() {
         email: loginIdentifier.trim(),
         identifier: loginIdentifier.trim(),
         password: loginPassword,
+        rememberMe,
         role: 'candidate'
       });
 
@@ -384,7 +385,7 @@ function LoginForm() {
         identifier: forgotId.trim()
       });
       setForgotMessage(data.message || 'আপনার ইমেইলে ৬-ডিজিটের ভেরিফিকেশন কোড পাঠানো হয়েছে।');
-      setForgotTestOtp(data.testOtp || '');
+      setForgotTestOtp(data.devOtp || data.testOtp || '');
       setForgotMaskedTarget(data.maskedTarget || forgotId.trim());
       setForgotStep(2);
       setForgotCountdown(60);

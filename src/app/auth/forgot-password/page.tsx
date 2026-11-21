@@ -91,7 +91,7 @@ function ForgotPasswordWizard() {
       }
 
       setMaskedTarget(data.maskedTarget || cleanId);
-      setTestOtp(data.testOtp || '');
+      setTestOtp(data.devOtp || data.testOtp || '');
       setSuccessMsg(data.message || 'আপনার ঠিকানায় ৬-ডিজিটের ভেরিফিকেশন কোড পাঠানো হয়েছে।');
       setStep(2);
       setCountdown(60);

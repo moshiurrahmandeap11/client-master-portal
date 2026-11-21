@@ -22,10 +22,51 @@ import {
   ArrowUpRight
 } from 'lucide-react';
 import { ExamNoticeItem } from '@/types/exams.types';
-import { initialExamNotices } from '@/data/examsData';
+import { useExamResource } from '@/hooks/usePlatformQueries';
 
 export default function ExamNoticesClient() {
-  const [notices] = useState<ExamNoticeItem[]>(initialExamNotices);
+  const { data: rawNotices = [] } = useExamResource<any>('notices');
+  const notices: ExamNoticeItem[] = useMemo(
+    () =>
+      rawNotices.map((n: any) => {
+        const stageRaw = String(n.stage || 'WRITTEN').toLowerCase();
+        const typeMap: Record<string, any> = {
+          preliminary: 'preliminary',
+          mcq: 'preliminary',
+          written: 'written',
+          practical: 'practical',
+          viva: 'viva',
+        };
+        return {
+          id: n.id,
+          title: n.title || n.job?.titleBn || n.job?.title || 'পরীক্ষার নোটিশ',
+          organization: n.organization || n.job?.organization || 'সরকারি প্রতিষ্ঠান',
+          type: typeMap[stageRaw] || 'written',
+          typeLabel:
+            stageRaw === 'preliminary' || stageRaw === 'mcq'
+              ? 'প্রিলিমিনারি / এমসিকিউ'
+              : stageRaw === 'practical'
+                ? 'ব্যবহারিক পরীক্ষা'
+                : stageRaw === 'viva'
+                  ? 'মৌখিক (ভাইভা)'
+                  : 'লিখিত পরীক্ষা',
+          badge: 'নতুন',
+          examDate: n.examDate ? new Date(n.examDate).toLocaleDateString('bn-BD') : 'ঘোষণা সাপেক্ষে',
+          examTime: n.examTime || 'সকাল ১০:০০ টা',
+          centersCount: n.venue || 'বিভিন্ন কেন্দ্র',
+          seatPlanUrl: n.noticeUrl || '#',
+          noticePdfUrl: n.noticeUrl || '#',
+          seatPlanList: [],
+          instructions: n.description
+            ? String(n.description).split('\n').filter(Boolean)
+            : ['পরীক্ষার ৩০ মিনিট পূর্বে প্রবেশপত্রসহ কেন্দ্রে উপস্থিত থাকুন।'],
+          status: (n.status === 'published' ? 'upcoming' : n.status || 'upcoming') as any,
+          publishedDate: n.createdAt ? new Date(n.createdAt).toLocaleDateString('bn-BD') : '',
+          jobId: n.jobId || n.job?.id,
+        } as ExamNoticeItem;
+      }),
+    [rawNotices],
+  );
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState<string>('all');
 

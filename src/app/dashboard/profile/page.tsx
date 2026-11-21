@@ -199,27 +199,10 @@ export default function ProfilePage() {
       const formData = new FormData();
       formData.append('file', resumeFile);
 
-      let res: Response;
-      try {
-        res = await fetchWithAuth('/api/candidate/import-resume', {
-          method: 'POST',
-          body: formData,
-        });
-      } catch {
-        res = await fetchWithAuth('http://localhost:6969/api/candidate/import-resume', {
-          method: 'POST',
-          body: formData,
-        });
-      }
-
-      if (!res.ok && res.status >= 500) {
-        try {
-          res = await fetchWithAuth('http://localhost:6969/api/candidate/import-resume', {
-            method: 'POST',
-            body: formData,
-          });
-        } catch {}
-      }
+      const res = await fetchWithAuth('/api/candidate/import-resume', {
+        method: 'POST',
+        body: formData,
+      });
 
       const rawText = await res.text();
       let data: any = {};

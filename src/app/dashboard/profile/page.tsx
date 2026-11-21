@@ -397,9 +397,12 @@ export default function ProfilePage() {
   // Synchronize profile data from TanStack Query candidate context (zero duplicate requests!)
   useEffect(() => {
     if (candidateProfile) {
+      const cleanedIncoming = Object.fromEntries(
+        Object.entries(candidateProfile).map(([k, v]) => [k, v === null ? undefined : v]),
+      );
       const normalized = {
         ...mockUserProfile,
-        ...candidateProfile,
+        ...cleanedIncoming,
         education: Array.isArray(candidateProfile.education) ? candidateProfile.education : Array.isArray((candidateProfile as any).educations) ? (candidateProfile as any).educations : [],
         skills: Array.isArray(candidateProfile.skills) ? candidateProfile.skills : [],
         experiences: Array.isArray(candidateProfile.experiences) ? candidateProfile.experiences : [],
@@ -1030,7 +1033,7 @@ export default function ProfilePage() {
               <label className="font-bold text-slate-700">পূর্ণ নাম (ইংরেজি ক্যাপিটাল লেটার)</label>
               <input
                 type="text"
-                value={profile.name}
+                value={profile.name ?? ''}
                 onChange={(e) => setProfile({ ...profile, name: e.target.value })}
                 className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                 required
@@ -1041,7 +1044,7 @@ export default function ProfilePage() {
               <label className="font-bold text-slate-700">পূর্ণ নাম (বাংলায়)</label>
               <input
                 type="text"
-                value={profile.nameBn}
+                value={profile.nameBn ?? ''}
                 onChange={(e) => setProfile({ ...profile, nameBn: e.target.value })}
                 className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                 required
@@ -1052,7 +1055,7 @@ export default function ProfilePage() {
               <label className="font-bold text-slate-700">পিতার নাম (ইংরেজি ক্যাপিটাল)</label>
               <input
                 type="text"
-                value={profile.fatherName}
+                value={profile.fatherName ?? ''}
                 onChange={(e) => setProfile({ ...profile, fatherName: e.target.value.toUpperCase() })}
                 placeholder="MD. ABDUR RAHMAN"
                 className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
@@ -1075,7 +1078,7 @@ export default function ProfilePage() {
               <label className="font-bold text-slate-700">মাতার নাম (ইংরেজি ক্যাপিটাল)</label>
               <input
                 type="text"
-                value={profile.motherName}
+                value={profile.motherName ?? ''}
                 onChange={(e) => setProfile({ ...profile, motherName: e.target.value.toUpperCase() })}
                 placeholder="FATEMA BEGUM"
                 className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
@@ -1105,7 +1108,7 @@ export default function ProfilePage() {
               </div>
               <input
                 type="date"
-                value={profile.dob}
+                value={profile.dob ?? ''}
                 onChange={(e) => setProfile({ ...profile, dob: e.target.value })}
                 className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                 required
@@ -1116,7 +1119,7 @@ export default function ProfilePage() {
               <label className="font-bold text-slate-700">প্রার্থীর জাতীয় পরিচয়পত্র (NID / Smart Card)</label>
               <input
                 type="text"
-                value={profile.nid}
+                value={profile.nid ?? ''}
                 onChange={(e) => setProfile({ ...profile, nid: e.target.value })}
                 placeholder="10, 13 বা 17 ডিজিটের NID নম্বর"
                 className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none font-mono"
@@ -1150,7 +1153,7 @@ export default function ProfilePage() {
               <label className="font-bold text-slate-700">মোবাইল নম্বর (এসএমএস প্রাপ্তির জন্য)</label>
               <input
                 type="tel"
-                value={profile.phone}
+                value={profile.phone ?? ''}
                 onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
                 className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                 required
@@ -1161,7 +1164,7 @@ export default function ProfilePage() {
               <label className="font-bold text-slate-700">ইমেইল ঠিকানা</label>
               <input
                 type="email"
-                value={profile.email}
+                value={profile.email ?? ''}
                 onChange={(e) => setProfile({ ...profile, email: e.target.value })}
                 className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
                 required
@@ -1182,7 +1185,7 @@ export default function ProfilePage() {
               {homeDistrictCustomMode ? (
                 <input
                   type="text"
-                  value={profile.district}
+                  value={profile.district ?? ''}
                   onChange={(e) => setProfile({ ...profile, district: e.target.value })}
                   placeholder="যেমন: ঢাকা, বগুড়া, নোয়াখালী..."
                   className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-xs focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
@@ -1190,7 +1193,7 @@ export default function ProfilePage() {
                 />
               ) : (
                 <select
-                  value={profile.district}
+                  value={profile.district ?? ''}
                   onChange={(e) => {
                     if (e.target.value === '__custom__') {
                       setHomeDistrictCustomMode(true);
@@ -1212,7 +1215,7 @@ export default function ProfilePage() {
             <div className="space-y-1.5">
               <label className="font-bold text-slate-700">লিঙ্গ (Gender)</label>
               <select
-                value={profile.gender}
+                value={profile.gender || 'male'}
                 onChange={(e) => setProfile({ ...profile, gender: e.target.value as any })}
                 className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:border-slate-400 focus:ring-2 focus:ring-slate-400/15 focus:bg-white outline-none"
               >

@@ -67,7 +67,7 @@ export const authService = {
     }
   },
 
-  async requestForgotPasswordOtp(payload: ForgotPasswordRequest): Promise<ApiResponse & { maskedTarget?: string; testOtp?: string }> {
+  async requestForgotPasswordOtp(payload: ForgotPasswordRequest): Promise<ApiResponse & { maskedTarget?: string; testOtp?: string; devOtp?: string }> {
     try {
       const response = await authClient.post('/api/auth/forgot-password', {
         ...payload,

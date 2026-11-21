@@ -245,21 +245,6 @@ export default function HomePage() {
     setExpandedJobId(prev => prev === jobId ? null : jobId);
   };
 
-  const [liveApplicantIndex, setLiveApplicantIndex] = useState(0);
-  const liveApplicants = [
-    { name: 'মোঃ তানভীর হাসান', district: 'কুমিল্লা', job: 'বাংলাদেশ ব্যাংক সহকারী পরিচালক', time: '২ মিনিট আগে' },
-    { name: 'নুসরাত জাহান', district: 'চট্টগ্রাম', job: 'প্রাথমিক সহকারী শিক্ষক', time: '৪ মিনিট আগে' },
-    { name: 'রাকিবুল ইসলাম', district: 'ঢাকা', job: 'বাংলাদেশ রেলওয়ে সহকারী স্টেশন মাস্টার', time: '৭ মিনিট আগে' },
-    { name: 'মেহেদী হাসান', district: 'রাজশাহী', job: '৪৮তম বিসিএস (সাধারণ ক্যাডার)', time: '৯ মিনিট আগে' },
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLiveApplicantIndex((prev) => (prev + 1) % liveApplicants.length);
-    }, 3500);
-    return () => clearInterval(interval);
-  }, [liveApplicants.length]);
-
   // Pagination state: 3 columns x 3 rows = exactly 9 jobs (3 lines of cards)
   const [currentPage, setCurrentPage] = useState(1);
   const JOBS_PER_PAGE = 9;
@@ -325,14 +310,24 @@ export default function HomePage() {
     let endingSoon = 0;
     let endingToday = 0;
 
+    const isRecentJob = (job: any) => {
+      if (job.featured || job.isHot) return true;
+      const pub = String(job.publishedDate || '');
+      if (pub.includes('আজ')) return true;
+      if (job.createdAt) {
+        const ageHours = (Date.now() - new Date(job.createdAt).getTime()) / (1000 * 60 * 60);
+        if (!isNaN(ageHours) && ageHours <= 48) return true;
+      }
+      return false;
+    };
+
     jobsList.forEach(job => {
       const days = job.daysRemaining ?? 15;
       const isExpired = job.status === 'EXPIRED' || days <= 0 || CentralDeadlineEngine.evaluateDeadline(job).isClosed;
       
       if (!isExpired) {
         ongoing++;
-        const pub = job.publishedDate || '';
-        if (job.featured || job.isHot || pub.includes('আজ') || pub.includes('নভেম্বর') || days >= 14) {
+        if (isRecentJob(job)) {
           newToday++;
         }
         if (days > 0 && days <= 7) {
@@ -418,23 +413,25 @@ export default function HomePage() {
       
       // Job Type dropdown
       if (selectedJobType !== 'all') {
-        if (selectedJobType === 'govt' && !(job.category === 'govt' || job.category === 'railway' || job.categoryLabel.includes('সরকারি') || job.categoryLabel.includes('বিসিএস'))) return false;
-        if (selectedJobType === 'bank' && !(job.category === 'bank' || job.categoryLabel.includes('ব্যাংক'))) return false;
-        if (selectedJobType === 'teacher' && !(job.category === 'teacher' || job.categoryLabel.includes('শিক্ষক'))) return false;
-        if (selectedJobType === 'railway' && !(job.category === 'railway' || job.categoryLabel.includes('রেলওয়ে'))) return false;
-        if (selectedJobType === 'ngo' && !(job.category === 'ngo' || job.categoryLabel.includes('এনজিও'))) return false;
-        if (selectedJobType === 'private' && !(job.category === 'ngo' || job.categoryLabel.includes('বেসরকারি'))) return false;
+        const catLabel = job.categoryLabel || '';
+        if (selectedJobType === 'govt' && !(job.category === 'govt' || job.category === 'railway' || catLabel.includes('সরকারি') || catLabel.includes('বিসিএস'))) return false;
+        if (selectedJobType === 'bank' && !(job.category === 'bank' || catLabel.includes('ব্যাংক'))) return false;
+        if (selectedJobType === 'teacher' && !(job.category === 'teacher' || catLabel.includes('শিক্ষক'))) return false;
+        if (selectedJobType === 'railway' && !(job.category === 'railway' || catLabel.includes('রেলওয়ে'))) return false;
+        if (selectedJobType === 'ngo' && !(job.category === 'ngo' || catLabel.includes('এনজিও'))) return false;
+        if (selectedJobType === 'private' && !(job.category === 'private' || catLabel.includes('বেসরকারি'))) return false;
       }
 
       // Education qualification dropdown
       if (selectedEducation !== 'all') {
-        if (selectedEducation === 'hsc' && !job.minEducation.includes('HSC') && !job.minEducation.includes('উচ্চ মাধ্যমিক') && !job.minEducation.includes('এইচএসসি')) return false;
-        if (selectedEducation === 'graduate' && !job.minEducation.includes('স্নাতক') && !job.minEducation.includes('ডিগ্রি') && !job.minEducation.includes('অনার্স') && !job.minEducation.includes('Honours')) return false;
-        if (selectedEducation === 'postgraduate' && !job.minEducation.includes('মাস্টার্স') && !job.minEducation.includes('স্নাতকোত্তর') && !job.minEducation.includes('Masters')) return false;
+        const minEdu = job.minEducation || '';
+        if (selectedEducation === 'hsc' && !minEdu.includes('HSC') && !minEdu.includes('উচ্চ মাধ্যমিক') && !minEdu.includes('এইচএসসি')) return false;
+        if (selectedEducation === 'graduate' && !minEdu.includes('স্নাতক') && !minEdu.includes('ডিগ্রি') && !minEdu.includes('অনার্স') && !minEdu.includes('Honours')) return false;
+        if (selectedEducation === 'postgraduate' && !minEdu.includes('মাস্টার্স') && !minEdu.includes('স্নাতকোত্তর') && !minEdu.includes('Masters')) return false;
       }
 
       // Organization filter
-      if (selectedOrg !== 'all' && !job.organization.includes(selectedOrg)) return false;
+      if (selectedOrg !== 'all' && !(job.organization || '').includes(selectedOrg)) return false;
 
       // Grade filter (supports single, range, or composite grade matching)
       if (!matchGradeComprehensive(job.grade, selectedGrade)) return false;
@@ -460,8 +457,10 @@ export default function HomePage() {
         const days = job.daysRemaining ?? 15;
         const isExpired = job.status === 'EXPIRED' || days <= 0 || CentralDeadlineEngine.evaluateDeadline(job).isClosed;
         if (isExpired) return false;
-        const pub = job.publishedDate || '';
-        const isNew = job.featured || job.isHot || pub.includes('আজ') || pub.includes('নভেম্বর') || days >= 14;
+        const pub = String(job.publishedDate || '');
+        const createdAt = (job as any).createdAt ? new Date((job as any).createdAt).getTime() : 0;
+        const within48h = createdAt > 0 && (Date.now() - createdAt) <= 48 * 60 * 60 * 1000;
+        const isNew = Boolean(job.featured || job.isHot || pub.includes('আজ') || within48h);
         if (!isNew) return false;
       } else if (statusFilter === 'ongoing') {
         if (job.status === 'EXPIRED' || (job.daysRemaining ?? 15) <= 0 || CentralDeadlineEngine.evaluateDeadline(job).isClosed) return false;
@@ -495,8 +494,6 @@ export default function HomePage() {
     const startIndex = (currentPage - 1) * JOBS_PER_PAGE;
     return filteredJobs.slice(startIndex, startIndex + JOBS_PER_PAGE);
   }, [filteredJobs, currentPage]);
-
-  const currentLive = liveApplicants[liveApplicantIndex];
 
   return (
     <div className="pb-20">

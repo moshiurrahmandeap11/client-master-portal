@@ -21,7 +21,7 @@ import {
   BookOpen
 } from 'lucide-react';
 import { ExamResultItem } from '@/types/exams.types';
-import { initialExamResults } from '@/data/examsData';
+import { useExamResource } from '@/hooks/usePlatformQueries';
 
 interface ExamResultsClientProps {
   defaultTypeFilter?: 'all' | 'written' | 'preliminary' | 'final';
@@ -36,12 +36,43 @@ export default function ExamResultsClient({
   pageSubtitle = 'বিসিএস, প্রাথমিক শিক্ষক, বাংলাদেশ ব্যাংক ও সরকারি নিয়োগ পরীক্ষার প্রিলিমিনারি, লিখিত ও চূড়ান্ত ফলাফল শিট।',
   breadcrumbLabel = 'পরীক্ষার ফলাফল'
 }: ExamResultsClientProps) {
-  const [results] = useState<ExamResultItem[]>(initialExamResults);
+  const { data: rawResults = [] } = useExamResource<any>('results');
+  const results: ExamResultItem[] = useMemo(
+    () =>
+      rawResults.map((r: any) => {
+        const stageRaw = String(r.stage || 'WRITTEN').toLowerCase();
+        const rolls = Array.isArray(r.passedRolls) ? r.passedRolls.map(String) : [];
+        return {
+          id: r.id,
+          title: r.title || r.job?.titleBn || r.job?.title || 'পরীক্ষার ফলাফল',
+          organization: r.organization || r.job?.organization || 'সরকারি প্রতিষ্ঠান',
+          type: (stageRaw === 'preliminary' || stageRaw === 'mcq' ? 'preliminary' : stageRaw === 'final' ? 'final' : 'written') as any,
+          typeLabel:
+            stageRaw === 'preliminary' || stageRaw === 'mcq'
+              ? 'প্রিলিমিনারি ফলাফল'
+              : stageRaw === 'final'
+                ? 'চূড়ান্ত ফলাফল'
+                : 'লিখিত ফলাফল',
+          publishedDate: r.publishedAt
+            ? new Date(r.publishedAt).toLocaleDateString('bn-BD')
+            : r.createdAt
+              ? new Date(r.createdAt).toLocaleDateString('bn-BD')
+              : '',
+          passedCount: rolls.length,
+          passedRolls: rolls,
+          pdfUrl: r.pdfUrl || '#',
+          nextStepNotice: r.summary || 'পরবর্তী ধাপের জন্য অফিসিয়াল নোটিশ অনুসরণ করুন।',
+          jobId: r.jobId || r.job?.id,
+        } as ExamResultItem;
+      }),
+    [rawResults],
+  );
   const [selectedType, setSelectedType] = useState<string>(defaultTypeFilter);
   const [searchQuery, setSearchQuery] = useState('');
 
   // Roll Checker states
-  const [checkerExamId, setCheckerExamId] = useState<string>(initialExamResults[0]?.id || '');
+  const [checkerExamId, setCheckerExamId] = useState<string>('');
+  const effectiveCheckerExamId = checkerExamId || results[0]?.id || '';
   const [checkerRoll, setCheckerRoll] = useState<string>('');
   const [checkerResult, setCheckerResult] = useState<{
     status: 'passed' | 'failed' | null;
@@ -76,7 +107,7 @@ export default function ExamResultsClient({
     const cleanRoll = checkerRoll.trim();
     if (!cleanRoll) return;
 
-    const exam = results.find(r => r.id === checkerExamId);
+    const exam = results.find(r => r.id === effectiveCheckerExamId);
     if (!exam) return;
 
     const isPassed = exam.passedRolls.includes(cleanRoll);

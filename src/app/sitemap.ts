@@ -1,8 +1,10 @@
 import { MetadataRoute } from 'next';
-import { serverDB } from '@/lib/db';
+import { serverApi } from '@/lib/server-api';
 import { JobFeedEngine } from '@/lib/feeds/engine';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const dynamic = 'force-dynamic';
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://chakrisheba.com';
 
   const staticRoutes = [
@@ -80,7 +82,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: route === '' ? 1.0 : (route === '/todays-jobs' || route === '/latest-jobs') ? 0.9 : route.startsWith('/jobs') ? 0.9 : 0.7,
   }));
 
-  const canonicalJobs = serverDB.getPublicJobs();
+  const canonicalJobs = await serverApi.getPublicJobs(200);
   const eligibleJobs = JobFeedEngine.filterPublicEligibleJobs(canonicalJobs, false);
 
   const jobEntries: MetadataRoute.Sitemap = eligibleJobs
@@ -104,10 +106,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     }));
 
-  const activeCategories = serverDB.getCategories ? serverDB.getCategories().filter(c => c.is_active) : [];
-  const categoryEntries: MetadataRoute.Sitemap = activeCategories.map((cat) => ({
+  const categories = await serverApi.getCategories();
+  const activeCategories = Array.isArray(categories) ? categories.filter((c: any) => c.isActive !== false && c.is_active !== false) : [];
+  const categoryEntries: MetadataRoute.Sitemap = activeCategories.map((cat: any) => ({
     url: `${baseUrl}/categories/${cat.slug}`,
-    lastModified: cat.updated_at ? new Date(cat.updated_at) : new Date(),
+    lastModified: cat.updatedAt || cat.updated_at ? new Date(cat.updatedAt || cat.updated_at) : new Date(),
     changeFrequency: 'daily',
     priority: 0.8,
   }));

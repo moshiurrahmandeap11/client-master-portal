@@ -33,7 +33,7 @@ import {
   Award,
   Building
 } from 'lucide-react';
-import { serverDB } from '@/lib/db';
+import { serverApi } from '@/lib/server-api';
 import { SearchEngine } from '@/lib/search/engine';
 import CategoryJobsClient from './CategoryJobsClient';
 
@@ -72,7 +72,8 @@ const ICON_MAP: Record<string, any> = {
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
   const slug = (params?.slug || '').toLowerCase().trim();
-  const category = slug ? serverDB.getCategoryBySlug(slug) : null;
+  const allCategories = await serverApi.getCategories();
+  const category = slug ? allCategories.find((c) => c.slug?.toLowerCase() === slug) || null : null;
   if (!category) {
     return { title: 'ক্যাটাগরি পাওয়া যায়নি | চাকরি সেবা' };
   }
@@ -97,7 +98,12 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 export default async function CategoryLandingPage(props: Props) {
   const params = await props.params;
   const slug = (params?.slug || '').toLowerCase().trim();
-  const category = slug ? serverDB.getCategoryBySlug(slug) : null;
+  const [rawCategories, allJobs] = await Promise.all([
+    serverApi.getCategories(),
+    serverApi.getPublicJobs(),
+  ]);
+  const allCategories = rawCategories.filter((c) => c.is_active);
+  const category = slug ? allCategories.find((c) => c.slug?.toLowerCase() === slug) || null : null;
 
   if (!category) {
     redirect(`/jobs?search=${encodeURIComponent(slug)}`);
@@ -108,8 +114,7 @@ export default async function CategoryLandingPage(props: Props) {
     redirect(`/categories/${category.slug}`);
   }
 
-  const allCategories = serverDB.getCategories().filter((c) => c.is_active);
-  const parentCategory = category.parent_id ? serverDB.getCategoryById(category.parent_id) : null;
+  const parentCategory = category.parent_id ? allCategories.find((c) => c.id === category.parent_id) || null : null;
   const subcategories = allCategories.filter((c) => c.parent_id === category.id);
   const siblingCategories = category.parent_id
     ? allCategories.filter((c) => c.parent_id === category.parent_id)
@@ -118,8 +123,6 @@ export default async function CategoryLandingPage(props: Props) {
   const relatedCategories = allCategories
     .filter((c) => !c.parent_id && c.id !== category.id && c.id !== category.parent_id)
     .slice(0, 4);
-
-  const allJobs = serverDB.getPublicJobs();
 
   // Initial server-side search evaluation for this category (matching client limit of 12)
   const initialResult = SearchEngine.search(allJobs, allCategories, {

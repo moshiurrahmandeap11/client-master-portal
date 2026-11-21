@@ -53,7 +53,8 @@ export default function ContactPage() {
     fetch('/api/platform/settings', { cache: 'no-store' })
       .then(r => r.json())
       .then(d => {
-        if (d.success && d.settings) setSettings(d.settings);
+        const live = d.settings || d.data;
+        if (d.success && live) setSettings(live);
       })
       .catch(() => {});
 

@@ -92,22 +92,22 @@ export default function SystemSettingsDiagnostics({
     if (onTabChange) onTabChange(tab);
   };
 
-  // 1. Settings State
+  // 1. Settings State (loaded from live PlatformSettings DB)
   const [platformName, setPlatformName] = useState('চাকরি সেবা (Chakri Sheba)');
-  const [supportPhone, setSupportPhone] = useState('+880 1774-366643');
+  const [supportPhone, setSupportPhone] = useState('');
   const [supportEmail, setSupportEmail] = useState('support@chakrisheba.com');
-  const [officeAddress, setOfficeAddress] = useState('ধানমন্ডি ৩২, ঢাকা-১২০৯, বাংলাদেশ');
-  const [whatsappNumber, setWhatsappNumber] = useState('8801774366643');
+  const [officeAddress, setOfficeAddress] = useState('');
+  const [whatsappNumber, setWhatsappNumber] = useState('');
   
   // Fees
-  const [standardFee, setStandardFee] = useState('80');
-  const [expressFee, setExpressFee] = useState('120');
+  const [standardFee, setStandardFee] = useState('50');
+  const [expressFee, setExpressFee] = useState('100');
   const [urgentFee, setUrgentFee] = useState('150');
 
-  // Official MFS Accounts
-  const [bkashNumber, setBkashNumber] = useState('01774366643');
-  const [nagadNumber, setNagadNumber] = useState('01812345678');
-  const [rocketNumber, setRocketNumber] = useState('01912345678');
+  // Official MFS Accounts (controlled from Admin Panel)
+  const [bkashNumber, setBkashNumber] = useState('');
+  const [nagadNumber, setNagadNumber] = useState('');
+  const [rocketNumber, setRocketNumber] = useState('');
 
   // Controls
   const [maintenanceMode, setMaintenanceMode] = useState(false);
@@ -129,10 +129,10 @@ export default function SystemSettingsDiagnostics({
             const s = d.settings;
             if (s.general) {
               if (s.general.siteName) setPlatformName(s.general.siteName);
-              if (s.general.supportPhone) setSupportPhone(s.general.supportPhone);
-              if (s.general.supportEmail) setSupportEmail(s.general.supportEmail);
-              if (s.general.officeAddress) setOfficeAddress(s.general.officeAddress);
-              if (s.general.whatsappNumber) setWhatsappNumber(s.general.whatsappNumber);
+              setSupportPhone(s.general.supportPhone || s.supportPhone || '');
+              setSupportEmail(s.general.supportEmail || s.general.contactEmail || s.contactEmail || '');
+              setOfficeAddress(s.general.officeAddress || '');
+              setWhatsappNumber(s.general.whatsappNumber || '');
             }
             if (s.workflow) {
               if (s.workflow.maintenanceMode !== undefined) setMaintenanceMode(s.workflow.maintenanceMode);
@@ -143,9 +143,9 @@ export default function SystemSettingsDiagnostics({
               if (s.operational.standardServiceFee !== undefined) setStandardFee(String(s.operational.standardServiceFee));
               if (s.operational.expressServiceFee !== undefined) setExpressFee(String(s.operational.expressServiceFee));
               if (s.operational.urgentServiceFee !== undefined) setUrgentFee(String(s.operational.urgentServiceFee));
-              if (s.operational.officialBkashNumber) setBkashNumber(s.operational.officialBkashNumber);
-              if (s.operational.officialNagadNumber) setNagadNumber(s.operational.officialNagadNumber);
-              if (s.operational.officialRocketNumber) setRocketNumber(s.operational.officialRocketNumber);
+              setBkashNumber(s.operational.bkashNumber || s.operational.officialBkashNumber || '');
+              setNagadNumber(s.operational.nagadNumber || s.operational.officialNagadNumber || '');
+              setRocketNumber(s.operational.rocketNumber || s.operational.officialRocketNumber || '');
             }
           }
         }
@@ -244,10 +244,14 @@ export default function SystemSettingsDiagnostics({
         method: 'PATCH',
         headers: getAdminHeaders(),
         body: JSON.stringify({
+          siteName: platformName,
+          contactEmail: supportEmail,
+          supportPhone,
           general: {
             siteName: platformName,
             supportPhone,
             supportEmail,
+            contactEmail: supportEmail,
             officeAddress,
             whatsappNumber
           },
@@ -257,9 +261,14 @@ export default function SystemSettingsDiagnostics({
             autoScrapeInterval: autoScraperCron
           },
           operational: {
-            standardServiceFee: Number(standardFee) || 80,
-            expressServiceFee: Number(expressFee) || 120,
+            maintenanceMode,
+            allowRegistration,
+            standardServiceFee: Number(standardFee) || 50,
+            expressServiceFee: Number(expressFee) || 100,
             urgentServiceFee: Number(urgentFee) || 150,
+            bkashNumber,
+            nagadNumber,
+            rocketNumber,
             officialBkashNumber: bkashNumber,
             officialNagadNumber: nagadNumber,
             officialRocketNumber: rocketNumber
@@ -268,6 +277,7 @@ export default function SystemSettingsDiagnostics({
       });
 
       if (res.ok) {
+        window.dispatchEvent(new Event('cs_settings_changed'));
         setSettingsSuccess('প্ল্যাটফর্মের সকল সেটিংস ও কনফিগারেশন সফলভাবে ডাটাবেসে সংরক্ষিত হয়েছে!');
         setTimeout(() => setSettingsSuccess(null), 4000);
       } else {

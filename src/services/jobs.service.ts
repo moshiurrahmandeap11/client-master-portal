@@ -38,7 +38,7 @@ export const jobsService = {
       const data = await jobsService.getJobs({ limit: 100, page });
       if (!Array.isArray(data.jobs)) throw new Error('Invalid jobs response');
       jobs.push(...data.jobs);
-      totalPages = data.totalPages || 1;
+      totalPages = Math.min(data.totalPages || 1, 3);
       page++;
     } while (page <= totalPages);
     return jobs;

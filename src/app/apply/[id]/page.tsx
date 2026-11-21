@@ -45,7 +45,7 @@ async function resolveJob(idOrSlug: string): Promise<JobCircular | null> {
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
   const job = await resolveJob(params.id);
-  if (!job || job.id.startsWith('draft-') || (job as any).status === 'UNPUBLISHED') {
+  if (!job || job.id.startsWith('draft-') || (job as any).status === 'UNPUBLISHED' || (job as any).status === 'DRAFT' || (job as any).status === 'ARCHIVED') {
     return {
       title: 'আবেদন | চাকরি সেবা',
       description: 'সরকারি ও ব্যাংক চাকরির নির্ভুল অনলাইন আবেদন সেবা।',
@@ -71,8 +71,8 @@ export default async function ApplyPage(props: Props) {
   const params = await props.params;
   const job = await resolveJob(params.id);
 
-  if (!job || job.id.startsWith('draft-') || (job as any).status === 'UNPUBLISHED') {
-    redirect(`/jobs?search=${encodeURIComponent(params.id)}`);
+  if (!job || job.id.startsWith('draft-') || (job as any).status === 'UNPUBLISHED' || (job as any).status === 'DRAFT' || (job as any).status === 'ARCHIVED') {
+    notFound();
   }
 
   return <ApplyClient initialJob={job} />;

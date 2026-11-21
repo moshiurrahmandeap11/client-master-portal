@@ -86,6 +86,7 @@ export default function SettingsPage() {
     setIsChangingPassword(true);
     try {
       const res = await axiosInstance.post('/api/auth/change-password', {
+        oldPassword: currentPassword,
         currentPassword,
         newPassword,
         confirmPassword
@@ -99,10 +100,10 @@ export default function SettingsPage() {
         setConfirmPassword('');
         setTimeout(() => setPasswordSuccess(null), 5000);
       } else {
-        setPasswordError(data?.error || 'পাসওয়ার্ড পরিবর্তন ব্যর্থ হয়েছে। সঠিক তথ্য প্রদান করুন।');
+        setPasswordError(data?.message || data?.error || 'পাসওয়ার্ড পরিবর্তন ব্যর্থ হয়েছে। সঠিক তথ্য প্রদান করুন।');
       }
     } catch (err: any) {
-      setPasswordError(err?.response?.data?.error || err.message || 'সার্ভারের সাথে যোগাযোগে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+      setPasswordError(err?.response?.data?.message || err?.response?.data?.error || err.message || 'সার্ভারের সাথে যোগাযোগে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
     } finally {
       setIsChangingPassword(false);
     }
@@ -111,6 +112,9 @@ export default function SettingsPage() {
   const handleLogout = async () => {
     if (!confirm('আপনি কি নিশ্চিত যে আপনার অ্যাকাউন্ট থেকে লগআউট করতে চান?')) return;
     setIsLoggingOut(true);
+    try {
+      await axiosInstance.post('/api/auth/logout');
+    } catch {}
     await storage.logout();
     router.replace('/login');
   };

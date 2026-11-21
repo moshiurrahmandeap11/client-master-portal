@@ -21,10 +21,33 @@ import {
   Award
 } from 'lucide-react';
 import { VivaNoticeItem } from '@/types/exams.types';
-import { initialVivaNotices } from '@/data/examsData';
+import { useExamResource } from '@/hooks/usePlatformQueries';
 
 export default function VivaNoticesClient() {
-  const [vivaNotices] = useState<VivaNoticeItem[]>(initialVivaNotices);
+  const { data: rawViva = [] } = useExamResource<any>('viva-notices');
+  const vivaNotices: VivaNoticeItem[] = useMemo(
+    () =>
+      rawViva.map((v: any) => ({
+        id: v.id,
+        title: v.title || 'ভাইভা নোটিশ',
+        organization: v.organization || 'সরকারি প্রতিষ্ঠান',
+        department: v.category || v.organization || 'সংশ্লিষ্ট দপ্তর',
+        postsCount: 0,
+        reportingTime: 'সকাল ০৯:৩০ মিনিট',
+        boardSchedules: [],
+        startDate: v.vivaDate ? new Date(v.vivaDate).toLocaleDateString('bn-BD') : 'ঘোষণা সাপেক্ষে',
+        endDate: v.vivaDate ? new Date(v.vivaDate).toLocaleDateString('bn-BD') : '',
+        vivaDate: v.vivaDate ? new Date(v.vivaDate).toLocaleDateString('bn-BD') : 'ঘোষণা সাপেক্ষে',
+        venue: v.venue || 'অফিশিয়াল নোটিশে উল্লিখিত স্থান',
+        rollRange: 'নোটিশ অনুযায়ী',
+        requiredDocuments: v.instructions
+          ? String(v.instructions).split('\n').filter(Boolean)
+          : ['মূল শিক্ষাগত যোগ্যতার সনদপত্র ও প্রবেশপত্র'],
+        noticePdfUrl: v.noticeUrl || '#',
+        status: (v.status === 'published' ? 'ongoing' : v.status || 'ongoing') as any,
+      } as VivaNoticeItem)),
+    [rawViva],
+  );
   const [searchQuery, setSearchQuery] = useState('');
   
   // Interactive Document Checklist state (set of checked doc IDs)

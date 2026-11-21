@@ -15,11 +15,32 @@ import {
   TrendingUp,
   Tag
 } from 'lucide-react';
-import { blogPostsData } from '@/data/preparationData';
+import { useCmsContent } from '@/hooks/usePlatformQueries';
 import { BlogPostItem } from '@/types/preparation.types';
 
 export default function BlogListClient() {
-  const [posts] = useState<BlogPostItem[]>(blogPostsData);
+  const { data: rawPosts = [] } = useCmsContent('blog');
+  const posts: BlogPostItem[] = useMemo(
+    () =>
+      rawPosts.map((p: any) => ({
+        id: p.id,
+        slug: p.slug,
+        title: p.title || '',
+        excerpt: p.excerpt || '',
+        category: p.category || 'ক্যারিয়ার',
+        categorySlug: (p.category || 'career').toLowerCase(),
+        author: p.author || 'চাকরি সেবা এডিটোরিয়াল',
+        authorRole: 'এডিটোরিয়াল টিম',
+        date: p.publishedAt ? new Date(p.publishedAt).toLocaleDateString('bn-BD') : '',
+        readTime: p.readTime || '৫ মিনিট',
+        viewsCount: 0,
+        coverGradient: 'from-emerald-800 to-teal-900',
+        sections: [],
+        relatedSlugs: [],
+        tags: Array.isArray(p.tags) ? p.tags : [],
+      } as BlogPostItem)),
+    [rawPosts],
+  );
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
 

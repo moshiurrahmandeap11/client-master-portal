@@ -19,7 +19,7 @@ import {
   Clock,
   FileText
 } from 'lucide-react';
-import { serverDB } from '@/lib/db';
+import { serverApi } from '@/lib/server-api';
 import { JobCircular } from '@/types';
 import JobLogo from '@/components/shared/JobLogo';
 
@@ -61,63 +61,50 @@ export default async function OrganizationDetailPage({ params }: PageProps) {
   const decodedSlug = decodeURIComponent(slug).trim();
   const normSlug = normalizeStr(decodedSlug);
 
-  const allJobs = serverDB.getJobs();
-  const allCompanies = serverDB.getCompanies();
+  const [directOrg, allJobs, allOrganizations] = await Promise.all([
+    serverApi.getOrganizationBySlug(decodedSlug),
+    serverApi.getPublicJobs(),
+    serverApi.getOrganizations(),
+  ]);
 
   // 1. Find all matching jobs for this organization
-  const matchingJobs = allJobs.filter(job => {
-    if (!job.organization) return false;
-    const normOrg = normalizeStr(job.organization);
-    const acronym = extractAcronym(job.organization);
+  const matchingJobs = directOrg?.jobs?.length
+    ? directOrg.jobs
+    : allJobs.filter(job => {
+        if (!job.organization) return false;
+        const normOrg = normalizeStr(job.organization);
+        const acronym = extractAcronym(job.organization);
 
-    if (normOrg.includes(normSlug) || normSlug.includes(normOrg)) return true;
-    if (acronym && normSlug.includes(acronym)) return true;
-    if (job.organization.toLowerCase().includes(decodedSlug.toLowerCase())) return true;
-    return false;
-  });
+        if (normOrg.includes(normSlug) || normSlug.includes(normOrg)) return true;
+        if (acronym && normSlug.includes(acronym)) return true;
+        if (job.organization.toLowerCase().includes(decodedSlug.toLowerCase())) return true;
+        return false;
+      });
 
-  // 2. Find matching company profile if any
-  const matchedCompany = allCompanies.find(c => {
-    const normName = normalizeStr(c.name);
+  // 2. Find matching organization profile if any
+  const matchedOrg = directOrg?.organization || allOrganizations.find((c: any) => {
+    const normName = normalizeStr(c.name || '');
     const normBn = c.nameBn ? normalizeStr(c.nameBn) : '';
-    return normName.includes(normSlug) || normBn.includes(normSlug) || normSlug.includes(normName);
+    return c.slug === decodedSlug || normName.includes(normSlug) || normBn.includes(normSlug) || normSlug.includes(normName);
   });
 
   // Determine Organization Display Attributes
   const primaryJob = matchingJobs[0];
-  const orgName = primaryJob?.organization || matchedCompany?.nameBn || matchedCompany?.name || decodedSlug;
-  const logoUrl = primaryJob?.logo || matchedCompany?.logo || 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=120&q=80';
-  const orgType = primaryJob?.orgType || matchedCompany?.organizationType || matchedCompany?.industry || 'সরকারি / স্বায়ত্তশাসিত প্রতিষ্ঠান';
-  const officialWebsite = primaryJob?.officialLink || matchedCompany?.website || '';
+  const orgName = matchedOrg?.nameBn || matchedOrg?.name || primaryJob?.organization || decodedSlug;
+  const logoUrl = matchedOrg?.logoUrl || primaryJob?.logo || '';
+  const orgType = matchedOrg?.type || primaryJob?.orgType || 'সরকারি / স্বায়ত্তশাসিত প্রতিষ্ঠান';
+  const officialWebsite = matchedOrg?.websiteUrl || primaryJob?.officialLink || '';
   const totalVacancies = matchingJobs.reduce((sum, j) => sum + (Number(j.totalPosts) || 1), 0);
 
-  // Past recruitment history archive data for this organization
-  const pastRecruitmentHistory = [
-    {
-      year: '২০২৪',
-      title: `${orgName}-এ বিভিন্ন ক্যাডার ও নন-ক্যাডার পদে নিয়োগ পরীক্ষা-২০২৪`,
-      posts: Math.max(12, Math.round(totalVacancies * 0.8)),
-      status: 'চূড়ান্ত নিয়োগ সম্পন্ন',
-      examType: 'লিখিত ও ভাইভা সম্পন্ন',
-      gazetteNo: 'স্মারক নং: গেজেট-০৪/২০২৪'
-    },
-    {
-      year: '২০২৩',
-      title: `${orgName}-এ সহকারী পরিচালক, কর্মকর্তা ও মাঠপর্যায়ের জনবল নিয়োগ`,
-      posts: Math.max(25, Math.round(totalVacancies * 1.2)),
-      status: 'গেজেট প্রকাশিত ও যোগদান সম্পন্ন',
-      examType: 'প্রিলিমিনারি ও লিখিত পরীক্ষা',
-      gazetteNo: 'স্মারক নং: গেজেট-১২/২০২৩'
-    },
-    {
-      year: '২০২২',
-      title: `${orgName}-এর কারিগরি, প্রকৌশল ও প্রশাসনিক পদসমূহে সরাসরি নিয়োগ`,
-      posts: Math.max(30, Math.round(totalVacancies * 1.5)),
-      status: 'কার্যক্রম সমাপ্ত',
-      examType: 'টেলিটক অনলাইন নিয়োগ',
-      gazetteNo: 'স্মারক নং: গেজেট-০৮/২০২২'
-    }
-  ];
+  // Only real archived records (no fabricated past gazettes)
+  const pastRecruitmentHistory: Array<{
+    year: string;
+    title: string;
+    posts: number;
+    status: string;
+    examType: string;
+    gazetteNo: string;
+  }> = [];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 text-slate-800">

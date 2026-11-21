@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import { serverDB } from '@/lib/db';
+import { serverApi } from '@/lib/server-api';
 import OrganizationsDirectoryClient, { OrgDirectoryItem } from '@/components/guides_components/OrganizationsDirectoryClient';
 
 export const dynamic = 'force-dynamic';
@@ -31,9 +31,11 @@ function slugifyOrg(name: string): string {
   return encodeURIComponent(name.toLowerCase().replace(/[,\(\)\.\/\\_]/g, ' ').trim().replace(/\s+/g, '-'));
 }
 
-export default function OrganizationsPage() {
-  const allJobs = serverDB.getJobs();
-  const allCompanies = serverDB.getCompanies();
+export default async function OrganizationsPage() {
+  const [allJobs, allOrganizations] = await Promise.all([
+    serverApi.getPublicJobs(),
+    serverApi.getOrganizations(),
+  ]);
 
   const orgMap = new Map<string, OrgDirectoryItem>();
 
@@ -42,7 +44,8 @@ export default function OrganizationsPage() {
     logo?: string,
     category?: string,
     orgType?: string,
-    website?: string
+    website?: string,
+    customSlug?: string,
   ) => {
     if (!name || !name.trim()) return;
     const clean = name.trim();
@@ -51,28 +54,35 @@ export default function OrganizationsPage() {
     if (!existing) {
       orgMap.set(key, {
         name: clean,
-        logo: logo || 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=120&q=80',
+        logo: logo || '',
         category: category || 'সরকারি চাকরি',
         orgType: orgType || 'সরকারি / স্বায়ত্তশাসিত',
         website: website || '',
         activeJobsCount: 0,
         totalVacancies: 0,
-        slug: slugifyOrg(clean)
+        slug: customSlug || slugifyOrg(clean)
       });
     }
   };
 
-  // 1. Register from companies
-  for (const c of allCompanies) {
-    register(c.name, c.logo, c.industry, c.organizationType, c.website);
+  // 1. Register from DB organizations (managed in Admin Panel)
+  for (const org of allOrganizations) {
+    register(org.nameBn || org.name, org.logoUrl, org.type || 'সরকারি চাকরি', org.type, org.websiteUrl, org.slug);
+    const item = orgMap.get((org.nameBn || org.name).trim().toLowerCase());
+    if (item && typeof org.activeJobsCount === 'number') {
+      item.activeJobsCount = org.activeJobsCount;
+      item.totalVacancies = org.totalVacancies || 0;
+    }
   }
 
-  // 2. Register from jobs
+  // 2. Also surface organizations from published jobs if not explicitly listed
   for (const j of allJobs) {
     if (!j.organization) continue;
+    const key = j.organization.trim().toLowerCase();
+    const existed = orgMap.has(key);
     register(j.organization, j.logo, j.categoryLabel || j.category, j.orgType, j.officialLink);
-    const item = orgMap.get(j.organization.trim().toLowerCase());
-    if (item) {
+    const item = orgMap.get(key);
+    if (item && !existed) {
       item.activeJobsCount += 1;
       item.totalVacancies += Number(j.totalPosts) || 1;
     }

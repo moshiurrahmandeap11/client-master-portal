@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { CentralDeadlineEngine } from '@/lib/deadlines/engine';
 
 import { usePlatformContext } from '@/components/shared/layout/ConditionalLayout';
+import { usePublicReviews, usePlatformSettings, getPlatformContacts } from '@/hooks/usePlatformQueries';
 import HeroSection from '@/components/shared/HeroSection';
 import JobSearchSection from '@/components/jobs_components/JobSearchSection';
 import JobLogo from '@/components/shared/JobLogo';
@@ -194,21 +195,25 @@ export default function HomePage() {
   const reviewsCms = homeSections?.find(s => s.type === 'testimonials' || s.id === 'sec-home-reviews');
   const faqCms = homeSections?.find(s => s.type === 'faq' || s.id === 'sec-home-faq');
 
+  const { data: liveReviews = [] } = usePublicReviews();
+  const { data: liveSettings } = usePlatformSettings();
+  const platformContacts = getPlatformContacts(liveSettings);
+
   const reviewsToDisplay = useMemo(() => {
-    const items = reviewsCms?.content?.items;
-    if (Array.isArray(items) && items.length > 0) {
-            return items.map((item: any, idx: number) => ({
-        id: item.id || idx + 1,
-        name: item.name || item.title || 'বেনামী চাকরিপ্রার্থী',
-        role: item.role || 'সহকারী কর্মকর্তা • সরকারি/ব্যাংক',
-        institution: item.institution || item.desc?.slice(0, 30) || 'বাংলাদেশ',
-        initials: (item.name || item.title || 'চ')[0] || 'চ',
-                textInitials: 'text-white',
-        quote: item.quote || item.desc || item.title || 'চাকরি সেবা প্ল্যাটফর্মের মাধ্যমে দ্রুত আবেদন সম্পন্ন করতে পেরেছি।'
-      }));
-    }
-    return candidateReviews;
-  }, [reviewsCms]);
+    const items = (Array.isArray(liveReviews) && liveReviews.length > 0)
+      ? liveReviews
+      : (Array.isArray(reviewsCms?.content?.items) && reviewsCms.content.items.length > 0 ? reviewsCms.content.items : []);
+
+    return items.map((item: any, idx: number) => ({
+      id: item.id || idx + 1,
+      name: item.name || item.title || 'চাকরিপ্রার্থী',
+      role: item.role || 'প্রার্থী',
+      institution: item.institution || 'বাংলাদেশ',
+      initials: (item.name || item.title || 'চ')[0] || 'চ',
+      textInitials: 'text-white',
+      quote: item.quote || item.desc || item.title || ''
+    })).filter((r: any) => Boolean(r.quote));
+  }, [liveReviews, reviewsCms]);
 
   const { data: publicJobs = [] } = useQuery({
     queryKey: ['publicJobs'],
@@ -1307,7 +1312,7 @@ export default function HomePage() {
       )}
 
       {/* 7. CANDIDATE TESTIMONIALS & REVIEWS SECTION (Auto-Scrolling Marquee) */}
-      {(reviewsCms?.isVisible !== false) && (
+      {(reviewsCms?.isVisible !== false && reviewsToDisplay.length > 0) && (
         <section id="reviews-section" className="w-full max-w-[1536px] 2xl:max-w-[1680px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 scroll-mt-24">
           <div 
             style={{
@@ -1321,7 +1326,7 @@ export default function HomePage() {
             <div className="text-center max-w-3xl mx-auto space-y-2 mb-6 relative z-10">
               <div className="inline-flex items-center gap-2 bg-slate-800 border border-slate-700 text-emerald-400 px-3.5 py-1 rounded-full text-xs font-normal tracking-wide shadow-xs">
                 <span className="flex items-center gap-0.5 text-emerald-400">{Array.from({ length: 5 }).map((_, i) => <FaStar key={i} className="w-3 h-3" />)}</span>
-                <span>{reviewsCms?.content?.badge || '৪.৯/৫ গড় রেটিং • ৩,৫০০+ ভেরিফাইড আবেদনকারী'}</span>
+                <span>{reviewsCms?.content?.badge || 'যাচাইকৃত চাকরিপ্রার্থীদের মতামত'}</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-normal text-white tracking-tight">
                 {reviewsCms?.title || 'সফল চাকরিপ্রার্থীদের বাস্তব অভিজ্ঞতা ও মতামত'}
@@ -1403,7 +1408,7 @@ export default function HomePage() {
               },
               {
                 q: "আবেদনের সরকারি ফি ও সার্ভিস চার্জ কীভাবে এবং কখন পরিশোধ করতে হবে?",
-                a: "আপনি বিকাশ (bKash), নগদ (Nagad), রকেট বা আপনার চাকরি সেবা ওয়ালেট ব্যালেন্সের মাধ্যমে অতি সহজে পেমেন্ট করতে পারবেন। সরকারি নির্ধারিত ফি-এর সাথে সামান্য সার্ভিস চার্জ যুক্ত থাকে। আবেদন সফলভাবে সাবমিট ও কনফার্ম না হওয়া পর্যন্ত আপনার টাকা সম্পূর্ণ নিরাপদ থাকে।"
+                a: "আপনি বিকাশ (bKash), নগদ (Nagad) সেন্ড মানি (TrxID ভেরিফিকেশন) অথবা আপনার চাকরি সেবা ওয়ালেট ব্যালেন্সের মাধ্যমে পেমেন্ট করতে পারবেন। সরকারি নির্ধারিত ফি-এর সাথে সামান্য সার্ভিস চার্জ যুক্ত থাকে।"
               },
               {
                 q: "আমার ছবি ও স্বাক্ষর কি নিজে রিসাইজ (300x300, 300x80) করতে হবে?",
@@ -1468,22 +1473,22 @@ export default function HomePage() {
               আমাদের অভিজ্ঞ কাস্টমার কেয়ার টিম প্রতিদিন সকাল ৯টা থেকে রাত ১১টা পর্যন্ত সরাসরি সহায়তার জন্য প্রস্তুত।
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
-              <a
-                href="https://wa.me/8801700000000"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/contact"
                 className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[15px] shadow-sm flex items-center gap-2 transition-all hover:scale-105"
               >
                 <MessageSquare className="w-4 h-4" />
-                <span>হোয়াটসঅ্যাপে সরাসরি কথা বলুন</span>
-              </a>
-              <a
-                href="tel:+8801700000000"
-                className="px-4 py-2.5 rounded-xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-[15px] shadow-xs flex items-center gap-2 transition-all"
-              >
-                <PhoneCall className="w-4 h-4 text-emerald-700" />
-                <span>কল করুন (হটলাইন)</span>
-              </a>
+                <span>সাপোর্ট টিকেট / যোগাযোগ করুন</span>
+              </Link>
+              {platformContacts.supportPhone && (
+                <a
+                  href={`tel:${platformContacts.supportPhone.replace(/[^0-9+]/g, '')}`}
+                  className="px-4 py-2.5 rounded-xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-[15px] shadow-xs flex items-center gap-2 transition-all"
+                >
+                  <PhoneCall className="w-4 h-4 text-emerald-700" />
+                  <span>কল করুন ({platformContacts.supportPhone})</span>
+                </a>
+              )}
             </div>
           </div>
         </section>

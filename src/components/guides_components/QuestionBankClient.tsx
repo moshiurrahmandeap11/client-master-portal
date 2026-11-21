@@ -18,11 +18,27 @@ import {
   Layers,
   ArrowRight
 } from 'lucide-react';
-import { initialQuestionBank, initialQuestionSets } from '@/data/preparationData';
+import { useExamResource } from '@/hooks/usePlatformQueries';
 import { QuestionBankItem } from '@/types/preparation.types';
 
 export default function QuestionBankClient() {
-  const [questions] = useState<QuestionBankItem[]>(initialQuestionBank);
+  const { data: rawQuestions = [] } = useExamResource<any>('questions');
+  const questions: QuestionBankItem[] = useMemo(
+    () =>
+      rawQuestions.map((q: any) => ({
+        id: q.id,
+        question: q.question || '',
+        options: Array.isArray(q.options) ? q.options : [],
+        correctIndex: Number(q.correctIndex ?? 0),
+        explanation: q.explanation || '',
+        subject: q.category || 'সাধারণ জ্ঞান',
+        examCategory: 'govt' as any,
+        examName: q.organization || 'সরকারি নিয়োগ পরীক্ষা',
+        year: q.examYear ? String(q.examYear) : '',
+      } as QuestionBankItem)),
+    [rawQuestions],
+  );
+  const initialQuestionSets: any[] = [];
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedSubject, setSelectedSubject] = useState<string>('all');

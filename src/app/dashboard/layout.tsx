@@ -33,7 +33,7 @@ import {
   Camera
 } from 'lucide-react';
 import { storage } from '@/lib/store';
-import axiosInstance from '@/lib/axios';
+import axiosInstance, { fetchWithAuth } from '@/lib/axios';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthSession } from '@/hooks/useAuthSession';
 import { CandidateProfile } from '@/types';
@@ -130,7 +130,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   useEffect(() => {
     if (Array.isArray(notificationsData)) {
-      const unread = notificationsData.filter((n: any) => !n.read).length;
+      const unread = notificationsData.filter((n: any) => !(n.isRead ?? n.read)).length;
       setUnreadNotifsCount(unread);
     }
   }, [notificationsData]);
@@ -241,9 +241,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     formData.append('docType', 'photo');
     formData.append('docTitle', 'প্রার্থীর ছবি');
     try {
-      const res = await axiosInstance.post('/api/candidate/upload-document', formData);
-      if (res.data?.success && res.data?.fileUrl) {
-        const updated = { ...profile, photoUrl: res.data.fileUrl };
+      const res = await fetchWithAuth('/api/candidate/upload-document', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data?.success && data?.fileUrl) {
+        const updated = { ...profile, photoUrl: data.fileUrl };
         setProfile(updated);
         storage.updateUser(updated);
         window.dispatchEvent(new Event('cs_user_changed'));

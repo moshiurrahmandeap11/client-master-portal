@@ -768,16 +768,26 @@ export default function ApplicationsPage() {
                 {normalizeAppStatus(selectedApp.status) === 'completed' ? (
                   <>
                     <div className="grid grid-cols-2 gap-2">
-                      <a
-                        data-testid="download-applicant-copy-btn"
-                        href={selectedApp.applicantCopyPdfUrl || '/demo-applicant-copy.pdf'}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="py-2.5 px-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold flex items-center justify-center gap-1.5 shadow-xs transition-colors text-center text-xs"
-                      >
-                        <Download className="w-4 h-4" />
-                        <span>স্লিপ ডাউনলোড</span>
-                      </a>
+                      {selectedApp.applicantCopyPdfUrl ? (
+                        <a
+                          data-testid="download-applicant-copy-btn"
+                          href={selectedApp.applicantCopyPdfUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="py-2.5 px-3 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl font-bold flex items-center justify-center gap-1.5 shadow-xs transition-colors text-center text-xs"
+                        >
+                          <Download className="w-4 h-4" />
+                          <span>স্লিপ ডাউনলোড</span>
+                        </a>
+                      ) : (
+                        <span
+                          data-testid="download-applicant-copy-btn"
+                          className="py-2.5 px-3 bg-slate-100 text-slate-500 rounded-xl font-bold flex items-center justify-center gap-1.5 text-center text-xs cursor-not-allowed"
+                        >
+                          <Download className="w-4 h-4" />
+                          <span>স্লিপ আপলোড হয়নি</span>
+                        </span>
+                      )}
                       <button
                         type="button"
                         data-testid="preview-slip-modal-btn"

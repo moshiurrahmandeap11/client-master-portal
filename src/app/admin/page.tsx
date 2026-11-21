@@ -1382,26 +1382,22 @@ function AdminContent() {
       const matchedApp = applications.find(a => a.id === currentAppId || a.candidatePhone === candidatePhoneOrId);
       if (matchedApp) {
         const fallbackCand = {
-          id: (matchedApp as any).candidateId || 'USR-' + (matchedApp.candidatePhone ? matchedApp.candidatePhone.replace(/\D/g, '') : 'DEMO'),
-          name: matchedApp.candidateName,
-          nameBn: matchedApp.candidateName,
-          fatherName: 'MD. ABDUR RAHMAN',
-          fatherNameBn: 'মোঃ আব্দুর রহমান',
-          motherName: 'FATEMA BEGUM',
-          motherNameBn: 'মোসাঃ ফাতেমা বেগম',
-          phone: matchedApp.candidatePhone,
-          email: (matchedApp.candidatePhone ? matchedApp.candidatePhone.replace(/\D/g, '') : 'user') + '@candidate.chakrisheba.com',
-          district: matchedApp.candidateDistrict || 'ঢাকা',
-          nid: '19952692518000214',
-          fatherNid: '19702692518000101',
-          motherNid: '19752692518000202',
-          walletBalance: 450,
+          id: (matchedApp as any).candidateId || candidatePhoneOrId,
+          name: matchedApp.candidateName || 'প্রার্থী',
+          nameBn: matchedApp.candidateName || 'প্রার্থী',
+          fatherName: '',
+          fatherNameBn: '',
+          motherName: '',
+          motherNameBn: '',
+          phone: matchedApp.candidatePhone || '',
+          email: (matchedApp as any).candidateEmail || '',
+          district: matchedApp.candidateDistrict || '',
+          nid: '',
+          fatherNid: '',
+          motherNid: '',
+          walletBalance: 0,
           quota: 'none',
-          education: (matchedApp as any).submittedEducation || [
-            { level: 'এসএসসি', boardOrUni: 'ঢাকা বোর্ড (বিজ্ঞান)', roll: '148209', reg: '110293', year: '2014', result: '5.00' },
-            { level: 'এইচএসসি', boardOrUni: 'ঢাকা বোর্ড (বিজ্ঞান)', roll: '119402', reg: '110293', year: '2016', result: '4.83' },
-            { level: 'স্নাতক (অনার্স)', boardOrUni: 'ঢাকা বিশ্ববিদ্যালয় (CSE)', roll: '1601042', reg: '1601042', year: '2021', result: '3.68' },
-          ],
+          education: (matchedApp as any).submittedEducation || [],
           customDocuments: (matchedApp as any).attachedDocuments || []
         };
         setProfileModalCandidate(fallbackCand);
@@ -1552,7 +1548,7 @@ function AdminContent() {
           teleTalkPassword: drawerPassword.trim(),
           corporateTrackingId: drawerCorporateId.trim(),
           submissionChannel: drawerSubmissionChannel,
-          applicantCopyPdfUrl: drawerPdfUrl.trim() || `/api/uploads/applicant-copies/${inspectingApp.id}_applicant_copy.pdf`,
+          ...(drawerPdfUrl.trim() ? { applicantCopyPdfUrl: drawerPdfUrl.trim() } : {}),
           notes: drawerNotes.trim() || (drawerSubmissionChannel === 'teletalk' ? 'টেলিটকে সরকারি আবেদন সম্পন্ন হয়েছে এবং অফিশিয়াল স্লিপ প্রস্তুত।' : 'আবেদন সফলভাবে সাবমিট হয়েছে এবং কনফার্মেশন স্লিপ প্রস্তুত।')
         })
       });
@@ -1563,7 +1559,7 @@ function AdminContent() {
           ...prev,
           status: 'completed',
           teleTalkTrackingId: drawerTrackingId.trim(),
-          applicantCopyPdfUrl: drawerPdfUrl.trim() || `https://alljobs.teletalk.com.bd/applicant-copy/${inspectingApp.id}.pdf`
+          ...(drawerPdfUrl.trim() ? { applicantCopyPdfUrl: drawerPdfUrl.trim() } : {})
         } : null);
       } else {
         const d = await res.json();

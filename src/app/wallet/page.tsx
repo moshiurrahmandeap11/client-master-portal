@@ -23,8 +23,11 @@ import {
 import { storage } from '@/lib/store';
 import { fetchWithAuth } from '@/lib/axios';
 import { CandidateProfile, WalletTransaction } from '@/types';
+import { usePlatformSettings, getPlatformContacts } from '@/hooks/usePlatformQueries';
 
 export default function WalletPublicPage() {
+  const { data: platformSettings } = usePlatformSettings();
+  const contacts = getPlatformContacts(platformSettings);
   const [isMounted, setIsMounted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [profile, setProfile] = useState<CandidateProfile | null>(null);
@@ -39,8 +42,11 @@ export default function WalletPublicPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const officialNumber = '01774366643';
-  const displayOfficialNumber = '01774-366643';
+  const selectedRawNumber = method === 'bKash'
+    ? (contacts.bkashNumber || contacts.supportPhone)
+    : (contacts.nagadNumber || contacts.bkashNumber || contacts.supportPhone);
+  const officialNumber = selectedRawNumber.replace(/[^0-9+]/g, '');
+  const displayOfficialNumber = selectedRawNumber || 'অ্যাডমিন প্যানেল থেকে নম্বর নির্ধারিত হয়নি';
 
   const getAuthHeaders = (): Record<string, string> => {
     return {};

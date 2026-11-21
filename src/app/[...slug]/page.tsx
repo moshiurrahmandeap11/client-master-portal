@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
-import { notFound, redirect, RedirectType } from 'next/navigation';
-import { serverDB } from '@/lib/db';
+import { notFound, redirect } from 'next/navigation';
 import { serverApi } from '@/lib/server-api';
 import CmsPageRenderer from '@/components/shared/CmsPageRenderer';
 
@@ -102,8 +101,12 @@ export default async function CustomPage(props: Props) {
     redirect(`/categories/${params.slug[2]}`);
   }
 
-  // 5. Category alias match
-  const matchedCat = serverDB.getCategoryBySlug(rawPath) || (params.slug.length === 1 ? serverDB.getCategoryBySlug(first) : null);
+  // 5. Category alias match (from live backend)
+  const [allCategories, allOrganizations] = await Promise.all([
+    serverApi.getCategories(),
+    serverApi.getOrganizations(),
+  ]);
+  const matchedCat = allCategories.find((c: any) => c.slug === rawPath || (params.slug.length === 1 && c.slug === first));
   if (matchedCat) {
     const catTarget = `/categories/${matchedCat.slug}`;
     if (catTarget !== fullPath) {
@@ -111,22 +114,14 @@ export default async function CustomPage(props: Props) {
     }
   }
 
-  // 6. Organization match
+  // 6. Organization match (from live backend)
   if (params.slug.length === 1) {
-    const org = serverDB.getCompanies ? serverDB.getCompanies().find((c: any) => c.slug === first || c.id === first) : null;
+    const org = allOrganizations.find((c: any) => c.slug === first || c.id === first);
     if (org) {
-      const orgTarget = `/organizations/${(org as any).slug || (org as any).id || first}`;
+      const orgTarget = `/organizations/${org.slug || org.id || first}`;
       if (orgTarget !== fullPath) {
         redirect(orgTarget);
       }
-    }
-  }
-
-  // 7. Dynamic redirects configured in admin
-  if (serverDB.findRedirectByPath) {
-    const rec = serverDB.findRedirectByPath(fullPath);
-    if (rec && rec.isActive && rec.targetPath && rec.targetPath !== fullPath) {
-      redirect(rec.targetPath, RedirectType.replace);
     }
   }
 

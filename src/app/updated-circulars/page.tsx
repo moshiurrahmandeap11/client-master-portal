@@ -2,7 +2,7 @@ import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Sparkles, Clock, ArrowRight, Building2, Calendar, FileText, CheckCircle2, ShieldAlert } from 'lucide-react';
-import { serverDB } from '@/lib/db';
+import { serverApi } from '@/lib/server-api';
 import { CentralDeadlineEngine } from '@/lib/deadlines/engine';
 import UpdatedCircularsClient, { UpdatedJobItem } from '@/components/shared/updated/UpdatedCircularsClient';
 
@@ -22,9 +22,9 @@ export const metadata: Metadata = {
   }
 };
 
-export default function UpdatedCircularsPage() {
-  const allJobs = serverDB.getPublicJobs();
-  const approvedProposals = serverDB.getCircularChangeProposals('APPROVED');
+export default async function UpdatedCircularsPage() {
+  const allJobs = await serverApi.getPublicJobs();
+  const approvedProposals: any[] = [];
   const updatedList: UpdatedJobItem[] = [];
 
   for (const job of allJobs) {
@@ -32,7 +32,7 @@ export default function UpdatedCircularsPage() {
       continue;
     }
 
-    const revisions = serverDB.getDeadlineRevisions(job.id);
+    const revisions: any[] = [];
     const evalResult = CentralDeadlineEngine.evaluateDeadline(job);
     const jobProposals = approvedProposals.filter(p => p.jobId === job.id);
 

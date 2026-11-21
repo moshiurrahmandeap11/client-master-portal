@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePlatformSettings } from '@/hooks/usePlatformQueries';
 import { 
   Phone, 
   MessageSquare, 
@@ -47,17 +48,9 @@ export default function ContactPage() {
   const [trackedTickets, setTrackedTickets] = useState<ContactMessageItem[] | null>(null);
   const [trackError, setTrackError] = useState<string | null>(null);
 
-  const [settings, setSettings] = useState<any>(null);
+  const { data: settings } = usePlatformSettings();
 
   useEffect(() => {
-    fetch('/api/platform/settings', { cache: 'no-store' })
-      .then(r => r.json())
-      .then(d => {
-        const live = d.settings || d.data;
-        if (d.success && live) setSettings(live);
-      })
-      .catch(() => {});
-
     // Read URL query parameters for tab=track or ticketId
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);

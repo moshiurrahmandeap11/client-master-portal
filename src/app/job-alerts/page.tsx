@@ -73,8 +73,8 @@ export default function JobAlertsPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [subscribedData, setSubscribedData] = useState<{ id: string; message: string } | null>(null);
   const [stats, setStats] = useState<{ totalSubscribers: number; activeSubscribers: number }>({
-    totalSubscribers: 12850,
-    activeSubscribers: 12600
+    totalSubscribers: 0,
+    activeSubscribers: 0
   });
 
   useEffect(() => {

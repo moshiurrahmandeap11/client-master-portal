@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound, redirect, RedirectType } from 'next/navigation';
 import { serverDB } from '@/lib/db';
+import { serverApi } from '@/lib/server-api';
 import CmsPageRenderer from '@/components/shared/CmsPageRenderer';
 
 export const dynamic = 'force-dynamic';
@@ -17,7 +18,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     return { robots: { index: false } };
   }
   const fullPath = '/' + params.slug.join('/');
-  const page = serverDB.getPublishedPageBySlug(fullPath);
+  const page = await serverApi.getCmsPageBySlug(fullPath);
   if (page) {
     return { 
       title: page.metaTitle || `${page.title} | চাকরি সেবা`, 
@@ -50,10 +51,11 @@ export default async function CustomPage(props: Props) {
     notFound();
   }
 
-  // 1. Direct CMS Page
-  const page = serverDB.getPublishedPageBySlug(fullPath);
+  // 1. Direct CMS Page from PostgreSQL/fallback
+  const page = await serverApi.getCmsPageBySlug(fullPath);
   if (page) {
-    return <CmsPageRenderer page={page as any} initialJobs={serverDB.getPublicJobs()} />;
+    const publicJobs = await serverApi.getPublicJobs(60);
+    return <CmsPageRenderer page={page as any} initialJobs={publicJobs} />;
   }
 
   // 2. High-frequency URL Aliases (Guard against redirecting to itself)
@@ -128,10 +130,6 @@ export default async function CustomPage(props: Props) {
     }
   }
 
-  // 8. Graceful fallback to jobs search instead of hard 404
-  const searchQuery = rawPath.replace(/[/-]/g, ' ').trim();
-  if (!searchQuery || first === 'jobs') {
-    redirect('/jobs');
-  }
-  redirect(`/jobs?search=${encodeURIComponent(searchQuery)}`);
+  // 8. Return true HTTP 404 for unknown routes instead of soft-404 search redirects
+  notFound();
 }

@@ -24,10 +24,33 @@ import {
   ArrowUpRight
 } from 'lucide-react';
 import { AdmitCardItem } from '@/types/exams.types';
-import { initialAdmitCards } from '@/data/examsData';
+import { useExamResource } from '@/hooks/usePlatformQueries';
 
 export default function AdmitCardsClient() {
-  const [admitCards] = useState<AdmitCardItem[]>(initialAdmitCards);
+  const { data: rawAdmitCards = [] } = useExamResource<any>('admit-cards');
+  const admitCards: AdmitCardItem[] = useMemo(
+    () =>
+      rawAdmitCards.map((item: any) => ({
+        id: item.id,
+        title: item.title || item.job?.titleBn || item.job?.title || 'প্রবেশপত্র',
+        organization: item.organization || item.job?.organization || 'সরকারি প্রতিষ্ঠান',
+        category: (item.category || 'govt') as any,
+        categoryLabel: item.category || 'সরকারি চাকরি',
+        postsCount: 0,
+        examDate: item.examDate ? new Date(item.examDate).toLocaleDateString('bn-BD') : 'ঘোষণা সাপেক্ষে',
+        deadlineText: item.deadline ? new Date(item.deadline).toLocaleDateString('bn-BD') : 'পরীক্ষার পূর্ব পর্যন্ত',
+        portalUrl: item.downloadUrl || '#',
+        portalName: item.downloadUrl ? 'অফিশিয়াল ডাউনলোড পোর্টাল' : 'পোর্টাল লিংক',
+        status: item.isAvailable === false ? 'upcoming' : ((item.status || 'available') as any),
+        statusLabel: item.isAvailable === false ? 'শীঘ্রই প্রকাশিত হবে' : 'ডাউনলোড চলছে',
+        instructions: item.rollInstructions
+          ? String(item.rollInstructions)
+          : 'ইউজার আইডি ও পাসওয়ার্ড দিয়ে প্রবেশপত্র ডাউনলোড করুন।',
+        teletalkPrefix: item.teletalkPrefix || 'ORG',
+        jobId: item.jobId || item.job?.id,
+      })),
+    [rawAdmitCards],
+  );
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import type { PageRecord } from '@/types';
-import { serverDB } from '@/lib/db';
+import { serverApi } from '@/lib/server-api';
 import CmsPageRenderer from '@/components/shared/CmsPageRenderer';
 
-export default function PublishedPage({ page }: { page: NonNullable<PageRecord['publishedContent']> | PageRecord }) {
+export default async function PublishedPage({ page }: { page: NonNullable<PageRecord['publishedContent']> | PageRecord }) {
   const normalizedPage: PageRecord = {
     id: (page as any).id || (page as any).slug?.replace(/^\//, '') || 'page',
     slug: page.slug || '/',
@@ -17,5 +17,6 @@ export default function PublishedPage({ page }: { page: NonNullable<PageRecord['
     updatedAt: (page as any).publishedAt || (page as any).updatedAt || new Date().toISOString()
   };
 
-  return <CmsPageRenderer page={normalizedPage} initialJobs={serverDB.getPublicJobs()} />;
+  const jobs = await serverApi.getPublicJobs();
+  return <CmsPageRenderer page={normalizedPage} initialJobs={jobs} />;
 }

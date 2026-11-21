@@ -1,5 +1,6 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { usePlatformSettings, getPlatformContacts } from '@/hooks/usePlatformQueries';
 
 import Link from 'next/link';
 import { Briefcase, Phone, MessageSquare, Send, ShieldCheck, CheckCircle2 } from 'lucide-react';
@@ -90,31 +91,10 @@ export const DEFAULT_FOOTER_COLUMNS: FooterColumnItem[] = [
 ];
 
 export default function Footer({ initialSettings }: { initialSettings?: any } = {}) {
-  const [settings, setSettings] = useState<any>(initialSettings || null);
-
-  useEffect(() => {
-    if (initialSettings) {
-      setSettings(initialSettings);
-    }
-  }, [initialSettings]);
-
-  useEffect(() => {
-    const load = () => {
-      fetch('/api/platform/settings')
-        .then(r => r.json())
-        .then(d => {
-          const live = d.settings || d.data;
-          if (d.success && live) setSettings(live);
-        })
-        .catch(() => {});
-    };
-    load();
-    window.addEventListener('cs_settings_changed', load);
-    return () => window.removeEventListener('cs_settings_changed', load);
-  }, []);
-
-  const phone = settings?.general?.supportPhone || '+৮৮০ ১৭৭৪-৩৬৬৬৪৩';
-  const whatsapp = settings?.general?.whatsappNumber || '8801774366643';
+  const { data: settings } = usePlatformSettings(initialSettings);
+  const contacts = getPlatformContacts(settings);
+  const phone = contacts.supportPhone;
+  const whatsapp = contacts.whatsappNumber;
   const aboutText = settings?.general?.footerAboutText || 'বাংলাদেশের চাকরিপ্রার্থীদের বিশ্বস্ত ডিজিটাল প্ল্যাটফর্ম। ঘরে বসেই সকল সরকারি, ব্যাংক ও শীর্ষ বেসরকারি চাকরির শতভাগ যাচাইকৃত বিজ্ঞপ্তি ও সঠিক নিয়মে অনলাইন আবেদন সহায়তা।';
   const fbUrl = settings?.general?.facebookUrl || 'https://facebook.com/chakrisheba.bd';
   const tgUrl = settings?.general?.telegramUrl || 'https://t.me/chakrisheba';
@@ -221,10 +201,10 @@ export default function Footer({ initialSettings }: { initialSettings?: any } = 
           ))}
         </div>
 
-        {/* Real Payment Partners Badges & Security Strip */}
+        {/* Manual Mobile Banking Payment Strip */}
         <div className="border-t border-slate-800/90 mt-10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5 text-[14px] text-slate-400">
-            <span className="font-semibold text-slate-300 mr-1">নিরাপদ পেমেন্ট পার্টনার্স:</span>
+            <span className="font-semibold text-slate-300 mr-1">গৃহীত পেমেন্ট মাধ্যম:</span>
             
             <div className="h-8 px-2.5 py-1 bg-white rounded-lg shadow-sm border border-slate-700/50 flex items-center justify-center hover:scale-105 transition-all" title="বিকাশ (bKash)">
               <img src="/images/payments/Bkash.png" alt="বিকাশ" className="h-6 w-auto object-contain" />
@@ -233,27 +213,11 @@ export default function Footer({ initialSettings }: { initialSettings?: any } = 
             <div className="h-8 px-2.5 py-1 bg-white rounded-lg shadow-sm border border-slate-700/50 flex items-center justify-center hover:scale-105 transition-all" title="নগদ (Nagad)">
               <img src="/images/payments/Nagad.png" alt="নগদ" className="h-6 w-auto object-contain rounded" />
             </div>
-
-            <div className="h-8 px-2.5 py-1 bg-white rounded-lg shadow-sm border border-slate-700/50 flex items-center justify-center hover:scale-105 transition-all" title="রকেট (Rocket)">
-              <img src="/images/payments/Rocket.png" alt="রকেট" className="h-6 w-auto object-contain rounded" />
-            </div>
-
-            <div className="h-8 px-2.5 py-1 bg-white rounded-lg shadow-sm border border-slate-700/50 flex items-center justify-center hover:scale-105 transition-all" title="উপায় (Upay)">
-              <img src="/images/payments/Upay.png" alt="উপায়" className="h-6 w-auto object-contain" />
-            </div>
-
-            <div className="h-8 px-2.5 py-1 bg-white rounded-lg shadow-sm border border-slate-700/50 flex items-center justify-center hover:scale-105 transition-all" title="ভিসা কার্ড (Visa)">
-              <img src="/images/payments/visa.svg" alt="Visa" className="h-5 w-auto object-contain rounded-sm" />
-            </div>
-
-            <div className="h-8 px-2.5 py-1 bg-white rounded-lg shadow-sm border border-slate-700/50 flex items-center justify-center hover:scale-105 transition-all" title="মাস্টারকার্ড (Mastercard)">
-              <img src="/images/payments/mastercard.svg" alt="Mastercard" className="h-5 w-auto object-contain rounded-sm" />
-            </div>
           </div>
 
           <div className="text-[13px] text-slate-400 flex items-center gap-1.5 bg-slate-800/60 px-3 py-1.5 rounded-xl border border-slate-700/40">
             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            <span>SSL এনক্রিপ্টেড ১০০% সুরক্ষিত গেটওয়ে</span>
+            <span>বিকাশ / নগদ সেন্ড মানি ও অ্যাডমিন TrxID ভেরিফাইড পেমেন্ট</span>
           </div>
         </div>
 

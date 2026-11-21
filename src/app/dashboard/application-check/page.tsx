@@ -110,24 +110,35 @@ export default function ApplicationCheckPage() {
       actionUrl: '/dashboard/profile'
     });
 
-    // 5. Age Check
-    let currentAge = 26;
+    // 5. Age Check (real DOB only — never fabricate a default age)
+    let currentAge: number | null = null;
     const dobStr = (profile as any)?.dateOfBirth || profile.dob;
     if (dobStr) {
-      const birthYear = new Date(dobStr).getFullYear();
-      if (!isNaN(birthYear) && birthYear > 1950) {
-        currentAge = new Date().getFullYear() - birthYear;
+      const birthDate = new Date(dobStr);
+      if (!isNaN(birthDate.getTime()) && birthDate.getFullYear() > 1950) {
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        currentAge = age;
       }
     }
     const minAge = selectedJob?.minAge ?? 18;
     const maxAge = selectedJob?.maxAge ?? 32;
-    const ageMeets = currentAge >= minAge && currentAge <= maxAge;
+    const ageMeets = currentAge !== null && currentAge >= minAge && currentAge <= maxAge;
     list.push({
       id: 'age',
       title: `বয়সসীমা যাচাই (${minAge}-${maxAge} বছর)`,
       passed: ageMeets,
       status: ageMeets ? 'OK' : 'WARNING',
-      message: `প্রার্থীর হিসাবকৃত বয়স ${currentAge} বছর যা নির্ধারিত বয়সসীমার (${minAge}-${maxAge}) মধ্যে রয়েছে।`
+      message: currentAge === null
+        ? 'প্রোফাইলে জন্ম তারিখ যুক্ত করুন যেন বয়সসীমা সঠিকভাবে যাচাই করা যায়।'
+        : ageMeets
+          ? `প্রার্থীর হিসাবকৃত বয়স ${currentAge} বছর যা নির্ধারিত বয়সসীমার (${minAge}-${maxAge}) মধ্যে রয়েছে।`
+          : `প্রার্থীর বয়স ${currentAge} বছর যা নির্ধারিত বয়সসীমার (${minAge}-${maxAge}) বাইরে।`,
+      actionUrl: '/dashboard/profile'
     });
 
     // 6. District quota

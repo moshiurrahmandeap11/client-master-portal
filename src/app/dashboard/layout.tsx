@@ -473,14 +473,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
           {/* Sidebar Footer Support & Logout */}
           <div className="p-3 border-t border-slate-200/80 bg-slate-50/50 space-y-1.5">
-            <a 
-              href="https://wa.me/8801700000000" 
-              target="_blank" 
-              rel="noopener noreferrer"
+            <Link 
+              href="/contact" 
               className="flex items-center justify-center py-2 px-3 bg-white/90 hover:bg-white text-slate-800 hover:text-slate-950 border border-slate-200/80 rounded-lg text-xs font-semibold shadow-xs transition-all backdrop-blur-sm"
             >
               <span>সহায়তা ও হেল্পলাইন</span>
-            </a>
+            </Link>
 
             <button
               onClick={handleLogout}

@@ -23,6 +23,7 @@ import { storage } from '@/lib/store';
 import { fetchWithAuth } from '@/lib/axios';
 import { ApplicationRequest, JobCircular } from '@/types';
 import { fetchPublicJobs } from '@/services/jobs.service';
+import { useCandidateCalendar } from '@/hooks/usePlatformQueries';
 
 interface CalendarEvent {
   id: string;
@@ -41,6 +42,7 @@ interface CalendarEvent {
 }
 
 export default function ExamCalendarPage() {
+  const { data: liveCalendar } = useCandidateCalendar();
   const [activeTab, setActiveTab] = useState<'all' | 'exam' | 'deadline'>('all');
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
   const [applications, setApplications] = useState<ApplicationRequest[]>([]);
@@ -106,39 +108,43 @@ export default function ExamCalendarPage() {
     return date.toISOString().split('T')[0];
   };
 
-  // Compute Calendar Events
+  // Compute Calendar Events from REAL DB exam notices, viva notices, and job deadlines (zero fabricated dates)
   const events: CalendarEvent[] = useMemo(() => {
     const list: CalendarEvent[] = [];
 
-    // 1. Applications (Exams)
-    applications.forEach((app, idx) => {
-      const baseDate = safeDate(app.submittedAt || app.date, 0);
-      const examDate = new Date(baseDate.getTime() + (21 + (idx % 7)) * 24 * 60 * 60 * 1000);
-      const dayName = banglaDays[examDate.getDay()];
-      const dayNum = examDate.getDate();
-      const monthName = banglaMonths[examDate.getMonth()];
-      const year = examDate.getFullYear();
+    // 1. Real official exam & viva notices from PostgreSQL (/api/exams/calendar)
+    const serverEvents = Array.isArray(liveCalendar?.events) ? liveCalendar.events : [];
+    serverEvents.forEach((ev: any) => {
+      const eventDate = new Date(ev.date);
+      if (isNaN(eventDate.getTime())) return;
+      const dayName = banglaDays[eventDate.getDay()];
+      const dayNum = eventDate.getDate();
+      const monthName = banglaMonths[eventDate.getMonth()];
+      const year = eventDate.getFullYear();
 
       list.push({
-        id: `exam-${app.id}`,
-        type: 'exam',
+        id: ev.id,
+        type: ev.type === 'deadline' ? 'deadline' : 'exam',
         dateString: `${dayNum} ${monthName} ${year}`,
-        dateObj: examDate,
+        dateObj: eventDate,
         dayBn: dayName,
-        time: idx % 2 === 0 ? 'সকাল ১০:০০ - ১১:০০' : 'বিকাল ০৩:০০ - ০৪:৩০',
-        title: app.jobTitle,
-        postName: app.postName,
-        organization: app.jobTitle.split(' ')[0] || 'সরকারি প্রতিষ্ঠান',
-        center: `${app.candidateDistrict || 'ঢাকা'} মহানগরীর কেন্দ্রসমূহ`,
-        jobId: app.jobId,
-        statusText: app.status === 'completed' ? 'প্রবেশপত্র শীঘ্রই ইস্যু' : 'আবেদন গৃহীত',
-        isApplied: true
+        time: ev.time || (ev.type === 'deadline' ? 'রাত ১১:৫৯ মিনিট' : 'নোটিশ অনুযায়ী'),
+        title: ev.title,
+        postName: ev.stage || (ev.type === 'deadline' ? 'আবেদনের শেষ তারিখ' : 'পরীক্ষার নোটিশ'),
+        organization: ev.organization || 'নিয়োগকারী কর্তৃপক্ষ',
+        center: ev.venue || undefined,
+        jobId: ev.jobSlug || ev.id,
+        statusText: ev.type === 'viva' ? 'ভাইভা সূচি' : ev.type === 'exam' ? 'অফিসিয়াল পরীক্ষার তারিখ' : 'আবেদনের ডেডলাইন',
+        isApplied: Boolean(ev.applicationStatus),
       });
     });
 
-    // 2. Deadlines for circulars
+    // 2. Deadlines for published circulars (if not already present)
+    const existingIds = new Set(list.map((e) => e.id));
     const activeJobs = jobs.slice(0, 10);
     activeJobs.forEach(job => {
+      const deadlineId = `deadline-${job.id}`;
+      if (existingIds.has(deadlineId) || existingIds.has(`deadline-app-${job.id}`)) return;
       const deadlineDate = safeDate(job.deadline, 7);
 
       const dayName = banglaDays[deadlineDate.getDay()];
@@ -149,7 +155,7 @@ export default function ExamCalendarPage() {
       const hasApplied = applications.some(a => a.jobId === job.id);
 
       list.push({
-        id: `deadline-${job.id}`,
+        id: deadlineId,
         type: 'deadline',
         dateString: `${dayNum} ${monthName} ${year}`,
         dateObj: deadlineDate,
@@ -168,7 +174,7 @@ export default function ExamCalendarPage() {
     // Sort by date ascending
     list.sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime());
     return list;
-  }, [applications, jobs]);
+  }, [applications, jobs, liveCalendar]);
 
   // Check for date conflicts
   const conflicts = useMemo(() => {
@@ -224,7 +230,7 @@ export default function ExamCalendarPage() {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-xs font-bold border border-slate-200 mb-2">
             <Calendar className="w-3.5 h-3.5 text-slate-700" />
-            <span>স্টেপ ১০ — ব্যক্তিগত পরীক্ষার দিনপঞ্জি ও ডেডলাইন</span>
+            <span>ব্যক্তিগত পরীক্ষার দিনপঞ্জি ও ডেডলাইন</span>
           </div>
           <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
             <span>ব্যক্তিগত পরীক্ষার ক্যালেন্ডার ও সময়সূচি</span>

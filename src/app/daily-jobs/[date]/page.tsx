@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
-import { serverDB } from '@/lib/db';
+import { serverApi } from '@/lib/server-api';
 import { JobFeedEngine } from '@/lib/feeds/engine';
 import { BangladeshDateHelper } from '@/lib/feeds/timezone';
 import JobFeedClient from '@/components/shared/feeds/JobFeedClient';
@@ -60,16 +60,20 @@ export default async function DailyJobDatePage(props: Props) {
     redirect('/daily-jobs');
   }
 
-  const jobs = serverDB.getPublicJobs();
-  const placements = serverDB.getFeaturedPlacements();
+  const [jobs, rawCategories] = await Promise.all([
+    serverApi.getPublicJobs(),
+    serverApi.getCategories(),
+  ]);
   const dateBn = BangladeshDateHelper.formatBengaliFullDate(parsedIso);
-  const categories = serverDB.getCategories().filter(c => c.is_active).map(c => ({
-    id: c.id,
-    name_bn: c.name_bn,
-    slug: c.slug
-  }));
+  const categories = rawCategories
+    .filter((c: any) => c.is_active)
+    .map((c: any) => ({
+      id: c.id,
+      name_bn: c.name_bn,
+      slug: c.slug,
+    }));
 
-  const initialResult = JobFeedEngine.getFeed(jobs, { feedType: 'daily', date: parsedIso, limit: 9 }, placements);
+  const initialResult = JobFeedEngine.getFeed(jobs, { feedType: 'daily', date: parsedIso, limit: 9 }, []);
 
   // Calculate previous and next date for calendar navigation
   const currDate = new Date(`${parsedIso}T00:00:00Z`);

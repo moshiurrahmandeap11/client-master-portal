@@ -198,7 +198,7 @@ export default function SettingsPage() {
             <span className="text-slate-400 font-bold block text-[10px]">নিবন্ধিত মোবাইল:</span>
             <div className="flex items-center gap-1.5 pt-0.5">
               <Phone className="w-3.5 h-3.5 text-slate-500" />
-              <span className="font-black font-mono text-slate-900 text-xs">{profile?.phone || '01700000000'}</span>
+              <span className="font-black font-mono text-slate-900 text-xs">{profile?.phone || 'যুক্ত করা হয়নি'}</span>
             </div>
             <span className="text-[10px] text-slate-500">ইউজার আইডি: {profile?.id || 'USR-AUTO'}</span>
           </div>

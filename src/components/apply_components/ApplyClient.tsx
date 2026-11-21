@@ -186,20 +186,37 @@ function ApplyFormContent({ initialJob }: ApplyClientProps) {
     reader.readAsDataURL(file);
   };
 
-  const handleApplyResizedToProfile = () => {
+  const handleApplyResizedToProfile = async () => {
     if (!resizedImage) return;
+    let finalUrl = resizedImage;
+    try {
+      const blobRes = await fetch(resizedImage);
+      const blob = await blobRes.blob();
+      const formData = new FormData();
+      formData.append('file', blob, resizerMode === 'photo' ? 'teletalk_photo_300x300.jpg' : 'teletalk_signature_300x80.jpg');
+      formData.append('docType', resizerMode);
+      formData.append('docTitle', resizerMode === 'photo' ? 'প্রার্থীর পাসপোর্ট ছবি (৩০০x৩০০)' : 'ডিজিটাল স্বাক্ষর (৩০০x৮০)');
+      const uploadRes = await fetchWithAuth('/api/candidate/upload-document', { method: 'POST', body: formData });
+      if (uploadRes.ok) {
+        const uploadData = await uploadRes.json().catch(() => ({}));
+        if (uploadData?.fileUrl) finalUrl = uploadData.fileUrl;
+      }
+    } catch {}
+
     if (resizerMode === 'photo') {
-      setUserProfile((prev: any) => ({ ...prev, photoUrl: resizedImage }));
+      setUserProfile((prev: any) => ({ ...prev, photoUrl: finalUrl }));
       const user = storage.getUser();
-      user.photoUrl = resizedImage;
+      user.photoUrl = finalUrl;
       storage.updateUser(user);
-      setResizerSuccessMsg('ছবি সফলভাবে আপনার আবেদন ও প্রোফাইলে সেট করা হয়েছে!');
+      window.dispatchEvent(new Event('cs_user_changed'));
+      setResizerSuccessMsg('ছবি সফলভাবে আপনার আবেদন ও প্রোফাইলে সেট ও সংরক্ষণ করা হয়েছে!');
     } else {
-      setUserProfile((prev: any) => ({ ...prev, signatureUrl: resizedImage }));
+      setUserProfile((prev: any) => ({ ...prev, signatureUrl: finalUrl }));
       const user = storage.getUser();
-      user.signatureUrl = resizedImage;
+      user.signatureUrl = finalUrl;
       storage.updateUser(user);
-      setResizerSuccessMsg('ডিজিটাল স্বাক্ষর সফলভাবে আপনার আবেদন ও প্রোফাইলে সেট করা হয়েছে!');
+      window.dispatchEvent(new Event('cs_user_changed'));
+      setResizerSuccessMsg('ডিজিটাল স্বাক্ষর সফলভাবে আপনার আবেদন ও প্রোফাইলে সেট ও সংরক্ষণ করা হয়েছে!');
     }
     setTimeout(() => {
       setIsResizerOpen(false);

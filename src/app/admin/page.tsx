@@ -71,6 +71,7 @@ import WebsiteBuilder from '@/components/admin_components/WebsiteBuilder';
 import SourceRegistryManagement from '@/components/admin_components/SourceRegistryManagement';
 import SmsNotificationsManagement from '@/components/admin_components/SmsNotificationsManagement';
 import SystemSettingsDiagnostics from '@/components/admin_components/SystemSettingsDiagnostics';
+import DynamicContentManager from '@/components/admin_components/DynamicContentManager';
 import WebsiteCmsSeoManagement from '@/components/admin_components/WebsiteCmsSeoManagement';
 import FinancialTransactionsLedger from '@/components/admin_components/FinancialTransactionsLedger';
 import CandidateManagementHub from '@/components/admin_components/CandidateManagementHub';
@@ -968,8 +969,8 @@ function AdminContent() {
   };
 
   const handleAttachPdf = async (appId: string) => {
-    const pdfUrl = prompt('অ্যাপ্লিক্যান্ট কপি PDF এর লিংক দিন:', 'https://alljobs.teletalk.com.bd/applicant-copy/' + appId + '.pdf');
-    if (!pdfUrl) return;
+    const pdfUrl = prompt('অ্যাপ্লিক্যান্ট কপি PDF এর লিংক দিন (https://... বা /uploads/...):', '');
+    if (!pdfUrl || !pdfUrl.trim()) return;
     try {
       const res = await fetch(`/api/applications/${appId}`, {
         method: 'PATCH',
@@ -1790,6 +1791,16 @@ function AdminContent() {
             { id: 'notifications', label: 'নোটিফিকেশন ও ব্রডকাস্ট' },
             { id: 'sms-status', label: 'এসএমএস গেটওয়ে ও ব্যালেন্স' },
             { id: 'templates-delivery', label: 'মেসেজ টেমপ্লেট ও ডেলিভারি লগ' }
+          ]
+        },
+        {
+          id: 'dynamic-content',
+          label: 'পরীক্ষা, ব্লগ ও রিভিউ',
+          icon: FileText,
+          badge: null,
+          keywords: ['পরীক্ষা', 'প্রবেশপত্র', 'ফলাফল', 'ভাইভা', 'প্রশ্নব্যাংক', 'মডেল টেস্ট', 'ব্লগ', 'রিভিউ', 'প্রতিষ্ঠান'],
+          subTabs: [
+            { id: 'dynamic-content', label: 'সকল ডাইনামিক কনটেন্ট ও পরীক্ষা' }
           ]
         },
         { 
@@ -5586,6 +5597,13 @@ function AdminContent() {
                 candidates={candidates} 
                 applications={applications} 
               />
+            </div>
+          )}
+
+          {/* TAB: DYNAMIC CONTENT, EXAMS, REVIEWS & ORGANIZATIONS MANAGER */}
+          {activeTab === 'dynamic-content' && (
+            <div className="space-y-4">
+              <DynamicContentManager />
             </div>
           )}
 

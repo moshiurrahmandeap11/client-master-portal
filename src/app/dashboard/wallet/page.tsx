@@ -67,12 +67,19 @@ export default function WalletPage() {
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data.transactions)) {
+            const normalizedRemote = data.transactions.map((t: any) => ({
+              ...t,
+              date: t.date || t.createdAt,
+              amount: Number(t.amount || 0),
+              status: typeof t.status === 'string' ? t.status.toLowerCase() : 'completed',
+              type: typeof t.type === 'string' ? t.type.toLowerCase() : 'recharge',
+            }));
             const map = new Map<string, WalletTransaction>();
             localTxs.forEach((t: WalletTransaction) => map.set(t.id, t));
-            data.transactions.forEach((t: WalletTransaction) => map.set(t.id, t));
-            const merged = Array.from(map.values()).sort((a: WalletTransaction, b: WalletTransaction) => {
-              const timeA = new Date(a.date).getTime() || 0;
-              const timeB = new Date(b.date).getTime() || 0;
+            normalizedRemote.forEach((t: WalletTransaction) => map.set(t.id, t));
+            const merged = Array.from(map.values()).sort((a: any, b: any) => {
+              const timeA = new Date(a.date || a.createdAt || 0).getTime() || 0;
+              const timeB = new Date(b.date || b.createdAt || 0).getTime() || 0;
               return timeB - timeA;
             });
             setTransactions(merged);
@@ -140,9 +147,10 @@ export default function WalletPage() {
         setTransactions(previous => [data.transaction, ...previous]);
         try { storage.addTransaction(data.transaction); } catch {}
       }
-      if (typeof data.newBalance === 'number') {
+      const nextBal = typeof data.walletBalance === 'number' ? data.walletBalance : data.newBalance;
+      if (typeof nextBal === 'number') {
         const u = storage.getUser();
-        u.walletBalance = data.newBalance;
+        u.walletBalance = nextBal;
         storage.updateUser(u);
       }
       window.dispatchEvent(new Event('cs_wallet_changed'));

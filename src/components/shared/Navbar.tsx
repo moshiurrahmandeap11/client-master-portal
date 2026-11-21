@@ -135,6 +135,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
   const [userProfile, setUserProfile] = useState<any>(null);
   const [avatarError, setAvatarError] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
   const [platformSettings, setPlatformSettings] = useState<any>(initialSettings || null);
   const navRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLAnchorElement>(null);
@@ -184,6 +185,21 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
         setUserProfile(u);
         setWalletBalance(u?.walletBalance || 0);
         setAvatarError(false);
+        const localUnread = storage.getNotifications().filter((n: any) => !n.read).length;
+        setUnreadNotificationsCount(localUnread);
+        if (a.isLoggedIn && a.role === 'candidate') {
+          fetch('/api/candidate/notifications', { credentials: 'include' })
+            .then(r => (r.ok ? r.json() : null))
+            .then(d => {
+              if (d && Array.isArray(d.notifications)) {
+                const count = typeof d.unreadCount === 'number'
+                  ? d.unreadCount
+                  : d.notifications.filter((n: any) => !(n.isRead ?? n.read)).length;
+                setUnreadNotificationsCount(count);
+              }
+            })
+            .catch(() => {});
+        }
       } catch (e) {
         console.error('[Navbar] storage error:', e);
       }
@@ -194,12 +210,14 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
     const handleAuthChange = () => syncUserData();
     const handleUserChange = () => syncUserData();
     const handleDocsChange = () => syncUserData();
+    const handleNotifsChange = () => syncUserData();
 
     const fetchSettings = () => {
       fetch('/api/platform/settings', { cache: 'no-store' })
         .then(res => res.json())
         .then(d => {
-          if (d.success && d.settings) setPlatformSettings(d.settings);
+          const live = d.settings || d.data;
+          if (d.success && live) setPlatformSettings(live);
         })
         .catch(err => {
           console.error('[Navbar] Settings fetch failed:', err);
@@ -214,6 +232,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
     window.addEventListener('cs_user_changed', handleUserChange);
     window.addEventListener('cs_documents_changed', handleDocsChange);
     window.addEventListener('cs_docs_changed', handleDocsChange);
+    window.addEventListener('cs_notifications_changed', handleNotifsChange);
 
     return () => {
       window.removeEventListener('cs_settings_changed', fetchSettings);
@@ -221,6 +240,7 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
       window.removeEventListener('cs_user_changed', handleUserChange);
       window.removeEventListener('cs_documents_changed', handleDocsChange);
       window.removeEventListener('cs_docs_changed', handleDocsChange);
+      window.removeEventListener('cs_notifications_changed', handleNotifsChange);
     };
   }, [initialSettings]);
 
@@ -574,7 +594,9 @@ export default function Navbar({ initialSettings }: { initialSettings?: any } = 
                     title="নোটিফিকেশন"
                   >
                     <Bell className="w-4 h-4 text-slate-600" />
-                    <span className="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
+                    {unreadNotificationsCount > 0 && (
+                      <span className="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
+                    )}
                   </Link>
                 )}
 

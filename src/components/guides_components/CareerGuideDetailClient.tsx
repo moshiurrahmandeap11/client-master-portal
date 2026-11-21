@@ -17,16 +17,78 @@ import {
   ChevronLeft,
   ArrowUpRight
 } from 'lucide-react';
-import { careerGuidesData } from '@/data/preparationData';
+import { useCmsContentDetail } from '@/hooks/usePlatformQueries';
 
 interface CareerGuideDetailClientProps {
   slug: string;
 }
 
 export default function CareerGuideDetailClient({ slug }: CareerGuideDetailClientProps) {
-  const guide = careerGuidesData[slug] || careerGuidesData['cv-writing'];
+  const { data: rawGuide, isLoading } = useCmsContentDetail(slug);
   const [checklistState, setChecklistState] = useState<Record<number, boolean>>({});
   const [copied, setCopied] = useState(false);
+
+  if (isLoading) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-16 text-center text-slate-500 text-sm">
+        গাইড লোড হচ্ছে...
+      </div>
+    );
+  }
+
+  if (!rawGuide) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-16 text-center space-y-4">
+        <h1 className="text-xl font-bold text-slate-800">ক্যারিয়ার গাইডটি এখনো যুক্ত করা হয়নি</h1>
+        <p className="text-sm text-slate-500">অ্যাডমিন প্যানেল থেকে এই গাইডটি প্রকাশ করা হলে এখানে দেখা যাবে।</p>
+        <Link href="/career-guides" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-700 text-white text-sm font-bold">
+          সকল ক্যারিয়ার গাইডে ফিরে যান
+        </Link>
+      </div>
+    );
+  }
+
+  const guide: {
+    slug: string;
+    title: string;
+    category: string;
+    readTime: string;
+    heroSummary: string;
+    keyTakeaways: string[];
+    interactiveChecklist: string[];
+    sampleTemplate: { title: string; description: string; snippet: string } | null;
+    relatedSlugs: string[];
+    sections: Array<{
+      title: string;
+      heading: string;
+      paragraphs: string[];
+      bulletPoints?: string[];
+      tipBox?: string;
+      templateSnippet?: string;
+    }>;
+    checklist: string[];
+  } = {
+    slug: rawGuide.slug,
+    title: rawGuide.title || '',
+    category: rawGuide.category || 'ক্যারিয়ার গাইড',
+    readTime: rawGuide.readTime || '৫ মিনিট',
+    heroSummary: rawGuide.excerpt || '',
+    keyTakeaways: [] as string[],
+    interactiveChecklist: [] as string[],
+    sampleTemplate: null as any,
+    relatedSlugs: [] as string[],
+    sections: typeof rawGuide.content === 'string'
+      ? rawGuide.content.split('\n\n').filter(Boolean).map((para: string, idx: number) => ({
+          title: idx === 0 ? 'মূল নির্দেশিকা' : `ধাপ ${idx + 1}`,
+          heading: idx === 0 ? 'মূল নির্দেশিকা' : `ধাপ ${idx + 1}`,
+          paragraphs: [para],
+          bulletPoints: [],
+          tipBox: '',
+          templateSnippet: '',
+        }))
+      : [],
+    checklist: [],
+  };
 
   // Toggle checklist item
   const toggleChecklist = (idx: number) => {
@@ -206,8 +268,8 @@ export default function CareerGuideDetailClient({ slug }: CareerGuideDetailClien
           </div>
 
           <div className="flex flex-wrap gap-2 text-xs">
-            {guide.relatedSlugs.map((rSlug) => {
-              const rGuide = careerGuidesData[rSlug];
+            {(guide.relatedSlugs || []).map((rSlug: string) => {
+              const rGuide: any = null;
               if (!rGuide) return null;
               return (
                 <Link

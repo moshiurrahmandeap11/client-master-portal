@@ -129,8 +129,8 @@ function JobListingViewContent({
       // 1. Initial Page-level FilterType (e.g. ssc, hsc, bachelor, etc.)
       switch (filterType) {
         case 'latest': {
-          const isRecent = !job.publishedDate || job.publishedDate.includes('নভেম্বর') || job.publishedDate.includes('অক্টোবর') || (job.daysRemaining && job.daysRemaining > 0);
-          if (!(job.featured || isRecent || (job.daysRemaining && job.daysRemaining > 15))) return false;
+          const evalRes = CentralDeadlineEngine.evaluateDeadline(job);
+          if (evalRes.isClosed) return false;
           break;
         }
         case 'deadline': {

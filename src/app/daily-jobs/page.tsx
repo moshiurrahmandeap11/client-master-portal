@@ -2,7 +2,7 @@ import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Calendar, ChevronRight, Sparkles, Clock, ArrowRight, Layers, Database } from 'lucide-react';
-import { serverDB } from '@/lib/db';
+import { serverApi } from '@/lib/server-api';
 import { JobFeedEngine } from '@/lib/feeds/engine';
 import { BangladeshDateHelper } from '@/lib/feeds/timezone';
 import DailyDateJumpPicker from '@/components/shared/feeds/DailyDateJumpPicker';
@@ -25,8 +25,8 @@ export const metadata: Metadata = {
 
 const toBn = (n: number | string) => String(n).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[+d]);
 
-export default function DailyJobsDirectoryPage() {
-  const jobs = serverDB.getPublicJobs();
+export default async function DailyJobsDirectoryPage() {
+  const jobs = await serverApi.getPublicJobs();
   const archives = JobFeedEngine.getDailyArchiveDates(jobs, 30);
   const todayInfo = BangladeshDateHelper.getBangladeshTodayDate();
 

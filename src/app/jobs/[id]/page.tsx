@@ -1,7 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import { notFound, redirect, RedirectType } from 'next/navigation';
-import { serverDB } from '@/lib/db';
+import { notFound, redirect } from 'next/navigation';
 import { serverApi } from '@/lib/server-api';
 import { JobCircular } from '@/types';
 import JobDetailClient from '@/components/jobs_components/JobDetailClient';
@@ -103,13 +102,7 @@ async function fetchJobFromBackend(idOrSlug: string): Promise<JobCircular | null
 }
 
 async function resolveJob(idOrSlug: string): Promise<JobCircular | null> {
-  const remote = await fetchJobFromBackend(idOrSlug);
-  if (remote) return remote;
-
-  const local = serverDB.getPublicJobById(idOrSlug) || serverDB.getJobByIdOrSlug(idOrSlug);
-  if (local) return local;
-
-  return null;
+  return await serverApi.getJobByIdOrSlug(idOrSlug);
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
@@ -205,13 +198,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
 export default async function SingleJobPage(props: Props) {
   const params = await props.params;
-  // 1. Check for active 301/308 redirects
-  const redirectRecord = serverDB.findRedirectByPath ? serverDB.findRedirectByPath(`/jobs/${params.id}`) : null;
-  if (redirectRecord && redirectRecord.isActive) {
-    redirect(redirectRecord.targetPath, RedirectType.replace);
-  }
-
-  // 2. Resolve job by ID or clean SEO Slug (local store + live PostgreSQL)
+  // Resolve job by ID or clean SEO Slug from live PostgreSQL backend
   const job = await resolveJob(params.id);
   const pubStatus = (job as any)?.publicationStatus;
 

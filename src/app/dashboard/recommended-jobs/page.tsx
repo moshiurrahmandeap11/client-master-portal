@@ -165,7 +165,7 @@ export default function RecommendedJobsPage() {
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-900 text-slate-400 rounded-full text-xs font-bold border border-slate-200">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>স্টেপ ০৯ — স্মার্ট জব ম্যাচিং ও পার্সোনালাইজড রিকমেন্ডেশন</span>
+              <span>স্মার্ট জব ম্যাচিং ও পার্সোনালাইজড রিকমেন্ডেশন</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
               আপনার জন্য সুপারিশকৃত চাকরি

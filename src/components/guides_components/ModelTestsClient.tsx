@@ -19,11 +19,40 @@ import {
   Trophy,
   BarChart3
 } from 'lucide-react';
-import { initialModelTests } from '@/data/preparationData';
+import { useExamResource, useSubmitModelTest } from '@/hooks/usePlatformQueries';
 import { ModelTestItem } from '@/types/preparation.types';
 
 export default function ModelTestsClient() {
-  const [modelTests] = useState<ModelTestItem[]>(initialModelTests);
+  const { data: rawModelTests = [] } = useExamResource<any>('model-tests');
+  const submitModelTest = useSubmitModelTest();
+
+  const modelTests: ModelTestItem[] = React.useMemo(
+    () =>
+      rawModelTests.map((t: any) => {
+        const rawQs = Array.isArray(t.questions) ? t.questions : [];
+        return {
+          id: t.id,
+          title: t.title || 'মডেল টেস্ট',
+          category: t.category || 'সরকারি চাকরি',
+          categoryLabel: t.category || 'সরকারি চাকরি',
+          description: t.description || '',
+          totalMarks: Number(t.totalMarks) || rawQs.length || 100,
+          questionsCount: rawQs.length,
+          passingScore: Math.round((Number(t.totalMarks) || 100) * 0.5),
+          durationMinutes: Number(t.durationMinutes) || 30,
+          negativeMarking: Number(t.negativeMark ?? 0.25),
+          difficulty: 'মাঝারি' as any,
+          questions: rawQs.map((q: any, idx: number) => ({
+            id: q.id || `q-${idx}`,
+            question: q.question || '',
+            options: Array.isArray(q.options) ? q.options : [],
+            correctIndex: Number(q.correctIndex ?? q.correctAnswer ?? 0),
+            explanation: q.explanation || '',
+          })),
+        } as ModelTestItem;
+      }),
+    [rawModelTests],
+  );
   const [activeTest, setActiveTest] = useState<ModelTestItem | null>(null);
   const [mode, setMode] = useState<'list' | 'testing' | 'result'>('list');
 
@@ -70,9 +99,22 @@ export default function ModelTestsClient() {
     };
   }, [mode, timeLeft]);
 
-  // Submit test
+  // Submit test and persist attempt to PostgreSQL if authenticated
   const handleSubmitTest = () => {
     if (timerRef.current) clearTimeout(timerRef.current);
+    if (activeTest) {
+      const answersPayload: Record<string, number> = {};
+      Object.entries(userAnswers).forEach(([idxStr, optIdx]) => {
+        const q = activeTest.questions[Number(idxStr)];
+        answersPayload[q?.id ? String(q.id) : idxStr] = optIdx;
+      });
+      const durationSec = Math.max(1, activeTest.durationMinutes * 60 - timeLeft);
+      submitModelTest.mutate({
+        modelTestId: activeTest.id,
+        answers: answersPayload,
+        durationSec,
+      });
+    }
     setMode('result');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

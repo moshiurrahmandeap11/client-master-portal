@@ -44,63 +44,7 @@ interface SmsLog {
   cost: number;
 }
 
-const INITIAL_LOGS: SmsLog[] = [
-  {
-    id: 'SMS-8921',
-    recipient: '01774366643',
-    name: 'মো: তানভীর হোসেন',
-    message: 'চাকরি সেবা: আপনার ওটিপি ভেরিফিকেশন কোড হলো 849201। এটি কারও সাথে শেয়ার করবেন না।',
-    template: 'ওটিপি ভেরিফিকেশন',
-    gateway: 'Greenweb BD',
-    status: 'delivered',
-    timestamp: 'আজ, ১০:৪৫ পূর্বাহ্ন',
-    cost: 0.40
-  },
-  {
-    id: 'SMS-8920',
-    recipient: '01812345678',
-    name: 'ফারহানা ইয়াসমিন',
-    message: 'অভিনন্দন ফারহানা! তথ্য ও যোগাযোগ প্রযুক্তি অধিদপ্তর-এর সহকারী প্রোগ্রামার পদের আবেদন সফলভাবে সম্পন্ন হয়েছে। ট্র্যাকিং: CS-2026-ICT-8849',
-    template: 'আবেদন সম্পন্ন',
-    gateway: 'Teletalk SMS',
-    status: 'delivered',
-    timestamp: 'আজ, ০৯:১২ পূর্বাহ্ন',
-    cost: 0.40
-  },
-  {
-    id: 'SMS-8919',
-    recipient: '01998765432',
-    name: 'আহমেদ সাদিক',
-    message: 'জরুরি নোটিশ: বাংলাদেশ ব্যাংক অফিসার পদের প্রবেশপত্র প্রকাশিত হয়েছে। ডাউনলোড করুন chakrisheba.com থেকে।',
-    template: 'অ্যাডমিট কার্ড রিলিজ',
-    gateway: 'SSL Wireless',
-    status: 'delivered',
-    timestamp: 'গতকাল, ১১:৩০ অপরাহ্ন',
-    cost: 0.40
-  },
-  {
-    id: 'SMS-8918',
-    recipient: '01655443322',
-    name: 'রাশেদ খান',
-    message: 'চাকরি সেবা: আপনার বিকাশ পেমেন্ট (৳১৬০) সফলভাবে ভেরিফাই করা হয়েছে। আবেদন প্রসেসিং চলছে।',
-    template: 'পেমেন্ট নিশ্চিতকরণ',
-    gateway: 'Greenweb BD',
-    status: 'delivered',
-    timestamp: 'গতকাল, ০৫:২০ অপরাহ্ন',
-    cost: 0.40
-  },
-  {
-    id: 'SMS-8917',
-    recipient: '01511223344',
-    name: 'তাসলিমা আক্তার',
-    message: 'চাকরি সেবা: সোনালী ব্যাংক পিএলসি সিনিয়র অফিসার পদের আবেদন শেষ হতে আর মাত্র ২৪ ঘণ্টা বাকি!',
-    template: 'শেষ সময় রিমাইন্ডার',
-    gateway: 'Teletalk SMS',
-    status: 'pending',
-    timestamp: 'গতকাল, ০২:১৫ অপরাহ্ন',
-    cost: 0.40
-  }
-];
+const INITIAL_LOGS: SmsLog[] = [];
 
 export default function SmsNotificationsManagement({
   activeTab = 'sms-status',
@@ -138,6 +82,28 @@ export default function SmsNotificationsManagement({
   const [smsLogs, setSmsLogs] = useState<SmsLog[]>(INITIAL_LOGS);
   const [logSearch, setLogSearch] = useState('');
   const [logStatusFilter, setLogStatusFilter] = useState<'all' | 'delivered' | 'pending' | 'failed'>('all');
+
+  useEffect(() => {
+    fetch('/api/admin/notifications/deliveries', { headers: getAdminHeaders() })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.success && Array.isArray(data.deliveries)) {
+          const mapped: SmsLog[] = data.deliveries.map((d: any) => ({
+            id: d.id,
+            recipient: d.recipient || 'N/A',
+            name: d.title || 'নোটিফিকেশন',
+            message: d.message || '',
+            template: d.channel || 'in_app',
+            gateway: d.metadata?.provider === 'configured_sms_gateway' ? 'Greenweb BD' : 'Teletalk SMS',
+            status: d.status === 'failed' ? 'failed' : d.status === 'logged_in_app' ? 'pending' : 'delivered',
+            timestamp: d.createdAt ? new Date(d.createdAt).toLocaleString('bn-BD') : 'সাম্প্রতিক',
+            cost: d.channel === 'sms' && d.status === 'sent' ? 0.4 : 0,
+          }));
+          setSmsLogs(mapped);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Broadcast Notification State
   const [broadcastTarget, setBroadcastTarget] = useState<'all_candidates' | 'pending_payment' | 'bcs_aspirants'>('all_candidates');

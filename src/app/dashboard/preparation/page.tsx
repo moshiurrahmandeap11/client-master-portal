@@ -57,7 +57,7 @@ export default function PreparationPage() {
             <span>মডেল টেস্ট দিন</span>
           </Link>
           <Link
-            href="/question-bank"
+            href="/previous-year-questions"
             className="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5"
           >
             <BookOpen className="w-4 h-4" />

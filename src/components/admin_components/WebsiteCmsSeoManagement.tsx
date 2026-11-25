@@ -84,35 +84,7 @@ interface RevisionItem {
   canRollback: boolean;
 }
 
-const INITIAL_REVISIONS: RevisionItem[] = [
-  {
-    id: 'REV-2061',
-    version: 'v2.6.1 (বর্তমান)',
-    author: 'আব্দুর রহমান লিওন (সুপার অ্যাডমিন)',
-    timestamp: 'আজ, ১০:১৫ পূর্বাহ্ন',
-    scope: 'গ্লোবাল এসইও ও মেটাডাটা ইঞ্জিন',
-    notes: 'Google Rich Snippet JobPosting Schema এবং ক্যান্ডিডেট প্রোফাইল হাইড্রেশন সিঙ্ক হালনাগাদ।',
-    canRollback: false
-  },
-  {
-    id: 'REV-2060',
-    version: 'v2.6.0',
-    author: 'আব্দুর রহমান লিওন (সুপার অ্যাডমিন)',
-    timestamp: 'গতকাল, ১১:৪৫ অপরাহ্ন',
-    scope: 'সার্কুলার টেবিল ও সাব-পজিশন ফর্ম',
-    notes: 'মাল্টিপল পদ ও মোট শূন্যপদ অটোমেটিক ক্যালকুলেশন এবং এডিট মডাল ফিচার সংযোজন।',
-    canRollback: true
-  },
-  {
-    id: 'REV-2059',
-    version: 'v2.5.9',
-    author: 'সিস্টেম অটোমেটর',
-    timestamp: '২৮ অক্টোবর ২০২৬',
-    scope: 'স্ক্র্যাপার পাইপলাইন ও ড্রাফট কিউ',
-    notes: 'টেলিটক অলজবস, বিপিএসসি ও বাংলাদেশ ব্যাংক স্ক্র্যাপার ইঞ্জিনের রেট লিমিটার অপটিমাইজেশন।',
-    canRollback: true
-  }
-];
+const INITIAL_REVISIONS: RevisionItem[] = [];
 
 const DEFAULT_HEADER_ITEMS: NavMenuItem[] = [
   {
@@ -341,7 +313,7 @@ export default function WebsiteCmsSeoManagement({
             sectionsCount: Array.isArray(p.sections) ? p.sections.length : 0,
             status: p.status || 'published',
             lastModified: p.updatedAt ? new Date(p.updatedAt).toLocaleDateString('bn-BD') : 'আজ',
-            views: Math.floor(1200 + Math.random() * 45000),
+            views: Number(p.viewsCount || 0),
             isSystemPage: Boolean(p.isSystemPage)
           }));
           setPages(mapped);
@@ -354,6 +326,24 @@ export default function WebsiteCmsSeoManagement({
   // Load server settings and pages on mount
   useEffect(() => {
     loadPages();
+
+    fetch('/api/admin/audit-logs', { headers: getAdminHeaders() })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.success && Array.isArray(data.logs)) {
+          const mapped: RevisionItem[] = data.logs.slice(0, 20).map((log: any, idx: number) => ({
+            id: log.id,
+            version: idx === 0 ? 'সর্বশেষ অডিট' : `v-${data.logs.length - idx}`,
+            author: `${log.actorId || 'ADMIN'} (${log.actorRole || 'ADMIN'})`,
+            timestamp: log.createdAt ? new Date(log.createdAt).toLocaleString('bn-BD') : 'সাম্প্রতিক',
+            scope: `${log.action || 'UPDATE'} • ${log.targetType || 'CMS'}`,
+            notes: typeof log.details === 'string' ? log.details : JSON.stringify(log.details || {}),
+            canRollback: false,
+          }));
+          setRevisions(mapped);
+        }
+      })
+      .catch(() => {});
 
     fetch('/api/admin/settings', { headers: getAdminHeaders() })
       .then(res => res.json())

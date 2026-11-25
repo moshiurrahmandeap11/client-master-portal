@@ -51,18 +51,7 @@ interface StaffMember {
   permissions: string[];
 }
 
-const INITIAL_STAFF: StaffMember[] = [
-  {
-    id: 'STF-001',
-    name: 'আব্দুর রহমান লিওন',
-    email: 'admin@chakrisheba.com',
-    phone: '01774366643',
-    role: 'সুপার অ্যাডমিন',
-    status: 'active',
-    lastActive: 'এইমাত্র সক্রিয়',
-    permissions: ['সকল পারমিশন', 'ডাটাবেস এক্সেস', 'পেমেন্ট কন্ট্রোল', 'সার্কুলার ম্যানেজমেন্ট', 'ইউজার ভল্ট']
-  }
-];
+const INITIAL_STAFF: StaffMember[] = [];
 
 export default function SystemSettingsDiagnostics({
   activeTab = 'settings',
@@ -155,6 +144,25 @@ export default function SystemSettingsDiagnostics({
     };
 
     fetchPlatformSettings();
+
+    fetch('/api/admin/staff', { headers: getAdminHeaders() })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.success && Array.isArray(data.staff)) {
+          const mapped: StaffMember[] = data.staff.map((m: any) => ({
+            id: m.id,
+            name: m.name,
+            email: m.email,
+            phone: m.phone || 'নির্ধারিত নয়',
+            role: m.role === 'ADMIN' ? 'সুপার অ্যাডমিন' : m.role === 'EDITOR' ? 'অপারেশনস মডারেটর' : 'টেলিটক অপারেটর',
+            status: 'active',
+            lastActive: m.updatedAt ? new Date(m.updatedAt).toLocaleDateString('bn-BD') : 'সক্রিয়',
+            permissions: Array.isArray(m.permissions) ? m.permissions : ['স্টাফ এক্সেস'],
+          }));
+          setStaffList(mapped);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   // 2. Diagnostics State
@@ -291,26 +299,48 @@ export default function SystemSettingsDiagnostics({
     }
   };
 
-  const handleAddStaff = (e: React.FormEvent) => {
+  const handleAddStaff = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newStaffName.trim() || !newStaffEmail.trim()) return;
 
-    const newMember: StaffMember = {
-      id: `STF-00${staffList.length + 1}`,
-      name: newStaffName,
-      email: newStaffEmail,
-      phone: newStaffPhone || '01XXXXXXXXX',
-      role: newStaffRole,
-      status: 'active',
-      lastActive: 'এইমাত্র যোগ করা হয়েছে',
-      permissions: newStaffRole === 'সুপার অ্যাডমিন' ? ['সকল পারমিশন'] : ['সীমিত অপারেটর এক্সেস']
-    };
+    const apiRole = newStaffRole === 'সুপার অ্যাডমিন' ? 'ADMIN' : newStaffRole === 'অপারেশনস মডারেটর' ? 'EDITOR' : 'OPERATOR';
+    const permissions = newStaffRole === 'সুপার অ্যাডমিন' ? ['সকল পারমিশন'] : ['সীমিত অপারেটর এক্সেস'];
 
-    setStaffList([...staffList, newMember]);
-    setShowAddStaffModal(false);
-    setNewStaffName('');
-    setNewStaffEmail('');
-    setNewStaffPhone('');
+    try {
+      const res = await fetch('/api/admin/staff', {
+        method: 'POST',
+        headers: getAdminHeaders(),
+        body: JSON.stringify({
+          name: newStaffName.trim(),
+          email: newStaffEmail.trim(),
+          role: apiRole,
+          permissions,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data?.member) {
+        const newMember: StaffMember = {
+          id: data.member.id,
+          name: data.member.name,
+          email: data.member.email,
+          phone: newStaffPhone || 'নির্ধারিত নয়',
+          role: newStaffRole,
+          status: 'active',
+          lastActive: 'এইমাত্র যোগ করা হয়েছে',
+          permissions,
+        };
+        setStaffList([...staffList, newMember]);
+      } else {
+        alert(data?.message || 'স্টাফ যোগ করতে ব্যর্থ হয়েছে');
+      }
+    } catch {
+      alert('সার্ভার এরর');
+    } finally {
+      setShowAddStaffModal(false);
+      setNewStaffName('');
+      setNewStaffEmail('');
+      setNewStaffPhone('');
+    }
   };
 
   return (
